@@ -7,35 +7,40 @@ import {
   QueryEventsArgs,
   SortOrder,
 } from "../api/data/types";
-import {PagedEventQuery, PagedEventQueryIndexEntry} from "./pagedEventQuery";
-import {myPurchases} from "./myPurchases";
-import {myTransactions} from "./myTransactions";
-import {me} from "./me";
+import { PagedEventQuery, PagedEventQueryIndexEntry } from "./pagedEventQuery";
+import { myTransactions } from "./myTransactions";
+import { me } from "./me";
 
 export class MyChat extends PagedEventQuery {
-  constructor(withCirclesAddress:string, sortOrder:SortOrder, pageSize = 20) {
-    super([
-      EventType.CrcHubTransfer,
-      EventType.CrcTrust,
-      EventType.ChatMessage,
-      EventType.Erc20Transfer,
-      EventType.Purchased,
-      EventType.SaleEvent,
-      EventType.InvitationRedeemed
-    ], sortOrder, pageSize, <ProfileEventFilter>{
-      with: withCirclesAddress
-    });
+  constructor(withCirclesAddress: string, sortOrder: SortOrder, pageSize = 20) {
+    super(
+      [
+        EventType.CrcHubTransfer,
+        EventType.CrcTrust,
+        EventType.ChatMessage,
+        EventType.Erc20Transfer,
+        EventType.InvitationRedeemed,
+      ],
+      sortOrder,
+      pageSize,
+      <ProfileEventFilter>{
+        with: withCirclesAddress,
+      }
+    );
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
     switch (eventPayload.__typename) {
-      case EventType.CrcHubTransfer: return eventPayload.transaction_hash;
-      case EventType.CrcTrust: return eventPayload.transaction_hash;
-      case EventType.ChatMessage: return eventPayload.id.toString();
-      case EventType.Erc20Transfer: return eventPayload.transaction_hash;
-      case EventType.Purchased: return eventPayload.purchase.id.toString();
-      case EventType.SaleEvent: return eventPayload.invoice.id.toString();
-      case EventType.InvitationRedeemed: return eventPayload.transaction_hash;
+      case EventType.CrcHubTransfer:
+        return eventPayload.transaction_hash;
+      case EventType.CrcTrust:
+        return eventPayload.transaction_hash;
+      case EventType.ChatMessage:
+        return eventPayload.id.toString();
+      case EventType.Erc20Transfer:
+        return eventPayload.transaction_hash;
+      case EventType.InvitationRedeemed:
+        return eventPayload.transaction_hash;
     }
     throw new Error(`Unknown event payload: ${eventPayload.__typename}`);
   }
@@ -45,26 +50,30 @@ export class MyChat extends PagedEventQuery {
   }
 
   async findSingleItemFallback(types: string[], primaryKey: string): Promise<ProfileEvent | undefined> {
-    let $me:Profile;
-    me.subscribe(m => $me = m)();
+    let $me: Profile;
+    me.subscribe((m) => ($me = m))();
     const args = <QueryEventsArgs>{
       safeAddress: $me.circlesAddress,
       types: types,
       pagination: {
         order: SortOrder.Desc,
         limit: 1,
-        continueAt: new Date().toJSON()
+        continueAt: new Date().toJSON(),
       },
       filter: {
         with: this.filter.with,
-        ... types.indexOf(EventType.ChatMessage) > 0 ? {
-          chatMessage: {
-            id: parseInt(primaryKey)
-          }
-        } : {},
-        ... types.indexOf(EventType.CrcHubTransfer) > 0 ? {
-          transactionHash: primaryKey
-        } : {}
+        ...(types.indexOf(EventType.ChatMessage) > 0
+          ? {
+              chatMessage: {
+                id: parseInt(primaryKey),
+              },
+            }
+          : {}),
+        ...(types.indexOf(EventType.CrcHubTransfer) > 0
+          ? {
+              transactionHash: primaryKey,
+            }
+          : {}),
       },
     };
 
@@ -83,18 +92,14 @@ export class MyChat extends PagedEventQuery {
   }
 
   protected maintainExternalCaches(event: ProfileEvent): void {
-    if (event.payload.__typename == EventType.Purchased) {
-      myPurchases.addToCache(event);
-    } else if (event.payload.__typename == EventType.CrcHubTransfer) {
-      myTransactions.addToCache(event);
-    }
+    myTransactions.addToCache(event);
   }
 }
 
 export class MyChats {
-  readonly myChats:{[withCirclesAddress:string]:MyChat} = {};
+  readonly myChats: { [withCirclesAddress: string]: MyChat } = {};
 
-  with (circlesAddress:string) : MyChat {
+  with(circlesAddress: string): MyChat {
     if (!this.myChats[circlesAddress]) {
       this.myChats[circlesAddress] = new MyChat(circlesAddress, SortOrder.Desc, 20);
     }

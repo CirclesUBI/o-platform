@@ -15,7 +15,6 @@ import { onDestroy, onMount } from "svelte";
 import { push } from "svelte-spa-router";
 import { showToast } from "../../../shared/toast";
 import Label from "../../../shared/atoms/Label.svelte";
-import { mySales } from "../../../shared/stores/mySales";
 import { contacts } from "../../../shared/stores/contacts";
 import { me } from "../../../shared/stores/me";
 import { ApiClient } from "../../../shared/apiConnection";

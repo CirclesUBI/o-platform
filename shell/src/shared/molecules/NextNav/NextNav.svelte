@@ -2,7 +2,6 @@
 import NavPill from "./Components/NavPill.svelte";
 import LoginPill from "./Components/LoginPill.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { cartContents } from "../../../dapps/o-marketplace/stores/shoppingCartStore";
 import Icons from "../Icons.svelte";
 // import { icons as Icon } from "@iconify/icons-heroicons";
 import { push } from "svelte-spa-router";
@@ -46,11 +45,6 @@ export let width: string = "w-full";
     {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
       <div class="flex items-center justify-center w-12 h-12 bg-white rounded-full cursor-pointer">
         <div class="relative cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
-          {#if $cartContents && $cartContents.length > 0}
-            <div class="absolute left-0 w-full text-center text-secondary -top-4 font-heading">
-              {$cartContents.length}
-            </div>
-          {/if}
           <Icons icon="shopping-cart" customClass="w-6 h-6 heroicon smallicon" />
         </div>
       </div>

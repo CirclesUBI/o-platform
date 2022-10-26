@@ -10,7 +10,7 @@ import {
     AggregatesDocument,
     AggregateType, CreateTagInput, ProfileAggregate,
     ProfileAggregateFilter,
-    QueryAggregatesArgs, ShopCategoryInput
+    QueryAggregatesArgs
 } from "./api/data/types";
 
 export class ApiClient {
