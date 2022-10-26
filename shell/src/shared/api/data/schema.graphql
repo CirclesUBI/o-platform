@@ -567,7 +567,6 @@ type AssetBalance {
   token_balance: String!
 }
 
-
 enum ContactDirection {
   In
   Out
