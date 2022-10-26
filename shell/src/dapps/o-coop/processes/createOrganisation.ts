@@ -7,7 +7,6 @@ import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import * as yup from "yup";
 import { promptFile } from "../../../shared/api/promptFile";
-import { promptCity } from "../../../shared/api/promptCity";
 import { Profile, UpsertOrganisationDocument } from "../../../shared/api/data/types";
 import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
@@ -164,29 +163,6 @@ const processDefinition = (processId: string) =>
           ),
         navigation: {
           next: "#country",
-        },
-      }),
-      country: promptCity<CreateOrganisationContext, any>({
-        id: "country",
-        field: "cityGeonameid",
-        params: {
-          view: {
-            title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.title"),
-            description: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.description"
-            ),
-            placeholder: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.placeholder"
-            ),
-            submitButtonText: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.submitButtonText"
-            ),
-          },
-        },
-        navigation: {
-          next: "#description",
-          previous: "#name",
-          canSkip: () => true,
         },
       }),
       description: prompt<CreateOrganisationContext, any>({

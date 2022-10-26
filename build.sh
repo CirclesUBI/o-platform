@@ -45,9 +45,7 @@ cd ../.. || exit
 echo "Generating graphql types for shared/api/data"
 echo "* api"
 cd shell/src/shared/api/data
-npx --no-install  graphql-codegen
-echo "* api"
-npx --no-install  graphql-codegen
+npx --no-install  graphql-codegen --config ./src/shared/api/data/codegen.yml
 
 cd ../../../../..
 
@@ -57,3 +55,4 @@ echo "Building 'shell' with dapps .."
 cd shell || exit
 npm run build
 cd .. || exit
+

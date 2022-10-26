@@ -10,7 +10,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import * as yup from "yup";
 import { promptChoice } from "./identify/prompts/promptChoice";
 import ChoiceSelector from "@o-platform/o-editors/src/ChoiceSelector.svelte";
-import { City, DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
+import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 
@@ -27,8 +27,6 @@ export type UpsertIdentityContextData = {
   askedForEmailAddress?: boolean;
   country?: string;
   dream?: string;
-  cityGeonameid?: number;
-  city?: City;
   avatarUrl?: string;
   avatarMimeType?: string;
   successAction?: (data: UpsertIdentityContextData) => void;
@@ -183,7 +181,6 @@ const processDefinition = (processId: string) =>
                 country: context.data.country,
                 avatarUrl: context.data.avatarUrl,
                 avatarMimeType: context.data.avatarMimeType,
-                cityGeonameid: context.data.cityGeonameid,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
               },

@@ -16,7 +16,6 @@ export type ProfileData = {
   id: number;
   firstName: string;
   lastName?: string;
-  cityId: number;
   passion?: string;
   avatarUrl?: string;
   circlesSafeOwner?: string;

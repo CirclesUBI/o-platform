@@ -28,13 +28,7 @@ query init {
       newsletter
       displayTimeCircles
       displayCurrency
-      cityGeonameid
       provenUniqueness
-      city {
-        geonameid
-        name
-        country
-      }
       memberships {
         isAdmin
         organisation {
@@ -46,13 +40,6 @@ query init {
           name
           description
           avatarUrl
-          cityGeonameid
-          city {
-            geonameid
-            country
-            name
-            population
-          }
         }
       }
       verifications {
@@ -65,11 +52,6 @@ query init {
           displayCurrency
           avatarUrl
           name
-          city {
-            geonameid
-            name
-            country
-          }
         }
       }
       # init.invitation
@@ -165,16 +147,6 @@ query stats {
         lastName
         dream
         avatarUrl
-        cityGeonameid
-        provenUniqueness
-        city {
-          geonameid
-          name
-          country
-          latitude
-          longitude
-          population
-        }
       }
     }
   }
@@ -197,16 +169,6 @@ query findSafesByOwner($owner: String!) {
       lastName
       dream
       avatarUrl
-      cityGeonameid
-      provenUniqueness
-      city {
-        geonameid
-        name
-        country
-        latitude
-        longitude
-        population
-      }
     }
   }
 }
@@ -252,16 +214,7 @@ query myProfile {
     newsletter
     displayTimeCircles
     displayCurrency
-    cityGeonameid
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-      latitude
-      longitude
-      population
-    }
     memberships {
       isAdmin
       organisation {
@@ -273,13 +226,7 @@ query myProfile {
         name
         description
         avatarUrl
-        cityGeonameid
-        city {
-          geonameid
-          country
-          name
-          population
-        }
+
       }
     }
     verifications {
@@ -292,11 +239,6 @@ query myProfile {
         displayCurrency
         avatarUrl
         name
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -316,11 +258,6 @@ query profiles($id: [Int!]!) {
     avatarUrl
     displayCurrency
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-    }
     memberships {
       isAdmin
       organisation {
@@ -332,13 +269,6 @@ query profiles($id: [Int!]!) {
         name
         description
         avatarUrl
-        cityGeonameid
-        city {
-          geonameid
-          country
-          name
-          population
-        }
       }
     }
     verifications {
@@ -352,39 +282,11 @@ query profiles($id: [Int!]!) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
 }
 
-query citiesByName($name: String!, $languageCode: String) {
-  cities(query: { byName: { name_like: $name, languageCode: $languageCode } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
-  }
-}
-
-query citiesById($ids: [Int!]!) {
-  cities(query: { byId: { geonameid: $ids } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
-  }
-}
 
 query profilesByName($searchString: String!) {
   search(query: { searchString: $searchString }) {
@@ -402,11 +304,6 @@ query profilesByName($searchString: String!) {
     country
     displayCurrency
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-    }
     verifications {
       createdAt
       revokedAt
@@ -418,11 +315,6 @@ query profilesByName($searchString: String!) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -442,11 +334,6 @@ query getRecentProfiles($pagination: PaginationArgs) {
     country
     avatarUrl
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-    }
     verifications {
       createdAt
       revokedAt
@@ -458,11 +345,6 @@ query getRecentProfiles($pagination: PaginationArgs) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -481,11 +363,6 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
     dream
     avatarUrl
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-    }
     memberships {
       isAdmin
       organisation {
@@ -497,13 +374,6 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
         name
         description
         avatarUrl
-        cityGeonameid
-        city {
-          geonameid
-          country
-          name
-          population
-        }
       }
     }
     verifications {
@@ -517,11 +387,6 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -540,11 +405,6 @@ query profilesByIds($id: [Int!]!) {
     dream
     avatarUrl
     provenUniqueness
-    city {
-      geonameid
-      name
-      country
-    }
     verifications {
       createdAt
       revokedAt
@@ -556,11 +416,6 @@ query profilesByIds($id: [Int!]!) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -603,11 +458,6 @@ query trustRelations($safeAddress: String!) {
           displayCurrency
           avatarUrl
           name
-          city {
-            geonameid
-            name
-            country
-          }
         }
       }
     }
@@ -626,11 +476,6 @@ query profileById($id: Int!) {
     firstName
     lastName
     dream
-    city {
-      geonameid
-      country
-      name
-    }
     provenUniqueness
     verifications {
       createdAt
@@ -643,11 +488,6 @@ query profileById($id: Int!) {
         avatarUrl
         name
         displayName
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -674,14 +514,8 @@ query profileBySafeAddress($safeAddress: String!) {
     newsletter
     displayTimeCircles
     displayCurrency
-    cityGeonameid
     provenUniqueness
 
-    city {
-      geonameid
-      name
-      country
-    }
     memberships {
       isAdmin
       organisation {
@@ -693,13 +527,6 @@ query profileBySafeAddress($safeAddress: String!) {
         name
         description
         avatarUrl
-        cityGeonameid
-        city {
-          geonameid
-          country
-          name
-          population
-        }
       }
     }
     verifications {
@@ -712,11 +539,6 @@ query profileBySafeAddress($safeAddress: String!) {
         displayCurrency
         avatarUrl
         name
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
     # init.invitation
@@ -742,29 +564,6 @@ query tags($typeId_in: [String!]!, $value_like: String) {
   }
 }
 
-query citiesByName($name: String!, $languageCode: String) {
-  cities(query: { byName: { name_like: $name, languageCode: $languageCode } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
-  }
-}
-
-query citiesById($ids: [Int!]!) {
-  cities(query: { byId: { geonameid: $ids } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
-  }
-}
 
 query organisations($pagination: PaginationArgs) {
   organisations(pagination: $pagination) {
@@ -774,11 +573,6 @@ query organisations($pagination: PaginationArgs) {
     createdAt
     name
     avatarUrl
-    city {
-      geonameid
-      name
-      country
-    }
   }
 }
 
@@ -790,11 +584,6 @@ query regions {
     createdAt
     name
     avatarUrl
-    city {
-      geonameid
-      name
-      country
-    }
   }
 }
 
@@ -807,11 +596,6 @@ query organisationsByAddress($addresses: [String!]!) {
     name
     avatarUrl
     displayName
-    city {
-      geonameid
-      name
-      country
-    }
     members {
       ... on Organisation {
         id
@@ -821,11 +605,6 @@ query organisationsByAddress($addresses: [String!]!) {
         name
         displayName
         avatarUrl
-        city {
-          geonameid
-          name
-          country
-        }
       }
       ... on Profile {
         id
@@ -839,11 +618,6 @@ query organisationsByAddress($addresses: [String!]!) {
         lastName
         dream
         provenUniqueness
-        city {
-          geonameid
-          country
-          name
-        }
         verifications {
           createdAt
           revokedAt
@@ -854,11 +628,6 @@ query organisationsByAddress($addresses: [String!]!) {
             displayCurrency
             avatarUrl
             name
-            city {
-              geonameid
-              name
-              country
-            }
           }
         }
       }
@@ -890,30 +659,6 @@ query tagById($id: Int!) {
     id
     typeId
     value
-  }
-}
-
-query citiesByName($name: String!, $languageCode: String) {
-  cities(query: { byName: { name_like: $name, languageCode: $languageCode } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
-  }
-}
-
-query citiesById($ids: [Int!]!) {
-  cities(query: { byId: { geonameid: $ids } }) {
-    geonameid
-    name
-    country
-    population
-    latitude
-    longitude
-    feature_code
   }
 }
 
@@ -1324,11 +1069,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
             circlesAddress
             displayCurrency
             provenUniqueness
-            city {
-              geonameid
-              name
-              country
-            }
             memberships {
               isAdmin
               organisation {
@@ -1340,13 +1080,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 name
                 description
                 avatarUrl
-                cityGeonameid
-                city {
-                  geonameid
-                  country
-                  name
-                  population
-                }
               }
             }
             members {
@@ -1358,11 +1091,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
               avatarUrl
               circlesAddress
               displayCurrency
-              city {
-                geonameid
-                name
-                country
-              }
             }
             verifications {
               createdAt
@@ -1374,11 +1102,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 displayCurrency
                 avatarUrl
                 name
-                city {
-                  geonameid
-                  name
-                  country
-                }
               }
             }
           }
@@ -1410,13 +1133,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
           name
           description
           avatarUrl
-          cityGeonameid
-          city {
-            geonameid
-            country
-            name
-            population
-          }
         }
       }
     }
@@ -1526,11 +1242,6 @@ query verifications($pagination: PaginationArgs, $filter: VerifiedSafesFilter) {
       displayCurrency
       avatarUrl
       name
-      city {
-        geonameid
-        name
-        country
-      }
     }
     verifiedSafeAddress
     verifiedProfile {

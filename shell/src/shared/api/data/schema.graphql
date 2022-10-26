@@ -51,8 +51,6 @@ type Profile {
   avatarMimeType: String
   newsletter: Boolean
   displayTimeCircles: Boolean
-  cityGeonameid: Int
-  city: City
   claimedInvitation: ClaimedInvitation
   invitationTransaction: ProfileEvent
   invitationLink: String
@@ -65,16 +63,6 @@ type Profile {
   provenUniqueness: Boolean
   age: Int
   gender: Gender
-}
-
-type City implements ICity {
-  geonameid: Int!
-  name: String!
-  country: String!
-  population: Int!
-  latitude: Float!
-  longitude: Float!
-  feature_code: String!
 }
 
 type ClaimedInvitation {
@@ -166,9 +154,7 @@ type Organisation {
   largeBannerUrl: String
   smallBannerUrl: String
   avatarMimeType: String
-  cityGeonameid: Int
   displayCurrency: DisplayCurrency
-  city: City
   members: [ProfileOrOrganisation!]
   trustsYou: Int
 }
@@ -209,7 +195,6 @@ input UpsertProfileInput {
   avatarMimeType: String
   newsletter: Boolean
   displayTimeCircles: Boolean
-  cityGeonameid: Int
   displayCurrency: DisplayCurrency
   age: Int
   gender: Gender
@@ -289,30 +274,6 @@ type UpdateSafeResponse {
   success: Boolean!
   errorMessage: String
   newSafeAddress: String
-}
-
-input QueryCitiesByNameInput {
-  name_like: String!
-  languageCode: String
-}
-
-input QueryCitiesByGeonameIdInput {
-  geonameid: [Int!]!
-}
-
-input QueryCitiesInput {
-  byName: QueryCitiesByNameInput
-  byId: QueryCitiesByGeonameIdInput
-}
-
-interface ICity {
-  geonameid: Int!
-  name: String!
-  country: String!
-  population: Int!
-  latitude: Float!
-  longitude: Float!
-  feature_code: String!
 }
 
 input QueryTagsInput {
@@ -696,7 +657,6 @@ input UpsertOrganisationInput {
   largeBannerUrl: String
   smallBannerUrl: String
   avatarMimeType: String
-  cityGeonameid: Int
   displayCurrency: DisplayCurrency
 }
 
@@ -951,7 +911,6 @@ type Query {
   findSafesByOwner(owner: String!): [SafeInfo!]!
   search(query: SearchInput!): [Profile!]!
   stats: Stats!
-  cities(query: QueryCitiesInput!): [City!]!
   tags(query: QueryTagsInput!): [Tag!]!
   tagById(id: Int!): Tag
   findInvitationCreator(code: String!): Profile

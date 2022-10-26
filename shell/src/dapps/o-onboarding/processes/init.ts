@@ -544,8 +544,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
             callback({
               type: "GOT_PROFILE",
               profile: {
-                ...profile,
-                cityId: profile.city?.geonameid
+                ...profile
               }
             });
           } else {

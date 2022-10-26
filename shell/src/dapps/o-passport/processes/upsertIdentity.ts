@@ -12,8 +12,7 @@ import * as yup from "yup";
 import { promptChoice } from "./identify/prompts/promptChoice";
 import ChoiceSelector from "@o-platform/o-editors/src/ChoiceSelector.svelte";
 import { promptFile } from "../../../shared/api/promptFile";
-import { promptCity } from "../../../shared/api/promptCity";
-import { City, DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
+import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 import LocationSearchEditor from "@o-platform/o-editors/src/LocationSearchEditor.svelte";
@@ -31,8 +30,6 @@ export type UpsertIdentityContextData = {
   askedForEmailAddress?: boolean;
   country?: string;
   dream?: string;
-  cityGeonameid?: number;
-  city?: City;
   avatarUrl?: string;
   avatarMimeType?: string;
   successAction?: (data: UpsertIdentityContextData) => void;
@@ -71,12 +68,6 @@ const editorContent: { [x: string]: EditorViewContext } = {
     submitButtonText: window.o.i18n(
       "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
     ),
-  },
-  city: {
-    title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
-    description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
-    placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
-    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"),
   },
   imageView: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.title"),
@@ -233,28 +224,8 @@ const processDefinition = (processId: string) =>
           }),
         },
         navigation: {
-          next: "#country",
-          previous: "#firstName",
-          canSkip: () => true,
-        },
-      }),
-
-      country: promptCity<UpsertIdentityContext, any>({
-        id: "country",
-        field: "cityGeonameid",
-        params: {
-          view: (editorContent.city = {
-            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
-            description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
-            placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"
-            ),
-          }),
-        },
-        navigation: {
           next: "#avatarUrl",
-          previous: "#lastName",
+          previous: "#firstName",
           canSkip: () => true,
         },
       }),
@@ -277,7 +248,7 @@ const processDefinition = (processId: string) =>
         },
         navigation: {
           next: "#upsertIdentity",
-          previous: "#country",
+          previous: "#lastName",
           canSkip: () => true,
         },
       }),
@@ -312,7 +283,6 @@ const processDefinition = (processId: string) =>
                 country: context.data.country,
                 avatarUrl: context.data.avatarUrl,
                 avatarMimeType: context.data.avatarMimeType,
-                cityGeonameid: context.data.cityGeonameid,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
               },
