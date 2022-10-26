@@ -1,3 +1,4 @@
+
 mutation requestSessionChallenge($address: String!) {
   requestSessionChallenge(address: $address)
 }
@@ -61,6 +62,57 @@ mutation acknowledge($until: Date!, $safeAddress: String) {
   acknowledge(until: $until, safeAddress: $safeAddress)
 }
 
+mutation sendMessage($fromSafeAddress: String, $toSafeAddress: String!, $content: String!) {
+  sendMessage(fromSafeAddress: $fromSafeAddress, toSafeAddress: $toSafeAddress, content: $content) {
+    success
+    error
+    event {
+      block_number
+      direction
+      safe_address
+      safe_address_profile {
+        id
+        firstName
+        lastName
+        avatarUrl
+        circlesAddress
+      }
+      timestamp
+      transaction_hash
+      transaction_index
+      type
+      value
+      tags {
+        id
+        typeId
+        value
+      }
+      payload {
+        ... on ChatMessage {
+          id
+          from
+          from_profile {
+            id
+            firstName
+            lastName
+            avatarUrl
+            circlesAddress
+          }
+          to
+          to_profile {
+            id
+            firstName
+            lastName
+            avatarUrl
+            circlesAddress
+          }
+          text
+        }
+      }
+    }
+  }
+}
+
 mutation addMember($groupId: String!, $memberAddress: String!) {
   addMember(groupId: $groupId, memberAddress: $memberAddress) {
     error
@@ -116,13 +168,11 @@ mutation upsertProfile(
   $newsletter: Boolean
   $displayCurrency: DisplayCurrency
   $displayTimeCircles: Boolean
+  $cityGeonameid: Int
   $status: String!
   $successorOfCirclesAddress: String
   $gender: Gender
-  $location: String
-  $locationName: String
-  $lat: Float
-  $lon: Float
+  $age: Int
 ) {
   upsertProfile(
     data: {
@@ -141,13 +191,11 @@ mutation upsertProfile(
       newsletter: $newsletter
       displayCurrency: $displayCurrency
       displayTimeCircles: $displayTimeCircles
+      cityGeonameid: $cityGeonameid
       status: $status
       successorOfCirclesAddress: $successorOfCirclesAddress
       gender: $gender
-      location: $location
-      locationName: $locationName
-      lat: $lat
-      lon: $lon
+      age: $age
     }
   ) {
     id
@@ -169,11 +217,17 @@ mutation upsertProfile(
     newsletter
     displayTimeCircles
     displayCurrency
+    cityGeonameid
+    age
     gender
-    location
-    locationName
-    lat
-    lon
+    city {
+      geonameid
+      name
+      country
+      latitude
+      longitude
+      population
+    }
     memberships {
       isAdmin
       organisation {
@@ -185,6 +239,13 @@ mutation upsertProfile(
         name
         description
         avatarUrl
+        cityGeonameid
+        city {
+          geonameid
+          country
+          name
+          population
+        }
       }
     }
     verifications {
@@ -197,6 +258,11 @@ mutation upsertProfile(
         displayCurrency
         avatarUrl
         name
+        city {
+          geonameid
+          name
+          country
+        }
       }
     }
   }
@@ -212,13 +278,46 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       avatarUrl
       circlesAddress
       circlesSafeOwner
+      cityGeonameid
+      city {
+        geonameid
+        country
+        name
+        latitude
+        longitude
+        population
+        feature_code
+      }
       createdAt
       description
       name
-      location
-      locationName
-      lat
-      lon
+    }
+  }
+}
+
+mutation upsertRegion($organisation: UpsertOrganisationInput!) {
+  upsertRegion(organisation: $organisation) {
+    success
+    error
+    organisation {
+      id
+      avatarMimeType
+      avatarUrl
+      circlesAddress
+      circlesSafeOwner
+      cityGeonameid
+      city {
+        geonameid
+        country
+        name
+        latitude
+        longitude
+        population
+        feature_code
+      }
+      createdAt
+      description
+      name
     }
   }
 }
@@ -249,12 +348,4 @@ mutation proofUniqueness($humanodeToken: String!) {
   proofUniqueness(humanodeToken: $humanodeToken) {
     existingSafe
   }
-}
-
-mutation setIsFavorite($circlesAddress: String!, $isFavorite: Boolean!) {
-  setIsFavorite(circlesAddress: $circlesAddress, isFavorite: $isFavorite)
-}
-
-mutation shareLink($targetType: LinkTargetType!, $targetKey: String!) {
-  shareLink(targetType: $targetType, targetKey: $targetKey)
 }
