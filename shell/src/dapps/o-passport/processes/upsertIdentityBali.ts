@@ -12,8 +12,7 @@ import * as yup from "yup";
 import { promptChoice, PromptChoiceSpec } from "./identify/prompts/promptChoice";
 import ChoiceSelector from "@o-platform/o-editors/src/ChoiceSelector.svelte";
 import { promptFile } from "../../../shared/api/promptFile";
-import { promptCity } from "../../../shared/api/promptCity";
-import { City, DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
+import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 import NumberEditor from "@o-platform/o-editors/src/NumberEditor.svelte";
@@ -31,8 +30,6 @@ export type UpsertIdentityContextData = {
   askedForEmailAddress?: boolean;
   country?: string;
   dream?: string;
-  cityGeonameid?: number;
-  city?: City;
   avatarUrl?: string;
   avatarMimeType?: string;
   gender?: string;
@@ -323,26 +320,6 @@ const processDefinition = (processId: string) =>
         },
       }),
 
-      country: promptCity<UpsertIdentityContext, any>({
-        id: "country",
-        field: "cityGeonameid",
-        params: {
-          view: (editorContent.city = {
-            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
-            description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
-            placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"
-            ),
-          }),
-        },
-        navigation: {
-          next: "#avatarUrl",
-          previous: "#lastName",
-          canSkip: () => true,
-        },
-      }),
-
       avatarUrl: promptFile<UpsertIdentityContext, any>({
         field: "avatarUrl",
         uploaded: (context, event) => {
@@ -396,7 +373,6 @@ const processDefinition = (processId: string) =>
                 country: context.data.country,
                 avatarUrl: context.data.avatarUrl,
                 avatarMimeType: context.data.avatarMimeType,
-                cityGeonameid: context.data.cityGeonameid,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
                 age: context.data.age,
