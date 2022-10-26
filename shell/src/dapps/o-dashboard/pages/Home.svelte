@@ -9,7 +9,6 @@ import {
   AggregateType,
   Capability,
   CapabilityType,
-  Erc721Token,
   ProfileAggregate,
   QueryAggregatesArgs,
   StatsDocument,
@@ -32,7 +31,6 @@ $: me;
 let disableBanking: boolean = false;
 let canVerify: boolean = false;
 let hasTickets: boolean = false;
-let balances: Erc721Token[] = [];
 let profilesCount: number;
 let statsResult: any;
 
@@ -47,19 +45,6 @@ const init = async () => {
 
   statsResult = await fetchStats();
   profilesCount = statsResult.data.stats.profilesCount;
-
-  // GET NFTS to decide if we display the NFTs tile //
-  const aggregates = await ApiClient.query<ProfileAggregate[], QueryAggregatesArgs>(AggregatesDocument, {
-    types: [AggregateType.Erc721Tokens],
-    safeAddress: $me.circlesAddress,
-  });
-
-  const erc721Balances: ProfileAggregate = aggregates.find((o) => o.type == AggregateType.Erc721Tokens);
-  if (!erc721Balances || erc721Balances.payload.__typename !== AggregateType.Erc721Tokens) {
-    throw new Error(`Couldn't find the Erc721Tokens in the query result.`);
-  }
-
-  balances = erc721Balances.payload.balances;
 };
 
 onMount(init);
