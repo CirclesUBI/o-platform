@@ -99,13 +99,6 @@ async function fetchStats() {
         title="dapps.o-dashboard.pages.home.banking" />
 
       <DashboardColorCard
-        color="marketplace"
-        link="/marketplace/locations"
-        blobshape="60% 4% 83% 88% / 99% 50% 90% 81%"
-        icon="shopping-cart"
-        title="dapps.o-dashboard.pages.home.market" />
-
-      <DashboardColorCard
         color="contacts"
         link="/contacts/chat"
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"

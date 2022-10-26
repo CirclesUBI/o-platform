@@ -3,7 +3,6 @@ import {
   EventType,
   ProfileEvent,
   ProfileEventFilter,
-  Purchased,
   QueryEventsArgs,
   SortOrder,
 } from "../api/data/types";
@@ -17,7 +16,7 @@ export class MyTransactions extends PagedEventQuery {
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
-    return (<Purchased>eventPayload).transaction_hash.toString();
+    return (eventPayload).transaction_hash.toString();
   }
 
   protected getIndexedValues(event: ProfileEvent): PagedEventQueryIndexEntry[] {

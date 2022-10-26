@@ -54,7 +54,6 @@ export const { subscribe } = readable<Contact[]>([], function start(set) {
           <string>EventType.CrcTrust,
           <string>EventType.CrcSignup,
           <string>EventType.CrcMinting,
-          <string>EventType.Purchased,
         ].indexOf(event.type) > -1;
 
       if (isRelevantEvent) {

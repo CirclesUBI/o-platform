@@ -1,7 +1,6 @@
 <script lang="ts">
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { cartContents } from "../../dapps/o-marketplace/stores/shoppingCartStore";
 import { me } from "../stores/me";
 import { Profile } from "../api/data/types";
 import { push } from "svelte-spa-router";

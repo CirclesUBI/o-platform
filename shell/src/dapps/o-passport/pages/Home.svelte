@@ -13,7 +13,6 @@ import { AvataarGenerator } from "../../../shared/avataarGenerator";
 import { onMount } from "svelte";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import QrCode from "../../../shared/molecules/QrCode/QrCode.svelte";
-import { upsertShippingAddress } from "../processes/upsertShippingAddress";
 import Label from "../../../shared/atoms/Label.svelte";
 
 let name;
@@ -125,47 +124,6 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
           <div class="text-left text-2xs text-dark-lightest">
             <Label key="dapps.o-passport.pages.home.postAddress" />
           </div>
-          {#if profile.shippingAddresses && profile.shippingAddresses.length}
-            {#each profile.shippingAddresses as shippingAddress, index}
-              <div class="flex items-center w-full pb-4 space-x-2 cursor-pointer sm:space-x-4">
-                <div class="text-left">
-                  <div class="inline-block break-all">
-                    {shippingAddress.name}<br />
-                    {shippingAddress.street}
-                    {shippingAddress.house} <br />
-                    {shippingAddress.zip}
-                    {shippingAddress.city} <br />
-                    {shippingAddress.country}
-                    <br />
-                    <span class:text-alert-dark="{shippingAddress.notificationEmail === null}">
-                      {shippingAddress.notificationEmail ? shippingAddress.notificationEmail : "no email address set"}
-                    </span>
-                  </div>
-                  <div>
-                    <button
-                      on:click="{() => {
-                        window.o.runProcess(upsertShippingAddress, {
-                          ...shippingAddress,
-                        });
-                      }}"
-                      class="mt-1 btn btn-sm btn-primary btn-outline">Edit Address</button>
-                  </div>
-                </div>
-              </div>
-            {/each}
-          {:else}
-            <div>
-              <button
-                class="btn btn-sm btn-primary"
-                on:click="{() => {
-                  window.o.runProcess(upsertShippingAddress, {
-                    successAction: () => {
-                      profile = $me;
-                    }
-                  });
-                }}">Add Address</button>
-            </div>
-          {/if}
         </div>
       </section>
     </div>
