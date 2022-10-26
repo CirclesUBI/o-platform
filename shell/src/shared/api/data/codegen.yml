@@ -1,7 +1,7 @@
 schema: ./src/shared/api/data/schema.graphql
 documents: './src/shared/api/data/src/*.graphql'
 generates:
-  ./types.ts:
+  ./src/shared/api/data/types.ts:
     plugins:
       - typescript
       - typescript-operations

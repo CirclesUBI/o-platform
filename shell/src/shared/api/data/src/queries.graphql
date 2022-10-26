@@ -12,7 +12,6 @@ query init {
       id
       circlesAddress
       displayCurrency
-      confirmedLegalAge
       circlesSafeOwner
       invitationLink
       successorOfCirclesAddress
