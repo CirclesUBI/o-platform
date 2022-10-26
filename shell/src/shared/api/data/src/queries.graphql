@@ -31,36 +31,10 @@ query init {
       displayCurrency
       cityGeonameid
       provenUniqueness
-      shippingAddresses {
-        id
-        name
-        street
-        house
-        zip
-        city
-        state
-        country
-        notificationEmail
-      }
-      shops {
-        id
-      }
       city {
         geonameid
         name
         country
-      }
-      shippingAddresses {
-        id
-        name
-        street
-        house
-        city
-        cityGeonameid
-        zip
-        state
-        country
-        notificationEmail
       }
       memberships {
         isAdmin
@@ -114,12 +88,6 @@ query init {
   }
 }
 
-query deliveryMethods {
-  deliveryMethods {
-    id
-    name
-  }
-}
 query lastAcknowledgedAt($safeAddress: String!) {
   lastAcknowledgedAt(safeAddress: $safeAddress)
 }
@@ -287,9 +255,6 @@ query myProfile {
     displayCurrency
     cityGeonameid
     provenUniqueness
-    shops {
-      id
-    }
     city {
       geonameid
       name
@@ -297,17 +262,6 @@ query myProfile {
       latitude
       longitude
       population
-    }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
     }
     memberships {
       isAdmin
@@ -321,9 +275,6 @@ query myProfile {
         description
         avatarUrl
         cityGeonameid
-        shops {
-          id
-        }
         city {
           geonameid
           country
@@ -370,17 +321,6 @@ query profiles($id: [Int!]!) {
       geonameid
       name
       country
-    }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
     }
     memberships {
       isAdmin
@@ -468,17 +408,6 @@ query profilesByName($searchString: String!) {
       name
       country
     }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
-    }
     verifications {
       createdAt
       revokedAt
@@ -558,17 +487,6 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
       name
       country
     }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
-    }
     memberships {
       isAdmin
       organisation {
@@ -627,17 +545,6 @@ query profilesByIds($id: [Int!]!) {
       geonameid
       name
       country
-    }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
     }
     verifications {
       createdAt
@@ -725,17 +632,6 @@ query profileById($id: Int!) {
       country
       name
     }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
-    }
     provenUniqueness
     verifications {
       createdAt
@@ -781,36 +677,11 @@ query profileBySafeAddress($safeAddress: String!) {
     displayCurrency
     cityGeonameid
     provenUniqueness
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-      notificationEmail
-    }
-    shops {
-      id
-    }
+
     city {
       geonameid
       name
       country
-    }
-    shippingAddresses {
-      id
-      name
-      street
-      house
-      city
-      cityGeonameid
-      zip
-      state
-      country
-      notificationEmail
     }
     memberships {
       isAdmin
@@ -909,14 +780,6 @@ query organisations($pagination: PaginationArgs) {
       name
       country
     }
-    shops {
-      id
-      name
-      description
-      legalText
-      largeBannerUrl
-      smallBannerUrl
-    }
   }
 }
 
@@ -950,14 +813,6 @@ query organisationsByAddress($addresses: [String!]!) {
       name
       country
     }
-    shops {
-      id
-      name
-      description
-      legalText
-      smallBannerUrl
-      largeBannerUrl
-    }
     members {
       ... on Organisation {
         id
@@ -989,17 +844,6 @@ query organisationsByAddress($addresses: [String!]!) {
           geonameid
           country
           name
-        }
-        shippingAddresses {
-          id
-          name
-          street
-          house
-          zip
-          city
-          state
-          country
-          notificationEmail
         }
         verifications {
           createdAt
@@ -1359,217 +1203,6 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           provenUniqueness
         }
       }
-      ... on SaleEvent {
-        buyer
-        buyer_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        invoice {
-          id
-          buyerSignature
-          buyerSignedDate
-          sellerSignature
-          sellerSignedDate
-          deliveryMethod {
-            id
-            name
-          }
-          deliveryAddress {
-            name
-            id
-            street
-            house
-            zip
-            city
-            state
-            country
-            cityGeonameid
-            notificationEmail
-          }
-          createdAt
-          cancelledAt
-          cancelReason
-          simplePickupCode
-          paymentTransactionHash
-          simplePickupCode
-          lines {
-            amount
-            metadata
-            shop {
-              id
-              name
-              description
-              legalText
-              smallBannerUrl
-              largeBannerUrl
-              openingHours
-              private
-              enabled
-              productListingStyle
-              shopListingStyle
-              purchaseMetaDataKeys
-              tosLink
-              privacyPolicyLink
-              healthInfosLink
-              adultOnly
-              ownerId
-              owner {
-                id
-                name
-                avatarUrl
-                circlesAddress
-              }
-              deliveryMethods {
-                id
-                name
-              }
-            }
-            offer {
-              id
-              title
-              pictureUrl
-              pricePerUnit
-              minAge
-              currentInventory
-              tags {
-                typeId
-                value
-              }
-            }
-          }
-        }
-      }
-      ... on Purchased {
-        seller_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        purchase {
-          id
-          createdAt
-          createdByAddress
-          total
-          deliveryMethod {
-            id
-            name
-          }
-          deliveryAddress {
-            name
-            id
-            street
-            house
-            zip
-            city
-            state
-            country
-            cityGeonameid
-            notificationEmail
-          }
-          lines {
-            id
-            amount
-            metadata
-            shop {
-              id
-              name
-              description
-              legalText
-              smallBannerUrl
-              largeBannerUrl
-              openingHours
-              private
-              enabled
-              productListingStyle
-              shopListingStyle
-              purchaseMetaDataKeys
-              tosLink
-              privacyPolicyLink
-              healthInfosLink
-              adultOnly
-              ownerId
-              pickupAddress {
-                name
-                street
-                house
-                zip
-                city
-                state
-                country
-              }
-              owner {
-                id
-                name
-                avatarUrl
-                circlesAddress
-              }
-              deliveryMethods {
-                id
-                name
-              }
-            }
-            offer {
-              id
-              pictureUrl
-              title
-              description
-              pricePerUnit
-              minAge
-              tags {
-                typeId
-                value
-              }
-            }
-          }
-          invoices {
-            id
-            pickupCode
-            deliveryMethod {
-              id
-              name
-            }
-            simplePickupCode
-            buyerProfile {
-              id
-              displayName
-              firstName
-              lastName
-              avatarUrl
-              circlesAddress
-              displayCurrency
-              provenUniqueness
-            }
-            sellerProfile {
-              id
-              displayName
-              firstName
-              lastName
-              avatarUrl
-              circlesAddress
-              displayCurrency
-              provenUniqueness
-            }
-            paymentTransactionHash
-            createdAt
-            cancelledAt
-            invoiceNo
-            sellerSignature
-            buyerSignature
-          }
-        }
-      }
       ... on OrganisationCreated {
         organisation
         organisation_profile {
@@ -1635,38 +1268,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
       provenUniqueness
     }
     payload {
-      ... on Offers {
-        lastUpdatedAt
-        offers {
-          id
-          version
-          createdByProfile {
-            id
-            displayName
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-            displayCurrency
-            smallBannerUrl
-            provenUniqueness
-          }
-          tags {
-            typeId
-            value
-            order
-          }
-          createdByAddress
-          createdAt
-          title
-          minAge
-          pictureUrl
-          pictureMimeType
-          description
-          pricePerUnit
-          timeCirclesPriceShare
-        }
-      }
       ... on Erc721Tokens {
         lastUpdatedAt
         balances {
@@ -1839,276 +1440,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
           }
         }
       }
-      ... on Purchases {
-        lastUpdatedAt
-        purchases {
-          id
-          createdAt
-          createdByAddress
-          createdByProfile {
-            id
-            displayName
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-            displayCurrency
-            provenUniqueness
-          }
-          deliveryMethod {
-            id
-            name
-          }
-          total
-          lines {
-            id
-            amount
-            metadata
-            shop {
-              id
-              name
-              description
-              legalText
-              smallBannerUrl
-              largeBannerUrl
-              openingHours
-              private
-              enabled
-              productListingStyle
-              shopListingStyle
-              purchaseMetaDataKeys
-              tosLink
-              privacyPolicyLink
-              healthInfosLink
-              adultOnly
-              ownerId
-              owner {
-                id
-                name
-                avatarUrl
-                circlesAddress
-              }
-              deliveryMethods {
-                id
-                name
-              }
-            }
-            offer {
-              id
-              version
-              title
-              description
-              pictureUrl
-              pricePerUnit
-              minAge
-              timeCirclesPriceShare
-              createdByProfile {
-                id
-                displayName
-                firstName
-                lastName
-                avatarUrl
-                circlesAddress
-                displayCurrency
-                provenUniqueness
-              }
-              tags {
-                typeId
-                value
-              }
-            }
-          }
-          invoices {
-            id
-            sellerAddress
-            paymentTransactionHash
-            buyerAddress
-            pickupCode
-            deliveryMethod {
-              id
-              name
-            }
-            simplePickupCode
-            buyerSignature
-            buyerSignedDate
-            sellerSignature
-            sellerSignedDate
-            createdAt
-            cancelledAt
-            cancelReason
-            sellerProfile {
-              id
-              displayName
-              firstName
-              lastName
-              avatarUrl
-              circlesAddress
-              displayCurrency
-              provenUniqueness
-            }
-          }
-        }
-      }
-      ... on Sales {
-        lastUpdatedAt
-        sales {
-          id
-          createdAt
-          sellerProfile {
-            id
-            displayName
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-            displayCurrency
-            provenUniqueness
-          }
-          buyerProfile {
-            id
-            displayName
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-            displayCurrency
-            verifications {
-              createdAt
-              revokedAt
-              verifierSafeAddress
-              verifierProfile {
-                id
-                circlesAddress
-                displayCurrency
-                avatarUrl
-                name
-                city {
-                  geonameid
-                  name
-                  country
-                }
-              }
-            }
-          }
-          total
-          lines {
-            id
-            amount
-            metadata
-            shop {
-              id
-              name
-              description
-              legalText
-              smallBannerUrl
-              largeBannerUrl
-              openingHours
-              private
-              enabled
-              productListingStyle
-              shopListingStyle
-              purchaseMetaDataKeys
-              tosLink
-              privacyPolicyLink
-              healthInfosLink
-              adultOnly
-              ownerId
-              owner {
-                id
-                name
-                avatarUrl
-                circlesAddress
-              }
-              deliveryMethods {
-                id
-                name
-              }
-            }
-            offer {
-              id
-              version
-              title
-              description
-              pictureUrl
-              pricePerUnit
-              minAge
-              timeCirclesPriceShare
-              createdByProfile {
-                id
-                displayName
-                firstName
-                lastName
-                avatarUrl
-                circlesAddress
-                displayCurrency
-                provenUniqueness
-              }
-              tags {
-                typeId
-                value
-              }
-            }
-          }
-          invoices {
-            id
-            sellerAddress
-            paymentTransactionHash
-            buyerAddress
-            pickupCode
-            deliveryMethod {
-              id
-              name
-            }
-            deliveryAddress {
-              name
-              id
-              street
-              house
-              zip
-              city
-              state
-              country
-              cityGeonameid
-              notificationEmail
-            }
-            simplePickupCode
-            buyerSignature
-            buyerSignedDate
-            sellerSignature
-            sellerSignedDate
-            createdAt
-            cancelledAt
-            cancelReason
-            buyerProfile {
-              id
-              displayName
-              firstName
-              lastName
-              avatarUrl
-              circlesAddress
-              displayCurrency
-              provenUniqueness
-              verifications {
-                createdAt
-                revokedAt
-                verifierSafeAddress
-                verifierProfile {
-                  id
-                  circlesAddress
-                  displayCurrency
-                  avatarUrl
-                  name
-                  city {
-                    geonameid
-                    name
-                    country
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -2205,10 +1536,6 @@ query directPath($from: String!, $to: String!, $amount: String!) {
   }
 }
 
-query invoice($invoiceId: Int!) {
-  invoice(invoiceId: $invoiceId)
-}
-
 query verifications($pagination: PaginationArgs, $filter: VerifiedSafesFilter) {
   verifications(pagination: $pagination, filter: $filter) {
     createdAt
@@ -2251,186 +1578,6 @@ query findInvitationCreator($code: String!) {
   }
 }
 
-query shop($id: Int!) {
-  shop(id: $id) {
-    id
-    name
-    description
-    legalText
-    smallBannerUrl
-    largeBannerUrl
-    openingHours
-    private
-    enabled
-    productListingStyle
-    shopListingStyle
-    purchaseMetaDataKeys
-    tosLink
-    privacyPolicyLink
-    healthInfosLink
-    adultOnly
-    ownerId
-    owner {
-      id
-      name
-      avatarUrl
-      circlesAddress
-    }
-    deliveryMethods {
-      id
-      name
-    }
-    pickupAddress {
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-    }
-    categories {
-      id
-      name
-      description
-      sortOrder
-      shopId
-      smallBannerUrl
-      largeBannerUrl
-      private
-      enabled
-      createdAt
-      productListingStyle
-      entries {
-        id
-        sortOrder
-        private
-        productId
-        productVersion
-        shopCategoryId
-        enabled
-
-        product {
-          id
-          version
-          title
-          description
-          pictureUrl
-          pricePerUnit
-          minAge
-          currentInventory
-          createdByProfile {
-            id
-            displayName
-            avatarUrl
-            circlesAddress
-            provenUniqueness
-          }
-        }
-      }
-    }
-  }
-}
-
-query shops($ownerId: Int) {
-  shops(ownerId: $ownerId) {
-    id
-    createdAt
-    name
-    description
-    legalText
-    smallBannerUrl
-    largeBannerUrl
-    openingHours
-    private
-    enabled
-    shopListingStyle
-    productListingStyle
-    sortOrder
-    ownerId
-    adultOnly
-    tosLink
-    privacyPolicyLink
-    healthInfosLink
-    deliveryMethods {
-      id
-      name
-    }
-    owner {
-      id
-      name
-      avatarUrl
-      circlesAddress
-    }
-    pickupAddress {
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-    }
-  }
-}
-
-query shopsById($ids: [Int!]!) {
-  shopsById(ids: $ids) {
-    id
-    createdAt
-    name
-    description
-    legalText
-    smallBannerUrl
-    largeBannerUrl
-    openingHours
-    private
-    enabled
-    shopListingStyle
-    productListingStyle
-    sortOrder
-    ownerId
-    tosLink
-    adultOnly
-    privacyPolicyLink
-    healthInfosLink
-    deliveryMethods {
-      id
-      name
-    }
-    owner {
-      id
-      name
-      avatarUrl
-      circlesAddress
-    }
-    pickupAddress {
-      name
-      street
-      house
-      zip
-      city
-      state
-      country
-    }
-  }
-}
-
 query clientAssertionJwt {
   clientAssertionJwt
-}
-
-query offersByIdAndVersion($query: [OfferByIdAndVersionInput!]!) {
-  offersByIdAndVersion(query: $query) {
-    id
-    title
-    pictureUrl
-    pricePerUnit
-    currentInventory
-    version
-    tags {
-      typeId
-      value
-    }
-  }
 }
