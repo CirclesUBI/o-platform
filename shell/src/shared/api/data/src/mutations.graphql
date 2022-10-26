@@ -168,11 +168,9 @@ mutation upsertProfile(
   $newsletter: Boolean
   $displayCurrency: DisplayCurrency
   $displayTimeCircles: Boolean
-  $cityGeonameid: Int
   $status: String!
   $successorOfCirclesAddress: String
   $gender: Gender
-  $age: Int
 ) {
   upsertProfile(
     data: {
@@ -191,11 +189,9 @@ mutation upsertProfile(
       newsletter: $newsletter
       displayCurrency: $displayCurrency
       displayTimeCircles: $displayTimeCircles
-      cityGeonameid: $cityGeonameid
       status: $status
       successorOfCirclesAddress: $successorOfCirclesAddress
       gender: $gender
-      age: $age
     }
   ) {
     id
@@ -217,17 +213,7 @@ mutation upsertProfile(
     newsletter
     displayTimeCircles
     displayCurrency
-    cityGeonameid
-    age
     gender
-    city {
-      geonameid
-      name
-      country
-      latitude
-      longitude
-      population
-    }
     memberships {
       isAdmin
       organisation {
@@ -239,13 +225,6 @@ mutation upsertProfile(
         name
         description
         avatarUrl
-        cityGeonameid
-        city {
-          geonameid
-          country
-          name
-          population
-        }
       }
     }
     verifications {
@@ -258,11 +237,6 @@ mutation upsertProfile(
         displayCurrency
         avatarUrl
         name
-        city {
-          geonameid
-          name
-          country
-        }
       }
     }
   }
@@ -278,16 +252,6 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       avatarUrl
       circlesAddress
       circlesSafeOwner
-      cityGeonameid
-      city {
-        geonameid
-        country
-        name
-        latitude
-        longitude
-        population
-        feature_code
-      }
       createdAt
       description
       name
@@ -305,16 +269,6 @@ mutation upsertRegion($organisation: UpsertOrganisationInput!) {
       avatarUrl
       circlesAddress
       circlesSafeOwner
-      cityGeonameid
-      city {
-        geonameid
-        country
-        name
-        latitude
-        longitude
-        population
-        feature_code
-      }
       createdAt
       description
       name
