@@ -34,7 +34,7 @@ export type AddMemberResult = {
   error?: Maybe<Scalars['String']>;
 };
 
-export type AggregatePayload = CrcBalances | Erc20Balances | Contacts | Memberships | Members | Erc721Tokens;
+export type AggregatePayload = CrcBalances | Erc20Balances | Contacts | Memberships | Members;
 
 export enum AggregateType {
   CrcBalances = 'CrcBalances',
@@ -42,8 +42,7 @@ export enum AggregateType {
   Contacts = 'Contacts',
   Memberships = 'Memberships',
   Members = 'Members',
-  Sales = 'Sales',
-  Erc721Tokens = 'Erc721Tokens'
+  Sales = 'Sales'
 }
 
 export type AssetBalance = {
@@ -280,23 +279,6 @@ export type Erc20Transfer = IEventPayload & {
   to_profile?: Maybe<Profile>;
   token: Scalars['String'];
   value: Scalars['String'];
-};
-
-export type Erc721Token = {
-  __typename?: 'Erc721Token';
-  token_symbol?: Maybe<Scalars['String']>;
-  token_name?: Maybe<Scalars['String']>;
-  token_address: Scalars['String'];
-  token_owner_address: Scalars['String'];
-  token_owner_profile?: Maybe<Profile>;
-  token_no: Scalars['String'];
-  token_url: Scalars['String'];
-};
-
-export type Erc721Tokens = IAggregatePayload & {
-  __typename?: 'Erc721Tokens';
-  lastUpdatedAt: Scalars['String'];
-  balances: Array<Erc721Token>;
 };
 
 export type EthTransfer = IEventPayload & {
@@ -2599,17 +2581,6 @@ export type AggregatesQuery = (
         { __typename?: 'Organisation' }
         & Pick<Organisation, 'circlesAddress' | 'displayCurrency'>
       )> }
-    ) | (
-      { __typename?: 'Erc721Tokens' }
-      & Pick<Erc721Tokens, 'lastUpdatedAt'>
-      & { balances: Array<(
-        { __typename?: 'Erc721Token' }
-        & Pick<Erc721Token, 'token_no' | 'token_symbol' | 'token_name' | 'token_address' | 'token_url'>
-        & { token_owner_profile?: Maybe<(
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'id' | 'circlesAddress' | 'displayName' | 'avatarUrl' | 'firstName' | 'lastName' | 'provenUniqueness'>
-        )> }
-      )> }
     ) }
   )> }
 );
@@ -4383,26 +4354,6 @@ export const AggregatesDocument = gql`
       provenUniqueness
     }
     payload {
-      ... on Erc721Tokens {
-        lastUpdatedAt
-        balances {
-          token_no
-          token_symbol
-          token_name
-          token_address
-          token_owner_profile {
-            id
-            circlesAddress
-            displayName
-            avatarUrl
-            firstName
-            lastName
-            provenUniqueness
-          }
-          token_no
-          token_url
-        }
-      }
       ... on CrcBalances {
         lastUpdatedAt
         balances {

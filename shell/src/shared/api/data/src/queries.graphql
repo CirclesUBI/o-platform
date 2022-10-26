@@ -1267,26 +1267,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
       provenUniqueness
     }
     payload {
-      ... on Erc721Tokens {
-        lastUpdatedAt
-        balances {
-          token_no
-          token_symbol
-          token_name
-          token_address
-          token_owner_profile {
-            id
-            circlesAddress
-            displayName
-            avatarUrl
-            firstName
-            lastName
-            provenUniqueness
-          }
-          token_no
-          token_url
-        }
-      }
       ... on CrcBalances {
         lastUpdatedAt
         balances {
