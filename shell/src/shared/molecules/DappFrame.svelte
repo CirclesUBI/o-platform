@@ -19,13 +19,23 @@ import { push } from "svelte-spa-router";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { generateNavManifest, GenerateNavManifestArgs } from "../functions/generateNavManifest";
+import { inbox } from "../stores/inbox";
 import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
 import { me } from "../stores/me";
-import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
+import {
+  Capability,
+  EventsDocument,
+  EventType,
+  I18n,
+  NotificationEvent,
+  SessionInfo,
+} from "../api/data/types";
 import { contacts } from "../stores/contacts";
+import { performOauth } from "../../dapps/o-humanode/processes/performOauth";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
+import { myChats } from "../stores/myChat";
 import { myTransactions } from "../stores/myTransactions";
 import { assetBalances } from "../stores/assetsBalances";
 import { upsertIdentity } from "../../dapps/o-passport/processes/upsertIdentity";
@@ -46,6 +56,8 @@ export let params: {
 
 let lastParamsJson: string = "";
 let identityChecked: boolean = false;
+let dappFrameState: any;
+let nextRoutable: Routable | undefined;
 let dapp: DappManifest<any>;
 let runtimeDapp: RuntimeDapp<any>;
 let routable: Routable;
@@ -88,7 +100,7 @@ async function onBack() {
     runtimeDapp: RuntimeDapp<any>;
     routable: Page<any, any>;
     params: { [x: string]: any };
-  } = <any>{};
+  } = {};
 
   const previousDapp = findDappById(previous.dappId);
   previousContext.runtimeDapp = previousDapp ? await RuntimeDapps.instance().getRuntimeDapp(previousDapp) : null;
@@ -157,7 +169,6 @@ async function onStay() {
       })
     );
   }
-
   previousContext.routable = <Page<any, any>>routable;
   previousContext.params = previous.params;
 
@@ -334,7 +345,7 @@ function setNav(navArgs: GenerateNavManifestArgs) {
  */
 
 let shellEventSubscription: ZenObservable.Subscription;
-// const blblblbl = new Audio("blblblbl.mp3");
+const blblblbl = new Audio("blblblbl.mp3");
 let sessionInfo: SessionInfo;
 function initSession(session: SessionInfo) {
   sessionInfo = session;
@@ -348,8 +359,15 @@ function initSession(session: SessionInfo) {
         })
         .subscribe(async (next) => {
           const event: NotificationEvent = next.data.events;
-          // let playBlblblbl = false;
-          if (
+          let playBlblblbl = false;
+
+          if (event.type == "new_message") {
+            const chatStore = myChats.with(event.from);
+            const message = await chatStore.findSingleItemFallback([EventType.ChatMessage], event.itemId.toString());
+            chatStore.refresh(true);
+            await contacts.findBySafeAddress(event.from, true);
+            playBlblblbl = true;
+          } else if (
             event.type == EventType.CrcHubTransfer ||
             event.type == EventType.CrcMinting ||
             event.type == EventType.Erc20Transfer
@@ -362,23 +380,42 @@ function initSession(session: SessionInfo) {
             myTransactions.refresh(true);
             assetBalances.update();
 
-            // if (event.type != EventType.CrcMinting) {
-            //   playBlblblbl = true;
-            // }
+            if (event.from == $me.circlesAddress) {
+              await contacts.findBySafeAddress(event.to, true);
+              const chatStore = myChats.with(event.to);
+              const message = await chatStore.findSingleItemFallback(
+                [EventType.CrcHubTransfer],
+                event.transaction_hash
+              );
+              chatStore.refresh(true);
+            } else if (event.type != EventType.CrcMinting) {
+              await contacts.findBySafeAddress(event.from, true);
+              const chatStore = myChats.with(event.from);
+              const message = await chatStore.findSingleItemFallback(
+                [EventType.CrcHubTransfer],
+                event.transaction_hash
+              );
+              chatStore.refresh(true);
+              playBlblblbl = true;
+            }
+          } else if (event.type == EventType.CrcTrust) {
+            if (event.from == $me.circlesAddress) {
+              const contact = await contacts.findBySafeAddress(event.to, true);
+              console.log("CrcTrust update to:", contact);
+            } else {
+              const contact = await contacts.findBySafeAddress(event.from, true);
+              console.log("CrcTrust update from:", contact);
+              const chatStore = myChats.with(contact.contactAddress);
+              const message = await chatStore.findSingleItemFallback([EventType.CrcTrust], event.transaction_hash);
+              chatStore.refresh(true);
+              playBlblblbl = true;
+            }
           }
-          // else if (event.type == EventType.CrcTrust) {
-          //   if (event.from != $me.circlesAddress) {
-          //     playBlblblbl = true;
-          //   }
-          // }
-          //inbox.refresh();
+          inbox.reload().then(() => {
+            if (!playBlblblbl) return;
 
-          return;
-          // if (!playBlblblbl) {
-
-          // } else {
-          //   blblblbl.play();
-          // }
+            blblblbl.play();
+          });
         });
     });
 
@@ -389,7 +426,7 @@ function initSession(session: SessionInfo) {
     });
   }
 
-  //inbox.refresh();
+  inbox.reload();
 }
 
 async function init() {
@@ -402,7 +439,7 @@ async function init() {
     centerIsOpen: false,
     rightIsOpen: false,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
   });
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
@@ -460,7 +497,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount: 0, //  $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -477,14 +514,14 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
 }
 
-function onOpenNotifications() {
-  push("#/notifications/all");
+function onOpenContacts() {
+  push("#/contacts/chat");
 }
 
 function onOpenModal() {
@@ -501,7 +538,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -520,7 +557,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
   });
   window.scrollTo(0, _scrollY);
 }
@@ -604,7 +641,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -617,7 +654,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -632,7 +669,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -684,8 +721,73 @@ function onInputBlurred() {
   return;
 }
 
+function armOauthListener() {
+  function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split("=");
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
+    }
+    return query;
+  }
+
+  if (location.search) {
+    // Handle OAuth callbacks:
+    // 1. Find out from where the oauth interaction was started (see state)
+    // 2. Send the user back to its origin
+    // 3. Re-open the flow to show a success- or cancelled-message
+    const paramsMap: any = parseQuery(location.search);
+
+    if (paramsMap && paramsMap.state) {
+      const splittedState = paramsMap.state.split("-");
+      if (splittedState.length != 2) {
+        // invalid
+        alert("Couldn't parse the 'state' from the oauth response");
+      } else {
+        // possibly valid
+        // TODO: allow app-id + routeParts in the second part of the 'state'
+        if (splittedState[1] == "dashboard") {
+          setTimeout(() => {
+            window.o.runProcess(performOauth, {
+              origin: "dashboard",
+              authorizationResponse: {
+                error: paramsMap?.error,
+                state: paramsMap?.state,
+                code: paramsMap?.code,
+              },
+              successAction: () => {
+                push("#/dashboard");
+              },
+            });
+          }, 1000);
+        } else if (splittedState[1] == "locations") {
+          setTimeout(() => {
+            window.o.runProcess(performOauth, {
+              origin: "locations",
+              authorizationResponse: {
+                error: paramsMap?.error,
+                state: paramsMap?.state,
+                code: paramsMap?.code,
+              },
+              successAction: () => {
+                push("#/dashboard");
+              },
+            });
+          }, 1000);
+        } else {
+          alert("Couldn't parse the 'state' from the oauth response");
+          // invalid
+        }
+      }
+    }
+  }
+}
+
 onMount(async () => {
   // log("onMount()");
+
+  armOauthListener();
 
   await window.o.events.subscribe(<any>(async (event) => {
     // log("DappFrame event: ", event);
@@ -720,7 +822,7 @@ onMount(async () => {
         onCloseNavigation();
         break;
       case "shell.contacts":
-        onOpenNotifications();
+        onOpenContacts();
         break;
       case "shell.authenticated":
         const session = await me.getSessionInfo();
@@ -1006,7 +1108,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }
@@ -1075,7 +1177,7 @@ function showModalPage(
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }
@@ -1153,11 +1255,9 @@ async function hideCenter() {
 }
 </script>
 
-{console.log("ROUTABLE: ", routable)}
 <Layout
   layout="{layout}"
   navigation="{navigation}"
-  pageBackgroundClass="{routable?.pageBackgroundClass ? routable.pageBackgroundClass : null}"
   on:clickedOutside="{() => {
     onRoot();
   }}"

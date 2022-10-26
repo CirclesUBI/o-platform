@@ -6,6 +6,7 @@ import Icons from "../Icons.svelte";
 // import { icons as Icon } from "@iconify/icons-heroicons";
 import { push } from "svelte-spa-router";
 
+export let runtimeDapp: RuntimeDapp<any>;
 export let navigation: any;
 export let width: string = "w-full";
 </script>
@@ -21,7 +22,6 @@ export let width: string = "w-full";
           ? 'bg-' + navigation.leftSlot.props.backgroundColorClass
           : 'bg-white'} rounded-full cursor-pointer"
         class:text-white="{navigation.leftSlot.props.backgroundColorClass}"
-        role="presentation"
         on:click="{navigation.leftSlot.props.action}">
         <svelte:component this="{navigation.leftSlot.component}" {...navigation.leftSlot.props} on:menuButton />
       </div>
@@ -41,10 +41,20 @@ export let width: string = "w-full";
       }}"
       props="{navigation.loginPill}" />
   {/if}
+  <div class="flex flex-row justify-end mr-4">
+    {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
+      <div class="flex items-center justify-center w-12 h-12 bg-white rounded-full cursor-pointer">
+        <div class="relative cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
+          <Icons icon="shopping-cart" customClass="w-6 h-6 heroicon smallicon" />
+        </div>
+      </div>
+    {/if}
+  </div>
 </footer>
 
 <style>
 #nextnav {
   --tw-text-opacity: 1;
+  background-image: linear-gradient(180deg, rgba(149, 183, 202, 0) 0%, rgba(13, 43, 102, 0.3) 100%);
 }
 </style>
