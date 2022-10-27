@@ -71,19 +71,6 @@ export class UserActions {
         const trustLimit = trustMetadata.values[outTrust];
         youTrust = parseInt(trustLimit) > 0;
       }
-      if (recipientProfile?.contactAddress) {
-        actions = actions.concat([
-          {
-            key: "chat",
-            icon: "chat",
-            title: window.o.i18n("shared.userActions.chat"),
-            displayHint: "discouraged",
-            action: async () => {
-              push("#/contacts/chat/" + recipientProfile.contactAddress);
-            },
-          },
-        ]);
-      }
 
       /* PERSON */
       if (

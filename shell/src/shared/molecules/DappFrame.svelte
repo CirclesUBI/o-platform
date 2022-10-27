@@ -482,8 +482,8 @@ function onCloseNavigation() {
   });
 }
 
-function onOpenContacts() {
-  push("#/contacts/chat");
+function onOpenNotifications() {
+  push("#/notifications");
 }
 
 function onOpenModal() {
@@ -784,7 +784,7 @@ onMount(async () => {
         onCloseNavigation();
         break;
       case "shell.contacts":
-        onOpenContacts();
+        onOpenNotifications();
         break;
       case "shell.authenticated":
         const session = await me.getSessionInfo();

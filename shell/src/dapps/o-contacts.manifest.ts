@@ -49,18 +49,6 @@ export class ContactsDappState {
   trusted?: boolean;
 }
 
-async function chatAction(circlesAddress: string): Promise<JumplistItem> {
-  return <JumplistItem>{
-    category: "Chat",
-    key: "chat",
-    icon: "chat",
-    title: "common.chat",
-    action: async () => {
-      push("#/contacts/chat/" + circlesAddress);
-    },
-  };
-}
-
 async function findContactActions(circlesAddress: string) {
   const recipientProfile: Contact = await contactStore.findBySafeAddress(circlesAddress);
   if (!recipientProfile) {
@@ -68,10 +56,6 @@ async function findContactActions(circlesAddress: string) {
   }
 
   const trustMetadata = recipientProfile.metadata.find((o) => o.name == EventType.CrcTrust);
-  if (!trustMetadata && recipientProfile.contactAddress_Profile.origin == ProfileOrigin.CirclesGarden) {
-    // No trust relation but a circles land profile
-    return [await chatAction(circlesAddress)];
-  }
 
   const inTrustIndex = trustMetadata.directions.indexOf(ContactDirection.In);
   const trustsYou = inTrustIndex > -1 ? parseInt(trustMetadata.values[inTrustIndex]) > 0 : false;
@@ -123,17 +107,6 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
       }
 
       if (recipientProfile?.contactAddress) {
-        actions = actions.concat([
-          {
-            category: "Chat",
-            key: "chat",
-            icon: "chat",
-            title: window.o.i18n("dapps.common.quickactions.chat"),
-            action: async () => {
-              push("#/contacts/chat/" + recipientProfile.contactAddress);
-            },
-          },
-        ]);
         if (
           recipientProfile.contactAddress_Profile &&
           recipientProfile.contactAddress_Profile.type == ProfileType.Person
@@ -281,7 +254,7 @@ export const contacts: DappManifest<DappState> = {
   icon: "group",
   title: "Contacts",
   routeParts: ["contacts"],
-  defaultRoute: ["chat"],
+  defaultRoute: [],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
   jumplist: profileJumplist,
