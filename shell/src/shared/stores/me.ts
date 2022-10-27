@@ -56,8 +56,6 @@ const _me = readable<Profile|null>(null, function start(set) {
         "avatarMimeType": "image/jpeg",
         "newsletter": true,
         "displayTimeCircles": true,
-        "cityGeonameid": null,
-        "city": null,
         "memberships": [],
         "verifications": [],
         "circlesTokenAddress": "",

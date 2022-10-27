@@ -20,7 +20,6 @@ export type CreateOrganisationContextData = {
   avatarMimeType: "image/png",
   avatarUrl: string,
   circlesAddress: string,
-  cityGeonameid: string,
   description: string,
   name: string,
   displayName: string,
@@ -111,7 +110,6 @@ const processDefinition = (processId: string) =>
                   avatarMimeType: context.data.avatarMimeType,
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
-                  cityGeonameid: context.data.cityGeonameid,
                   description: context.data.description,
                   name: context.data.name
                 }

@@ -83,12 +83,6 @@ const editorContent: { [x: string]: EditorViewContext } = {
     placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.age.placeholder"),
     submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.age.submitButtonText"),
   },
-  city: {
-    title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
-    description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
-    placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
-    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"),
-  },
   imageView: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.title"),
     description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.description"),
