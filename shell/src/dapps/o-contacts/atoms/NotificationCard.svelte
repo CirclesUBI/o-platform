@@ -10,9 +10,6 @@ import { onMount } from "svelte";
 import Date from "../../../shared/atoms/Date.svelte";
 import { EventType, ProfileEvent } from "../../../shared/api/data/types";
 import CrcTrust from "./chatListItems/CrcTrust.svelte";
-import Purchase from "./chatListItems/Purchase.svelte";
-import Sale from "./chatListItems/Sale.svelte";
-import ChatMessage from "./chatListItems/ChatMessage.svelte";
 import CrcHubTransfer from "./chatListItems/CrcHubTransfer.svelte";
 import Erc20Transfer from "./chatListItems/Erc20Transfer.svelte";
 import InvitationRedeemed from "./chatListItems/InvitationRedeemed.svelte";
@@ -25,18 +22,6 @@ export let event: ProfileEvent;
 let userActions: UserActionItem[] = [];
 
 const components = [
-  {
-    type: EventType.Purchased,
-    component: Purchase,
-  },
-  {
-    type: EventType.SaleEvent,
-    component: Sale,
-  },
-  {
-    type: EventType.ChatMessage,
-    component: ChatMessage,
-  },
   {
     type: EventType.CrcTrust,
     component: CrcTrust,
@@ -105,9 +90,7 @@ async function getEventActions() {
   if (!specificView) return null;
   return specificView.actions ? specificView.actions : null;
 }
-if (event.type == EventType.Purchased) {
-  event.direction = null;
-}
+
 </script>
 
 <div class="px-2 sm:px-6">
@@ -117,17 +100,9 @@ if (event.type == EventType.Purchased) {
     class:pl-12="{event.direction == 'in'}">
     <div
       class="flex flex-col flex-grow space-y-1 rounded-xl"
-      class:bg-gray-100="{event.type != EventType.ChatMessage &&
-        event.type != EventType.Purchased &&
-        event.type != EventType.CrcHubTransfer}">
+      class:bg-gray-100="{event.type != EventType.CrcHubTransfer}">
       <div
-        class="relative w-full text-xs sm:text-sm message chatText"
-        class:p-4="{event.type != EventType.ChatMessage}">
-        {#if event.type != EventType.ChatMessage && event.type != EventType.Purchased}
-          <div class="absolute bottom-2 right-3 text-2xs">
-            <Date time="{event.timestamp}" />
-          </div>
-        {/if}
+        class="relative w-full text-xs sm:text-sm message chatText p-4">
         <svelte:component this="{getEventView()}" event="{event}" />
         {#if userActions && userActions.length}
           <div class="pt-4">
