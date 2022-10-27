@@ -85,7 +85,7 @@ async function fetchStats() {
 
       <DashboardColorCard
         color="contacts"
-        link="/contacts/chat"
+        link="/contacts"
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
         icon="users"
         title="dapps.o-dashboard.pages.home.contacts" />

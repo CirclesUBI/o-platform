@@ -24,18 +24,10 @@ import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
 import { me } from "../stores/me";
-import {
-  Capability,
-  EventsDocument,
-  EventType,
-  I18n,
-  NotificationEvent,
-  SessionInfo,
-} from "../api/data/types";
+import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
 import { contacts } from "../stores/contacts";
 import { performOauth } from "../../dapps/o-humanode/processes/performOauth";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
-import { myChats } from "../stores/myChat";
 import { myTransactions } from "../stores/myTransactions";
 import { assetBalances } from "../stores/assetsBalances";
 import { upsertIdentity } from "../../dapps/o-passport/processes/upsertIdentity";
@@ -100,7 +92,7 @@ async function onBack() {
     runtimeDapp: RuntimeDapp<any>;
     routable: Page<any, any>;
     params: { [x: string]: any };
-  } = {};
+  } = <any>{};
 
   const previousDapp = findDappById(previous.dappId);
   previousContext.runtimeDapp = previousDapp ? await RuntimeDapps.instance().getRuntimeDapp(previousDapp) : null;
@@ -360,14 +352,7 @@ function initSession(session: SessionInfo) {
         .subscribe(async (next) => {
           const event: NotificationEvent = next.data.events;
           let playBlblblbl = false;
-
-          if (event.type == "new_message") {
-            const chatStore = myChats.with(event.from);
-            const message = await chatStore.findSingleItemFallback([EventType.ChatMessage], event.itemId.toString());
-            chatStore.refresh(true);
-            await contacts.findBySafeAddress(event.from, true);
-            playBlblblbl = true;
-          } else if (
+          if (
             event.type == EventType.CrcHubTransfer ||
             event.type == EventType.CrcMinting ||
             event.type == EventType.Erc20Transfer
@@ -380,34 +365,11 @@ function initSession(session: SessionInfo) {
             myTransactions.refresh(true);
             assetBalances.update();
 
-            if (event.from == $me.circlesAddress) {
-              await contacts.findBySafeAddress(event.to, true);
-              const chatStore = myChats.with(event.to);
-              const message = await chatStore.findSingleItemFallback(
-                [EventType.CrcHubTransfer],
-                event.transaction_hash
-              );
-              chatStore.refresh(true);
-            } else if (event.type != EventType.CrcMinting) {
-              await contacts.findBySafeAddress(event.from, true);
-              const chatStore = myChats.with(event.from);
-              const message = await chatStore.findSingleItemFallback(
-                [EventType.CrcHubTransfer],
-                event.transaction_hash
-              );
-              chatStore.refresh(true);
+            if (event.type != EventType.CrcMinting) {
               playBlblblbl = true;
             }
           } else if (event.type == EventType.CrcTrust) {
-            if (event.from == $me.circlesAddress) {
-              const contact = await contacts.findBySafeAddress(event.to, true);
-              console.log("CrcTrust update to:", contact);
-            } else {
-              const contact = await contacts.findBySafeAddress(event.from, true);
-              console.log("CrcTrust update from:", contact);
-              const chatStore = myChats.with(contact.contactAddress);
-              const message = await chatStore.findSingleItemFallback([EventType.CrcTrust], event.transaction_hash);
-              chatStore.refresh(true);
+            if (event.from != $me.circlesAddress) {
               playBlblblbl = true;
             }
           }

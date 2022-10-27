@@ -56,7 +56,6 @@ async function queryEvents(mySafeAddress: string) {
         EventType.CrcHubTransfer,
         EventType.CrcMinting,
         EventType.CrcTrust,
-        EventType.ChatMessage,
         EventType.CrcSignup,
         EventType.CrcTokenTransfer,
         // EventType.EthTransfer,
