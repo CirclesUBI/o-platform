@@ -28,13 +28,7 @@ if (profile.__typename == "Profile") {
       class:text-xs="{displayName.startsWith('0x')}">
       {displayName}
     </div>
-
-    {#if profile && profile.city}
-      <div class="mt-1 text-sm text-dark-lightest">
-        {profile.city ? profile.city.name : ""}
-        {profile.city ? ", " + profile.city.country : ""}
-      </div>
-    {/if}
+    
   </div>
 
   <!-- {#if showPassion && profile.dream}

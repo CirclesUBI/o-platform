@@ -85,20 +85,6 @@ function editProfileField(onlyThesePages: string[]) {
             {displayName}
           </h2>
         </div>
-        {#if profile}
-          {#if profile.city}
-            <div
-              class="relative mt-1 text-sm text-center cursor-pointer"
-              on:click="{() => editProfileField(['cityGeonameid'])}">
-              {profile.city ? profile.city.name : ""}
-              {profile.city ? ", " + profile.city.country : ", " + getCountryName(profile)}
-            </div>
-          {:else}
-            <div class="mt-1 text-sm text-center cursor-pointer" on:click="{() => editProfileField(['cityGeonameid'])}">
-              Where do you live?
-            </div>
-          {/if}
-        {/if}
       </div>
     </span>
   </div>

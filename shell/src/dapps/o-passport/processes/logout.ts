@@ -68,8 +68,6 @@ const processDefinition = (processId: string) =>
                 avatarMimeType: "image/jpeg",
                 newsletter: true,
                 displayTimeCircles: true,
-                cityGeonameid: null,
-                city: null,
                 memberships: [],
                 verifications: [],
                 circlesTokenAddress: "",

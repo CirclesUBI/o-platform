@@ -129,14 +129,7 @@ function submit() {
           orientation: 'inline',
           alignment: 'center',
           labels: {
-            setTrust: (action) => `${action.title}`,
-            chat: (action) => {
-              if (data.type == EventType.CrcHubTransfer) {
-                return window.o.i18n('shared.notificationViewer.sayThanks');
-              } else {
-                return null;
-              }
-            },
+            setTrust: (action) => `${action.title}`
           },
           colors: {
             default: 'primary',

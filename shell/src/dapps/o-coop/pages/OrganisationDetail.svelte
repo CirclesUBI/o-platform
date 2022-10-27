@@ -113,15 +113,6 @@ let promise = getJumplist();
             {profile.name ? profile.name : profile.circlesAddress}
           </div>
         {/if}
-        {#if profile && profile.city}
-          <div class="mt-1 text-sm text-dark-lightest">
-            {profile.city ? profile.city.name : ""}
-
-            {profile.city
-              ? ", " + profile.city.country
-              : ", " + getCountryName(profile)}
-          </div>
-        {/if}
       </div>
     </header>
     <div class="flex flex-col">
