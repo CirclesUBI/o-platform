@@ -9,6 +9,7 @@ import { coop } from "./dapps/o-coop.manifest";
 import { verification } from "./dapps/o-verification.manifest";
 import {welcome} from "./dapps/o-welcome.manifest";
 import { translation } from "./dapps/o-translation.manifest";
+import { notifications } from "./dapps/o-notification.manifest";
 
 export const dapps: DappManifest<any>[] = [
   homepage,
@@ -20,5 +21,6 @@ export const dapps: DappManifest<any>[] = [
   coop,
   verification,
   welcome,
-  translation
+  translation,
+  notifications
 ];

@@ -26,8 +26,6 @@ import { UserActions, UserActionItem } from "../../../shared/userActions";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { Environment } from "../../../shared/environment";
-import { param } from "../atoms/ChatListCard.svelte";
-import { _ } from "svelte-i18n";
 
 
 export let id: string;
@@ -168,12 +166,6 @@ async function setProfile(id: string) {
             class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}"
             class:text-xs="{displayName.startsWith('0x')}">
             {displayName}
-          </div>
-        {/if}
-        {#if profile && profile.city}
-          <div class="mt-1 text-sm text-dark-lightest">
-            {profile.city ? profile.city.name : ""}
-            {profile.city ? ", " + profile.city.country : ", " + getCountryName(profile)}
           </div>
         {/if}
       </div>
