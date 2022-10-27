@@ -68,21 +68,6 @@ export enum CapabilityType {
   VerifiedByHumanode = 'VerifiedByHumanode'
 }
 
-export type ChatMessage = IEventPayload & {
-  __typename?: 'ChatMessage';
-  id: Scalars['Int'];
-  transaction_hash?: Maybe<Scalars['String']>;
-  from: Scalars['String'];
-  from_profile?: Maybe<Profile>;
-  to: Scalars['String'];
-  to_profile?: Maybe<Profile>;
-  text: Scalars['String'];
-};
-
-export type ChatMessageEventFilter = {
-  id: Scalars['Int'];
-};
-
 export type ClaimInvitationResult = {
   __typename?: 'ClaimInvitationResult';
   success: Scalars['Boolean'];
@@ -281,7 +266,7 @@ export type EthTransfer = IEventPayload & {
   tags: Array<Tag>;
 };
 
-export type EventPayload = CrcSignup | CrcTrust | CrcTokenTransfer | CrcHubTransfer | CrcMinting | EthTransfer | Erc20Transfer | GnosisSafeEthTransfer | ChatMessage | MembershipOffer | MembershipAccepted | MembershipRejected | WelcomeMessage | InvitationCreated | InvitationRedeemed | OrganisationCreated | MemberAdded | SafeVerified | NewUser;
+export type EventPayload = CrcSignup | CrcTrust | CrcTokenTransfer | CrcHubTransfer | CrcMinting | EthTransfer | Erc20Transfer | GnosisSafeEthTransfer | MembershipOffer | MembershipAccepted | MembershipRejected | WelcomeMessage | InvitationCreated | InvitationRedeemed | OrganisationCreated | MemberAdded | SafeVerified | NewUser;
 
 export enum EventType {
   CrcSignup = 'CrcSignup',
@@ -292,7 +277,6 @@ export enum EventType {
   CrcMinting = 'CrcMinting',
   EthTransfer = 'EthTransfer',
   GnosisSafeEthTransfer = 'GnosisSafeEthTransfer',
-  ChatMessage = 'ChatMessage',
   MembershipOffer = 'MembershipOffer',
   MembershipAccepted = 'MembershipAccepted',
   MembershipRejected = 'MembershipRejected',
@@ -750,7 +734,6 @@ export type ProfileEventFilter = {
   to?: Maybe<Scalars['String']>;
   with?: Maybe<Scalars['String']>;
   transactionHash?: Maybe<Scalars['String']>;
-  chatMessage?: Maybe<ChatMessageEventFilter>;
 };
 
 export type ProfileOrOrganisation = Profile | Organisation;
@@ -1375,42 +1358,6 @@ export type AcknowledgeMutation = (
   & Pick<Mutation, 'acknowledge'>
 );
 
-export type SendMessageMutationVariables = Exact<{
-  fromSafeAddress?: Maybe<Scalars['String']>;
-  toSafeAddress: Scalars['String'];
-  content: Scalars['String'];
-}>;
-
-
-export type SendMessageMutation = (
-  { __typename?: 'Mutation' }
-  & { sendMessage: (
-    { __typename?: 'SendMessageResult' }
-    & Pick<SendMessageResult, 'success' | 'error'>
-    & { event?: Maybe<(
-      { __typename?: 'ProfileEvent' }
-      & Pick<ProfileEvent, 'block_number' | 'direction' | 'safe_address' | 'timestamp' | 'transaction_hash' | 'transaction_index' | 'type' | 'value'>
-      & { safe_address_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-      )>, tags?: Maybe<Array<(
-        { __typename?: 'Tag' }
-        & Pick<Tag, 'id' | 'typeId' | 'value'>
-      )>>, payload?: Maybe<{ __typename?: 'CrcSignup' } | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | (
-        { __typename?: 'ChatMessage' }
-        & Pick<ChatMessage, 'id' | 'from' | 'to' | 'text'>
-        & { from_profile?: Maybe<(
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-        )>, to_profile?: Maybe<(
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-        )> }
-      ) | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
-    )> }
-  ) }
-);
-
 export type AddMemberMutationVariables = Exact<{
   groupId: Scalars['String'];
   memberAddress: Scalars['String'];
@@ -1705,7 +1652,7 @@ export type HubSignupTransactionQuery = (
     & { payload?: Maybe<(
       { __typename?: 'CrcSignup' }
       & Pick<CrcSignup, 'token'>
-    ) | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | { __typename?: 'ChatMessage' } | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
+    ) | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
   )> }
 );
 
@@ -2178,16 +2125,6 @@ export type StreamQuery = (
       { __typename?: 'GnosisSafeEthTransfer' }
       & Pick<GnosisSafeEthTransfer, 'transaction_hash' | 'initiator' | 'from' | 'to' | 'value'>
     ) | (
-      { __typename?: 'ChatMessage' }
-      & Pick<ChatMessage, 'id' | 'from' | 'to' | 'text'>
-      & { from_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
-      )>, to_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
-      )> }
-    ) | (
       { __typename?: 'MembershipOffer' }
       & Pick<MembershipOffer, 'createdBy' | 'organisation' | 'isAdmin'>
       & { createdBy_profile?: Maybe<(
@@ -2609,62 +2546,6 @@ export const ClaimInvitationDocument = gql`
 export const AcknowledgeDocument = gql`
     mutation acknowledge($until: Date!, $safeAddress: String) {
   acknowledge(until: $until, safeAddress: $safeAddress)
-}
-    `;
-export const SendMessageDocument = gql`
-    mutation sendMessage($fromSafeAddress: String, $toSafeAddress: String!, $content: String!) {
-  sendMessage(
-    fromSafeAddress: $fromSafeAddress
-    toSafeAddress: $toSafeAddress
-    content: $content
-  ) {
-    success
-    error
-    event {
-      block_number
-      direction
-      safe_address
-      safe_address_profile {
-        id
-        firstName
-        lastName
-        avatarUrl
-        circlesAddress
-      }
-      timestamp
-      transaction_hash
-      transaction_index
-      type
-      value
-      tags {
-        id
-        typeId
-        value
-      }
-      payload {
-        ... on ChatMessage {
-          id
-          from
-          from_profile {
-            id
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-          }
-          to
-          to_profile {
-            id
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-          }
-          text
-        }
-      }
-    }
-  }
 }
     `;
 export const AddMemberDocument = gql`
@@ -3681,32 +3562,6 @@ export const StreamDocument = gql`
         to
         value
       }
-      ... on ChatMessage {
-        id
-        from
-        from_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        to
-        to_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        text
-      }
       ... on MembershipOffer {
         createdBy
         createdBy_profile {
@@ -4184,9 +4039,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     acknowledge(variables: AcknowledgeMutationVariables): Promise<AcknowledgeMutation> {
       return withWrapper(() => client.request<AcknowledgeMutation>(print(AcknowledgeDocument), variables));
-    },
-    sendMessage(variables: SendMessageMutationVariables): Promise<SendMessageMutation> {
-      return withWrapper(() => client.request<SendMessageMutation>(print(SendMessageDocument), variables));
     },
     addMember(variables: AddMemberMutationVariables): Promise<AddMemberMutation> {
       return withWrapper(() => client.request<AddMemberMutation>(print(AddMemberDocument), variables));

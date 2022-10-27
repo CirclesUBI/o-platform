@@ -827,32 +827,6 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         to
         value
       }
-      ... on ChatMessage {
-        id
-        from
-        from_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        to
-        to_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        text
-      }
       ... on MembershipOffer {
         createdBy
         createdBy_profile {
