@@ -1,8 +1,6 @@
 import ContactsView from "./o-contacts/pages/Contacts.svelte";
 import ProfilePage from "./o-contacts/pages/Profile.svelte";
 import ScanToTrust from "./o-contacts/pages/ScanToTrust.svelte";
-import Chat from "./o-contacts/pages/Chat.svelte";
-import ChatDetail from "./o-contacts/pages/ChatDetail.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { me } from "../shared/stores/me";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
@@ -275,33 +273,6 @@ export const scanToTrust: Page<any, ContactsDappState> = {
   component: ScanToTrust,
 };
 
-export const chatdetail: Page<any, ContactsDappState> = {
-  type: "page",
-  isSystem: true,
-  position: "modal",
-  routeParts: ["=chat", ":id"],
-  title: "Chat",
-  component: ChatDetail,
-};
-
-export const chat: Page<any, ContactsDappState> = {
-  routeParts: ["=chat"],
-  component: Chat,
-  title: "Chat",
-  icon: "chat",
-  type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "users",
-        backgroundColorClass: "contacts",
-        // action: () => processNavigation.back(),
-      },
-    },
-  },
-};
-
 export const contacts: DappManifest<DappState> = {
   type: "dapp",
   dappId: "contacts:1",
@@ -329,9 +300,9 @@ export const contacts: DappManifest<DappState> = {
     }
 
     return {
-      initialRoutable: chat,
+      initialRoutable: contacts,
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, chat, chatdetail, scanToTrust],
+  routables: [index, profile, scanToTrust],
 };
