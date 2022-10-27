@@ -1,7 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { Continue } from "@o-platform/o-process/dist/events/continue";
-import NotificationViewChatMessage from "./NotificationViewer/molecules/NotificationViewChatMessage.svelte";
 import NotificationViewUbi from "./NotificationViewer/molecules/NotificationViewUbi.svelte";
 import NotificationViewTrust from "./NotificationViewer/molecules/NotificationViewTrust.svelte";
 import NotificationViewTransfer from "./NotificationViewer/molecules/NotificationViewTransfer.svelte";
@@ -25,16 +24,6 @@ let userActions: UserActionItem[] = [];
 const dispatch = createEventDispatcher();
 
 const components = [
-  {
-    type: EventType.ChatMessage,
-    component: NotificationViewChatMessage,
-    actions: [
-      {
-        action: "chat",
-        label: window.o.i18n("shared.notificationViewer.answer"),
-      },
-    ],
-  },
   {
     type: EventType.CrcMinting,
     component: NotificationViewUbi,
@@ -144,8 +133,6 @@ function submit() {
             chat: (action) => {
               if (data.type == EventType.CrcHubTransfer) {
                 return window.o.i18n('shared.notificationViewer.sayThanks');
-              } else if (data.type == EventType.ChatMessage) {
-                return window.o.i18n('shared.notificationViewer.answer');
               } else {
                 return null;
               }
