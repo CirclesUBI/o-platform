@@ -41,15 +41,6 @@ export let width: string = "w-full";
       }}"
       props="{navigation.loginPill}" />
   {/if}
-  <div class="flex flex-row justify-end mr-4">
-    {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
-      <div class="flex items-center justify-center w-12 h-12 bg-white rounded-full cursor-pointer">
-        <div class="relative cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
-          <Icons icon="shopping-cart" customClass="w-6 h-6 heroicon smallicon" />
-        </div>
-      </div>
-    {/if}
-  </div>
 </footer>
 
 <style>

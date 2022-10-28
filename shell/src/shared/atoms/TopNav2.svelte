@@ -33,11 +33,6 @@ $: {
     </div>
 
     <div class="col-start-3 pr-1 place-self-center justify-self-end">
-      {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
-        <div class="relative mr-4 cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
-          <Icons icon="shopping-cart" class="w-6 h-6 heroicon smallicon" />
-        </div>
-      {/if}
       {#if profile}
         {#if profile.__typename === "Organisation"}
           <div class="mr-4 text-white cursor-pointer" on:click="{() => push(`#/marketplace/scan-purchase`)}">
