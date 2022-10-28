@@ -241,6 +241,7 @@ export async function followTrust(profile: Profile | Organisation) {
 
 export const inbox = {
   subscribe,
+  next: () => {},
   reload: async () => {
     // If we're in an organisation context then find all trust changes of all members since the last update
     let profile: Profile|Organisation|null = null;

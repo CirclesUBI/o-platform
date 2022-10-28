@@ -8,10 +8,11 @@ export let event: ProfileEvent;
 </script>
 
 <div>
+  <!--<pre>{JSON.stringify(event, null, 2)}</pre>-->
   <ItemCard
     params="{{
       edgeless: false,
-      title: window.o.i18n("shared.molecules.notificationViewer.molecules.genericEventCard.title", { values: { eventType: event.type}}),
+      title: event.type,
       subTitle: window.o.i18n("shared.molecules.notificationViewer.molecules.genericEventCard.subTitle"),
       noTruncate: true,
     }}">
