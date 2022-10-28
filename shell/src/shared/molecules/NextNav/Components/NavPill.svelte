@@ -1,5 +1,4 @@
 <script lang="ts">
-import { showNotifications } from "../../../processes/showNotifications";
 import { inbox } from "../../../stores/inbox";
 import Icons from "../../Icons.svelte";
 
