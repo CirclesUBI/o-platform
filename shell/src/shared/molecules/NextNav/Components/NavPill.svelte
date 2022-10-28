@@ -23,6 +23,7 @@ function clickHandler() {
     }
   }
 }
+
 </script>
 
 <div class="h-12 col-start-2 place-self-center">

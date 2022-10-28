@@ -373,11 +373,13 @@ function initSession(session: SessionInfo) {
               playBlblblbl = true;
             }
           }
-          inbox.reload().then(() => {
-            if (!playBlblblbl) return;
+          inbox.refresh();
 
+          if (!playBlblblbl) {
+            return;
+          } else {
             blblblbl.play();
-          });
+          }
         });
     });
 
@@ -388,7 +390,7 @@ function initSession(session: SessionInfo) {
     });
   }
 
-  inbox.reload();
+  inbox.refresh();
 }
 
 async function init() {
