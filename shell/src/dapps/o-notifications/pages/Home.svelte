@@ -7,7 +7,7 @@ import {onMount} from "svelte";
 import {ProfileEvent} from "../../../shared/api/data/types";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
-import NotificationCard from "../../o-contacts/atoms/NotificationCard.svelte";
+import NotificationCard from "./../atoms/NotificationCard.svelte"
 import { inbox } from "../../../shared/stores/inbox";
 
 export let runtimeDapp: RuntimeDapp<any>;
@@ -30,7 +30,7 @@ onMount(() => {
     <section class="flex items-center justify-center mb-2 ">
       <div class="flex items-center w-full p-4 space-x-2 bg-white shadow ">
         <div class="flex flex-col items-start">
-          <div><Label key="dapps.o-contacts.pages.contacts.loadingContacts"  /></div>
+          <div>Loading notifications</div>
         </div>
       </div>
     </section>
