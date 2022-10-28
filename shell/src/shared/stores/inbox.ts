@@ -13,16 +13,16 @@ import {me} from "./me";
 import {ApiClient} from "../apiConnection";
 
 export class MyInbox extends PagedEventQuery {
-  constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[], filter?: ProfileEventFilter) {
-    super(eventTypes, sortOrder, pageSize, filter);
+  constructor(sortOrder: SortOrder, pageSize = 20) {
+    super([
+      EventType.CrcHubTransfer,
+      EventType.CrcMinting,
+      EventType.CrcTrust,
+    ], sortOrder, pageSize);
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
-    if (eventPayload.__typename === EventType.InvitationRedeemed) {
-      return eventPayload.redeemedBy;
-    } else {
-      return eventPayload.transaction_hash.toString();
-    }
+    return (eventPayload).transaction_hash.toString();
   }
 
   protected getIndexedValues(event: ProfileEvent): PagedEventQueryIndexEntry[] {
@@ -48,7 +48,7 @@ export class MyInbox extends PagedEventQuery {
         continueAt: new Date().toJSON(),
       },
       filter: <ProfileEventFilter>{
-        transactionHash: primaryKey
+        transactionHash: primaryKey,
       },
     });
 
@@ -76,3 +76,5 @@ export class MyInbox extends PagedEventQuery {
     this.refresh();
   }
 }
+
+export const inbox = new MyInbox(SortOrder.Desc);
