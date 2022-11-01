@@ -10,6 +10,7 @@ import { verification } from "./dapps/o-verification.manifest";
 import {welcome} from "./dapps/o-welcome.manifest";
 import { translation } from "./dapps/o-translation.manifest";
 import { notifications } from "./dapps/o-notification.manifest";
+import { marketlisting } from "./dapps/o-marketlisting.manifest";
 
 export const dapps: DappManifest<any>[] = [
   homepage,
@@ -22,5 +23,6 @@ export const dapps: DappManifest<any>[] = [
   verification,
   welcome,
   translation,
-  notifications
+  notifications,
+  marketlisting
 ];
