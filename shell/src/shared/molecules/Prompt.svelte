@@ -56,15 +56,6 @@ const onBlur = () => window.o.publishEvent({ type: "shell.inputBlurred" });
   <section
     class="flex flex-col items-center justify-center p-6 space-y-4"
     class:pb-0="{prompt.component === DropdownSelectEditor}">
-    <!-- <slot name="EditorTitle">
-      {#if prompt.params.view && prompt.params.view.title}
-        <div class="w-full text-center">
-          <h1 class="text-3xl uppercase font-heading {prompt.params.view ? prompt.params.view.titleClass : ''}">
-            {@html prompt.params.view ? prompt.params.view.title : ""}
-          </h1>
-        </div>
-      {/if}
-    </slot> -->
     <slot name="EditorDescription">
       {#if prompt.params.view && prompt.params.view.description}
         <div class="w-full text-center">
@@ -83,9 +74,6 @@ const onBlur = () => window.o.publishEvent({ type: "shell.inputBlurred" });
           on:blur="{onBlur}" />
       </slot>
     </div>
-    <!-- <slot name="EditorActionButtons">
-    <div class="w-full">BUTTONS</div>
-  </slot> -->
   </section>
 {:else}
   <Label key="shared.molecules.prompt.nothingToDisplay" />

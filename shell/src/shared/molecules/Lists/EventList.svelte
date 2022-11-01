@@ -16,7 +16,7 @@ export type EventListViewMap = {
 import { onMount } from "svelte";
 
 import { inview } from "svelte-inview/dist/index";
-import GenericEventCard from "../../NotificationViewer/molecules/GenericEventCard.svelte";
+
 import {
   poppedScrollPosition,
   scrollToTop,
@@ -27,8 +27,8 @@ import {
 } from "../../layouts/Center.svelte";
 import { Readable } from "svelte/store";
 import { SvelteComponentDev } from "svelte/internal";
-import { _ } from "svelte-i18n";
 import Label from "../../atoms/Label.svelte";
+import GenericEventCard from "../../../dapps/o-notifications/atoms/GenericEventCard.svelte";
 
 export let views: EventListViewMap = {};
 export let reverse: boolean = false;

@@ -10,7 +10,6 @@ const translations: Page<any, ContactsDappState> = {
   type: "page",
 };
 
-
 export interface DappState {
   // put state here
 }

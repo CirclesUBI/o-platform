@@ -1,13 +1,5 @@
-<script lang="ts" context="module">
-  export type NotificationCardStyle = {
-    backgroundClass: string;
-    titleClass: string;
-  };
-  </script>
-  
-  <script lang="ts">
+<script lang="ts">
   import { onMount } from "svelte";
-  import Date from "../../../shared/atoms/Date.svelte";
   import { EventType, ProfileEvent } from "../../../shared/api/data/types";
   import CrcTrust from "./chatListItems/CrcTrust.svelte";
   import CrcHubTransfer from "./chatListItems/CrcHubTransfer.svelte";
@@ -15,7 +7,6 @@
   import InvitationRedeemed from "./chatListItems/InvitationRedeemed.svelte";
   import { UserActions, UserActionItem } from "../../../shared/userActions";
   import ButtonGroup from "../../../shared/molecules/ButtonGroup/ButtonGroup.svelte";
-  import TransactionCard from "../../o-banking/atoms/TransactionCard.svelte";
   
   export let event: ProfileEvent;
   

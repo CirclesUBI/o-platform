@@ -1,5 +1,4 @@
 import Home from "./o-dashboard/pages/Home.svelte";
-import InviteLeaderboard from "./o-dashboard/pages/InviteLeaderboard.svelte";
 import SharePersonalInvite from "./o-dashboard/pages/SharePersonalInvite.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
@@ -20,14 +19,6 @@ const sharePersonalInvite: Page<any, DappState> = {
   routeParts: ["=share"],
   title: "Share Profile",
   component: SharePersonalInvite,
-};
-
-const inviteLeaderboard: Page<any, DappState> = {
-  routeParts: ["=leaderboard"],
-  component: InviteLeaderboard,
-  isSystem: false,
-  title: "common.inviteLeaderboard",
-  type: "page",
 };
 
 const externalChat: Link<any, DappState> = {
@@ -63,21 +54,6 @@ export const home: DappManifest<DappState> = {
   tag: Promise.resolve("alpha"),
   isEnabled: true,
   hideFooter: true,
-  // featuredAction: async () => {
-  //   let $me: Profile = null;
-  //   me.subscribe((e) => ($me = e))();
-
-  //   if ($me.__typename == "Profile") {
-  //     return {
-  //       text: "My Invites",
-  //       icon: "",
-  //       action: () => {
-  //         push("/home/invites");
-  //       },
-  //     };
-  //   }
-  // },
-
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {
@@ -85,5 +61,5 @@ export const home: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, inviteLeaderboard, sharePersonalInvite, externalChat, externalForum],
+  routables: [index, sharePersonalInvite, externalChat, externalForum],
 };
