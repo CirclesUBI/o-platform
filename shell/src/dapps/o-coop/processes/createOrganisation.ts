@@ -19,6 +19,7 @@ import { BN } from "ethereumjs-util";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
+import {promptCity} from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -161,7 +162,7 @@ const processDefinition = (processId: string) =>
             )
           ),
         navigation: {
-          next: "#country",
+          next: "#description",
         },
       }),
       description: prompt<CreateOrganisationContext, any>({
@@ -192,10 +193,29 @@ const processDefinition = (processId: string) =>
             window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")
           ),
         navigation: {
-          next: "#avatarUrl",
-          canSkip: () => true,
-          previous: "#country",
+          next: "#location",
+          canSkip: () => false,
+          previous: "#description",
         },
+      }),
+      location: promptCity<CreateOrganisationContext, any>({
+        id: "location",
+        field: "location",
+        params: {
+          view: {
+            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
+            description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
+            placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
+            submitButtonText: window.o.i18n(
+              "dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"
+            ),
+          },
+        },
+        navigation: {
+          next: "#avatarUrl",
+          previous: "#description",
+          canSkip: () => false,
+        }
       }),
       avatarUrl: promptFile<CreateOrganisationContext, any>({
         field: "avatarUrl",

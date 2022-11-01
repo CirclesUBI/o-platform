@@ -1,8 +1,7 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import {InvitationRedeemed, NewUser, Profile, ProfileEvent} from "../../../shared/api/data/types";
-import { displayableName } from "../../../shared/functions/stringHelper";
+import {InvitationRedeemed, Profile, ProfileEvent} from "../../../shared/api/data/types";
 
 export let param: Profile;
 export let event: ProfileEvent;

@@ -762,14 +762,6 @@ type MyInviteRank {
   redeemedInvitationsCount: Int!
 }
 
-type Stats {
-  profilesCount: Int!
-  verificationsCount: Int!
-  leaderboard: [LeaderboardEntry!]!
-  goals: FibonacciGoals!
-  myRank: MyInviteRank!
-}
-
 type TransitiveTransfer {
   isHubTransfer: Boolean
   from: String!
@@ -895,7 +887,6 @@ type Query {
   profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
   findSafesByOwner(owner: String!): [SafeInfo!]!
   search(query: SearchInput!): [Profile!]!
-  stats: Stats!
   tags(query: QueryTagsInput!): [Tag!]!
   tagById(id: Int!): Tag
   findInvitationCreator(code: String!): Profile
