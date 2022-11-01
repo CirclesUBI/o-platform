@@ -1,9 +1,7 @@
 import Home from "./o-homepage/pages/Home.svelte";
-
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
-import { Environment } from "../shared/environment";
 import Terms from "./o-homepage/pages/Terms.svelte";
 import Privacy from "./o-homepage/pages/Privacy.svelte";
 

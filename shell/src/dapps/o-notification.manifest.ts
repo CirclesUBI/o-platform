@@ -1,9 +1,9 @@
 import Home from "./o-notifications/pages/Home.svelte"
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
-import { me } from "../shared/stores/me";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
-import { init } from "./o-banking/init";
-import { Profile } from "../shared/api/data/types";
+import Trusts from "./o-notifications/pages/Trusts.svelte";
+import Transactions from "./o-notifications/pages/Transactions.svelte";
+import RedeemedInvitations from "./o-notifications/pages/RedeemedInvitations.svelte";
 
 export class NotificationDappState {
 }
@@ -11,9 +11,30 @@ export class NotificationDappState {
 export const index: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
-  routeParts: [],
-  title: "Notifications",
+  routeParts: ["=all"],
+  title: "All",
   component: Home,
+};
+export const trusts: Page<any, NotificationDappState> = {
+  type: "page",
+  position: "main",
+  routeParts: ["=trusts"],
+  title: "Trust events",
+  component: Trusts,
+};
+export const transactions: Page<any, NotificationDappState> = {
+  type: "page",
+  position: "main",
+  routeParts: ["=transactions"],
+  title: "Transactions",
+  component: Transactions,
+};
+export const redeemedInvitations: Page<any, NotificationDappState> = {
+  type: "page",
+  position: "main",
+  routeParts: ["=invitations"],
+  title: "Invitations",
+  component: RedeemedInvitations,
 };
 
 export const notifications: DappManifest<NotificationDappState> = {
@@ -22,28 +43,10 @@ export const notifications: DappManifest<NotificationDappState> = {
   isSingleton: true,
   icon: "group",
   title: "Notifications",
-  routeParts: ["notifications"],
-  defaultRoute: [],
+  routeParts: [],
+  defaultRoute: ["all"],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
   hideFooter: true,
-  initialize: async (stack, runtimeDapp) => {
-    // Do init stuff here
-    const myProfileResult = await new Promise<Profile>((resolve) => {
-      const unsub = me.subscribe((myProfile) => {
-        resolve(myProfile);
-      });
-      unsub();
-    });
-
-    if (myProfileResult) {
-      await init();
-    }
-
-    return {
-      initialRoutable: notifications,
-      cancelDependencyLoading: false,
-    };
-  },
-  routables: [index],
+  routables: [index, transactions, trusts, redeemedInvitations],
 };

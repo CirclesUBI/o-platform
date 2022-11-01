@@ -13,13 +13,14 @@ import {me} from "./me";
 import {ApiClient} from "../apiConnection";
 
 export class MyInbox extends PagedEventQuery {
-  constructor(sortOrder: SortOrder, pageSize = 20) {
-    super([
+  constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[]) {
+    super(eventTypes /*[
       EventType.CrcHubTransfer,
       EventType.CrcMinting,
       EventType.CrcTrust,
-      EventType.InvitationRedeemed
-    ], sortOrder, pageSize);
+      EventType.InvitationRedeemed,
+      EventType.Erc20Transfer
+    ]*/, sortOrder, pageSize);
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
@@ -81,5 +82,3 @@ export class MyInbox extends PagedEventQuery {
     this.refresh();
   }
 }
-
-export const inbox = new MyInbox(SortOrder.Desc);
