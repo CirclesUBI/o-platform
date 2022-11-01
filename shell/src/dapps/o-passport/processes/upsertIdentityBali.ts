@@ -308,7 +308,7 @@ const processDefinition = (processId: string) =>
           }),
         },
         navigation: {
-          next: "#country",
+          next: "#location",
           previous: "#gender",
           canSkip: () => true,
         },
@@ -332,7 +332,7 @@ const processDefinition = (processId: string) =>
         },
         navigation: {
           next: "#upsertIdentity",
-          previous: "#country",
+          previous: "#location",
           canSkip: () => true,
         },
       }),
