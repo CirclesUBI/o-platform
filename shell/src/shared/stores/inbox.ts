@@ -2,7 +2,7 @@ import {PagedEventQuery, PagedEventQueryIndexEntry} from "./pagedEventQuery";
 import {
   AcknowledgeDocument,
   EventPayload,
-  EventType,
+  EventType, InvitationRedeemed,
   Profile,
   ProfileEvent,
   ProfileEventFilter,
@@ -18,11 +18,16 @@ export class MyInbox extends PagedEventQuery {
       EventType.CrcHubTransfer,
       EventType.CrcMinting,
       EventType.CrcTrust,
+      EventType.InvitationRedeemed
     ], sortOrder, pageSize);
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
-    return (eventPayload).transaction_hash.toString();
+    if (eventPayload.__typename === EventType.InvitationRedeemed) {
+      return eventPayload.redeemedBy;
+    } else {
+      return eventPayload.transaction_hash.toString();
+    }
   }
 
   protected getIndexedValues(event: ProfileEvent): PagedEventQueryIndexEntry[] {

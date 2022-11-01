@@ -137,6 +137,7 @@ console.log(`__ALLOW_VERIFY__: ${__ALLOW_VERIFY__}`);
 console.log(`__ALLOW_CREATE_ORGANISATION__: ${__ALLOW_CREATE_ORGANISATION__}`);
 console.log(`__FIXED_GAS_PRICE__: ${__FIXED_GAS_PRICE__}`);
 console.log(`__SHOW_LANGUAGE_SWITCHER__: ${__SHOW_LANGUAGE_SWITCHER__}`);
+console.log(`__HERE_API_KEY__: ${__HERE_API_KEY__}`);
 
 const sveltePath = path.resolve("node_modules", "svelte");
 
