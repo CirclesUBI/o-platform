@@ -5,7 +5,6 @@ import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { me } from "../shared/stores/me";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { init } from "./o-banking/init";
-import Graph from "./o-contacts/pages/Graph.svelte";
 import { Jumplist, JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Contact, ContactDirection, EventType, Profile, ProfileOrigin, ProfileType } from "../shared/api/data/types";
 import { transfer } from "./o-banking/processes/transfer";
@@ -227,14 +226,6 @@ export const profile: Page<any, ContactsDappState> = {
   routeParts: ["=profile", ":id"],
   title: "Profile",
   component: ProfilePage,
-};
-
-const graph: Page<any, ContactsDappState> = {
-  routeParts: ["=graph"],
-  component: Graph,
-  title: "Network",
-  icon: "network",
-  type: "page",
 };
 
 export const scanToTrust: Page<any, ContactsDappState> = {
