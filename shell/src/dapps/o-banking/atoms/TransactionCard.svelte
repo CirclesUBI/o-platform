@@ -2,10 +2,8 @@
 import { push } from "svelte-spa-router";
 import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
-import Date from "../../../shared/atoms/Date.svelte";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import relativeTimeString from "../../../shared/functions/relativeTimeString";
-import { displayableName } from "../../../shared/functions/stringHelper";
 
 import {
   CrcHubTransfer,
@@ -16,7 +14,6 @@ import {
   ProfileEvent,
 } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import Icons from "../../../shared/molecules/Icons.svelte";
 
 export let event: ProfileEvent;
 
@@ -148,7 +145,7 @@ function loadDetailPage(path) {
       profileLink: `#/contacts/profile/${targetProfile.circlesAddress}`,
       imageAlt: event.direction === 'in' ? fromProfile.circlesAddress : toProfile.circlesAddress,
 
-      title: displayableName(targetProfile.firstName, targetProfile.lastName ? targetProfile.lastName : null),
+      title: targetProfile.displayName,
       subTitle: messageString ? messageString : '',
       truncateMain: true,
       endTextBig: amountTime,

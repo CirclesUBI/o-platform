@@ -2,7 +2,6 @@
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import { Verification } from "../../../shared/api/data/types";
-import { displayableName } from "../../../shared/functions/stringHelper";
 import dayjs from "dayjs";
 
 export let param: Verification;
