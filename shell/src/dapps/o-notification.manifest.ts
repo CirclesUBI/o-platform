@@ -43,7 +43,7 @@ export const notifications: DappManifest<NotificationDappState> = {
   isSingleton: true,
   icon: "group",
   title: "Notifications",
-  routeParts: [],
+  routeParts: ["=notifications"],
   defaultRoute: ["all"],
   tag: Promise.resolve("alpha"),
   isEnabled: true,

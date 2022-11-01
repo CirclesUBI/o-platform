@@ -1,6 +1,4 @@
 <script lang="ts">
-import Icons from "../../Icons.svelte";
-
 export let props;
 
 function clickHandler() {
