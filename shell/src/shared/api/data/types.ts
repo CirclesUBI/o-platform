@@ -54,6 +54,14 @@ export type AssetBalance = {
   token_balance: Scalars['String'];
 };
 
+export type Businesses = {
+  __typename?: 'Businesses';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+};
+
 export type Capability = {
   __typename?: 'Capability';
   type?: Maybe<CapabilityType>;
@@ -811,6 +819,7 @@ export type Query = {
   signMessage: Scalars['String'];
   directPath: TransitivePath;
   paymentPath: TransitivePath;
+  allBusinesses: Array<Businesses>;
 };
 
 
@@ -2427,6 +2436,17 @@ export type ClientAssertionJwtQuery = (
   & Pick<Query, 'clientAssertionJwt'>
 );
 
+export type AllBusinessesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBusinessesQuery = (
+  { __typename?: 'Query' }
+  & { allBusinesses: Array<(
+    { __typename?: 'Businesses' }
+    & Pick<Businesses, 'id' | 'name' | 'description' | 'picture'>
+  )> }
+);
+
 export type EventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3937,6 +3957,16 @@ export const ClientAssertionJwtDocument = gql`
   clientAssertionJwt
 }
     `;
+export const AllBusinessesDocument = gql`
+    query allBusinesses {
+  allBusinesses {
+    id
+    name
+    description
+    picture
+  }
+}
+    `;
 export const EventsDocument = gql`
     subscription events {
   events {
@@ -4128,6 +4158,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     clientAssertionJwt(variables?: ClientAssertionJwtQueryVariables): Promise<ClientAssertionJwtQuery> {
       return withWrapper(() => client.request<ClientAssertionJwtQuery>(print(ClientAssertionJwtDocument), variables));
+    },
+    allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
+      return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));
