@@ -9,6 +9,7 @@ import { inbox } from "../../../shared/stores/inbox";
 import EventList from "../../../shared/molecules/Lists/EventList.svelte";
 import GenericEventCard from "../../../shared/NotificationViewer/molecules/GenericEventCard.svelte";
 import TransactionCard from "../../o-banking/atoms/TransactionCard.svelte";
+import RedeemedInvitationCard from "../atoms/RedeemedInvitationCard.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -29,6 +30,7 @@ onMount(() => {
   views="{{
     [EventType.CrcHubTransfer]: { component: TransactionCard },
     [EventType.CrcMinting]: { component: TransactionCard },
-    [EventType.CrcTrust]: { component: GenericEventCard }
+    [EventType.CrcTrust]: { component: GenericEventCard },
+    [EventType.InvitationRedeemed]: {component: RedeemedInvitationCard}
   }}" />
 </div>
