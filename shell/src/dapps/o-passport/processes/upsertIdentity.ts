@@ -4,7 +4,6 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
-import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import EmailAddressEditor from "@o-platform/o-editors/src/EmailAddressEditor.svelte";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
@@ -15,7 +14,7 @@ import { promptFile } from "../../../shared/api/promptFile";
 import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
-import LocationSearchEditor from "@o-platform/o-editors/src/LocationSearchEditor.svelte";
+import {promptCity} from "../../../shared/api/promptCity";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -247,10 +246,30 @@ const processDefinition = (processId: string) =>
           }),
         },
         navigation: {
-          next: "#upsertIdentity",
+          next: "#location",
           previous: "#lastName",
           canSkip: () => true,
         },
+      }),
+
+      location: promptCity<UpsertIdentityContext, any>({
+        id: "location",
+        field: "location",
+        params: {
+          view: (editorContent.city = {
+            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
+            description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
+            placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
+            submitButtonText: window.o.i18n(
+              "dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"
+            ),
+          }),
+        },
+        navigation: {
+          next: "#upsertIdentity",
+          previous: "#avatarUrl",
+          canSkip: () => true,
+        }
       }),
 
       upsertIdentity: {
@@ -267,6 +286,7 @@ const processDefinition = (processId: string) =>
               (sessionStorage.getItem("circlesKey")
                 ? RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).address
                 : undefined);
+
             const result = await apiClient.mutate({
               mutation: UpsertProfileDocument,
               variables: {

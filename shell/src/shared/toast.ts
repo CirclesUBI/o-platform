@@ -1,5 +1,4 @@
-import { SvelteToast, toast } from "./molecules/Toast";
-import { onMount } from "svelte";
+import { toast } from "./molecules/Toast";
 
 /**
  * Specify the type of notification

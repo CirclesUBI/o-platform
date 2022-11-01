@@ -7,7 +7,6 @@ import PageHeader from "../../../shared/atoms/PageHeader.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { getCountryName } from "../../../shared/countries";
 import { Profile, Organisation } from "../../../shared/api/data/types";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
