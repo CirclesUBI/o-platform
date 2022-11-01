@@ -1,16 +1,3 @@
-<script context="module" lang="ts">
-import { PromptNavigation } from "@o-platform/o-process/dist/events/prompt";
-
-export interface ProcessContainerNavigation extends PromptNavigation {
-  canSkip: boolean;
-  canGoBack: boolean;
-  canSubmit: boolean;
-  skip: () => void;
-  back: () => void;
-  cancel: () => void;
-}
-</script>
-
 <script lang="ts">
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Prompt from "./Prompt.svelte";

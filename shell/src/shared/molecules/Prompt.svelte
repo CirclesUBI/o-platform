@@ -5,8 +5,6 @@ import { Schema } from "yup";
 import { PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
-import NavSteps from "./NavSteps.svelte";
-import { _ } from "svelte-i18n";
 import Label from "../atoms/Label.svelte";
 import ModalHeader from "../atoms/ModalHeader.svelte";
 

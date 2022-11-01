@@ -25,7 +25,6 @@ import { media } from "../stores/media";
 import { me } from "../stores/me";
 import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
 import { contacts } from "../stores/contacts";
-import { performOauth } from "../../dapps/o-humanode/processes/performOauth";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
 import { myTransactions } from "../stores/myTransactions";
 import { assetBalances } from "../stores/assetsBalances";
@@ -47,8 +46,6 @@ export let params: {
 
 let lastParamsJson: string = "";
 let identityChecked: boolean = false;
-let dappFrameState: any;
-let nextRoutable: Routable | undefined;
 let dapp: DappManifest<any>;
 let runtimeDapp: RuntimeDapp<any>;
 let routable: Routable;
@@ -684,73 +681,8 @@ function onInputBlurred() {
   return;
 }
 
-function armOauthListener() {
-  function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i].split("=");
-      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
-    }
-    return query;
-  }
-
-  if (location.search) {
-    // Handle OAuth callbacks:
-    // 1. Find out from where the oauth interaction was started (see state)
-    // 2. Send the user back to its origin
-    // 3. Re-open the flow to show a success- or cancelled-message
-    const paramsMap: any = parseQuery(location.search);
-
-    if (paramsMap && paramsMap.state) {
-      const splittedState = paramsMap.state.split("-");
-      if (splittedState.length != 2) {
-        // invalid
-        alert("Couldn't parse the 'state' from the oauth response");
-      } else {
-        // possibly valid
-        // TODO: allow app-id + routeParts in the second part of the 'state'
-        if (splittedState[1] == "dashboard") {
-          setTimeout(() => {
-            window.o.runProcess(performOauth, {
-              origin: "dashboard",
-              authorizationResponse: {
-                error: paramsMap?.error,
-                state: paramsMap?.state,
-                code: paramsMap?.code,
-              },
-              successAction: () => {
-                push("#/dashboard");
-              },
-            });
-          }, 1000);
-        } else if (splittedState[1] == "locations") {
-          setTimeout(() => {
-            window.o.runProcess(performOauth, {
-              origin: "locations",
-              authorizationResponse: {
-                error: paramsMap?.error,
-                state: paramsMap?.state,
-                code: paramsMap?.code,
-              },
-              successAction: () => {
-                push("#/dashboard");
-              },
-            });
-          }, 1000);
-        } else {
-          alert("Couldn't parse the 'state' from the oauth response");
-          // invalid
-        }
-      }
-    }
-  }
-}
-
 onMount(async () => {
   // log("onMount()");
-
-  armOauthListener();
 
   await window.o.events.subscribe(<any>(async (event) => {
     // log("DappFrame event: ", event);
