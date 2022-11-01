@@ -2,7 +2,7 @@ import {PagedEventQuery, PagedEventQueryIndexEntry} from "./pagedEventQuery";
 import {
   AcknowledgeDocument,
   EventPayload,
-  EventType, InvitationRedeemed,
+  EventType,
   Profile,
   ProfileEvent,
   ProfileEventFilter,
@@ -14,13 +14,7 @@ import {ApiClient} from "../apiConnection";
 
 export class MyInbox extends PagedEventQuery {
   constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[]) {
-    super(eventTypes /*[
-      EventType.CrcHubTransfer,
-      EventType.CrcMinting,
-      EventType.CrcTrust,
-      EventType.InvitationRedeemed,
-      EventType.Erc20Transfer
-    ]*/, sortOrder, pageSize);
+    super(eventTypes, sortOrder, pageSize);
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {

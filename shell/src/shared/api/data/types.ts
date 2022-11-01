@@ -793,7 +793,6 @@ export type Query = {
   profilesBySafeAddress: Array<Profile>;
   findSafesByOwner: Array<SafeInfo>;
   search: Array<Profile>;
-  stats: Stats;
   tags: Array<Tag>;
   tagById?: Maybe<Tag>;
   findInvitationCreator?: Maybe<Profile>;
@@ -1088,15 +1087,6 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
-
-export type Stats = {
-  __typename?: 'Stats';
-  profilesCount: Scalars['Int'];
-  verificationsCount: Scalars['Int'];
-  leaderboard: Array<LeaderboardEntry>;
-  goals: FibonacciGoals;
-  myRank: MyInviteRank;
-};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -1668,31 +1658,6 @@ export type SafeInfoQuery = (
     { __typename?: 'SafeInfo' }
     & Pick<SafeInfo, 'lastUbiAt' | 'safeAddress' | 'tokenAddress' | 'randomValue'>
   )> }
-);
-
-export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type StatsQuery = (
-  { __typename?: 'Query' }
-  & { stats: (
-    { __typename?: 'Stats' }
-    & Pick<Stats, 'profilesCount' | 'verificationsCount'>
-    & { goals: (
-      { __typename?: 'FibonacciGoals' }
-      & Pick<FibonacciGoals, 'lastGoal' | 'currentValue' | 'nextGoal'>
-    ), myRank: (
-      { __typename?: 'MyInviteRank' }
-      & Pick<MyInviteRank, 'rank' | 'redeemedInvitationsCount'>
-    ), leaderboard: Array<(
-      { __typename?: 'LeaderboardEntry' }
-      & Pick<LeaderboardEntry, 'createdByCirclesAddress' | 'inviteCount'>
-      & { createdByProfile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl'>
-      )> }
-    )> }
-  ) }
 );
 
 export type FindSafesByOwnerQueryVariables = Exact<{
@@ -2841,38 +2806,6 @@ export const SafeInfoDocument = gql`
     safeAddress
     tokenAddress
     randomValue
-  }
-}
-    `;
-export const StatsDocument = gql`
-    query stats {
-  stats {
-    profilesCount
-    verificationsCount
-    goals {
-      lastGoal
-      currentValue
-      nextGoal
-    }
-    myRank {
-      rank
-      redeemedInvitationsCount
-    }
-    leaderboard {
-      createdByCirclesAddress
-      inviteCount
-      createdByProfile {
-        id
-        circlesAddress
-        displayCurrency
-        circlesSafeOwner
-        displayName
-        firstName
-        lastName
-        dream
-        avatarUrl
-      }
-    }
   }
 }
     `;
@@ -4102,9 +4035,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     safeInfo(variables?: SafeInfoQueryVariables): Promise<SafeInfoQuery> {
       return withWrapper(() => client.request<SafeInfoQuery>(print(SafeInfoDocument), variables));
-    },
-    stats(variables?: StatsQueryVariables): Promise<StatsQuery> {
-      return withWrapper(() => client.request<StatsQuery>(print(StatsDocument), variables));
     },
     findSafesByOwner(variables: FindSafesByOwnerQueryVariables): Promise<FindSafesByOwnerQuery> {
       return withWrapper(() => client.request<FindSafesByOwnerQuery>(print(FindSafesByOwnerDocument), variables));

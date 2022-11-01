@@ -7,7 +7,6 @@ import { ApiClient } from "../apiConnection";
 import { Environment } from "../environment";
 
 let availableLanguages = [];
-
 let selectedValue: string;
 let ratio = 1.77;
 let height = 75;
