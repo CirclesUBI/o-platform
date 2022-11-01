@@ -7,10 +7,6 @@ export class Environment {
     return "__SHOW_LANGUAGE_SWITCHER__" == "true";
   }
 
-  public static get authEndpointUrl(): string {
-    return "__AUTH_ENDPOINT__";
-  }
-
   public static get apiEndpointUrl(): string {
     return "__API_ENDPOINT__";
   }
@@ -45,10 +41,6 @@ export class Environment {
 
   public static get filesAppId(): string {
     return "__FILES_APP_ID__";
-  }
-
-  public static get circlesGardenApiUrl(): string {
-    return "__CIRCLES_GARDEN_API__";
   }
 
   public static get pathfinderEndpointUrl(): string {

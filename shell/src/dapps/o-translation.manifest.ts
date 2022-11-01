@@ -2,9 +2,6 @@ import Translations from "./o-translation/pages/Translations.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { ContactsDappState } from "./o-contacts.manifest";
-import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
-import { Environment } from "../shared/environment";
-import { performOauth } from "./o-humanode/processes/performOauth";
 
 const translations: Page<any, ContactsDappState> = {
   routeParts: [],
@@ -12,7 +9,6 @@ const translations: Page<any, ContactsDappState> = {
   title: "translations",
   type: "page",
 };
-
 
 export interface DappState {
   // put state here

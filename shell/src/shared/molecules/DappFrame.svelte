@@ -19,14 +19,12 @@ import { push } from "svelte-spa-router";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { generateNavManifest, GenerateNavManifestArgs } from "../functions/generateNavManifest";
-import { inbox } from "../stores/inbox";
 import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
 import { me } from "../stores/me";
 import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
 import { contacts } from "../stores/contacts";
-import { performOauth } from "../../dapps/o-humanode/processes/performOauth";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
 import { myTransactions } from "../stores/myTransactions";
 import { assetBalances } from "../stores/assetsBalances";
@@ -48,8 +46,6 @@ export let params: {
 
 let lastParamsJson: string = "";
 let identityChecked: boolean = false;
-let dappFrameState: any;
-let nextRoutable: Routable | undefined;
 let dapp: DappManifest<any>;
 let runtimeDapp: RuntimeDapp<any>;
 let routable: Routable;
@@ -373,7 +369,7 @@ function initSession(session: SessionInfo) {
               playBlblblbl = true;
             }
           }
-          inbox.refresh();
+          //inbox.refresh();
 
           if (!playBlblblbl) {
             return;
@@ -390,7 +386,7 @@ function initSession(session: SessionInfo) {
     });
   }
 
-  inbox.refresh();
+  //inbox.refresh();
 }
 
 async function init() {
@@ -403,7 +399,7 @@ async function init() {
     centerIsOpen: false,
     rightIsOpen: false,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
   });
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
@@ -461,7 +457,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount:0,//  $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -478,14 +474,14 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
 }
 
 function onOpenNotifications() {
-  push("#/notifications");
+  push("#/notifications/all");
 }
 
 function onOpenModal() {
@@ -502,7 +498,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -521,7 +517,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
   });
   window.scrollTo(0, _scrollY);
 }
@@ -605,7 +601,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -618,7 +614,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -633,7 +629,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -685,73 +681,8 @@ function onInputBlurred() {
   return;
 }
 
-function armOauthListener() {
-  function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i].split("=");
-      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
-    }
-    return query;
-  }
-
-  if (location.search) {
-    // Handle OAuth callbacks:
-    // 1. Find out from where the oauth interaction was started (see state)
-    // 2. Send the user back to its origin
-    // 3. Re-open the flow to show a success- or cancelled-message
-    const paramsMap: any = parseQuery(location.search);
-
-    if (paramsMap && paramsMap.state) {
-      const splittedState = paramsMap.state.split("-");
-      if (splittedState.length != 2) {
-        // invalid
-        alert("Couldn't parse the 'state' from the oauth response");
-      } else {
-        // possibly valid
-        // TODO: allow app-id + routeParts in the second part of the 'state'
-        if (splittedState[1] == "dashboard") {
-          setTimeout(() => {
-            window.o.runProcess(performOauth, {
-              origin: "dashboard",
-              authorizationResponse: {
-                error: paramsMap?.error,
-                state: paramsMap?.state,
-                code: paramsMap?.code,
-              },
-              successAction: () => {
-                push("#/dashboard");
-              },
-            });
-          }, 1000);
-        } else if (splittedState[1] == "locations") {
-          setTimeout(() => {
-            window.o.runProcess(performOauth, {
-              origin: "locations",
-              authorizationResponse: {
-                error: paramsMap?.error,
-                state: paramsMap?.state,
-                code: paramsMap?.code,
-              },
-              successAction: () => {
-                push("#/dashboard");
-              },
-            });
-          }, 1000);
-        } else {
-          alert("Couldn't parse the 'state' from the oauth response");
-          // invalid
-        }
-      }
-    }
-  }
-}
-
 onMount(async () => {
   // log("onMount()");
-
-  armOauthListener();
 
   await window.o.events.subscribe(<any>(async (event) => {
     // log("DappFrame event: ", event);
@@ -1072,7 +1003,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }
@@ -1141,7 +1072,7 @@ function showModalPage(
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }

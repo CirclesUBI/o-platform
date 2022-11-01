@@ -122,37 +122,6 @@ query safeInfo {
   }
 }
 
-query stats {
-  stats {
-    profilesCount
-    verificationsCount
-    goals {
-      lastGoal
-      currentValue
-      nextGoal
-    }
-    myRank {
-      rank
-      redeemedInvitationsCount
-    }
-    leaderboard {
-      createdByCirclesAddress
-      inviteCount
-      createdByProfile {
-        id
-        circlesAddress
-        displayCurrency
-        circlesSafeOwner
-        displayName
-        firstName
-        lastName
-        dream
-        avatarUrl
-      }
-    }
-  }
-}
-
 query findSafesByOwner($owner: String!) {
   findSafesByOwner(owner: $owner) {
     type

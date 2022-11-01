@@ -1,5 +1,4 @@
 import Organisations from "./o-coop/pages/Organisations.svelte";
-import Regions from "./o-coop/pages/Regions.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { createOrganisation } from "./o-coop/processes/createOrganisation";
@@ -9,11 +8,10 @@ import { addMember } from "./o-coop/processes/addMember";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { loadProfile } from "../shared/functions/loadProfile";
-import { CapabilityType, InitDocument, InitQueryVariables, Profile, SessionInfo } from "../shared/api/data/types";
+import { CapabilityType, Profile } from "../shared/api/data/types";
 import { me } from "../shared/stores/me";
 import { getSessionInfo } from "./o-passport/processes/identify/services/getSessionInfo";
 import { addOwner } from "./o-coop/processes/addOwner";
-import { ApiClient } from "../shared/apiConnection";
 
 const index: Page<any, ContactsDappState> = {
   routeParts: ["=organisations"],
@@ -21,12 +19,7 @@ const index: Page<any, ContactsDappState> = {
   title: "Coops",
   type: "page",
 };
-const regions: Page<any, ContactsDappState> = {
-  routeParts: ["=regions"],
-  component: Regions,
-  title: "Regions",
-  type: "page",
-};
+
 export const profile: Page<any, ContactsDappState> = {
   type: "page",
   isSystem: true,
@@ -140,5 +133,5 @@ export const coop: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, regions],
+  routables: [index, profile],
 };
