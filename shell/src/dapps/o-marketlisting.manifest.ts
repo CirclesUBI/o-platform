@@ -1,65 +1,19 @@
+import Translations from "./o-translation/pages/Translations.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { ContactsDappState } from "./o-contacts.manifest";
+import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
+import { Environment } from "../shared/environment";
+import { performOauth } from "./o-humanode/processes/performOauth";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
-import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
-import Favorites from "./o-marketlisting/pages/Favorites.svelte";
-import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
-import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 
-const externalChat: Link<any, DappState> = {
-  type: "link",
-  title: "common.support",
-  icon: "support",
-  routeParts: ["=chat"],
-  openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
-};
-
-const listing: Page<any, ContactsDappState> = {
-  routeParts: ["=listing"],
+const marketlistings: Page<any, ContactsDappState> = {
+  routeParts: [],
   component: Marketlisting,
-  title: "Market",
-  icon: "marketlisting",
+  title: "marketlisting",
   type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "marketlisting",
-        backgroundColorClass: "market",
-      },
-    },
-  },
-  position: "main",
 };
 
-const favorites: Page<any, ContactsDappState> = {
-  routeParts: ["=favorites"],
-  component: Favorites,
-  title: "Favorites",
-  type: "page",
-  position: "main",
-  icon: "favorite",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "marketlisting",
-        backgroundColorClass: "market",
-      },
-    },
-  },
-};
-
-const detailPage: Page<any, ContactsDappState> = {
-  routeParts: ["=detail", ":circlesAddress"],
-  component: MarketlistingDetail,
-  title: "detail",
-  isSystem: true,
-  type: "page",
-  position: "modal",
-};
 
 export interface DappState {
   // put state here
@@ -67,30 +21,21 @@ export interface DappState {
 
 export const marketlisting: DappManifest<DappState> = {
   type: "dapp",
-  dappId: "market:1",
+  dappId: "marketlisting:1",
   isSingleton: true,
   isHidden: false,
   icon: "check",
-  title: "Market",
-  routeParts: ["market"],
-  defaultRoute: ["listing"],
+  title: "marketlisting",
+  routeParts: ["=marketlisting"],
+  defaultRoute: ["marketlisting"],
   tag: Promise.resolve("alpha"),
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "marketlisting",
-        backgroundColorClass: "market",
-      },
-    },
-  },
   isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {
-      initialRoutable: listing,
+      initialRoutable: marketlistings,
       cancelDependencyLoading: false,
     };
   },
-  routables: [listing, detailPage, favorites, externalChat],
+  routables: [marketlistings],
 };

@@ -63,6 +63,7 @@ type Profile {
   provenUniqueness: Boolean
   age: Int
   gender: Gender
+  location: String
 }
 
 type ClaimedInvitation {
@@ -198,6 +199,7 @@ input UpsertProfileInput {
   displayCurrency: DisplayCurrency
   age: Int
   gender: Gender
+  location: String
 }
 
 type Tag {
@@ -363,16 +365,6 @@ type GnosisSafeEthTransfer implements IEventPayload {
   tags: [Tag!]!
 }
 
-type ChatMessage implements IEventPayload {
-  id: Int!
-  transaction_hash: String
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  text: String!
-}
-
 type MembershipOffer implements IEventPayload {
   transaction_hash: String
   createdBy: String!
@@ -453,11 +445,6 @@ interface IAggregatePayload {
   lastUpdatedAt: String
 }
 
-type Erc721Tokens implements IAggregatePayload {
-  lastUpdatedAt: String!
-  balances: [Erc721Token!]!
-}
-
 type Contacts implements IAggregatePayload {
   lastUpdatedAt: String!
   contacts: [Contact!]!
@@ -482,7 +469,6 @@ union EventPayload =
   | EthTransfer
   | Erc20Transfer
   | GnosisSafeEthTransfer
-  | ChatMessage
   | MembershipOffer
   | MembershipAccepted
   | MembershipRejected
@@ -503,7 +489,6 @@ enum EventType {
   CrcMinting
   EthTransfer
   GnosisSafeEthTransfer
-  ChatMessage
   MembershipOffer
   MembershipAccepted
   MembershipRejected
@@ -523,7 +508,6 @@ enum AggregateType {
   Memberships
   Members
   Sales
-  Erc721Tokens
 }
 
 type AssetBalance {
@@ -532,16 +516,6 @@ type AssetBalance {
   token_owner_address: String!
   token_owner_profile: Profile
   token_balance: String!
-}
-
-type Erc721Token {
-  token_symbol: String
-  token_name: String
-  token_address: String!
-  token_owner_address: String!
-  token_owner_profile: Profile
-  token_no: String!
-  token_url: String!
 }
 
 enum ContactDirection {
@@ -562,7 +536,6 @@ union AggregatePayload =
   | Contacts
   | Memberships
   | Members
-  | Erc721Tokens
 
 type ProfileAggregate {
   type: String!
@@ -711,6 +684,13 @@ type i18n {
   needsUpdate: Boolean
 }
 
+type Businesses {
+  id: Int!
+  name: String
+  description: String
+  picture: String
+}
+
 enum SortOrder {
   ASC
   DESC
@@ -728,17 +708,12 @@ enum Direction {
   out
 }
 
-input ChatMessageEventFilter {
-  id: Int!
-}
-
 input ProfileEventFilter {
   direction: Direction
   from: String
   to: String
   with: String
   transactionHash: String
-  chatMessage: ChatMessageEventFilter
 }
 
 input ContactAggregateFilter {
@@ -957,6 +932,7 @@ type Query {
   signMessage(message: String!, key: String!): String!
   directPath(from: String!, to: String!, amount: String!): TransitivePath!
   paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
+  allBusinesses: [Businesses!]!
 }
 
 type Subscription {

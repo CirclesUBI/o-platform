@@ -54,6 +54,14 @@ export type AssetBalance = {
   token_balance: Scalars['String'];
 };
 
+export type Businesses = {
+  __typename?: 'Businesses';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+};
+
 export type Capability = {
   __typename?: 'Capability';
   type?: Maybe<CapabilityType>;
@@ -67,21 +75,6 @@ export enum CapabilityType {
   Tickets = 'Tickets',
   VerifiedByHumanode = 'VerifiedByHumanode'
 }
-
-export type ChatMessage = IEventPayload & {
-  __typename?: 'ChatMessage';
-  id: Scalars['Int'];
-  transaction_hash?: Maybe<Scalars['String']>;
-  from: Scalars['String'];
-  from_profile?: Maybe<Profile>;
-  to: Scalars['String'];
-  to_profile?: Maybe<Profile>;
-  text: Scalars['String'];
-};
-
-export type ChatMessageEventFilter = {
-  id: Scalars['Int'];
-};
 
 export type ClaimInvitationResult = {
   __typename?: 'ClaimInvitationResult';
@@ -281,7 +274,7 @@ export type EthTransfer = IEventPayload & {
   tags: Array<Tag>;
 };
 
-export type EventPayload = CrcSignup | CrcTrust | CrcTokenTransfer | CrcHubTransfer | CrcMinting | EthTransfer | Erc20Transfer | GnosisSafeEthTransfer | ChatMessage | MembershipOffer | MembershipAccepted | MembershipRejected | WelcomeMessage | InvitationCreated | InvitationRedeemed | OrganisationCreated | MemberAdded | SafeVerified | NewUser;
+export type EventPayload = CrcSignup | CrcTrust | CrcTokenTransfer | CrcHubTransfer | CrcMinting | EthTransfer | Erc20Transfer | GnosisSafeEthTransfer | MembershipOffer | MembershipAccepted | MembershipRejected | WelcomeMessage | InvitationCreated | InvitationRedeemed | OrganisationCreated | MemberAdded | SafeVerified | NewUser;
 
 export enum EventType {
   CrcSignup = 'CrcSignup',
@@ -292,7 +285,6 @@ export enum EventType {
   CrcMinting = 'CrcMinting',
   EthTransfer = 'EthTransfer',
   GnosisSafeEthTransfer = 'GnosisSafeEthTransfer',
-  ChatMessage = 'ChatMessage',
   MembershipOffer = 'MembershipOffer',
   MembershipAccepted = 'MembershipAccepted',
   MembershipRejected = 'MembershipRejected',
@@ -706,6 +698,7 @@ export type Profile = {
   provenUniqueness?: Maybe<Scalars['Boolean']>;
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type ProfileAggregate = {
@@ -750,7 +743,6 @@ export type ProfileEventFilter = {
   to?: Maybe<Scalars['String']>;
   with?: Maybe<Scalars['String']>;
   transactionHash?: Maybe<Scalars['String']>;
-  chatMessage?: Maybe<ChatMessageEventFilter>;
 };
 
 export type ProfileOrOrganisation = Profile | Organisation;
@@ -828,6 +820,7 @@ export type Query = {
   signMessage: Scalars['String'];
   directPath: TransitivePath;
   paymentPath: TransitivePath;
+  allBusinesses: Array<Businesses>;
 };
 
 
@@ -1211,6 +1204,7 @@ export type UpsertProfileInput = {
   displayCurrency?: Maybe<DisplayCurrency>;
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type UpsertTagInput = {
@@ -1375,42 +1369,6 @@ export type AcknowledgeMutation = (
   & Pick<Mutation, 'acknowledge'>
 );
 
-export type SendMessageMutationVariables = Exact<{
-  fromSafeAddress?: Maybe<Scalars['String']>;
-  toSafeAddress: Scalars['String'];
-  content: Scalars['String'];
-}>;
-
-
-export type SendMessageMutation = (
-  { __typename?: 'Mutation' }
-  & { sendMessage: (
-    { __typename?: 'SendMessageResult' }
-    & Pick<SendMessageResult, 'success' | 'error'>
-    & { event?: Maybe<(
-      { __typename?: 'ProfileEvent' }
-      & Pick<ProfileEvent, 'block_number' | 'direction' | 'safe_address' | 'timestamp' | 'transaction_hash' | 'transaction_index' | 'type' | 'value'>
-      & { safe_address_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-      )>, tags?: Maybe<Array<(
-        { __typename?: 'Tag' }
-        & Pick<Tag, 'id' | 'typeId' | 'value'>
-      )>>, payload?: Maybe<{ __typename?: 'CrcSignup' } | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | (
-        { __typename?: 'ChatMessage' }
-        & Pick<ChatMessage, 'id' | 'from' | 'to' | 'text'>
-        & { from_profile?: Maybe<(
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-        )>, to_profile?: Maybe<(
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'id' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress'>
-        )> }
-      ) | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
-    )> }
-  ) }
-);
-
 export type AddMemberMutationVariables = Exact<{
   groupId: Scalars['String'];
   memberAddress: Scalars['String'];
@@ -1498,6 +1456,7 @@ export type UpsertProfileMutationVariables = Exact<{
   status: Scalars['String'];
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1505,7 +1464,7 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -1621,7 +1580,7 @@ export type InitQuery = (
       & Pick<Capability, 'type'>
     )>, profile?: Maybe<(
       { __typename?: 'Profile' }
-      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'circlesTokenAddress'>
+      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'circlesTokenAddress'>
       & { memberships?: Maybe<Array<(
         { __typename?: 'Membership' }
         & Pick<Membership, 'isAdmin'>
@@ -1705,7 +1664,7 @@ export type HubSignupTransactionQuery = (
     & { payload?: Maybe<(
       { __typename?: 'CrcSignup' }
       & Pick<CrcSignup, 'token'>
-    ) | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | { __typename?: 'ChatMessage' } | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
+    ) | { __typename?: 'CrcTrust' } | { __typename?: 'CrcTokenTransfer' } | { __typename?: 'CrcHubTransfer' } | { __typename?: 'CrcMinting' } | { __typename?: 'EthTransfer' } | { __typename?: 'Erc20Transfer' } | { __typename?: 'GnosisSafeEthTransfer' } | { __typename?: 'MembershipOffer' } | { __typename?: 'MembershipAccepted' } | { __typename?: 'MembershipRejected' } | { __typename?: 'WelcomeMessage' } | { __typename?: 'InvitationCreated' } | { __typename?: 'InvitationRedeemed' } | { __typename?: 'OrganisationCreated' } | { __typename?: 'MemberAdded' } | { __typename?: 'SafeVerified' } | { __typename?: 'NewUser' }> }
   )> }
 );
 
@@ -1959,7 +1918,7 @@ export type ProfileByIdQuery = (
   { __typename?: 'Query' }
   & { profilesById: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness' | 'location'>
     & { verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
@@ -2177,16 +2136,6 @@ export type StreamQuery = (
     ) | (
       { __typename?: 'GnosisSafeEthTransfer' }
       & Pick<GnosisSafeEthTransfer, 'transaction_hash' | 'initiator' | 'from' | 'to' | 'value'>
-    ) | (
-      { __typename?: 'ChatMessage' }
-      & Pick<ChatMessage, 'id' | 'from' | 'to' | 'text'>
-      & { from_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
-      )>, to_profile?: Maybe<(
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
-      )> }
     ) | (
       { __typename?: 'MembershipOffer' }
       & Pick<MembershipOffer, 'createdBy' | 'organisation' | 'isAdmin'>
@@ -2522,6 +2471,17 @@ export type ClientAssertionJwtQuery = (
   & Pick<Query, 'clientAssertionJwt'>
 );
 
+export type AllBusinessesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBusinessesQuery = (
+  { __typename?: 'Query' }
+  & { allBusinesses: Array<(
+    { __typename?: 'Businesses' }
+    & Pick<Businesses, 'id' | 'name' | 'description' | 'picture'>
+  )> }
+);
+
 export type EventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2611,62 +2571,6 @@ export const AcknowledgeDocument = gql`
   acknowledge(until: $until, safeAddress: $safeAddress)
 }
     `;
-export const SendMessageDocument = gql`
-    mutation sendMessage($fromSafeAddress: String, $toSafeAddress: String!, $content: String!) {
-  sendMessage(
-    fromSafeAddress: $fromSafeAddress
-    toSafeAddress: $toSafeAddress
-    content: $content
-  ) {
-    success
-    error
-    event {
-      block_number
-      direction
-      safe_address
-      safe_address_profile {
-        id
-        firstName
-        lastName
-        avatarUrl
-        circlesAddress
-      }
-      timestamp
-      transaction_hash
-      transaction_index
-      type
-      value
-      tags {
-        id
-        typeId
-        value
-      }
-      payload {
-        ... on ChatMessage {
-          id
-          from
-          from_profile {
-            id
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-          }
-          to
-          to_profile {
-            id
-            firstName
-            lastName
-            avatarUrl
-            circlesAddress
-          }
-          text
-        }
-      }
-    }
-  }
-}
-    `;
 export const AddMemberDocument = gql`
     mutation addMember($groupId: String!, $memberAddress: String!) {
   addMember(groupId: $groupId, memberAddress: $memberAddress) {
@@ -2713,9 +2617,9 @@ export const TagTransactionDocument = gql`
 }
     `;
 export const UpsertProfileDocument = gql`
-    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender) {
+    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String) {
   upsertProfile(
-    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender}
+    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location}
   ) {
     id
     circlesAddress
@@ -2737,6 +2641,7 @@ export const UpsertProfileDocument = gql`
     displayTimeCircles
     displayCurrency
     gender
+    location
     memberships {
       isAdmin
       organisation {
@@ -2864,6 +2769,7 @@ export const InitDocument = gql`
       displayTimeCircles
       displayCurrency
       provenUniqueness
+      location
       memberships {
         isAdmin
         organisation {
@@ -3323,6 +3229,7 @@ export const ProfileByIdDocument = gql`
     lastName
     dream
     provenUniqueness
+    location
     verifications {
       createdAt
       revokedAt
@@ -3680,32 +3587,6 @@ export const StreamDocument = gql`
         from
         to
         value
-      }
-      ... on ChatMessage {
-        id
-        from
-        from_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        to
-        to_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        text
       }
       ... on MembershipOffer {
         createdBy
@@ -4143,6 +4024,16 @@ export const ClientAssertionJwtDocument = gql`
   clientAssertionJwt
 }
     `;
+export const AllBusinessesDocument = gql`
+    query allBusinesses {
+  allBusinesses {
+    id
+    name
+    description
+    picture
+  }
+}
+    `;
 export const EventsDocument = gql`
     subscription events {
   events {
@@ -4184,9 +4075,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     acknowledge(variables: AcknowledgeMutationVariables): Promise<AcknowledgeMutation> {
       return withWrapper(() => client.request<AcknowledgeMutation>(print(AcknowledgeDocument), variables));
-    },
-    sendMessage(variables: SendMessageMutationVariables): Promise<SendMessageMutation> {
-      return withWrapper(() => client.request<SendMessageMutation>(print(SendMessageDocument), variables));
     },
     addMember(variables: AddMemberMutationVariables): Promise<AddMemberMutation> {
       return withWrapper(() => client.request<AddMemberMutation>(print(AddMemberDocument), variables));
@@ -4340,6 +4228,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     clientAssertionJwt(variables?: ClientAssertionJwtQueryVariables): Promise<ClientAssertionJwtQuery> {
       return withWrapper(() => client.request<ClientAssertionJwtQuery>(print(ClientAssertionJwtDocument), variables));
+    },
+    allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
+      return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));

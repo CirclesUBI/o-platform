@@ -12,7 +12,6 @@ query init {
       id
       circlesAddress
       displayCurrency
-      confirmedLegalAge
       circlesSafeOwner
       invitationLink
       successorOfCirclesAddress
@@ -30,6 +29,7 @@ query init {
       displayTimeCircles
       displayCurrency
       provenUniqueness
+      location
       memberships {
         isAdmin
         organisation {
@@ -478,6 +478,7 @@ query profileById($id: Int!) {
     lastName
     dream
     provenUniqueness
+    location
     verifications {
       createdAt
       revokedAt
@@ -828,32 +829,6 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         to
         value
       }
-      ... on ChatMessage {
-        id
-        from
-        from_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        to
-        to_profile {
-          id
-          displayName
-          firstName
-          lastName
-          avatarUrl
-          circlesAddress
-          displayCurrency
-          provenUniqueness
-        }
-        text
-      }
       ... on MembershipOffer {
         createdBy
         createdBy_profile {
@@ -1013,26 +988,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
       provenUniqueness
     }
     payload {
-      ... on Erc721Tokens {
-        lastUpdatedAt
-        balances {
-          token_no
-          token_symbol
-          token_name
-          token_address
-          token_owner_profile {
-            id
-            circlesAddress
-            displayName
-            avatarUrl
-            firstName
-            lastName
-            provenUniqueness
-          }
-          token_no
-          token_url
-        }
-      }
       ... on CrcBalances {
         lastUpdatedAt
         balances {
@@ -1291,4 +1246,13 @@ query findInvitationCreator($code: String!) {
 
 query clientAssertionJwt {
   clientAssertionJwt
+}
+
+query allBusinesses {
+  allBusinesses {
+    id
+    name
+    description
+    picture
+  }
 }
