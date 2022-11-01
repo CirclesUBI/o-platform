@@ -12,7 +12,6 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
-import { loginWithTorus } from "./o-onboarding/processes/loginWithTorus";
 
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],

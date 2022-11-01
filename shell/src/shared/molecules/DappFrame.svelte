@@ -19,7 +19,6 @@ import { push } from "svelte-spa-router";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { generateNavManifest, GenerateNavManifestArgs } from "../functions/generateNavManifest";
-import { inbox } from "../stores/inbox";
 import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
@@ -373,7 +372,7 @@ function initSession(session: SessionInfo) {
               playBlblblbl = true;
             }
           }
-          inbox.refresh();
+          //inbox.refresh();
 
           if (!playBlblblbl) {
             return;
@@ -390,7 +389,7 @@ function initSession(session: SessionInfo) {
     });
   }
 
-  inbox.refresh();
+  //inbox.refresh();
 }
 
 async function init() {
@@ -403,7 +402,7 @@ async function init() {
     centerIsOpen: false,
     rightIsOpen: false,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
   });
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
@@ -461,7 +460,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount:0,//  $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -478,14 +477,14 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
 }
 
 function onOpenNotifications() {
-  push("#/notifications");
+  push("#/notifications/all");
 }
 
 function onOpenModal() {
@@ -502,7 +501,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -521,7 +520,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
   });
   window.scrollTo(0, _scrollY);
 }
@@ -605,7 +604,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -618,7 +617,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -633,7 +632,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -1072,7 +1071,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }
@@ -1141,7 +1140,7 @@ function showModalPage(
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: $inbox ? $inbox.length : 0,
+    notificationCount: 0,// $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }

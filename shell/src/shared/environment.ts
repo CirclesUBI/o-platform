@@ -43,10 +43,6 @@ export class Environment {
     return "__FILES_APP_ID__";
   }
 
-  public static get circlesGardenApiUrl(): string {
-    return "__CIRCLES_GARDEN_API__";
-  }
-
   public static get pathfinderEndpointUrl(): string {
     return "__PATHFINDER_ENDPOINT__";
   }
