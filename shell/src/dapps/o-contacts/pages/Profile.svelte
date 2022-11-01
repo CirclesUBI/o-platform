@@ -1,10 +1,8 @@
 <script lang="ts">
-import { getCountryName } from "../../../shared/countries";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { me } from "../../../shared/stores/me";
 import LoadingIndicator from "../../../shared/atoms/LoadingIndicator.svelte";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
-import { showToast } from "../../../shared/toast";
 
 import {
   CommonTrust,

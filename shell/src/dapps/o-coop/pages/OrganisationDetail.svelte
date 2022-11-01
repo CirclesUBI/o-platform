@@ -10,7 +10,6 @@ import LoadingIndicator from "../../../shared/atoms/LoadingIndicator.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { me } from "../../../shared/stores/me";
 import { loadOrganisationsBySafeAddress } from "../../../shared/api/loadOrganisationsBySafeAddress";
-import { getCountryName } from "../../../shared/countries";
 import { onMount } from "svelte";
 import ContactCard from "../../o-contacts/atoms/ContactCard.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
