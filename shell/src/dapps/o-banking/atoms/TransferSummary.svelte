@@ -4,11 +4,7 @@ import Time from "svelte-time";
 import UserImage from "src/shared/atoms/UserImage.svelte";
 import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
-// import CirclesTransferGraph from "../../../shared/pathfinder/CirclesTransferGraph.svelte";
-import { Profile } from "../../../shared/api/data/types";
 import { loadProfile } from "../../../shared/functions/loadProfile";
-import { displayableName } from "../../../shared/functions/stringHelper";
-import { _ } from "svelte-i18n"
 import Label from "../../../shared/atoms/Label.svelte";
 
 

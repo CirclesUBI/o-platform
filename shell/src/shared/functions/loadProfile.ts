@@ -3,7 +3,6 @@ import { loadProfileBySafeAddress } from "../api/loadProfileBySafeAddress";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import {CommonTrust, CommonTrustDocument, CommonTrustQueryVariables, Profile} from "../api/data/types";
 import {ApiClient} from "../apiConnection";
-import {me} from "../stores/me";
 
 export async function loadProfile(id: string, $me) {
   if (!id) {
