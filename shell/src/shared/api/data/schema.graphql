@@ -63,6 +63,7 @@ type Profile {
   provenUniqueness: Boolean
   age: Int
   gender: Gender
+  location: String
 }
 
 type ClaimedInvitation {
@@ -198,6 +199,7 @@ input UpsertProfileInput {
   displayCurrency: DisplayCurrency
   age: Int
   gender: Gender
+  location: String
 }
 
 type Tag {

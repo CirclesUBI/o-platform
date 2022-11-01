@@ -690,6 +690,7 @@ export type Profile = {
   provenUniqueness?: Maybe<Scalars['Boolean']>;
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type ProfileAggregate = {
@@ -1194,6 +1195,7 @@ export type UpsertProfileInput = {
   displayCurrency?: Maybe<DisplayCurrency>;
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type UpsertTagInput = {
@@ -1445,6 +1447,7 @@ export type UpsertProfileMutationVariables = Exact<{
   status: Scalars['String'];
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
   gender?: Maybe<Gender>;
+  location?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1452,7 +1455,7 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -1568,7 +1571,7 @@ export type InitQuery = (
       & Pick<Capability, 'type'>
     )>, profile?: Maybe<(
       { __typename?: 'Profile' }
-      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'circlesTokenAddress'>
+      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'circlesTokenAddress'>
       & { memberships?: Maybe<Array<(
         { __typename?: 'Membership' }
         & Pick<Membership, 'isAdmin'>
@@ -1906,7 +1909,7 @@ export type ProfileByIdQuery = (
   { __typename?: 'Query' }
   & { profilesById: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness' | 'location'>
     & { verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
@@ -2594,9 +2597,9 @@ export const TagTransactionDocument = gql`
 }
     `;
 export const UpsertProfileDocument = gql`
-    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender) {
+    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String) {
   upsertProfile(
-    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender}
+    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location}
   ) {
     id
     circlesAddress
@@ -2618,6 +2621,7 @@ export const UpsertProfileDocument = gql`
     displayTimeCircles
     displayCurrency
     gender
+    location
     memberships {
       isAdmin
       organisation {
@@ -2745,6 +2749,7 @@ export const InitDocument = gql`
       displayTimeCircles
       displayCurrency
       provenUniqueness
+      location
       memberships {
         isAdmin
         organisation {
@@ -3204,6 +3209,7 @@ export const ProfileByIdDocument = gql`
     lastName
     dream
     provenUniqueness
+    location
     verifications {
       createdAt
       revokedAt

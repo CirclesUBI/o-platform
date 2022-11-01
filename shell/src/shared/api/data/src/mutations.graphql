@@ -121,6 +121,7 @@ mutation upsertProfile(
   $status: String!
   $successorOfCirclesAddress: String
   $gender: Gender
+  $location: String
 ) {
   upsertProfile(
     data: {
@@ -142,6 +143,7 @@ mutation upsertProfile(
       status: $status
       successorOfCirclesAddress: $successorOfCirclesAddress
       gender: $gender
+      location: $location
     }
   ) {
     id
@@ -164,6 +166,7 @@ mutation upsertProfile(
     displayTimeCircles
     displayCurrency
     gender
+    location
     memberships {
       isAdmin
       organisation {
