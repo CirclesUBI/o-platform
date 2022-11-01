@@ -7,10 +7,6 @@ export class Environment {
     return "__SHOW_LANGUAGE_SWITCHER__" == "true";
   }
 
-  public static get authEndpointUrl(): string {
-    return "__AUTH_ENDPOINT__";
-  }
-
   public static get apiEndpointUrl(): string {
     return "__API_ENDPOINT__";
   }
