@@ -89,11 +89,6 @@ export class Environment {
     return "__ALLOW_VERIFY__" == "true";
   }
 
-  public static get allowCreateOrganisation(): boolean {
-    // @ts-ignore
-    return "__ALLOW_CREATE_ORGANISATION__" == "true";
-  }
-
   public static get fixedGasPrice(): string {
     return "__FIXED_GAS_PRICE__";
   }
@@ -106,12 +101,6 @@ export class Environment {
     return "__HERE_API_KEY__";
   }
 
-  public static getShopMetadata(shopId: number): string {
-    return localStorage.getItem("shopMetadata." + shopId);
-  }
-  public static setShopMetadata(shopId: number, data: string) {
-    return localStorage.setItem("shopMetadata." + shopId, data);
-  }
   public static get userLanguage(): string {
     if (!this.showLanguageSwitcher)
       return "en";
