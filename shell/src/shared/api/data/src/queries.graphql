@@ -29,6 +29,7 @@ query init {
       displayTimeCircles
       displayCurrency
       provenUniqueness
+      location
       memberships {
         isAdmin
         organisation {
@@ -477,6 +478,7 @@ query profileById($id: Int!) {
     lastName
     dream
     provenUniqueness
+    location
     verifications {
       createdAt
       revokedAt
