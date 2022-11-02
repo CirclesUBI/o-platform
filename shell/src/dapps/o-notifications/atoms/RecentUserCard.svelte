@@ -2,7 +2,6 @@
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import {NewUser, Profile, ProfileEvent} from "../../../shared/api/data/types";
-import { displayableName } from "../../../shared/functions/stringHelper";
 
 export let param: Profile;
 export let event: ProfileEvent;
@@ -24,7 +23,7 @@ function loadDetailPage(path) {
     params="{{
       edgeless: false,
       imageProfile: param,
-      title: `${displayableName(param.firstName, param.lastName)} `,
+      title: param.displayName,
       subTitle: 'verification unknown',
     }}">
     <div slot="itemCardEnd">

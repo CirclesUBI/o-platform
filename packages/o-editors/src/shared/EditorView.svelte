@@ -1,5 +1,4 @@
 <script lang="ts">
-import NavSteps from "src/shared/molecules/NavSteps.svelte";
 import { EditorContext } from "./../editorContext";
 
 export let context: EditorContext;
@@ -16,11 +15,6 @@ console.log("Params: ", context);
 </script>
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
-  <slot name="EditorSteps">
-    <!-- <div>
-      <NavSteps steps="{[0, 0, 0]}" />
-    </div> -->
-  </slot>
   <slot name="EditorTitle">
     <div class="w-full text-center">
       <h1 class="uppercase font-heading {titleColorClass} text-3xl">

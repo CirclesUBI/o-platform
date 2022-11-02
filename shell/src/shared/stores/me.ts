@@ -6,7 +6,6 @@ import {
   Profile,
   SessionInfo,
 } from "../api/data/types";
-import {displayableName} from "../functions/stringHelper";
 import {Subscriber} from "svelte/types/runtime/store";
 import {getSessionInfo} from "../../dapps/o-passport/processes/identify/services/getSessionInfo";
 import {ApiClient} from "../apiConnection";
@@ -67,9 +66,6 @@ const _me = readable<Profile|null>(null, function start(set) {
     }
     if (event.type == "shell.authenticated" && event.profile) {
       sessionInfo = event.sessionInfo;
-      if (!event.profile.displayName) {
-        event.profile.displayName = displayableName(event.profile.firstName, event.profile.lastName);
-      }
       set(event.profile);
       console.log("me.ts new $me: ", event.profile);
       localStorage.setItem("me", JSON.stringify(event.profile));
@@ -80,9 +76,6 @@ const _me = readable<Profile|null>(null, function start(set) {
   if (cachedProfile) {
     try {
       const profile = JSON.parse(cachedProfile);
-      if (!profile.displayName) {
-        profile.displayName = displayableName(profile.firstName, profile.lastName);
-      }
       set(profile);
     } catch (e) {
       console.warn(`Parsing of the cached profile from localStorage(me) failed:`, e);

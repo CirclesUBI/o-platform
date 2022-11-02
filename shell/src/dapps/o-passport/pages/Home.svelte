@@ -64,23 +64,6 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
       </section>
     </div>
     <div class="flex flex-col w-full p-4 space-y-4 bg-white border rounded-xl border-bordergray">
-      <!-- <section class="justify-center">
-      <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="dapps.o-passport.pages.home.passion" />
-        </div>
-
-        <div class="flex items-center w-full space-x-2 sm:space-x-4">
-          <div
-            class="text-2xl leading-tight text-left font-heading"
-            on:click="{() => editProfile({ dream: true })}">
-            {#if profile && profile.dream}
-              {profile.dream}
-            {:else}<Label key="dapps.o-passport.pages.home.noPassionSet" />{/if}
-          </div>
-        </div>
-      </div>
-    </section> -->
       {#if profile.circlesAddress}
         <section class="justify-center">
           <div class="flex flex-col w-full space-y-1">
@@ -118,14 +101,6 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
           </div>
         </section>
       {/if}
-
-      <section class="justify-center">
-        <div class="flex flex-col w-full space-y-1">
-          <div class="text-left text-2xs text-dark-lightest">
-            <Label key="dapps.o-passport.pages.home.postAddress" />
-          </div>
-        </div>
-      </section>
     </div>
   </div>
 {/if}

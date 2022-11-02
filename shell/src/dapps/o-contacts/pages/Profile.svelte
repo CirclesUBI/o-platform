@@ -17,13 +17,11 @@ import {
 } from "../../../shared/api/data/types";
 import { contacts } from "../../../shared/stores/contacts";
 import { ApiClient } from "../../../shared/apiConnection";
-import { getSessionInfo } from "../../o-passport/processes/identify/services/getSessionInfo";
 import { isMobile } from "../../../shared/functions/isMobile";
 import { UserActions, UserActionItem } from "../../../shared/userActions";
 
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
-import { Environment } from "../../../shared/environment";
 
 
 export let id: string;
