@@ -1,8 +1,7 @@
 <script lang="ts">
-import { ProfileEvent } from "../../api/data/types";
-import { onMount } from "svelte";
-import ItemCard from "../../atoms/ItemCard.svelte";
-import Date from "../../atoms/Date.svelte";
+import {ProfileEvent} from "../../../shared/api/data/types";
+import ItemCard from "src/shared/atoms/ItemCard.svelte";
+import Date from "src/shared/atoms/Date.svelte";
 
 export let event: ProfileEvent;
 </script>
@@ -13,7 +12,7 @@ export let event: ProfileEvent;
     params="{{
       edgeless: false,
       title: event.type,
-      subTitle: window.o.i18n("shared.molecules.notificationViewer.molecules.genericEventCard.subTitle"),
+      subTitle: window.o.i18n('shared.molecules.notificationViewer.molecules.genericEventCard.subTitle'),
       noTruncate: true,
     }}">
     <div slot="itemCardEnd">

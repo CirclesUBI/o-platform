@@ -9,7 +9,6 @@ import {
 } from "../api/data/types";
 import {writable} from "svelte/store";
 import {me} from "./me";
-import {Subscriber} from "rxjs";
 
 export type PagedEventQueryIndexEntry = {
   indexName: string,

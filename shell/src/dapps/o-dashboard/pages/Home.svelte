@@ -5,21 +5,10 @@ import { onMount } from "svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import {
-  AggregatesDocument,
-  AggregateType,
-  Capability,
-  CapabilityType,
-  ProfileAggregate,
-  QueryAggregatesArgs,
-  StatsDocument,
+  Capability
 } from "../../../shared/api/data/types";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
-import { Environment } from "../../../shared/environment";
-import Label from "../../../shared/atoms/Label.svelte";
 import DashboardInvitesWidget from "../molecules/DashboardInvitesWidget.svelte";
-import Icons from "../../../shared/molecules/Icons.svelte";
-import LangSwitcher from "../../../shared/atoms/LangSwitcher.svelte";
-import { ApiClient } from "../../../shared/apiConnection";
 import DashboardColorCard from "../atoms/DashboardColorCard.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
@@ -29,10 +18,6 @@ export let capabilities: Capability[] | undefined = [];
 $: me;
 
 let disableBanking: boolean = false;
-let canVerify: boolean = false;
-let hasTickets: boolean = false;
-let profilesCount: number;
-let statsResult: any;
 
 const init = async () => {
   const pk = sessionStorage.getItem("circlesKey");
@@ -40,26 +25,9 @@ const init = async () => {
 
   const sessionInfo = await me.getSessionInfo();
   capabilities = sessionInfo.capabilities;
-  canVerify = capabilities && capabilities.find((o) => o.type == CapabilityType.Verify) && Environment.allowVerify;
-  hasTickets = capabilities && !!capabilities.find((o) => o.type == CapabilityType.Tickets);
-
-  statsResult = await fetchStats();
-  profilesCount = statsResult.data.stats.profilesCount;
 };
 
 onMount(init);
-
-async function fetchStats() {
-  const apiClient = await window.o.apiClient.client.subscribeToResult();
-  const result = await apiClient.query({
-    query: StatsDocument,
-  });
-  if (result.errors) {
-    throw new Error(`Couldn't load stats': ${JSON.stringify(result.errors)}`);
-  }
-
-  return result;
-}
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
@@ -89,64 +57,6 @@ async function fetchStats() {
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
         icon="users"
         title="dapps.o-dashboard.pages.home.contacts" />
-      <!-- 
-      <section
-        class="flex items-center justify-center bg-white rounded-lg shadow-md cursor-pointer dashboard-card"
-        on:click="{() => loadLink('/contacts')}">
-        <div class="flex flex-col items-center w-full p-4 pt-6 justify-items-center">
-          <div class="pt-2 text-primary">
-            <Icons icon="users" class="w-20 h-20 heroicon" />
-          </div>
-          <div class="mt-4 text-3xl font-heading text-dark">
-            <Label key="dapps.o-dashboard.pages.home.contacts" />
-          </div>
-        </div>
-      </section>
-      
-       -->
-
-      <!-- {#if canVerify}
-        <section
-          class="flex items-center justify-center bg-white rounded-lg shadow-md cursor-pointer dashboard-card"
-          on:click="{() => loadLink('/verification/verifications')}">
-          <div class="flex flex-col items-center w-full p-4 pt-6 justify-items-center">
-            <div class="pt-2 text-primary">
-              <Icons icon="badge-check" class="w-20 h-20 heroicon" />
-            </div>
-            <div class="mt-4 text-3xl font-heading text-dark">
-              <Label key="dapps.o-dashboard.pages.home.verified" />
-            </div>
-          </div>
-        </section>
-      {/if} -->
-      <!-- {#if hasTickets}
-        <section
-          class="flex items-center justify-center bg-white rounded-lg shadow-md cursor-pointer dashboard-card"
-          on:click="{() => loadLink('/marketplace/my-tickets')}">
-          <div class="flex flex-col items-center w-full p-4 pt-6 justify-items-center">
-            <div class="pt-2 text-primary">
-              <Icons icon="ticket" class="w-20 h-20 heroicon" />
-            </div>
-            <div class="mt-4 text-3xl font-heading text-dark">
-              <Label key="dapps.o-dashboard.pages.home.tickets" />
-            </div>
-          </div>
-        </section>
-      {/if}
-      {#if balances.length}
-        <section
-          class="flex items-center justify-center bg-white rounded-lg shadow-md cursor-pointer dashboard-card"
-          on:click="{() => loadLink('/gallery/nfts')}">
-          <div class="flex flex-col items-center w-full p-4 pt-6 justify-items-center">
-            <div class="pt-2 text-primary">
-              <Icons icon="photograph" class="w-20 h-20 heroicon" />
-            </div>
-            <div class="mt-4 text-3xl font-heading text-dark">
-              <Label key="dapps.o-dashboard.pages.home.gallery" />
-            </div>
-          </div>
-        </section>
-      {/if} -->
     </div>
   </div>
 </div>
