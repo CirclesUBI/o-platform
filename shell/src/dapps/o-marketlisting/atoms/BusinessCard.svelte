@@ -1,46 +1,35 @@
 <script lang="ts">
-import { createEventDispatcher } from "svelte";
-import { push } from "svelte-spa-router";
+import { onMount } from "svelte";
+
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-import { Businesses } from "../../../shared/api/data/types";
-import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 
-export let business: Businesses & { isFavorite: boolean };
+export let image: string;
+export let description: string;
+export let name: string;
+export let id: number;
 
-const eventDispatcher = createEventDispatcher();
+let outlineState: boolean = false;
 
-function loadDetailPage(circlesAddress) {
-  push(`/market/detail/${circlesAddress}`);
-}
+
+
+onMount(async () => {});
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-1">
+<section class="flex-row w-[50%] h-[50%] p-2">
   <div class="relative">
-    <!-- svelte-ignore a11y-img-redundant-alt -->
-    <img
-      src="{business.picture}"
-      alt="picture of the business"
-      class="w-full h-full rounded-3xl"
-      role="presentation"
-      on:click="{() => {
-        loadDetailPage(business.circlesAddress);
-      }}" />
+    <img src="{image}" alt="picture of the business" class="rounded-3xl h-full w-full" />
     <div
-      role="presentation"
       on:click="{() => {
-        eventDispatcher('toggleFavorite', business.circlesAddress);
+        outlineState = !outlineState;
+        console.log(outlineState);
       }}">
-      {#if $marketFavoritesStore[business.circlesAddress]}
+      {#if outlineState}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
       {:else}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
       {/if}
     </div>
   </div>
-  {#if business.name}
-    <div class="pt-2 text-2xl font-bold font-heading">{business.name}</div>
-  {/if}
-  {#if business.description}
-    <div class="flex-wrap">{business.description}</div>
-  {/if}
+  <h1 class="">{name}</h1>
+  <p class="flex-wrap">{description}</p>
 </section>

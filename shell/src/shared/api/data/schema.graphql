@@ -64,6 +64,7 @@ type Profile {
   age: Int
   gender: Gender
   location: String
+  category: BusinessCategory
 }
 
 type ClaimedInvitation {
@@ -130,6 +131,10 @@ type Contact {
   lastContactAt: String!
   contactAddress: String!
   contactAddress_Profile: Profile
+}
+
+type BusinessCategory {
+  name: String
 }
 
 type CrcBalances implements IAggregatePayload {
@@ -689,6 +694,15 @@ type Businesses {
   name: String
   description: String
   picture: String
+  businessHoursMonday: String
+  businessHoursTuesday: String
+  businessHoursWednesday: String
+  businessHoursThursday: String
+  businessHoursFriday: String
+  businessHoursSaturday: String
+  businessHoursSunday: String
+  phoneNumber: String
+  location: String
 }
 
 enum SortOrder {
