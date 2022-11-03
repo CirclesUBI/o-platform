@@ -64,6 +64,7 @@ type Profile {
   age: Int
   gender: Gender
   location: String
+  category: BusinessCategory
 }
 
 type ClaimedInvitation {
@@ -130,6 +131,10 @@ type Contact {
   lastContactAt: String!
   contactAddress: String!
   contactAddress_Profile: Profile
+}
+
+type BusinessCategory {
+  name: String
 }
 
 type CrcBalances implements IAggregatePayload {
@@ -689,6 +694,15 @@ type Businesses {
   name: String
   description: String
   picture: String
+  businessHoursMonday: String
+  businessHoursTuesday: String
+  businessHoursWednesday: String
+  businessHoursThursday: String
+  businessHoursFriday: String
+  businessHoursSaturday: String
+  businessHoursSunday: String
+  phoneNumber: String
+  location: String
 }
 
 enum SortOrder {
@@ -767,6 +781,14 @@ type FibonacciGoals {
 type MyInviteRank {
   rank: Int!
   redeemedInvitationsCount: Int!
+}
+
+type Stats {
+  profilesCount: Int!
+  verificationsCount: Int!
+  leaderboard: [LeaderboardEntry!]!
+  goals: FibonacciGoals!
+  myRank: MyInviteRank!
 }
 
 type TransitiveTransfer {
@@ -894,6 +916,7 @@ type Query {
   profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
   findSafesByOwner(owner: String!): [SafeInfo!]!
   search(query: SearchInput!): [Profile!]!
+  stats: Stats!
   tags(query: QueryTagsInput!): [Tag!]!
   tagById(id: Int!): Tag
   findInvitationCreator(code: String!): Profile

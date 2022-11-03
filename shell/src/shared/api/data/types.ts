@@ -54,12 +54,26 @@ export type AssetBalance = {
   token_balance: Scalars['String'];
 };
 
+export type BusinessCategory = {
+  __typename?: 'BusinessCategory';
+  name?: Maybe<Scalars['String']>;
+};
+
 export type Businesses = {
   __typename?: 'Businesses';
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
+  businessHoursMonday?: Maybe<Scalars['String']>;
+  businessHoursTuesday?: Maybe<Scalars['String']>;
+  businessHoursWednesday?: Maybe<Scalars['String']>;
+  businessHoursThursday?: Maybe<Scalars['String']>;
+  businessHoursFriday?: Maybe<Scalars['String']>;
+  businessHoursSaturday?: Maybe<Scalars['String']>;
+  businessHoursSunday?: Maybe<Scalars['String']>;
+  phoneNumber?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
 };
 
 export type Capability = {
@@ -699,6 +713,7 @@ export type Profile = {
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  category?: Maybe<BusinessCategory>;
 };
 
 export type ProfileAggregate = {
@@ -801,6 +816,7 @@ export type Query = {
   profilesBySafeAddress: Array<Profile>;
   findSafesByOwner: Array<SafeInfo>;
   search: Array<Profile>;
+  stats: Stats;
   tags: Array<Tag>;
   tagById?: Maybe<Tag>;
   findInvitationCreator?: Maybe<Profile>;
@@ -1096,6 +1112,15 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type Stats = {
+  __typename?: 'Stats';
+  profilesCount: Scalars['Int'];
+  verificationsCount: Scalars['Int'];
+  leaderboard: Array<LeaderboardEntry>;
+  goals: FibonacciGoals;
+  myRank: MyInviteRank;
+};
 
 export type Subscription = {
   __typename?: 'Subscription';
