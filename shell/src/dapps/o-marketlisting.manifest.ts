@@ -4,7 +4,6 @@ import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { ContactsDappState } from "./o-contacts.manifest";
 import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Environment } from "../shared/environment";
-import { performOauth } from "./o-humanode/processes/performOauth";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
 
 const marketlistings: Page<any, ContactsDappState> = {
