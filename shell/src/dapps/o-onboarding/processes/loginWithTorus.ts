@@ -59,6 +59,13 @@ let loginOptions = [
     class: "btn btn-outline",
     icon: "apple",
   },
+  {
+    key: "facebook",
+    label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.facebook.label"),
+    target: "#facebook",
+    class: "btn btn-outline",
+    icon: "facebook",
+  },
   /*
   {
     key: "github",
@@ -196,18 +203,12 @@ const processDefinition = (processId: string) =>
               icon: "apple",
             },
             {
-              key: "github",
-              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
-              target: "#github",
+              key: "facebook",
+              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.facebook.label"),
+              target: "#facebook",
               class: "btn btn-outline",
-              icon: "github",
-            } /*
-                    {
-                      key: "email",
-                      label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.email.label"),
-                      target: "#email",
-                      class: "btn-info",
-                    }*/,
+              icon: "facebook",
+            },
           ]),
         }),
         useMockProfile: {
@@ -376,49 +377,6 @@ const processDefinition = (processId: string) =>
             ],
           },
         },
-        github: {
-          id: "github",
-          entry: [
-            () => {
-              window.o.publishEvent(<PlatformEvent>{
-                type: "shell.progress",
-                message: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.pleaseWaitWeSigningYouIn"),
-              });
-            },
-            (context) => {
-              context.dirtyFlags = {};
-            },
-          ],
-          invoke: {
-            src: async (context) => {
-              const openLogin = await getOpenLogin();
-              const privateKey = await openLogin.login({
-                loginProvider: "github",
-              });
-              return {
-                privateKey: privateKey.privKey,
-                userInfo: await openLogin.getUserInfo(),
-              };
-            },
-            onDone: {
-              actions: "assignPrivateKeyAndUserInfoToContext",
-              target: "#enterEncryptionPin",
-            },
-            onError: [
-              {
-                // user closed popup
-                cond: (context, event) => event.data.message == "user closed popup",
-                target: "#chooseFlow",
-              },
-              {
-                cond: (context, event) => (window.o.lastError = event.data),
-                actions: setWindowLastError,
-                target: "#showError",
-              },
-            ],
-          },
-        },
-        /*
       facebook: {
         id: "facebook",
         invoke: {
@@ -441,6 +399,7 @@ const processDefinition = (processId: string) =>
           }
         }
       },
+      /*
       email: {
         id: "email",
         invoke: {
