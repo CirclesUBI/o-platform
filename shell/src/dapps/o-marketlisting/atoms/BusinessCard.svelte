@@ -15,7 +15,7 @@ let outlineState: boolean = false;
 onMount(async () => {});
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-2">
+<section class="flex-row w-[50%] h-[50%] p-1">
   <div class="relative">
     <img src="{image}" alt="picture of the business" class="rounded-3xl h-full w-full" />
     <div
@@ -30,6 +30,6 @@ onMount(async () => {});
       {/if}
     </div>
   </div>
-  <h1 class="">{name}</h1>
-  <p class="flex-wrap">{description}</p>
+  <div class="font-bold">{name}</div>
+  <div class="flex-wrap">{description}</div>
 </section>
