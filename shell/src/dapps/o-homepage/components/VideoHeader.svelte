@@ -7,7 +7,6 @@
   let parser = new UAParser();
   let player: any;
   let isFullscreen: boolean = false;
-  let isMobile: boolean = parser.getResult().device["type"] == "mobile";
   $: player = document.querySelector("vm-player");
 
   onMount(() => {
