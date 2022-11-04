@@ -15,7 +15,6 @@ import { me } from "../../../shared/stores/me";
 import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import { BN } from "ethereumjs-util";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
@@ -32,99 +31,6 @@ export type CreateOrganisationContextData = {
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
-
-/**
- * Sends the specified "amount".
- */
-async function sendFundsFromEoa(to: string, amount: BN) {
-  let $me: Profile = null;
-  const unsub = me.subscribe((current) => {
-    $me = current;
-  });
-  unsub();
-
-  if (!$me) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notLoggedOn"));
-  if (!$me.circlesSafeOwner) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.noEoa"));
-
-  const privateKey = sessionStorage.getItem("circlesKey");
-  if (!privateKey) {
-    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notUnlockedPrivateKey"));
-  }
-
-  const web3 = RpcGateway.get();
-  const eoaBalance = new BN(await web3.eth.getBalance($me.circlesSafeOwner));
-  const gas = 41000;
-  const gasPrice = new BN(await web3.eth.getGasPrice());
-  const totalFee = gasPrice.mul(new BN(gas.toString()));
-  const nonce = await web3.eth.getTransactionCount($me.circlesSafeOwner);
-
-  const availableForTransfer = eoaBalance.sub(totalFee);
-  if (availableForTransfer.lt(amount)) {
-    throw new Error(
-      `You have not enough funds on '${$me.circlesSafeOwner}'. Max. transferable amount is ${web3.utils.fromWei(
-        availableForTransfer,
-        "ether"
-      )}`
-    ); //i18n skipped for now
-  }
-
-  const account = web3.eth.accounts.privateKeyToAccount(privateKey);
-  const signedTx = await account.signTransaction({
-    from: $me.circlesSafeOwner,
-    to: to,
-    value: amount,
-    gasPrice: gasPrice,
-    gas: gas,
-    nonce: nonce,
-  });
-
-  if (!signedTx?.rawTransaction) {
-    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.couldNotSend"));
-  }
-
-  const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  console.log(receipt);
-}
-
-/**
- * Sends the specified "amount".
- */
-async function sendFundsFromSafe(to: string, amount: BN) {
-  let $me: Profile = null;
-  const unsub = me.subscribe((current) => {
-    $me = current;
-  });
-  unsub();
-
-  if (!$me) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notLoggedOn"));
-  if (!$me.circlesSafeOwner) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.noEoa"));
-
-  const privateKey = sessionStorage.getItem("circlesKey");
-  if (!privateKey) {
-    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notUnlockedPrivateKey"));
-  }
-
-  const web3 = RpcGateway.get();
-  const eoaBalance = new BN(await web3.eth.getBalance($me.circlesAddress));
-  const gas = 41000;
-  const gasPrice = new BN(await web3.eth.getGasPrice());
-  const totalFee = gasPrice.mul(new BN(gas.toString()));
-  const nonce = await web3.eth.getTransactionCount($me.circlesAddress);
-
-  const availableForTransfer = eoaBalance.sub(totalFee);
-  if (availableForTransfer.lt(amount)) {
-    throw new Error(
-      `You have not enough funds on '${$me.circlesAddress}'. Max. transferable amount is ${web3.utils.fromWei(
-        availableForTransfer,
-        "ether"
-      )}`
-    ); //i18n skipped for now
-  }
-
-  const proxy = new GnosisSafeProxy(web3, $me.circlesAddress);
-  const receipt = await proxy.transferEth(privateKey, amount, to);
-  console.log(receipt);
-}
 
 const processDefinition = (processId: string) =>
   createMachine<CreateOrganisationContext, any>({
