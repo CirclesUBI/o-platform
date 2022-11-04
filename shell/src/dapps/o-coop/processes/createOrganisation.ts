@@ -7,6 +7,7 @@ import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import * as yup from "yup";
 import { promptFile } from "../../../shared/api/promptFile";
+import { promptCity } from "../../../shared/api/promptCity";
 import { Profile, UpsertOrganisationDocument } from "../../../shared/api/data/types";
 import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
@@ -15,10 +16,10 @@ import { me } from "../../../shared/stores/me";
 import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
+import { BN } from "ethereumjs-util";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
-import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -26,17 +27,106 @@ export type CreateOrganisationContextData = {
   avatarMimeType: "image/png";
   avatarUrl: string;
   circlesAddress: string;
+  cityGeonameid: string;
   description: string;
   name: string;
-  displayName: string;
   organisationSafeProxy: GnosisSafeProxy;
-  location: string;
-  locationName: string;
-  lat: number;
-  lon: number;
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
+
+/**
+ * Sends the specified "amount".
+ */
+async function sendFundsFromEoa(to: string, amount: BN) {
+  let $me: Profile = null;
+  const unsub = me.subscribe((current) => {
+    $me = current;
+  });
+  unsub();
+
+  if (!$me) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notLoggedOn"));
+  if (!$me.circlesSafeOwner) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.noEoa"));
+
+  const privateKey = sessionStorage.getItem("circlesKey");
+  if (!privateKey) {
+    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notUnlockedPrivateKey"));
+  }
+
+  const web3 = RpcGateway.get();
+  const eoaBalance = new BN(await web3.eth.getBalance($me.circlesSafeOwner));
+  const gas = 41000;
+  const gasPrice = new BN(await web3.eth.getGasPrice());
+  const totalFee = gasPrice.mul(new BN(gas.toString()));
+  const nonce = await web3.eth.getTransactionCount($me.circlesSafeOwner);
+
+  const availableForTransfer = eoaBalance.sub(totalFee);
+  if (availableForTransfer.lt(amount)) {
+    throw new Error(
+      `You have not enough funds on '${$me.circlesSafeOwner}'. Max. transferable amount is ${web3.utils.fromWei(
+        availableForTransfer,
+        "ether"
+      )}`
+    ); //i18n skipped for now
+  }
+
+  const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+  const signedTx = await account.signTransaction({
+    from: $me.circlesSafeOwner,
+    to: to,
+    value: amount,
+    gasPrice: gasPrice,
+    gas: gas,
+    nonce: nonce,
+  });
+
+  if (!signedTx?.rawTransaction) {
+    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.couldNotSend"));
+  }
+
+  const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  console.log(receipt);
+}
+
+/**
+ * Sends the specified "amount".
+ */
+async function sendFundsFromSafe(to: string, amount: BN) {
+  let $me: Profile = null;
+  const unsub = me.subscribe((current) => {
+    $me = current;
+  });
+  unsub();
+
+  if (!$me) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notLoggedOn"));
+  if (!$me.circlesSafeOwner) throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.noEoa"));
+
+  const privateKey = sessionStorage.getItem("circlesKey");
+  if (!privateKey) {
+    throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.notUnlockedPrivateKey"));
+  }
+
+  const web3 = RpcGateway.get();
+  const eoaBalance = new BN(await web3.eth.getBalance($me.circlesAddress));
+  const gas = 41000;
+  const gasPrice = new BN(await web3.eth.getGasPrice());
+  const totalFee = gasPrice.mul(new BN(gas.toString()));
+  const nonce = await web3.eth.getTransactionCount($me.circlesAddress);
+
+  const availableForTransfer = eoaBalance.sub(totalFee);
+  if (availableForTransfer.lt(amount)) {
+    throw new Error(
+      `You have not enough funds on '${$me.circlesAddress}'. Max. transferable amount is ${web3.utils.fromWei(
+        availableForTransfer,
+        "ether"
+      )}`
+    ); //i18n skipped for now
+  }
+
+  const proxy = new GnosisSafeProxy(web3, $me.circlesAddress);
+  const receipt = await proxy.transferEth(privateKey, amount, to);
+  console.log(receipt);
+}
 
 const processDefinition = (processId: string) =>
   createMachine<CreateOrganisationContext, any>({
@@ -73,7 +163,30 @@ const processDefinition = (processId: string) =>
             )
           ),
         navigation: {
+          next: "#country",
+        },
+      }),
+      country: promptCity<CreateOrganisationContext, any>({
+        id: "country",
+        field: "id",
+        params: {
+          view: {
+            title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.title"),
+            description: window.o.i18n(
+              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.description"
+            ),
+            placeholder: window.o.i18n(
+              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.placeholder"
+            ),
+            submitButtonText: window.o.i18n(
+              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.country.submitButtonText"
+            ),
+          },
+        },
+        navigation: {
           next: "#description",
+          previous: "#name",
+          canSkip: () => true,
         },
       }),
       description: prompt<CreateOrganisationContext, any>({
@@ -104,34 +217,16 @@ const processDefinition = (processId: string) =>
             window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")
           ),
         navigation: {
-          next: "#location",
-          canSkip: () => false,
-          previous: "#description",
-        },
-      }),
-      location: promptCity<CreateOrganisationContext, any>({
-        id: "location",
-        field: "location",
-        params: {
-          view: {
-            title: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.title"),
-            description: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.description"),
-            placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.location.submitButtonText"
-            ),
-          },
-        },
-        navigation: {
           next: "#avatarUrl",
-          previous: "#description",
-          canSkip: () => false,
-        }
+          canSkip: () => true,
+          previous: "#country",
+        },
       }),
       avatarUrl: promptFile<CreateOrganisationContext, any>({
         field: "avatarUrl",
         uploaded: (context, event) => {
-          context.data.avatarUrl = event.data?.url;
+          //context.data.avatarUrl = event.data?.url;
+          //context.data.avatarMimeType = event.data?.mimeType;
         },
         params: {
           view: {
@@ -248,35 +343,24 @@ const processDefinition = (processId: string) =>
         entry: () => console.log(`upsertOrganisation ...`),
         invoke: {
           src: async (context) => {
-            if (context.data.location) {
-              const city = await cityByHereId(context.data.location);
-              context.data.lat = city.position.lat;
-              context.data.lon = city.position.lng;
-              context.data.locationName = city.title;
-            }
+            // return result.data.upsertProfile;
+            const organisation = {
+              avatarMimeType: context.data.avatarMimeType,
+              avatarUrl: context.data.avatarUrl,
+              circlesAddress: context.data.circlesAddress.toLowerCase(),
+              cityGeonameid: context.data.cityGeonameid,
+              description: context.data.description,
+              name: context.data.name,
+              id: context.data.id,
+            };
+
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
               variables: {
-                organisation: {
-
-                  avatarMimeType: context.data.avatarMimeType,
-                  avatarUrl: context.data.avatarUrl,
-                  circlesAddress: context.data.circlesAddress.toLowerCase(),
-                  description: context.data.description,
-                  name: context.data.name,
-                  location: context.data.location,
-                  lat: context.data.lat,
-                  lon: context.data.lon,
-                  locationName: context.data.locationName,
-                },
+                organisation: organisation,
               },
             });
-            context.data.displayName = context.data.name;
-            context.data = {
-              ...context.data,
-              ...result.data.upsertOrganisation.organisation,
-            };
           },
           onDone: "#success",
           onError: {
@@ -306,9 +390,7 @@ const processDefinition = (processId: string) =>
             context.data.successAction(context.data);
           }
         },
-        data: (context, event: any) => {
-          return context.data;
-        },
+        data: () => true,
       },
     },
   });
