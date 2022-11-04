@@ -37,10 +37,7 @@ $: {
       subTitle: varietyDetail || description,
       truncateMain: true,
       endTextBig: Number.parseFloat(balance).toFixed(2),
-      endTextSmall:
-        variety == 0 || variety == 1
-          ? title
-          : `${Number.parseFloat(balance / 10).toFixed(2)} €`,
+      endTextSmall: title,
       mobileTextCutoff: 18,
     }}" />
 </div>

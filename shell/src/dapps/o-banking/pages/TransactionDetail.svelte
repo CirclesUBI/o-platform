@@ -146,7 +146,7 @@ function openDetail(transfer: ProfileEvent) {
                   ).toString()
                 : "0",
               transfer.timestamp,
-              $me.displayCurrency,
+              "TIME_CRC",
               transfer.payload.__typename === "Erc20Transfer" ? "erc20" : ""
             )}
           {:else}
@@ -158,34 +158,14 @@ function openDetail(transfer: ProfileEvent) {
                   ).toString()
                 : "0",
               transfer.timestamp,
-              $me.displayCurrency,
+              "TIME_CRC",
               transfer.payload.__typename === "Erc20Transfer" ? "erc20" : ""
             )}
           {/if}
         </span>
         <span class="text-6xl font-enso {classes}"
-          >{Currency.currencySymbol["EURS"]}</span>
+          ><Icons icon="timeCircle" size="{10}" customClass="inline" /></span>
       </div>
-      {#if $me.displayCurrency && $me.displayCurrency != "TIME_CRC"}
-        <div class="self-end m-auto -mt-4 space-y-2 text-center max-w-max">
-          {Currency.instance().displayAmount(
-            transfer
-              ? (transfer.payload.value
-                  ? transfer.payload.value
-                  : transfer.payload.flow
-                ).toString()
-              : "0",
-            transfer.timestamp,
-            "TIME_CRC",
-            transfer.payload.__typename === "Erc20Transfer" ? "erc20" : ""
-          )}
-          <Icons icon="timeCircle" size="{4}" customClass="inline" />
-
-          <small class="block whitespace-nowrap">
-            <!--{$mySafe.ui.loadingPercent ? $mySafe.ui.loadingText : ''}-->
-          </small>
-        </div>
-      {/if}
       <UserImage profile="{targetProfile}" size="{36}" gradientRing="{true}" />
       <div
         class="cursor-pointer"
