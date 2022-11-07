@@ -17,8 +17,6 @@ import { getOpenLogin, GetOpenLoginResult } from "../../../shared/openLogin";
 import {
   FindInvitationCreatorDocument,
   Profile,
-  ProfilesDocument,
-  ProfilesQueryVariables,
   QueryFindInvitationCreatorArgs,
 } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";

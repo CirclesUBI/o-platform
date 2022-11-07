@@ -3,7 +3,7 @@ import Icons from "../molecules/Icons.svelte";
 
 export let title: string = null;
 export let icon: string = null;
-export let size: number = 6;
+export let size: number = 8;
 export let colorClass: string = "";
 export let customClass: string = "inline";
 console.log("ICON: ", icon);
