@@ -27,7 +27,7 @@ const index: Page<any, DappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "users",
+        icon: "dashfriends",
         backgroundColorClass: "contacts",
         // action: () => processNavigation.back(),
       },

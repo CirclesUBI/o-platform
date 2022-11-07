@@ -44,11 +44,8 @@ function onkeydown(e: KeyboardEvent) {
   <div
     class="flex flex-col items-center self-center w-full m-auto space-y-4 text-center justify-self-center">
     <div>
-      <span class="inline-block text-6xl font-heading {classes}">
-        {_context.data.tokens.amount} <span class=" font-primary">€</span>
-      </span>
-      <div class="font-xs">
-        {_context.data.tokens.amount * 10}
+      <div class="inline-block text-4xl font-heading {classes}">
+        <span>{_context.data.tokens.amount}</span>
         <span class=" font-primary">{Currency.currencySymbol["TIME_CRC"]}</span>
       </div>
     </div>

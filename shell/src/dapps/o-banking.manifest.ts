@@ -30,7 +30,7 @@ const transactions: Page<any, BankingDappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "banking",
+        icon: "dashbanking",
         backgroundColorClass: "banking",
         // action: () => processNavigation.back(),
       },
@@ -103,7 +103,7 @@ const assets: Page<any, BankingDappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "banking",
+        icon: "dashbanking",
         backgroundColorClass: "banking",
         // action: () => processNavigation.back(),
       },
