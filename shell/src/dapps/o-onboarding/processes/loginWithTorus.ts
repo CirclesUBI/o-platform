@@ -17,8 +17,6 @@ import { getOpenLogin, GetOpenLoginResult } from "../../../shared/openLogin";
 import {
   FindInvitationCreatorDocument,
   Profile,
-  ProfilesDocument,
-  ProfilesQueryVariables,
   QueryFindInvitationCreatorArgs,
 } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
@@ -194,20 +192,7 @@ const processDefinition = (processId: string) =>
               target: "#apple",
               class: "btn btn-outline",
               icon: "apple",
-            },
-            {
-              key: "github",
-              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
-              target: "#github",
-              class: "btn btn-outline",
-              icon: "github",
-            } /*
-                    {
-                      key: "email",
-                      label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.email.label"),
-                      target: "#email",
-                      class: "btn-info",
-                    }*/,
+            }
           ]),
         }),
         useMockProfile: {
