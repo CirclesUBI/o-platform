@@ -17,12 +17,13 @@ const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
   title: "common.profile",
+  icon: "myprofile",
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "identification",
+        icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -44,12 +45,13 @@ const profile: Page<any, DappState> = {
   routeParts: ["=profile", ":profileId"],
   component: Home,
   title: "Profile",
+  
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "identification",
+        icon: "myprofile",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -60,12 +62,13 @@ const account: Page<any, DappState> = {
   routeParts: ["=accounts"],
   component: Account,
   title: "common.accounts",
+  icon: "accounts",
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "identification",
+        icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -77,12 +80,13 @@ const settings: Page<any, DappState> = {
   routeParts: ["=settings"],
   component: Settings,
   title: "common.settings",
+  icon: "settings",
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "identification",
+        icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -131,8 +135,8 @@ export const passport: DappManifest<DappState> = {
   dappId: "passport:1",
   isSingleton: true,
   isHidden: false,
-  icon: "passport",
   title: "Passport",
+  icon: "myprofile",
   routeParts: ["=passport"],
   defaultRoute: ["passport"],
   tag: Promise.resolve("alpha"),
