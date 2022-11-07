@@ -8,5 +8,5 @@ export let text: string = null;
 {#if text}
   {text}
 {:else if icon}
-  <Icons icon="{icon}" customClass="w-6 h-6 heroicon smallicon" />
+  <Icons icon="{icon}" customClass=" heroicon smallicon" />
 {/if}

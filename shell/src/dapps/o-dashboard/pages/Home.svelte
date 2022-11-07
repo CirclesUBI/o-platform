@@ -41,21 +41,21 @@ onMount(init);
         color="passport"
         link="/passport/profile"
         blobshape="60% 40% 56% 38% / 99% 50% 90% 57%"
-        icon="identification"
+        icon="dashpassport"
         title="dapps.o-dashboard.pages.home.passport" />
 
       <DashboardColorCard
         color="banking"
         link="/banking/transactions"
         blobshape="137% 1% 119% 38% / 99% 60% 86% 73%"
-        icon="banking"
+        icon="dashbanking"
         title="dapps.o-dashboard.pages.home.banking" />
 
       <DashboardColorCard
         color="contacts"
         link="/contacts"
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
-        icon="users"
+        icon="dashfriends"
         title="dapps.o-dashboard.pages.home.contacts" />
     </div>
   </div>

@@ -51,7 +51,7 @@ $: {
         on:click="{() => dispatch('siwtchEvent')}">
         <span>
           <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-            <Icons icon="settings" customClass="w-6 h-6 heroicon smallicon inline" />
+            <Icons icon="settings" size="{8}" customClass="heroicon smallicon inline" />
           </span>
 
           <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm ">
