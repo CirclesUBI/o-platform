@@ -1248,11 +1248,20 @@ query clientAssertionJwt {
   clientAssertionJwt
 }
 
-query allBusinesses {
-  allBusinesses {
+query allBusinesses($id: Int) {
+  allBusinesses(id: $id) {
     id
     name
     description
     picture
+    phoneNumber
+    businessHoursMonday
+    businessHoursTuesday
+    businessHoursWednesday
+    businessHoursThursday
+    businessHoursFriday
+    businessHoursSaturday
+    businessHoursSunday
+    businessCategory
   }
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte";
+import { push } from "svelte-spa-router";
 
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 
@@ -10,14 +11,18 @@ export let id: number;
 
 let outlineState: boolean = false;
 
-
+function loadDetailPage(id) {
+  push(`/marketlisting/${id}`);
+}
 
 onMount(async () => {});
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-2">
   <div class="relative">
-    <img src="{image}" alt="picture of the business" class="rounded-3xl h-full w-full" />
+    <img src="{image}" alt="picture of the business" class="rounded-3xl h-full w-full" on:click="{() => {
+      loadDetailPage(id)
+    }}"/>
     <div
       on:click="{() => {
         outlineState = !outlineState;
