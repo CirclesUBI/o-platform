@@ -134,6 +134,7 @@ type Contact {
 }
 
 type BusinessCategory {
+  id: Int!
   name: String
 }
 
@@ -703,6 +704,7 @@ type Businesses {
   businessHoursSunday: String
   phoneNumber: String
   location: String
+  businessCategory: String
 }
 
 enum SortOrder {
@@ -946,7 +948,8 @@ type Query {
   signMessage(message: String!, key: String!): String!
   directPath(from: String!, to: String!, amount: String!): TransitivePath!
   paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
-  allBusinesses: [Businesses!]!
+  allBusinessCategories: [BusinessCategory!]!
+  allBusinesses(categoryId: Int, id: Int): [Businesses!]!
 }
 
 type Subscription {

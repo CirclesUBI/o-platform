@@ -56,6 +56,7 @@ export type AssetBalance = {
 
 export type BusinessCategory = {
   __typename?: 'BusinessCategory';
+  id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
 };
 
@@ -74,6 +75,7 @@ export type Businesses = {
   businessHoursSunday?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
+  businessCategory?: Maybe<Scalars['String']>;
 };
 
 export type Capability = {
@@ -835,6 +837,7 @@ export type Query = {
   signMessage: Scalars['String'];
   directPath: TransitivePath;
   paymentPath: TransitivePath;
+  allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
 };
 
@@ -1003,6 +1006,12 @@ export type QueryPaymentPathArgs = {
   from: Scalars['String'];
   to: Scalars['String'];
   amount: Scalars['String'];
+};
+
+
+export type QueryAllBusinessesArgs = {
+  categoryId?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['Int']>;
 };
 
 export type QueryProfileInput = {
@@ -2461,14 +2470,16 @@ export type ClientAssertionJwtQuery = (
   & Pick<Query, 'clientAssertionJwt'>
 );
 
-export type AllBusinessesQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllBusinessesQueryVariables = Exact<{
+  id?: Maybe<Scalars['Int']>;
+}>;
 
 
 export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'name' | 'description' | 'picture'>
+    & Pick<Businesses, 'id' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategory'>
   )> }
 );
 
@@ -3983,12 +3994,21 @@ export const ClientAssertionJwtDocument = gql`
 }
     `;
 export const AllBusinessesDocument = gql`
-    query allBusinesses {
-  allBusinesses {
+    query allBusinesses($id: Int) {
+  allBusinesses(id: $id) {
     id
     name
     description
     picture
+    phoneNumber
+    businessHoursMonday
+    businessHoursTuesday
+    businessHoursWednesday
+    businessHoursThursday
+    businessHoursFriday
+    businessHoursSaturday
+    businessHoursSunday
+    businessCategory
   }
 }
     `;
