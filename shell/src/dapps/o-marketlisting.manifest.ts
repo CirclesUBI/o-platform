@@ -5,12 +5,22 @@ import { ContactsDappState } from "./o-contacts.manifest";
 import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Environment } from "../shared/environment";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
+import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
 
 const marketlistings: Page<any, ContactsDappState> = {
   routeParts: [],
   component: Marketlisting,
   title: "marketlisting",
   type: "page",
+  position: "main"
+};
+
+const detailPage: Page<any, ContactsDappState> = {
+  routeParts: [":id"],
+  component: MarketlistingDetail,
+  title: "detail",
+  type: "page",
+  position: "modal"
 };
 
 
@@ -36,5 +46,5 @@ export const marketlisting: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [marketlistings],
+  routables: [marketlistings, detailPage],
 };
