@@ -25,14 +25,11 @@ jobs:
 
       - id: readPackageJson
         run: |
-          delimiter="$(openssl rand -hex 8)"
-          echo "packageJson<<${delimiter}" >> "${GITHUB_OUTPUT}"
-          cat ./package.json >> "${GITHUB_OUTPUT}"
-          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "server_ref=$(cat ./package.json | jq '.')" >> "${GITHUB_OUTPUT}"
   call-build-workflow:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     needs: read-packageJson
     with:
-      server_ref: ${{fromJson(needs.read-packageJson.outputs.packageJson).peerDependencies.api-server}}
+      server_ref: ${{needs.read-packageJson.outputs.server_ref}}
       client_ref: ${{inputs.client_ref}}
     secrets: inherit
