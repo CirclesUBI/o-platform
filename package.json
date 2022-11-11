@@ -37,7 +37,7 @@
     "xstate": "^4.33.6"
   },
   "peerDependencies": {
-    "@api-server": "cf79a81"
+    "api-server": "cf79a81"
   },
   "peerDependenciesMeta": {
     "api-server": {
