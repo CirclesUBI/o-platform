@@ -1,13 +1,15 @@
+<script>
+import Label from "../../../shared/atoms/Label.svelte";
+</script>
+
 <div>
   <div>
-    Before you can use this app you need to agree to the following points. If you agree, press the boxes to tick. If you
-    have any questions, please reach out to a local circles representative.
+    <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />
+    <Label key="dapps.o-homepage.components.survey.informedConsent.title.middle" />
+    <Label key="dapps.o-homepage.components.survey.informedConsent.title.bottom" />
   </div>
-  <div>I understand that Circles is conduction a research project.</div>
-  <div>I agree to participate in this Circles research project.</div>
-  <div>
-    I understand that when the Circles research project end I may not be able to use Circles points that remain in my
-    Circles wallet.
-  </div>
-  <div>You haven't ticked all the boxes so you cannot use the Circles app.</div>
+  <div><Label key="dapps.o-homepage.components.survey.informedConsent.firstCheckbox" /></div>
+  <div><Label key="dapps.o-homepage.components.survey.informedConsent.secondCheckbox" /></div>
+  <div><Label key="dapps.o-homepage.components.survey.informedConsent.thirdCheckbox" /></div>
+  <div><Label key="dapps.o-homepage.components.survey.informedConsent.info" /></div>
 </div>
