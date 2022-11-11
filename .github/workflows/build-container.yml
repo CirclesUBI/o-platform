@@ -46,31 +46,12 @@ jobs:
         name: Docker meta outside of branches
         id: meta
         uses: docker/metadata-action@v4
-        if: ${{ branch == null }}
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env. IMAGE_OWNER }}/${{ env.IMAGE_REPOSITORY }}
           tags: |
             latest-${{ inputs.server_ref }}
             {{sha}}-${{ inputs.server_ref }}
-            {{base_ref}}-${{ inputs.server_ref }}
-            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{base_ref}}-${{ inputs.server_ref }}
-
-      -
-        name: Docker meta inside a branch
-        id: meta
-        uses: docker/metadata-action@v4
-        if: ${{ branch != null }}
-        with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env. IMAGE_OWNER }}/${{ env.IMAGE_REPOSITORY }}
-          tags: |
-            latest-${{ inputs.server_ref }}
-            {{sha}}-${{ inputs.server_ref }}
-            {{branch}}-${{ inputs.server_ref }}
-            {{base_ref}}-${{ inputs.server_ref }}
-            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{branch}}-${{ inputs.server_ref }}
-            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{base_ref}}-${{ inputs.server_ref }}
 
       -
         name: Set up Docker Buildx
