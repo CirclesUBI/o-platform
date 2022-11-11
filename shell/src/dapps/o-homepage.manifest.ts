@@ -73,7 +73,7 @@ const survey: Page<any, DappState> = {
   isSystem: true,
   anonymous: true,
   title: "dapps.o-homepage.pages.survey.title",
-  routeParts: ["=survey"],
+  routeParts: ["=survey", ":id"],
   icon: "forum",
   component: Survey,
 };
