@@ -9,9 +9,6 @@ on:
         required: true
         type: string
 
-env:
-  Call: CirclesUBI/o-platform/.github/workflows/build-container.yml@${{ inputs.client_ref }}
-
 jobs:
   read-packageJson:
     runs-on: ubuntu-latest
@@ -36,7 +33,7 @@ jobs:
           echo "packageJson=$content" >> $GITHUB_OUTPUT
 
   call-build-workflow:
-    uses: $Call
+    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     with:
       server_ref: ${{fromJson(steps.readPackageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
       client_ref: ${{inputs.client_ref}}
