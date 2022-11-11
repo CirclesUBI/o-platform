@@ -43,6 +43,6 @@
     "@CirclesUBI/api-server": {
       "optional": true
     }
-  }
+  },
   "version": "8.0.0"
 }
