@@ -39,10 +39,10 @@
     "xstate": "^4.33.6"
   },
   "peerDependencies": {
-    "@CirclesUBI/api-server": "cf79a81"
+    "@api-server": "cf79a81"
   },
   "peerDependenciesMeta": {
-    "@CirclesUBI/api-server": {
+    "api-server": {
       "optional": true
     }
   },
