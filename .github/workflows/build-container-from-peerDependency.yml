@@ -38,9 +38,7 @@ jobs:
           echo "packageJson=$content" >> $GITHUB_OUTPUT
 
   call-build-workflow:
-    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@{{ env.GITHUB_REV }}
+    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@{{env.GITHUB_REV}}
     with:
       server_ref: ${{fromJson(steps.readPackageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
-      client_ref: ${{ inputs.client_ref }}
-
-
+      client_ref: ${{inputs.client_ref}}
