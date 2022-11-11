@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
+    outputs:
+      packageJson: ${{ steps.readPackageJson.outputs.packageJson }}
     steps:
       -
         name: Checkout repository
@@ -34,6 +35,7 @@ jobs:
 
   call-build-workflow:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
+    needs: read-packageJson
     with:
-      server_ref: ${{fromJson(steps.readPackageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
+      server_ref: ${{fromJson(needs.read-packageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
       client_ref: ${{inputs.client_ref}}
