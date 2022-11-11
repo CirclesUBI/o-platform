@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       client_ref:
-        description: "A commit sha from this repository."
+        description: "A branch from this repository."
         required: true
         type: string
 
@@ -53,8 +53,8 @@ jobs:
             {{sha}}-${{ inputs.server_ref }}
             {{branch}}-${{ inputs.server_ref }}
             {{base_ref}}-${{ inputs.server_ref }}
-            ${{ fromJson(steps.readPackageJson.outputs.packageJson).version }}${{ branch }}-${{ inputs.server_ref }}
-            ${{ fromJson(steps.readPackageJson.outputs.packageJson).version }}${{ base_ref }}-${{ inputs.server_ref }}
+            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{branch}}-${{ inputs.server_ref }}
+            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{base_ref}}-${{ inputs.server_ref }}
 
       -
         name: Set up Docker Buildx
