@@ -1,0 +1,46 @@
+name: Build application container
+run-name: Generate o-platform ${{ inputs.client_ref }} for api-server peerDependency by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      client_ref:
+        description: "A ref from this repository, CirclesUBI/o-platform."
+        required: true
+        type: string
+
+env:
+  REGISTRY: registry.digitalocean.com
+  IMAGE_OWNER: circles-land
+  IMAGE_REPOSITORY: o-platform
+
+jobs:
+  read-packageJson:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.client_ref }}
+
+      - id: readPackageJson
+        run: |
+          content=`cat ./package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "packageJson=$content" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@{{ env.GITHUB_REV }}
+    with:
+      server_ref: ${{fromJson(steps.readPackageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
+      client_ref: ${{ inputs.client_ref }}
+
+
