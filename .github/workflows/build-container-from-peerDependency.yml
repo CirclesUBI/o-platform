@@ -29,15 +29,10 @@ jobs:
           echo "packageJson<<${delimiter}" >> "${GITHUB_OUTPUT}"
           cat ./package.json >> "${GITHUB_OUTPUT}"
           echo "${delimiter}" >> "${GITHUB_OUTPUT}"
-  echo-packageJson:
-    runs-on: ubuntu-latest
-    needs: read-packageJson
-    steps:
-      -
-        run: echo ${{needs.read-packageJson.outputs.packageJson}}
   call-build-workflow:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     needs: read-packageJson
     with:
       server_ref: ${{fromJson(needs.read-packageJson.outputs.packageJson).peerDependencies.api-server}}
       client_ref: ${{inputs.client_ref}}
+    secrets: inherit
