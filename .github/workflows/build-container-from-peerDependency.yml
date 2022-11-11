@@ -1,4 +1,4 @@
-name: Build application container
+name: Build application container from peerDependency
 run-name: Generate o-platform ${{ inputs.client_ref }} for api-server peerDependency by @${{ github.actor }}
 
 on:
@@ -8,11 +8,6 @@ on:
         description: "A ref from this repository, CirclesUBI/o-platform."
         required: true
         type: string
-
-env:
-  REGISTRY: registry.digitalocean.com
-  IMAGE_OWNER: circles-land
-  IMAGE_REPOSITORY: o-platform
 
 jobs:
   read-packageJson:
@@ -38,7 +33,7 @@ jobs:
           echo "packageJson=$content" >> $GITHUB_OUTPUT
 
   call-build-workflow:
-    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@{{env.GITHUB_REV}}
+    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@{{ inputs.client_ref }}
     with:
       server_ref: ${{fromJson(steps.readPackageJson.outputs.packageJson).peerDependency."@CirclesUBI/api-server" }}
       client_ref: ${{inputs.client_ref}}
