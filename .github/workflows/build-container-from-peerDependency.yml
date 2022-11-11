@@ -37,5 +37,5 @@ jobs:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     needs: read-packageJson
     with:
-      server_ref: ${{fromJson(needs.read-packageJson.outputs.packageJson).peerDependencies.api-server }}
+      server_ref: ${{fromJson(needs.read-packageJson.outputs.packageJson).peerDependencies.api-server}}
       client_ref: ${{inputs.client_ref}}
