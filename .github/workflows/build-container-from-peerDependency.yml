@@ -32,7 +32,12 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "packageJson=$content" >> $GITHUB_OUTPUT
-
+  echo-packageJson:
+    runs-on: ubuntu-latest
+    needs: read-packageJson
+    steps:
+      -
+        run: echo ${{needs.read-packageJson.outputs.packageJson}}
   call-build-workflow:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     needs: read-packageJson
