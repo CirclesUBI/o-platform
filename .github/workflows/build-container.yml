@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       server_ref:
-        description: "A commit sha from CirclesUBI/api-server to whose deployment this frontend instance is linked."
+        description: "A ref from CirclesUBI/api-server against which we build."
         required: true
         type: string
       client_ref:
-        description: "A branch from this repository."
+        description: "A ref from this repository, CirclesUBI/o-platform."
         required: true
         type: string
 
@@ -72,4 +72,4 @@ jobs:
           build-args: |
             SERVER_REF=${{ inputs.server_ref }}
           tags: ${{ steps.meta.outputs.tags }}
-          file: "{{ context }}/Dockerfile.ci"
+          file: ${{context}}/Dockerfile.ci
