@@ -1,4 +1,5 @@
 name: Build application container
+run-name: Generate o-platform ${{ inputs.client_ref }} for api-server ${{ inputs.server_ref }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
@@ -42,9 +43,24 @@ jobs:
           echo "::set-output name=packageJson::$content"
 
       -
-        name: Docker meta
+        name: Docker meta outside of branches
         id: meta
         uses: docker/metadata-action@v4
+        if: ${{ branch == null }}
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env. IMAGE_OWNER }}/${{ env.IMAGE_REPOSITORY }}
+          tags: |
+            latest-${{ inputs.server_ref }}
+            {{sha}}-${{ inputs.server_ref }}
+            {{base_ref}}-${{ inputs.server_ref }}
+            ${{fromJson(steps.readPackageJson.outputs.packageJson).version }}{{base_ref}}-${{ inputs.server_ref }}
+
+      -
+        name: Docker meta inside a branch
+        id: meta
+        uses: docker/metadata-action@v4
+        if: ${{ branch != null }}
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env. IMAGE_OWNER }}/${{ env.IMAGE_REPOSITORY }}
