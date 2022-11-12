@@ -38,8 +38,7 @@ jobs:
         run: echo ${{needs.read-packageJson.outputs.server_ref}}
   call-build-workflow:
     name: Trigger container build
-    if: ${{ needs.read-packageJson.outputs.server_ref == 'cf79a81' }}
-    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
+    uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@${{ inputs.client_ref }}
     needs: [read-packageJson, echo-server_ref]
     with:
       server_ref: ${{needs.read-packageJson.outputs.server_ref}}
