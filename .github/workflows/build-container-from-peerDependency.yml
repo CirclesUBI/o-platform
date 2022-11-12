@@ -35,7 +35,7 @@ jobs:
     needs: read-packageJson
     steps:
       -
-        run: echo {{needs.read-packageJson.outputs.server_ref}}
+        run: echo ${{needs.read-packageJson.outputs.server_ref}}
   call-build-workflow:
     name: Trigger container build
     if: ${{ needs.read-packageJson.outputs.server_ref == 'cf79a81' }}
