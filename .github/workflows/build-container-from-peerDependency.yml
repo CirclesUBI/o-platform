@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    outputs:
-      server_ref: ${{ steps.readPackageJson.outputs.server_ref }}
     steps:
       -
         name: Checkout repository
@@ -29,6 +27,9 @@ jobs:
           server_ref=$(jq -r '.peerDependencies."api-server"' ./package.json)
           echo "server_ref=$server_ref"
           echo "server_ref=$server_ref" >> "${GITHUB_OUTPUT}"
+    outputs:
+      server_ref: ${{ steps.readPackageJson.outputs.server_ref }}
+
   echo-server_ref:
     name: echo server_ref
     runs-on: ubuntu-latest
@@ -36,6 +37,7 @@ jobs:
     steps:
       -
         run: echo ${{needs.read-packageJson.outputs.server_ref}}
+
   call-build-workflow:
     name: Trigger container build
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
