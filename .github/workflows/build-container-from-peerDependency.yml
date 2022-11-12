@@ -25,7 +25,7 @@ jobs:
 
       - id: readPackageJson
         run: |
-          echo "server_ref=$(cat ./package.json | jq '.')" >> "${GITHUB_OUTPUT}"
+          echo "server_ref=$(cat ./package.json | jq '.peerDependencies.api-server')" >> "${GITHUB_OUTPUT}"
   call-build-workflow:
     uses: CirclesUBI/o-platform/.github/workflows/build-container.yml@main
     needs: read-packageJson
