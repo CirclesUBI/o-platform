@@ -1,5 +1,5 @@
 name: Build application container from peerDependency
-run-name: Generate o-platform build of ${{ inputs.client_ref }} for api-server peerDependency from ${{ env.GITHUB_REF }} by @${{ github.actor }}
+run-name: Generate o-platform build of ${{ inputs.client_ref }} for api-server peerDependency from ${{ github.ref }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
