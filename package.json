@@ -39,10 +39,10 @@
     "xstate": "^4.33.6"
   },
   "peerDependencies": {
-    "circlesapi": "cf79a81"
+    "api-server": "cf79a81"
   },
   "peerDependenciesMeta": {
-    "circlesapi": {
+    "api-server": {
       "optional": true
     }
   },
