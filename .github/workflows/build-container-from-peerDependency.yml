@@ -26,7 +26,7 @@ jobs:
       - name: Read package.json, get server_ref
         id: readPackageJson
         run: |
-          server_ref=$(jq '.peerDependencies."api-server"' ./package.json)
+          server_ref=$(jq -r '.peerDependencies."api-server"' ./package.json)
           echo "server_ref=$server_ref"
           echo "server_ref=$server_ref" >> "${GITHUB_OUTPUT}"
   echo-server_ref:
