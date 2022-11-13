@@ -22,27 +22,27 @@ onMount(async () => {
   business = await getBusiness(id);
   console.log(business);
 
-  const currentDay = new Date().getDay();
+  const currentDateIndex = new Date().getDay();
   const businessHours = [
-    business[0].businessHoursMonday,
-    business[0].businessHoursTuesday,
-    business[0].businessHoursWednesday,
-    business[0].businessHoursThursday,
-    business[0].businessHoursFriday,
-    business[0].businessHoursSaturday,
-    business[0].businessHoursSunday,
+    business[0].businessHoursSunday + " Sunday",
+    business[0].businessHoursMonday + " Monday",
+    business[0].businessHoursTuesday + " Tuesday",
+    business[0].businessHoursWednesday + " Wednesday",
+    business[0].businessHoursThursday + " Thursday",
+    business[0].businessHoursFriday + " Friday",
+    business[0].businessHoursSaturday + " Saturday",
   ];
 
-  currentDayOpenHours = businessHours[currentDay - 1];
-  everythingBeforeTheCurrentDay = businessHours.slice(0, currentDay - 1);
-  let everythingAfterTheCurrentDay = [];
-  if (currentDay < businessHours.length) {
-    everythingAfterTheCurrentDay = businessHours.slice(currentDay, businessHours.length);
+  currentDayOpenHours = businessHours[currentDateIndex];
+  everythingBeforeTheCurrentDay = businessHours.slice(0, currentDateIndex);
+  if (currentDateIndex < businessHours.length) {
+    everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
   }
 
   console.log("before", everythingBeforeTheCurrentDay);
   console.log("today", currentDayOpenHours);
   console.log("after", everythingAfterTheCurrentDay);
+  console.log("current day index", new Date().getDay());
 });
 
 async function getBusiness(id: string) {
@@ -59,6 +59,7 @@ async function getBusiness(id: string) {
     <div class="relative">
       <img src="{business[0].picture}" alt="picture of the business" class="h-full w-full rounded-2xl" />
 
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         on:click="{() => {
           outlineState = !outlineState;
@@ -86,15 +87,21 @@ async function getBusiness(id: string) {
       <Icon name="clock" class="h-6 w-6" />
       <p class="pr-4 pl-4">Opening Hours</p>
       <div>
-        {#each everythingBeforeTheCurrentDay as day}
-          <p>{day}</p>
-        {/each}
-        <p>{currentDayOpenHours}</p>
-          {#each everythingAfterTheCurrentDay as day}
-            <p>{day}</p>
+        {#if visible}
+          {#each everythingBeforeTheCurrentDay as day}
+            <p transition:fade>{day}</p>
           {/each}
+        {/if}
+
+        <p>{currentDayOpenHours}</p>
+        {#if visible}
+          {#each everythingAfterTheCurrentDay as after}
+            <p transition:fade>{after}</p>
+          {/each}
+        {/if}
       </div>
       {#if !visible}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
           on:click="{() => {
             visible = !visible;
@@ -103,6 +110,10 @@ async function getBusiness(id: string) {
           <Icon name="chevron-down" class="h-6 w-6" />
         </div>
       {/if}
+    </div>
+    <div class="flex border-t-2 mt-4 pt-4">
+      <Icon name="phone" class="h-6 w-6" />
+      <p class="pl-4">{business[0].phoneNumber}</p>
     </div>
   {:else}
     <p>loading details...</p>
