@@ -3,16 +3,24 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { onMount } from "svelte";
 import { ApiClient } from "../../../shared/apiConnection";
-import { AllBusinessesDocument, AllBusinessesQueryVariables, Businesses } from "../../../shared/api/data/types";
+import {
+  AllBusinessesDocument,
+  AllBusinessesQueryVariables,
+  Businesses,
+  MutationToggleFavoriteArgs, ToggleFavoriteDocument
+} from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
+import {me} from "../../../shared/stores/me";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let id: string;
 
 let business: Businesses[] = [];
-let outlineState: boolean = false;
+let favorites: {[circlesAddress:string]: boolean} = {};
+
+let isFavorite: boolean = false;
 let visible: boolean = false;
 let currentDayOpenHours = "";
 let everythingBeforeTheCurrentDay = [];
@@ -20,6 +28,15 @@ let everythingAfterTheCurrentDay = [];
 
 onMount(async () => {
   business = await getBusiness(id);
+  me.subscribe(m => {
+    favorites = {};
+    m.favorites.forEach(f => {
+      favorites[f.favorite.circlesAddress] = true;
+    });
+  })
+
+  isFavorite = favorites[business[0].circlesAddress];
+
   console.log(business);
 
   const currentDay = new Date().getDay();
@@ -45,9 +62,19 @@ onMount(async () => {
   console.log("after", everythingAfterTheCurrentDay);
 });
 
-async function getBusiness(id: string) {
+async function toggleFavorite(circlesAddress:string) {
+  isFavorite = !isFavorite;
+  ApiClient.mutate<boolean, MutationToggleFavoriteArgs>(ToggleFavoriteDocument, {
+    circlesAddress: circlesAddress
+  }).then(isFavorite => {
+    favorites[circlesAddress] = isFavorite;
+  });
+  return isFavorite;
+}
+
+async function getBusiness(circlesAddress: string) {
   let queryResult = await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
-    id: parseInt(id),
+    circlesAddress: circlesAddress,
   });
 
   return queryResult;
@@ -62,10 +89,9 @@ async function getBusiness(id: string) {
 
       <div
         on:click="{() => {
-          outlineState = !outlineState;
-          console.log(outlineState);
+          toggleFavorite(business[0].circlesAddress);
         }}">
-        {#if outlineState}
+        {#if isFavorite}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
         {:else}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
