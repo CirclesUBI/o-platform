@@ -15,7 +15,7 @@ import {me} from "../../../shared/stores/me";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
-export let id: string;
+export let circlesAddress: string;
 
 let business: Businesses[] = [];
 let favorites: {[circlesAddress:string]: boolean} = {};
@@ -27,7 +27,7 @@ let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 
 onMount(async () => {
-  business = await getBusiness(id);
+  business = await getBusiness(circlesAddress);
   me.subscribe(m => {
     favorites = {};
     m.favorites.forEach(f => {

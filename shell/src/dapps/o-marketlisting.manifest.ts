@@ -1,24 +1,22 @@
-import Translations from "./o-translation/pages/Translations.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { ContactsDappState } from "./o-contacts.manifest";
-import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
-import { Environment } from "../shared/environment";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
 import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
 
-const marketlistings: Page<any, ContactsDappState> = {
-  routeParts: [],
+const listing: Page<any, ContactsDappState> = {
+  routeParts: ["=listing"],
   component: Marketlisting,
-  title: "marketlisting",
+  title: "Market",
   type: "page",
   position: "main"
 };
 
 const detailPage: Page<any, ContactsDappState> = {
-  routeParts: [":id"],
+  routeParts: ["=detail",":circlesAddress"],
   component: MarketlistingDetail,
   title: "detail",
+  isSystem: true,
   type: "page",
   position: "modal"
 };
@@ -30,21 +28,21 @@ export interface DappState {
 
 export const marketlisting: DappManifest<DappState> = {
   type: "dapp",
-  dappId: "marketlisting:1",
+  dappId: "market:1",
   isSingleton: true,
   isHidden: false,
   icon: "check",
-  title: "marketlisting",
-  routeParts: ["=marketlisting"],
-  defaultRoute: ["marketlisting"],
+  title: "Market",
+  routeParts: ["market"],
+  defaultRoute: ["listing"],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {
-      initialRoutable: marketlistings,
+      initialRoutable: listing,
       cancelDependencyLoading: false,
     };
   },
-  routables: [marketlistings, detailPage],
+  routables: [listing, detailPage],
 };
