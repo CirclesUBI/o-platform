@@ -160,6 +160,10 @@ module.exports = {
         dappbackground: {
           DEFAULT: "#F9F9FB",
         },
+        marketlisting: {
+          DEFAULT: "#70BD9E",
+          light: "#89D4BA",
+        }
       },
       fontSize: {
         "4rem": "4rem",
