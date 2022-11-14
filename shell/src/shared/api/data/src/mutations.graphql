@@ -256,3 +256,7 @@ mutation proofUniqueness($humanodeToken: String!) {
     existingSafe
   }
 }
+
+mutation toggleFavorite($circlesAddress: String!) {
+  toggleFavorite(circlesAddress: $circlesAddress)
+}

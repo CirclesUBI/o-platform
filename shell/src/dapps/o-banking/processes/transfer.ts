@@ -19,7 +19,7 @@ import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfile
 import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
 
 import { me } from "../../../shared/stores/me";
-import { DirectPathDocument, Profile, QueryDirectPathArgs } from "../../../shared/api/data/types";
+import {AllBusinessesDocument, DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
 import { convertTimeCirclesToCircles, displayCirclesAmount } from "../../../shared/functions/displayCirclesAmount";
 import { TransactionReceipt } from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";

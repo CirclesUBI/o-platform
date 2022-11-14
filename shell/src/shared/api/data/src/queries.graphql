@@ -66,6 +66,16 @@ query init {
       }
       # init.ubi
       circlesTokenAddress
+      favorites {
+        createdAt
+        comment
+        favorite {
+          circlesAddress
+          avatarUrl
+          displayName
+          dream
+        }
+      }
     }
   }
 }
@@ -209,6 +219,16 @@ query myProfile {
         displayCurrency
         avatarUrl
         name
+      }
+    }
+    favorites {
+      createdAt
+      comment
+      favorite {
+        circlesAddress
+        avatarUrl
+        displayName
+        dream
       }
     }
   }
@@ -1217,9 +1237,10 @@ query clientAssertionJwt {
   clientAssertionJwt
 }
 
-query allBusinesses($id: Int) {
-  allBusinesses(id: $id) {
+query allBusinesses($circlesAddress: String) {
+  allBusinesses(circlesAddress: $circlesAddress) {
     id
+    circlesAddress
     name
     description
     picture
@@ -1231,6 +1252,7 @@ query allBusinesses($id: Int) {
     businessHoursFriday
     businessHoursSaturday
     businessHoursSunday
+    businessCategoryId
     businessCategory
   }
 }

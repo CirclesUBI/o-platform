@@ -1,40 +1,36 @@
 <script lang="ts">
-import { onMount } from "svelte";
-import { push } from "svelte-spa-router";
+  import {createEventDispatcher} from "svelte";
+  import { push } from "svelte-spa-router";
+  import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+  import {Businesses} from "../../../shared/api/data/types";
 
-import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+  export let business: Businesses;
+  export let isFavorite: boolean = false;
 
-export let image: string;
-export let description: string;
-export let name: string;
-export let id: number;
+  const eventDispatcher = createEventDispatcher();
 
-let outlineState: boolean = false;
-
-function loadDetailPage(id) {
-  push(`/marketlisting/${id}`);
-}
-
-onMount(async () => {});
+  function loadDetailPage(circlesAddress) {
+    push(`/marketlisting/${circlesAddress}`);
+  }
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-1">
   <div class="relative">
-    <img src="{image}" alt="picture of the business" class="rounded-3xl h-full w-full" on:click="{() => {
-      loadDetailPage(id)
-    }}"/>
+    <img src={business.picture} alt="picture of the business" class="rounded-3xl h-full w-full" on:click={() => {
+      loadDetailPage(business.circlesAddress);
+    }}/>
     <div
       on:click="{() => {
-        outlineState = !outlineState;
-        console.log(outlineState);
+        isFavorite = !isFavorite;
+        eventDispatcher('toggleFavorite', business.circlesAddress);
       }}">
-      {#if outlineState}
+      {#if isFavorite}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
       {:else}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
       {/if}
     </div>
   </div>
-  <div class="font-bold">{name}</div>
-  <div class="flex-wrap">{description}</div>
+  <div class="font-bold">{business.name}</div>
+  <div class="flex-wrap">{business.description}</div>
 </section>
