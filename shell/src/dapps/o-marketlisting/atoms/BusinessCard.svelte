@@ -10,7 +10,7 @@
   const eventDispatcher = createEventDispatcher();
 
   function loadDetailPage(circlesAddress) {
-    push(`/marketlisting/${circlesAddress}`);
+    push(`/market/detail/${circlesAddress}`);
   }
 </script>
 
