@@ -54,6 +54,7 @@ async function getBusiness(id: string) {
 }
 </script>
 
+<div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business.length}
     <div class="relative">
