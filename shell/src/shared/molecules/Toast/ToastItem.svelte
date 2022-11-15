@@ -29,7 +29,7 @@
   {#if item.dismissable}
     <div
       class="_toastBtn"
-      role="button"
+      role="presentation"
       tabindex="-1"
       on:click={() => toast.pop(item.id)}
     >
