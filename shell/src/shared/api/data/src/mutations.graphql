@@ -260,3 +260,7 @@ mutation proofUniqueness($humanodeToken: String!) {
 mutation toggleFavorite($circlesAddress: String!) {
   toggleFavorite(circlesAddress: $circlesAddress)
 }
+
+mutation shareLink($targetType:LinkTargetType! $targetKey:String!) {
+  shareLink(targetType: $targetType targetKey: $targetKey)
+}

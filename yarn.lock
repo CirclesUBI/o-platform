@@ -1779,6 +1779,11 @@
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.1.1.tgz"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
+"@here/maps-api-for-javascript@3.1.35.3":
+  version "1.35.3"
+  resolved "https://repo.platform.here.com/artifactory/api/npm/maps-api-for-javascript/-/@here/maps-api-for-javascript-1.35.3.tgz#6f4bc3f3a6bb904e43ace37c9c847ef8dbdd6ca7"
+  integrity sha1-b0vD86a7kE5DrON8nIR++NvdbKc=
+
 "@iarna/toml@^2.2.5":
   version "2.2.5"
   resolved "https://registry.npmjs.org/@iarna/toml/-/toml-2.2.5.tgz"
