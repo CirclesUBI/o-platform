@@ -1237,8 +1237,8 @@ query clientAssertionJwt {
   clientAssertionJwt
 }
 
-query allBusinesses($circlesAddress: String) {
-  allBusinesses(circlesAddress: $circlesAddress) {
+query allBusinesses($queryParams: QueryAllBusinessesParameters) {
+  allBusinesses(queryParams: $queryParams) {
     id
     circlesAddress
     name

@@ -506,7 +506,7 @@ type PublicEvent {
 type Query {
     aggregates(filter: ProfileAggregateFilter, safeAddress: String!, types: [AggregateType!]!): [ProfileAggregate!]!
     allBusinessCategories: [BusinessCategory!]!
-    allBusinesses(categoryId: Int, circlesAddress: String, id: Int): [Businesses!]!
+    allBusinesses(queryParams: QueryAllBusinessesParameters): [Businesses!]!
     allProfiles(sinceLastChange: Date): [ExportProfile]!
     allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!
     claimedInvitation: ClaimedInvitation
@@ -793,6 +793,14 @@ enum ProfileType {
     REGION
 }
 
+enum QueryAllBusinessesOrderOptions {
+    Alphabetical
+    MostPopular
+    Nearest
+    Newest
+    Oldest
+}
+
 enum SortOrder {
     ASC
     DESC
@@ -820,6 +828,11 @@ input CreateTagInput {
     value: String
 }
 
+input Geolocation {
+    lat: Float!
+    lon: Float!
+}
+
 input PaginationArgs {
     continueAt: String
     continueAtId: Int
@@ -838,6 +851,20 @@ input ProfileEventFilter {
     to: String
     transactionHash: String
     with: String
+}
+
+input QueryAllBusinessesConditions {
+    inCategories: [Int!]
+}
+
+input QueryAllBusinessesOrder {
+    orderBy: QueryAllBusinessesOrderOptions!
+}
+
+input QueryAllBusinessesParameters {
+    order: QueryAllBusinessesOrder
+    ownCoordinates: Geolocation
+    where: QueryAllBusinessesConditions
 }
 
 input QueryProfileInput {
