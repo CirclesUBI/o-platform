@@ -402,6 +402,11 @@ export type LeaderboardEntry = {
   inviteCount: Scalars['Int'];
 };
 
+export enum LinkTargetType {
+  Business = 'Business',
+  Person = 'Person'
+}
+
 export type LogoutResponse = {
   __typename?: 'LogoutResponse';
   errorMessage?: Maybe<Scalars['String']>;
@@ -494,6 +499,7 @@ export type Mutation = {
   revokeSafeVerification: VerifySafeResult;
   sendMessage: SendMessageResult;
   setStringUpdateState?: Maybe<I18n>;
+  shareLink: Scalars['String'];
   tagTransaction: TagTransactionResult;
   toggleFavorite: Scalars['Boolean'];
   updateSafe: UpdateSafeResponse;
@@ -584,6 +590,12 @@ export type MutationSendMessageArgs = {
 
 export type MutationSetStringUpdateStateArgs = {
   key?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationShareLinkArgs = {
+  targetKey: Scalars['String'];
+  targetType: LinkTargetType;
 };
 
 
@@ -1618,6 +1630,17 @@ export type ToggleFavoriteMutationVariables = Exact<{
 export type ToggleFavoriteMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'toggleFavorite'>
+);
+
+export type ShareLinkMutationVariables = Exact<{
+  targetType: LinkTargetType;
+  targetKey: Scalars['String'];
+}>;
+
+
+export type ShareLinkMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'shareLink'>
 );
 
 export type InitQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2785,6 +2808,11 @@ export const ProofUniquenessDocument = gql`
 export const ToggleFavoriteDocument = gql`
     mutation toggleFavorite($circlesAddress: String!) {
   toggleFavorite(circlesAddress: $circlesAddress)
+}
+    `;
+export const ShareLinkDocument = gql`
+    mutation shareLink($targetType: LinkTargetType!, $targetKey: String!) {
+  shareLink(targetType: $targetType, targetKey: $targetKey)
 }
     `;
 export const InitDocument = gql`
@@ -4162,6 +4190,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     toggleFavorite(variables: ToggleFavoriteMutationVariables): Promise<ToggleFavoriteMutation> {
       return withWrapper(() => client.request<ToggleFavoriteMutation>(print(ToggleFavoriteDocument), variables));
+    },
+    shareLink(variables: ShareLinkMutationVariables): Promise<ShareLinkMutation> {
+      return withWrapper(() => client.request<ShareLinkMutation>(print(ShareLinkDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));
