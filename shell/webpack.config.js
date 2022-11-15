@@ -151,6 +151,7 @@ module.exports = {
     chunkModules: VERBOSE,
     cached: VERBOSE,
     cachedAssets: VERBOSE,
+    
   },
   output: {
     path: __dirname + "/public",
@@ -478,10 +479,19 @@ module.exports = {
     minimize: prod,
     minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
   },
+  stats: {
+    warningsFilter: ['../node_modules/'],
+  },
   devServer: {
     compress: false,
     static: {
       directory: path.join(__dirname, "public"),
+    },
+    client: {
+      overlay: {
+        errors: true,
+        warnings: true,
+      },
     },
     port: process.env.DEPLOY_ENVIRONMENT !== "docker" ? 5000 : 8080,
     host: "localhost",

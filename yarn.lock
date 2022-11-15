@@ -6312,9 +6312,9 @@ file-loader@^6.2.0:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-file-selector@^0.2.2:
+file-selector@^0.2.4:
   version "0.2.4"
-  resolved "https://registry.npmjs.org/file-selector/-/file-selector-0.2.4.tgz"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.2.4.tgz#7b98286f9dbb9925f420130ea5ed0a69238d4d80"
   integrity sha512-ZDsQNbrv6qRi1YTDOEWzf5J2KjZ9KMI1Q2SGeTkCJmNNW25Jg4TW4UMcmoqcg4WrAyKRcpBXdbWRxkfrOzVRbA==
   dependencies:
     tslib "^2.0.3"
@@ -12486,12 +12486,12 @@ svelte-easy-crop@^1.0.7:
   resolved "https://registry.npmjs.org/svelte-easy-crop/-/svelte-easy-crop-1.0.7.tgz"
   integrity sha512-7+AJJsS38dRYDxdfpOvykRzZyRD0/NsthZTS/Ig5KWYM8W63ILWBhx1cu6i0RBA4898rfJMlTDldE81pfEw3yw==
 
-svelte-file-dropzone@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.npmjs.org/svelte-file-dropzone/-/svelte-file-dropzone-0.0.15.tgz"
-  integrity sha512-detN5snkt/UkcSQWvfMUHY0LpwZBwsrhpNqXzpkR+8wNmmhJhqcjVfuRnvTB+STNJhS6wDP6IAJXOaGPVONwmw==
+svelte-file-dropzone@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-file-dropzone/-/svelte-file-dropzone-1.0.0.tgz#5a2cf0747d90ddcdac6167ebf0b54f62dfc3c4fa"
+  integrity sha512-F2DN+wN2w7bKuUJFYQOFsdtTgaohQ/rNKau5m5n2l3LHJRRIccYS4wpq8f6dz/h5aSxYse3oRclmYdW6FWAfjw==
   dependencies:
-    file-selector "^0.2.2"
+    file-selector "^0.2.4"
 
 svelte-flagpack@^1.0.0:
   version "1.0.0"
