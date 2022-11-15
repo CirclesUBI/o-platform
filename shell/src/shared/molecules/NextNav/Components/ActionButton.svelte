@@ -1,17 +1,15 @@
 <script lang="ts">
 import Icons from "../../Icons.svelte";
-
 import { createEventDispatcher } from "svelte";
 import UserImage from "../../../atoms/UserImage.svelte";
 import { me } from "../../../stores/me";
-import Icons from "../../Icons.svelte";
 
 export let icon: string;
 
 const dispatcher = createEventDispatcher();
 </script>
 
-<div on:click="{() => dispatcher('actionButton')}">
+<div role="presentation" on:click="{() => dispatcher('actionButton')}">
   {#if icon == "close"}
     <Icons icon="close" />
     <!-- <img

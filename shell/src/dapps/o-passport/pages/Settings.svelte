@@ -126,6 +126,7 @@ function editProfileField(onlyThesePages: string[], dirtyFlags: any = {}) {
             <label class="pl-0 label" for="emailAddress">
               <div
                 class="w-full text-left cursor-pointer"
+                role="presentation"
                 on:click="{() =>
                   editProfileField(['emailAddress'], { emailAddress: true })}">
                 {$me.emailAddress

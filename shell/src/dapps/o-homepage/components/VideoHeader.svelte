@@ -70,6 +70,7 @@
   -o-background-size: cover; background-size: cover; ">
   <div
     class="absolute z-30 flex flex-col items-stretch content-center w-full h-full min-h-full pb-40 text-center video-overlay"
+    role="presentation"
     on:click="{() => playVideo()}">
     <h1 class="px-5 text-4xl text-white font-heading md:text-6xl mt-11">
       <Label key="dapps.o-homepage.components.videoHeader.beFree"  />

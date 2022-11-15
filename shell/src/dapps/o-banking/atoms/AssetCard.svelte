@@ -27,6 +27,7 @@ $: {
 </script>
 
 <div
+  role="presentation"
   on:click="{() => push(`#/banking/assets/${symbol}`)}"
   class="cursor-pointer">
   <ItemCard

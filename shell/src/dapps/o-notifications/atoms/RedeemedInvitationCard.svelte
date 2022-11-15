@@ -18,7 +18,7 @@ function loadDetailPage(path) {
 }
 </script>
 
-<div on:click="{() => loadDetailPage(param.circlesAddress)}">
+<div role="presentation" on:click="{() => loadDetailPage(param.circlesAddress)}">
   <ItemCard
     params="{{
       edgeless: false,

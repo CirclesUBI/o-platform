@@ -6,7 +6,6 @@ import Icons from "../Icons.svelte";
 // import { icons as Icon } from "@iconify/icons-heroicons";
 import { push } from "svelte-spa-router";
 
-export let runtimeDapp: RuntimeDapp<any>;
 export let navigation: any;
 export let width: string = "w-full";
 </script>
@@ -22,6 +21,7 @@ export let width: string = "w-full";
           ? 'bg-' + navigation.leftSlot.props.backgroundColorClass
           : 'bg-white'} rounded-full cursor-pointer"
         class:text-white="{navigation.leftSlot.props.backgroundColorClass}"
+        role="presentation"
         on:click="{navigation.leftSlot.props.action}">
         <svelte:component this="{navigation.leftSlot.component}" {...navigation.leftSlot.props} on:menuButton />
       </div>

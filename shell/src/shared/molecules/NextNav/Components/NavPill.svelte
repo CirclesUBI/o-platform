@@ -26,8 +26,9 @@ function clickHandler() {
 <div class="h-12 col-start-2 place-self-center">
   <div class="flex flex-row">
     <div
-      class="flex justify-center flex-shrink-0 -mr-4 rounded-l-full cursor-pointer w-14 h-11"
+      class="flex justify-center flex-shrink-0 -mr-4 text-white rounded-l-full cursor-pointer w-14 h-11"
       class:bg-cpurple="{props && props.left}"
+      role="presentation"
       on:click="{clickHandler}">
       {#if props && props.left}
        <!-- {#if $inbox.length && $inbox.length && props.center.props.icon !== "close"}
@@ -54,6 +55,7 @@ function clickHandler() {
     <div
       class="flex justify-center flex-shrink-0 -ml-5 rounded-r-full cursor-pointer w-14 h-11 "
       class:bg-cpurple="{props && props.right}"
+      role="presentation"
       on:click="{props.right ? props.right.props.action : null}">
       {#if props && props.right}
         <div class="flex flex-col self-center justify-center h-full ml-1 text-white">

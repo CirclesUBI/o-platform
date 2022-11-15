@@ -91,6 +91,7 @@ const submitHandler = () => {
       <div class="mt-2 text-right">
         <span
           class="mt-4 text-xs link link-primary"
+          role="presentation"
           on:click="{() =>
             window.o.runProcess(logout, {
               successAction: () => {
