@@ -56,7 +56,7 @@ async function reloadBusinesses(order?:QueryAllBusinessesOrderOptions, ownLocati
     _businesses = (await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
         queryParams: {
           order: {
-            orderBy: QueryAllBusinessesOrderOptions.MostPopular
+            orderBy: QueryAllBusinessesOrderOptions.Nearest
           },
           ownCoordinates: {
             lat: ownLocation.coords.latitude,
