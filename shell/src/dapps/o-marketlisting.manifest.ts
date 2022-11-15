@@ -19,7 +19,6 @@ const detailPage: Page<any, ContactsDappState> = {
   isSystem: true,
   type: "page",
   position: "modal",
-  isSystem: true
 };
 
 
