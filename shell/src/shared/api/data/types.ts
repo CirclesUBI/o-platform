@@ -498,10 +498,10 @@ export type Mutation = {
   requestUpdateSafe: RequestUpdateSafeResponse;
   revokeSafeVerification: VerifySafeResult;
   sendMessage: SendMessageResult;
+  setIsFavorite: Scalars['Boolean'];
   setStringUpdateState?: Maybe<I18n>;
   shareLink: Scalars['String'];
   tagTransaction: TagTransactionResult;
-  toggleFavorite: Scalars['Boolean'];
   updateSafe: UpdateSafeResponse;
   updateValue?: Maybe<I18n>;
   upsertOrganisation: CreateOrganisationResult;
@@ -588,6 +588,12 @@ export type MutationSendMessageArgs = {
 };
 
 
+export type MutationSetIsFavoriteArgs = {
+  circlesAddress: Scalars['String'];
+  isFavorite: Scalars['Boolean'];
+};
+
+
 export type MutationSetStringUpdateStateArgs = {
   key?: Maybe<Scalars['String']>;
 };
@@ -602,11 +608,6 @@ export type MutationShareLinkArgs = {
 export type MutationTagTransactionArgs = {
   tag: CreateTagInput;
   transactionHash: Scalars['String'];
-};
-
-
-export type MutationToggleFavoriteArgs = {
-  circlesAddress: Scalars['String'];
 };
 
 
@@ -1622,14 +1623,15 @@ export type ProofUniquenessMutation = (
   ) }
 );
 
-export type ToggleFavoriteMutationVariables = Exact<{
+export type SetIsFavoriteMutationVariables = Exact<{
   circlesAddress: Scalars['String'];
+  isFavorite: Scalars['Boolean'];
 }>;
 
 
-export type ToggleFavoriteMutation = (
+export type SetIsFavoriteMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'toggleFavorite'>
+  & Pick<Mutation, 'setIsFavorite'>
 );
 
 export type ShareLinkMutationVariables = Exact<{
@@ -2805,9 +2807,9 @@ export const ProofUniquenessDocument = gql`
   }
 }
     `;
-export const ToggleFavoriteDocument = gql`
-    mutation toggleFavorite($circlesAddress: String!) {
-  toggleFavorite(circlesAddress: $circlesAddress)
+export const SetIsFavoriteDocument = gql`
+    mutation setIsFavorite($circlesAddress: String!, $isFavorite: Boolean!) {
+  setIsFavorite(circlesAddress: $circlesAddress, isFavorite: $isFavorite)
 }
     `;
 export const ShareLinkDocument = gql`
@@ -4188,8 +4190,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     proofUniqueness(variables: ProofUniquenessMutationVariables): Promise<ProofUniquenessMutation> {
       return withWrapper(() => client.request<ProofUniquenessMutation>(print(ProofUniquenessDocument), variables));
     },
-    toggleFavorite(variables: ToggleFavoriteMutationVariables): Promise<ToggleFavoriteMutation> {
-      return withWrapper(() => client.request<ToggleFavoriteMutation>(print(ToggleFavoriteDocument), variables));
+    setIsFavorite(variables: SetIsFavoriteMutationVariables): Promise<SetIsFavoriteMutation> {
+      return withWrapper(() => client.request<SetIsFavoriteMutation>(print(SetIsFavoriteDocument), variables));
     },
     shareLink(variables: ShareLinkMutationVariables): Promise<ShareLinkMutation> {
       return withWrapper(() => client.request<ShareLinkMutation>(print(ShareLinkDocument), variables));

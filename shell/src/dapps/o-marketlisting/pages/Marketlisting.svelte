@@ -3,56 +3,13 @@
   import {Routable} from "@o-platform/o-interfaces/dist/routable";
 
   import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
-  import {
-    AllBusinessesDocument,
-    Businesses, Maybe,
-    MutationToggleFavoriteArgs, Profile,
-    ToggleFavoriteDocument
-  } from "../../../shared/api/data/types";
-  import {onMount} from "svelte";
-  import {ApiClient} from "../../../shared/apiConnection";
   import BusinessCard from "../atoms/BusinessCard.svelte";
   import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-  import {me} from "../../../shared/stores/me";
   import {myLocation} from "src/shared/stores/myLocation";
+  import {businesses} from "src/shared/stores/businesses";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
-
-  let businesses: Businesses[] = [];
-  let favorites: {[circlesAddress:string]: boolean} = {};
-  let currentLocation: GeolocationPosition|GeolocationPositionError|Error|null;
-
-onMount(async () => {
-  const results = await Promise.all([
-          getBusinesses(),
-          me.reload()
-  ]);
-  businesses = <any>results[0];
-  const profile:Maybe<Profile> = <any>results[1];
-
-  if (profile) {
-    profile.favorites.forEach(f => {
-      favorites[f.favorite.circlesAddress] = true;
-    });
-  }
-});
-
-async function getBusinesses() : Promise<Businesses[]> {
-  if (currentLocation) {
-    console.log("Sorting result by 'closest first' for location: ", currentLocation);
-    return await ApiClient.query<Businesses[], null>(AllBusinessesDocument, null);
-  } else {
-    return await ApiClient.query<Businesses[], null>(AllBusinessesDocument, null);
-  }
-}
-
-async function toggleFavorite(circlesAddress:string) {
-  favorites[circlesAddress] = await ApiClient.mutate<boolean, MutationToggleFavoriteArgs>(ToggleFavoriteDocument, {
-    circlesAddress: circlesAddress
-  });
-  return favorites[circlesAddress];
-}
 </script>
 
 <div style="visibility: hidden;" class="bg-market"></div>
@@ -71,19 +28,17 @@ async function toggleFavorite(circlesAddress:string) {
     {#if $myLocation}
       <!-- Sort nearest first -->
       <p>Nearest first:</p>
-      {#each businesses as business}
+      {#each $businesses as business}
         <BusinessCard
-                on:toggleFavorite={e => toggleFavorite(e.detail)}
+                on:toggleFavorite={e => businesses.toggleFavorite(e.detail)}
                 business={business}
-                isFavorite={favorites[business.circlesAddress]}
         />
       {/each}
     {:else}
-      {#each businesses as business}
+      {#each $businesses as business(business.circlesAddress)}
         <BusinessCard
-                on:toggleFavorite={e => toggleFavorite(e.detail)}
+                on:toggleFavorite={e => businesses.toggleFavorite(e.detail)}
                 business={business}
-                isFavorite={favorites[business.circlesAddress]}
         />
       {/each}
     {/if}
