@@ -364,10 +364,10 @@ type Mutation {
     requestUpdateSafe(data: RequestUpdateSafeInput!): RequestUpdateSafeResponse!
     revokeSafeVerification(safeAddress: String!): VerifySafeResult!
     sendMessage(content: String!, fromSafeAddress: String, toSafeAddress: String!): SendMessageResult!
+    setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
     setStringUpdateState(key: String): i18n
     shareLink(targetKey: String!, targetType: LinkTargetType!): String!
     tagTransaction(tag: CreateTagInput!, transactionHash: String!): TagTransactionResult!
-    toggleFavorite(circlesAddress: String!): Boolean!
     updateSafe(data: UpdateSafeInput!): UpdateSafeResponse!
     updateValue(createdBy: String, key: String, lang: String, value: String): i18n
     upsertOrganisation(organisation: UpsertOrganisationInput!): CreateOrganisationResult!

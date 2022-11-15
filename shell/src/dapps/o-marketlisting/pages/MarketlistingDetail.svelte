@@ -7,9 +7,7 @@
     AllBusinessesDocument,
     AllBusinessesQueryVariables,
     Businesses,
-    LinkTargetType, Maybe,
-    MutationToggleFavoriteArgs, Profile,
-    ToggleFavoriteDocument
+    LinkTargetType, MutationToggleFavoriteArgs, ToggleFavoriteDocument
   } from "../../../shared/api/data/types";
   import Icon from "@krowten/svelte-heroicons/Icon.svelte";
   import {fade} from "svelte/transition";
@@ -17,42 +15,31 @@
   import Map from "src/dapps/o-marketlisting/atoms/Map.svelte";
   import {ShareLinkDocument, ShareLinkMutationVariables} from "src/shared/api/data/types";
   import {myLocation} from "src/shared/stores/myLocation";
+  import {businesses} from "../../../shared/stores/businesses";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
   export let circlesAddress: string;
 
-let business: Businesses[] = [];
-let favorites: {[circlesAddress:string]: boolean} = {};
+let business: Businesses & {isFavorite:boolean};
 
 let visible: boolean = false;
 let currentDayOpenHours = "";
 let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 
-onMount(async () => {
-  const results = await Promise.all([
-    getBusiness(circlesAddress),
-    me.reload()
-  ]);
-  business = <any>results[0];
-  const profile:Maybe<Profile> = <any>results[1];
-
-  if (profile) {
-    profile.favorites.forEach(f => {
-      favorites[f.favorite.circlesAddress] = true;
-    });
-  }
+async function reload() {
+  business = await businesses.findByCirclesAddress(circlesAddress);
 
   const currentDateIndex = new Date().getDay();
   const businessHours = [
-    business[0].businessHoursSunday + " Sunday",
-    business[0].businessHoursMonday + " Monday",
-    business[0].businessHoursTuesday + " Tuesday",
-    business[0].businessHoursWednesday + " Wednesday",
-    business[0].businessHoursThursday + " Thursday",
-    business[0].businessHoursFriday + " Friday",
-    business[0].businessHoursSaturday + " Saturday",
+    business.businessHoursSunday + " Sunday",
+    business.businessHoursMonday + " Monday",
+    business.businessHoursTuesday + " Tuesday",
+    business.businessHoursWednesday + " Wednesday",
+    business.businessHoursThursday + " Thursday",
+    business.businessHoursFriday + " Friday",
+    business.businessHoursSaturday + " Saturday",
   ];
 
   currentDayOpenHours = businessHours[currentDateIndex];
@@ -65,22 +52,11 @@ onMount(async () => {
   console.log("today", currentDayOpenHours);
   console.log("after", everythingAfterTheCurrentDay);
   console.log("current day index", new Date().getDay());
+}
+
+onMount(async () => {
+  await reload();
 });
-
-async function toggleFavorite(circlesAddress:string) {
-  favorites[circlesAddress]  = !favorites[circlesAddress] ;
-  ApiClient.mutate<boolean, MutationToggleFavoriteArgs>(ToggleFavoriteDocument, {
-    circlesAddress: circlesAddress
-  }).then(_isFavorite => {
-    favorites[circlesAddress] = _isFavorite;
-  });
-}
-
-async function getBusiness(circlesAddress: string) {
-  return await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
-    circlesAddress: circlesAddress,
-  });
-}
 
 async function shareLink() {
   const link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
@@ -93,25 +69,26 @@ async function shareLink() {
 
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
-  {#if business.length}
+  {#if business}
     <div class="relative">
-      <img src="{business[0].picture}" alt="picture of the business" class="h-full w-full rounded-2xl" />
+      <img src="{business.picture}" alt="picture of the business" class="h-full w-full rounded-2xl" />
 
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         on:click="{() => {
-          toggleFavorite(business[0].circlesAddress);
+          businesses.toggleFavorite(business.circlesAddress);
+          reload();
         }}">
-        {#if favorites[business[0].circlesAddress]}
+        {#if business.isFavorite}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
         {:else}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
         {/if}
       </div>
     </div>
-    <h1 class="font-bold">{business[0].name}</h1>
-    <p>{business[0].description}</p>
-    <p class="text-gray-400">{business[0].businessCategory}</p>
+    <h1 class="font-bold">{business.name}</h1>
+    <p>{business.description}</p>
+    <p class="text-gray-400">{business.businessCategory}</p>
 
     <button class="btn mr-2 ml-2 text-black bg-white border-1" on:click={shareLink}>
       <span><Icon name="share" class="h-6 w-6" /></span>Share
@@ -147,7 +124,7 @@ async function shareLink() {
     </div>
     <div class="flex border-t-2 mt-4 pt-4">
       <Icon name="phone" class="h-6 w-6" />
-      <p class="pl-4">{business[0].phoneNumber}</p>
+      <p class="pl-4">{business.phoneNumber}</p>
     </div>
     <div class="flex border-t-2 mt-4 pt-4">
       <Icon style="position: absolute;" name="location-marker" class="h-6 w-6" />

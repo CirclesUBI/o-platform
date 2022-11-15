@@ -4,8 +4,7 @@
   import Icon from "@krowten/svelte-heroicons/Icon.svelte";
   import {Businesses} from "../../../shared/api/data/types";
 
-  export let business: Businesses;
-  export let isFavorite: boolean = false;
+  export let business: Businesses & {isFavorite: boolean};
 
   const eventDispatcher = createEventDispatcher();
 
@@ -21,10 +20,9 @@
     }}/>
     <div
       on:click="{() => {
-        isFavorite = !isFavorite;
         eventDispatcher('toggleFavorite', business.circlesAddress);
       }}">
-      {#if isFavorite}
+      {#if business.isFavorite}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
       {:else}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
