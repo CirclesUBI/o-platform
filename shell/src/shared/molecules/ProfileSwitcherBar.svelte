@@ -28,6 +28,7 @@ function handleClick(action) {
       {#if action.key === $me.circlesAddress}
         <div
           class="text-center align-top list-none cursor-pointer inline-table"
+          role="presentation"
           on:click="{() => window.o.publishEvent({ type: 'shell.closeModal' })}">
           <span>
             <span class="inline table-cell w-12 h-12 align-middle rounded-full bg-light-light">
@@ -45,10 +46,10 @@ function handleClick(action) {
           </span>
         </div>
       {:else}
-        <div class="text-center align-top list-none cursor-pointer inline-table" on:click="{() => handleClick(action)}">
+        <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click="{() => handleClick(action)}">
           <span>
             {#if action.icon.startsWith("http") || action.icon.indexOf("/") > -1 || action.icon.startsWith("data:")}
-              <span class="inline table-cell w-12 h-12 align-middle rounded-full bg-light-light">
+              <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
                 <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
                   <div class="w-12 h-12 m-auto bg-white rounded-full">
                     <img class="w-12 h-12 rounded-full" src="{action.icon}" alt="action" />
