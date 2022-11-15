@@ -29,6 +29,8 @@ export const me = {
         profile: sessionInfo.profile,
       });
     }
+
+    return sessionInfo.profile;
   }
 };
 const _me = readable<Profile|null>(null, function start(set) {

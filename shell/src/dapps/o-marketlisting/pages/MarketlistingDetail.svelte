@@ -7,8 +7,8 @@
     AllBusinessesDocument,
     AllBusinessesQueryVariables,
     Businesses,
-    LinkTargetType,
-    MutationToggleFavoriteArgs,
+    LinkTargetType, Maybe,
+    MutationToggleFavoriteArgs, Profile,
     ToggleFavoriteDocument
   } from "../../../shared/api/data/types";
   import Icon from "@krowten/svelte-heroicons/Icon.svelte";
@@ -16,6 +16,7 @@
   import {me} from "../../../shared/stores/me";
   import Map from "src/dapps/o-marketlisting/atoms/Map.svelte";
   import {ShareLinkDocument, ShareLinkMutationVariables} from "src/shared/api/data/types";
+  import {myLocation} from "src/shared/stores/myLocation";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
@@ -30,16 +31,18 @@ let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 
 onMount(async () => {
-  business = await getBusiness(circlesAddress);
-  me.subscribe(m => {
-    favorites = {};
-    m.favorites.forEach(f => {
+  const results = await Promise.all([
+    getBusiness(circlesAddress),
+    me.reload()
+  ]);
+  business = <any>results[0];
+  const profile:Maybe<Profile> = <any>results[1];
+
+  if (profile) {
+    profile.favorites.forEach(f => {
       favorites[f.favorite.circlesAddress] = true;
     });
-    favorites = favorites;
-  })
-
-  console.log(business);
+  }
 
   const currentDateIndex = new Date().getDay();
   const businessHours = [
@@ -148,7 +151,12 @@ async function shareLink() {
     </div>
     <div class="flex border-t-2 mt-4 pt-4">
       <Icon style="position: absolute;" name="location-marker" class="h-6 w-6" />
-      <Map width={"100%"} height={"8em"} />
+      {#if $myLocation instanceof GeolocationPosition}
+        <p>With route</p>
+        <Map width={"100%"} height={"8em"} />
+      {:else}
+        <Map width={"100%"} height={"8em"} />
+      {/if}
     </div>
   {:else}
     <p>loading details...</p>
