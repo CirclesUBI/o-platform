@@ -43,9 +43,10 @@ async function getStringsToBeUpdatedAmount(lang: string, key: string) {
 }
 </script>
 
-<div class="ml-4 mb-4">
+<div class="mb-4 ml-4">
   <span class="flex items-center">
     <div
+      role="presentation"
       on:click="{() => {
         rootNode.toggleExpanded();
         snapshot[rootNode.snapId] = rootNode.expandState;
@@ -79,6 +80,7 @@ async function getStringsToBeUpdatedAmount(lang: string, key: string) {
     </div>
     <p
       class="hover:bg-blue-500 hover:rounded hover:cursor-pointer"
+      role="presentation"
       on:click="{() => {
         searchKey = rootNode.snapId.replace('root.', '');
         if (searchKey == 'root') {
@@ -92,7 +94,8 @@ async function getStringsToBeUpdatedAmount(lang: string, key: string) {
     </p>
     {#if amountStringsToBeUpdated > 0 && amountStringsToBeUpdated != undefined}
       <p
-        class="ml-4 text-warning w-4 text-center hover:bg-blue-500 hover:cursor-pointer hover:rounded"
+        class="w-4 ml-4 text-center text-warning hover:bg-blue-500 hover:cursor-pointer hover:rounded"
+        role="presentation"
         on:click="{() => {
           searchKey = rootNode.snapId.replace('root.', '');
           updateMode = true;
@@ -107,7 +110,7 @@ async function getStringsToBeUpdatedAmount(lang: string, key: string) {
 {#if rootNode.expandState}
   {#if rootNode}
     {#each rootNode.children as childNode}
-      <ul class="ml-4 mb-4">
+      <ul class="mb-4 ml-4">
         {#if !childNode.isLeaf}
           <svelte:self
             rootNode="{childNode}"

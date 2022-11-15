@@ -240,6 +240,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
         on:focus="{() => handleHover(i)}"
         on:mouseover="{() => handleHover(i)}"
         on:click="{(event) => handleClick({ item, i, event })}"
+        role="presentation"
         class="listItem">
         <svelte:component
           this="{Item}"
@@ -264,6 +265,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
           on:focus="{() => handleHover(i)}"
           on:mouseover="{() => handleHover(i)}"
           on:click="{(event) => handleClick({ item, i, event })}"
+          role="presentation"
           class="listItem">
           <svelte:component
             this="{Item}"
