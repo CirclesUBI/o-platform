@@ -41,6 +41,7 @@ $: {
     <a href="{window.o.i18n("common.supportUrl")}">
       <Label key="shared.atoms.error.pleaseTryToReload" /><a
         href="{window.o.i18n("common.supportUrl")}"
+        rel="noreferrer"
         target="_blank"
         class="btn-link">{window.o.i18n("common.supportUrl")}</a
       ><Label key="shared.atoms.error.ifTheProblemPersists" />

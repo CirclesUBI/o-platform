@@ -693,6 +693,7 @@ onDestroy(() => {
   class:disabled="{isDisabled}"
   class:focused="{isFocused}"
   style="{containerStyles}"
+  role="presentation"
   on:click="{handleClick}"
   bind:this="{container}">
   {#if Icon}

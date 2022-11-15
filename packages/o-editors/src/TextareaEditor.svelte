@@ -55,7 +55,7 @@ onMount(() => {
   <label class="p-0 label" for="{context.field}">
     {#if context.params.canCopy}
       <CopyToClipboard text="{_context.data[context.field]}" let:copy>
-        <div on:click="{copy}" class="text-sm text-gray-500">
+        <div role="presentation" on:click="{copy}" class="text-sm text-gray-500">
           Copy to Clipboard
           <svg
             xmlns="http://www.w3.org/2000/svg"

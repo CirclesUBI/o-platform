@@ -5,7 +5,7 @@ import { createEventDispatcher } from "svelte";
 /*
  * Edge Case: if the very first items are both super long, it will break into a new line even before clicking on 'more'
  */
-import ActionListItem from "src/shared/atoms/ActionListItem.svelte";
+import ActionListItem from "../atoms/ActionListItem.svelte";
 import { Environment } from "../environment";
 import Label from "../atoms/Label.svelte";
 export let actions: {
@@ -48,6 +48,7 @@ $: {
     {#if Environment.showLanguageSwitcher}
       <div
         class="text-center align-top list-none cursor-pointer inline-table"
+        role="presentation"
         on:click="{() => dispatch('siwtchEvent')}">
         <span>
           <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
