@@ -36,7 +36,7 @@ function loadDetailPage(path) {
 }
 </script>
 
-<div on:click="{() => loadDetailPage(safeAddress)}" class="cursor-pointer">
+<div role="presentation" on:click="{() => loadDetailPage(safeAddress)}" class="cursor-pointer">
   <ItemCard
     params="{{
       edgeless: false,

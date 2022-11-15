@@ -20,6 +20,7 @@ function loadLink(alink, external = false) {
 
 <section
   class="relative items-center justify-center h-36 overflow-hidden rounded-xl shadow-md cursor-pointer bg-{color} dashboard-card"
+  role="presentation"
   on:click="{() => loadLink(link)}">
   <div class="blob  bg-{color}-light" style="border-radius: {blobshape}">
     <div class="pt-2 text-white">

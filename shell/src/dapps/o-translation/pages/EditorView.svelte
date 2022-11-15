@@ -101,17 +101,18 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
 }
 </script>
 
-<section class="flex flex-col items-center justify-evenly p-6">
-  <div class="w-full flex flex-row flex-wrap items-stretch justify-evenly">
+<section class="flex flex-col items-center p-6 justify-evenly">
+  <div class="flex flex-row flex-wrap items-stretch w-full justify-evenly">
     <div class="z-10 flex w-1/3 justify-evenly">
       {#each allLanguages as languageCode}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <svg
+          role="presentation"
           on:click="{() => {
             selectedLanguage = languageCode;
             dispatch('toggleLanguage', { languageCode: languageCode });
           }}"
-          class="w-12 h-8 flex flex-row border-8 border-warning"
+          class="flex flex-row w-12 h-8 border-8 border-warning"
           class:border-8="{selectedLanguage == languageCode}"
           class:border-warning="{selectedLanguage == languageCode}">
           {#if languageCode == "en"}
@@ -126,27 +127,27 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
         </svg>
       {/each}
     </div>
-    <div class="w-2/3 inline-flex">
+    <div class="inline-flex w-2/3">
       <div class="inline-flex w-3/4">
         <form
-          class="justify-sart w-full inline-flex"
+          class="inline-flex w-full justify-sart"
           on:submit|preventDefault="{() => {
             dispatch('stringSearch', { searchString: valueFilter });
             valueFilter = '';
           }}">
-          <input bind:value="{valueFilter}" class="rounded-r-none w-3/4" type="text" placeholder="String" />
+          <input bind:value="{valueFilter}" class="w-3/4 rounded-r-none" type="text" placeholder="String" />
           {#if valueFilter == ""}
-            <button class="btn-primary btn-disabled btn-sm rounded-btn rounded-l-none bg-gray-400 text-white">
-              <Icon name="search" class="h-5 w-5 text-white" solid />
+            <button class="text-white bg-gray-400 rounded-l-none btn-primary btn-disabled btn-sm rounded-btn">
+              <Icon name="search" class="w-5 h-5 text-white" solid />
             </button>
           {:else}
-            <button class="btn-primary btn-sm rounded-btn rounded-l-none">
-              <Icon name="search" class="h-5 w-5 text-white" solid />
+            <button class="rounded-l-none btn-primary btn-sm rounded-btn">
+              <Icon name="search" class="w-5 h-5 text-white" solid />
             </button>
           {/if}
         </form>
       </div>
-      <div class="flex grow w-1/4 justify-evenly">
+      <div class="flex w-1/4 grow justify-evenly">
         <button
           class="bg-blue-200 rounded-md btn-md hover:bg-blue-500"
           class:bg-blue-100="{createNewStringMode}"
@@ -163,23 +164,23 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
 
     {#if createNewStringMode}
       <!--Modal effect-->
-      <div class="fixed  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-40" id="my-modal"></div>
+      <div class="fixed inset-0 z-40 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50" id="my-modal"></div>
       <!--modale editor-->
       <div
         class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto p-5 border w-[50%] rounded-md bg-white z-50">
-        <div class="max-w-2xl bg-white py-10 px-5 m-auto w-full mt-10">
-          <div class="text-3xl mb-6 text-center ">Create a new string</div>
+        <div class="w-full max-w-2xl px-5 py-10 m-auto mt-10 bg-white">
+          <div class="mb-6 text-3xl text-center ">Create a new string</div>
           <div class="mb-6 text-center text-info">
             Please use english for the new created text/string.<br />All other languages will be notified about a new
             created text/string.
           </div>
 
-          <div class="grid grid-cols-2 gap-4 max-w-xl m-auto">
+          <div class="grid max-w-xl grid-cols-2 gap-4 m-auto">
             <div class="col-span-2">
               <input
                 bind:value="{keyToCreate}"
                 type="text"
-                class="border-solid border-gray-400 border-2 p-3 md:text-xl w-full"
+                class="w-full p-3 border-2 border-gray-400 border-solid md:text-xl"
                 placeholder="key goes here..." />
             </div>
 
@@ -188,13 +189,13 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
                 bind:value="{stringToCreate}"
                 cols="30"
                 rows="8"
-                class="border-solid border-gray-400 border-2 p-3 md:text-xl w-full"
+                class="w-full p-3 border-2 border-gray-400 border-solid md:text-xl"
                 placeholder="Message"></textarea>
             </div>
 
             <div class="sm:col-span-1 text-left col-span-2 sm:text-center w-[100%]">
               <button
-                class="py-3 px-6 bg-green-500 text-white font-bold w-full sm:w-32 rounded-md"
+                class="w-full px-6 py-3 font-bold text-white bg-green-500 rounded-md sm:w-32"
                 on:click="{async () => {
                   for (let i = 0; i < availableLanguages.length; i++) {
                     await writeNewKeyToDb(availableLanguages[i].lang, keyToCreate, 1, stringToCreate);
@@ -208,7 +209,7 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
 
             <div class="sm:col-span-1 text-right col-span-2 sm:text-center w-[100%]">
               <button
-                class="py-3 px-6 bg-red-500 text-white font-bold w-full sm:w-32 rounded-md"
+                class="w-full px-6 py-3 font-bold text-white bg-red-500 rounded-md sm:w-32"
                 on:click="{() => {
                   createNewStringMode = false;
                 }}">
@@ -221,9 +222,9 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
     {/if}
   </div>
 
-  <div class="pt-20 w-full">
+  <div class="w-full pt-20">
     {#if !i18nData.length}
-      <h1 class="flex justify-center align-middle text-alert pt-20">No matching result</h1>
+      <h1 class="flex justify-center pt-20 align-middle text-alert">No matching result</h1>
     {/if}
 
     {#each i18nData as data (data.key + data.lang + data.version)}

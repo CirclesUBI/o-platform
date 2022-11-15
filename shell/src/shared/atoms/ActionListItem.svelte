@@ -9,7 +9,7 @@ export let customClass: string = "inline";
 console.log("ICON: ", icon);
 </script>
 
-<div class="text-center align-top list-none cursor-pointer inline-table" on:click>
+<div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click>
   <span>
     <span class="table-cell w-12 h-12 align-middle rounded-full {colorClass} {customClass} bg-light-light">
       <Icons icon="{icon}" customClass="w-{size} h-{size} heroicon smallicon inline" />

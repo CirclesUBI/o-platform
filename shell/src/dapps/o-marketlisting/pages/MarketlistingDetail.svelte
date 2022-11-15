@@ -1,28 +1,29 @@
 <script lang="ts">
-import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { onMount } from "svelte";
-import { ApiClient } from "../../../shared/apiConnection";
-import {
-  AllBusinessesDocument,
-  AllBusinessesQueryVariables,
-  Businesses,
-  MutationToggleFavoriteArgs,
-  ToggleFavoriteDocument,
-} from "../../../shared/api/data/types";
-import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-import { fade } from "svelte/transition";
-import { me } from "../../../shared/stores/me";
-import { favoriteBusinesses } from "../../../shared/stores/businesses";
+  import {RuntimeDapp} from "@o-platform/o-interfaces/dist/runtimeDapp";
+  import {Routable} from "@o-platform/o-interfaces/dist/routable";
+  import {onMount} from "svelte";
+  import {ApiClient} from "../../../shared/apiConnection";
+  import {
+    AllBusinessesDocument,
+    AllBusinessesQueryVariables,
+    Businesses,
+    LinkTargetType,
+    MutationToggleFavoriteArgs,
+    ToggleFavoriteDocument
+  } from "../../../shared/api/data/types";
+  import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+  import {fade} from "svelte/transition";
+  import {me} from "../../../shared/stores/me";
+  import Map from "src/dapps/o-marketlisting/atoms/Map.svelte";
+  import {ShareLinkDocument, ShareLinkMutationVariables} from "src/shared/api/data/types";
 
-export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
-export let id: string;
+  export let runtimeDapp: RuntimeDapp<any>;
+  export let routable: Routable;
+  export let circlesAddress: string;
 
 let business: Businesses[] = [];
 let favorites: { [circlesAddress: string]: boolean } = {};
 
-let isFavorite: boolean = false;
 let visible: boolean = false;
 let currentDayOpenHours = "";
 let everythingBeforeTheCurrentDay = [];
@@ -36,9 +37,8 @@ onMount(async () => {
     m.favorites.forEach((f) => {
       favorites[f.favorite.circlesAddress] = true;
     });
-  });
-
-  isFavorite = favorites[business[0].circlesAddress];
+    favorites = favorites;
+  })
 
   console.log(business);
 
@@ -65,23 +65,28 @@ onMount(async () => {
   console.log("current day index", new Date().getDay());
 });
 
-async function toggleFavorite(circlesAddress: string) {
-  isFavorite = !isFavorite;
+async function toggleFavorite(circlesAddress:string) {
+  favorites[circlesAddress]  = !favorites[circlesAddress] ;
   ApiClient.mutate<boolean, MutationToggleFavoriteArgs>(ToggleFavoriteDocument, {
-    circlesAddress: circlesAddress,
-  }).then((isFavorite) => {
-    favorites[circlesAddress] = isFavorite;
+    circlesAddress: circlesAddress
+  }).then(_isFavorite => {
+    favorites[circlesAddress] = _isFavorite;
   });
-  return isFavorite;
 }
 
-//async function getBusiness(circlesAddress: string) {
-//  let queryResult = await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
-//    circlesAddress: circlesAddress,
-//  });
-//
-//  return queryResult;
-//}
+async function getBusiness(circlesAddress: string) {
+  return await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
+    circlesAddress: circlesAddress,
+  });
+}
+
+async function shareLink() {
+  const link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
+    targetType: LinkTargetType.Business,
+    targetKey: circlesAddress
+  });
+  alert(link);
+}
 </script>
 
 <div class="bg-marketlisting" style="display: none;"></div>
@@ -98,7 +103,7 @@ async function toggleFavorite(circlesAddress: string) {
           me.reload();
           business = await favoriteBusinesses.getBusiness(id);
         }}">
-        {#if isFavorite}
+        {#if favorites[business[0].circlesAddress]}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
         {:else}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
@@ -109,13 +114,10 @@ async function toggleFavorite(circlesAddress: string) {
     <p>{business[0].description}</p>
     <p class="text-gray-400">{business[0].businessCategory}</p>
 
-    <button class="btn mr-2 ml-2 text-black bg-white border-1"
-      ><span><Icon name="share" class="h-6 w-6" /></span>Share</button>
+    <button class="btn mr-2 ml-2 text-black bg-white border-1" on:click={shareLink}>
+      <span><Icon name="share" class="h-6 w-6" /></span>Share
+    </button>
 
-    <div class="flex border-t-2 mt-4 pt-4">
-      <Icon name="location-marker" class="h-6 w-6" />
-      <p class="pl-4">{business[0].location}</p>
-    </div>
     <div class="flex border-t-2 mt-4 pt-4">
       <Icon name="clock" class="h-6 w-6" />
       <p class="pr-4 pl-4">Opening Hours</p>
@@ -136,7 +138,7 @@ async function toggleFavorite(circlesAddress: string) {
       {#if !visible}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
-          on:click="{() => {
+                on:click="{() => {
             visible = !visible;
             console.log(visible);
           }}">
@@ -147,6 +149,10 @@ async function toggleFavorite(circlesAddress: string) {
     <div class="flex border-t-2 mt-4 pt-4">
       <Icon name="phone" class="h-6 w-6" />
       <p class="pl-4">{business[0].phoneNumber}</p>
+    </div>
+    <div class="flex border-t-2 mt-4 pt-4">
+      <Icon style="position: absolute;" name="location-marker" class="h-6 w-6" />
+      <Map width={"100%"} height={"8em"} />
     </div>
   {:else}
     <p>loading details...</p>

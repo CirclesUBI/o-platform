@@ -45,6 +45,7 @@ async function toggleFavorite(circlesAddress: string) {
 
 </script>
 
+<div style="visibility: hidden;" class="bg-market"></div>
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <section class="justify-center align-middle">
   <div class="flex self-center justify-center content-between">
