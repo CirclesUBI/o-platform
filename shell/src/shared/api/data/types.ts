@@ -359,6 +359,11 @@ export enum Gender {
   Male = 'MALE'
 }
 
+export type Geolocation = {
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+};
+
 export type GnosisSafeEthTransfer = IEventPayload & {
   __typename?: 'GnosisSafeEthTransfer';
   from: Scalars['String'];
@@ -881,9 +886,7 @@ export type QueryAggregatesArgs = {
 
 
 export type QueryAllBusinessesArgs = {
-  categoryId?: Maybe<Scalars['Int']>;
-  circlesAddress?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['Int']>;
+  queryParams?: Maybe<QueryAllBusinessesParameters>;
 };
 
 
@@ -1044,6 +1047,28 @@ export type QueryTrustRelationsArgs = {
 export type QueryVerificationsArgs = {
   filter?: Maybe<VerifiedSafesFilter>;
   pagination?: Maybe<PaginationArgs>;
+};
+
+export type QueryAllBusinessesConditions = {
+  inCategories?: Maybe<Array<Scalars['Int']>>;
+};
+
+export type QueryAllBusinessesOrder = {
+  orderBy: QueryAllBusinessesOrderOptions;
+};
+
+export enum QueryAllBusinessesOrderOptions {
+  Alphabetical = 'Alphabetical',
+  MostPopular = 'MostPopular',
+  Nearest = 'Nearest',
+  Newest = 'Newest',
+  Oldest = 'Oldest'
+}
+
+export type QueryAllBusinessesParameters = {
+  order?: Maybe<QueryAllBusinessesOrder>;
+  ownCoordinates?: Maybe<Geolocation>;
+  where?: Maybe<QueryAllBusinessesConditions>;
 };
 
 export type QueryProfileInput = {
@@ -2539,7 +2564,7 @@ export type ClientAssertionJwtQuery = (
 );
 
 export type AllBusinessesQueryVariables = Exact<{
-  circlesAddress?: Maybe<Scalars['String']>;
+  queryParams?: Maybe<QueryAllBusinessesParameters>;
 }>;
 
 
@@ -4092,8 +4117,8 @@ export const ClientAssertionJwtDocument = gql`
 }
     `;
 export const AllBusinessesDocument = gql`
-    query allBusinesses($circlesAddress: String) {
-  allBusinesses(circlesAddress: $circlesAddress) {
+    query allBusinesses($queryParams: QueryAllBusinessesParameters) {
+  allBusinesses(queryParams: $queryParams) {
     id
     circlesAddress
     name

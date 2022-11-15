@@ -2,7 +2,10 @@ import {readable} from "svelte/store";
 import {Subscriber} from "svelte/types/runtime/store";
 import {
   AllBusinessesDocument,
-  Businesses, MutationSetIsFavoriteArgs,
+  AllBusinessesQueryVariables,
+  Businesses,
+  MutationSetIsFavoriteArgs,
+  QueryAllBusinessesOrderOptions,
   SetIsFavoriteDocument
 } from "../api/data/types";
 import {ApiClient} from "../apiConnection";
@@ -10,10 +13,13 @@ import {me} from "./me";
 
 export const businesses = {
   subscribe: (subscriber: Subscriber<(Businesses & { isFavorite: boolean })[]>) => _businessesStore.subscribe(subscriber),
-  reload: () => {},//_reloadBusinesses(),
+  reload: async (order:QueryAllBusinessesOrderOptions) => {
+    await reload(order)
+    publish();
+  },
   findByCirclesAddress: async (circlesAddress:string) => {
     if (!_data) {
-      await reload();
+      await reload(QueryAllBusinessesOrderOptions.Nearest);
       publish();
     }
     return _data
@@ -25,22 +31,18 @@ export const businesses = {
     _favorites[circlesAddress] = !_favorites[circlesAddress];
     business.isFavorite = _favorites[circlesAddress];
     publish();
-
-    const wasFavoriteBefore = await ApiClient.mutate<boolean, MutationSetIsFavoriteArgs>(SetIsFavoriteDocument, {
+    await ApiClient.mutate<boolean, MutationSetIsFavoriteArgs>(SetIsFavoriteDocument, {
       circlesAddress: circlesAddress,
       isFavorite: business.isFavorite
     });
-
     return business;
   }
 };
 
 let _set: (data:(Businesses & { isFavorite: boolean })[]) => void;
-
 let _favorites: {[circlesAddress:string]: boolean}|null = {};
-let _businesses: Businesses[] = [];
+let _businesses: (Businesses & {index: number})[] = [];
 let _data: (Businesses & { isFavorite: boolean })[];
-
 
 async function reloadFavorites() {
   _favorites = (await me.reload()).favorites.reduce((p,c) => {
@@ -49,22 +51,63 @@ async function reloadFavorites() {
   }, <{[circlesAddress:string]: boolean}>{});
 }
 
-async function reloadBusinesses() {
-  _businesses = await ApiClient.query<Businesses[], null>(AllBusinessesDocument, null);
+async function reloadBusinesses(order?:QueryAllBusinessesOrderOptions, ownLocation?: GeolocationPosition) {
+  if (order == QueryAllBusinessesOrderOptions.Nearest) {
+    _businesses = (await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
+        queryParams: {
+          order: {
+            orderBy: QueryAllBusinessesOrderOptions.MostPopular
+          },
+          ownCoordinates: {
+            lat: ownLocation.coords.latitude,
+            lon: ownLocation.coords.longitude
+          }
+        }
+      }))
+      .map((o, i) => {
+        return {
+          ...o,
+          index: i
+        };
+      });
+  } else {
+    var business = (await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
+     ...order ? {
+       queryParams: {
+         order: {
+           orderBy: order
+         }
+       }
+     } : {}
+    }))
+    console.log("businesses ordered by something", business);
+    _businesses = business.map((o, i) => {
+        return {
+          ...o,
+          index: i
+        };
+      });
+  }
 }
 
-async function reload() {
-  await Promise.all([reloadFavorites(), reloadBusinesses()]);
+async function reload(order?:QueryAllBusinessesOrderOptions) {
+  await Promise.all([reloadFavorites(), reloadBusinesses(order, <GeolocationPosition>{
+    coords: {
+      // TODO: Add the correct coordinates
+      latitude: -8.809899,
+      longitude: 115.221209
+    }
+  })]);
 }
 
 function publish() {
   _data = _businesses.map(o => {
-    return JSON.parse(JSON.stringify( {
+    return  {
       ...o,
       isFavorite: _favorites[o.circlesAddress]
-    }))
-  }).sort((a,b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
-  console.log("_data:", _data)
+    }
+  });
+
   if (_set) {
     _set(_data);
   }
@@ -73,9 +116,7 @@ function publish() {
 const _businessesStore = readable<(Businesses & { isFavorite: boolean })[]>([], function start(set) {
   _set = set;
 
-  reload().then(o => {
-    console.log("_businesses", _businesses);
-    console.log("_favorites", _favorites);
+  reload(QueryAllBusinessesOrderOptions.MostPopular).then(o => {
     publish();
   });
 
