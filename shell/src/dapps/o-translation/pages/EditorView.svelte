@@ -105,6 +105,7 @@ async function writeNewKeyToDb(lang: string, key: string, version: number, value
   <div class="w-full flex flex-row flex-wrap items-stretch justify-evenly">
     <div class="z-10 flex w-1/3 justify-evenly">
       {#each allLanguages as languageCode}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <svg
           on:click="{() => {
             selectedLanguage = languageCode;

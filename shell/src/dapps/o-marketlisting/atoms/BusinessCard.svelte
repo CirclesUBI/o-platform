@@ -5,23 +5,26 @@
   import {Businesses} from "../../../shared/api/data/types";
 
   export let business: Businesses;
-  export let isFavorite: boolean = false;
+  export let isFavorite: boolean;
 
   const eventDispatcher = createEventDispatcher();
 
-  function loadDetailPage(circlesAddress) {
+  function loadDetailPage(circlesAddress: string) {
     push(`/marketlisting/${circlesAddress}`);
   }
+
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-1">
   <div class="relative">
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-img-redundant-alt -->
     <img src={business.picture} alt="picture of the business" class="rounded-3xl h-full w-full" on:click={() => {
       loadDetailPage(business.circlesAddress);
     }}/>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       on:click="{() => {
-        isFavorite = !isFavorite;
         eventDispatcher('toggleFavorite', business.circlesAddress);
       }}">
       {#if isFavorite}

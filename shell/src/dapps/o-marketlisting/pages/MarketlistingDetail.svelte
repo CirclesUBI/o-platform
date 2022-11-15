@@ -7,18 +7,20 @@ import {
   AllBusinessesDocument,
   AllBusinessesQueryVariables,
   Businesses,
-  MutationToggleFavoriteArgs, ToggleFavoriteDocument
+  MutationToggleFavoriteArgs,
+  ToggleFavoriteDocument,
 } from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
-import {me} from "../../../shared/stores/me";
+import { me } from "../../../shared/stores/me";
+import { favoriteBusinesses } from "../../../shared/stores/businesses";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let id: string;
 
 let business: Businesses[] = [];
-let favorites: {[circlesAddress:string]: boolean} = {};
+let favorites: { [circlesAddress: string]: boolean } = {};
 
 let isFavorite: boolean = false;
 let visible: boolean = false;
@@ -27,13 +29,14 @@ let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 
 onMount(async () => {
-  business = await getBusiness(id);
-  me.subscribe(m => {
+  business = await favoriteBusinesses.getBusiness(id);
+
+  me.subscribe((m) => {
     favorites = {};
-    m.favorites.forEach(f => {
+    m.favorites.forEach((f) => {
       favorites[f.favorite.circlesAddress] = true;
     });
-  })
+  });
 
   isFavorite = favorites[business[0].circlesAddress];
 
@@ -62,35 +65,38 @@ onMount(async () => {
   console.log("current day index", new Date().getDay());
 });
 
-async function toggleFavorite(circlesAddress:string) {
+async function toggleFavorite(circlesAddress: string) {
   isFavorite = !isFavorite;
   ApiClient.mutate<boolean, MutationToggleFavoriteArgs>(ToggleFavoriteDocument, {
-    circlesAddress: circlesAddress
-  }).then(isFavorite => {
+    circlesAddress: circlesAddress,
+  }).then((isFavorite) => {
     favorites[circlesAddress] = isFavorite;
   });
   return isFavorite;
 }
 
-async function getBusiness(circlesAddress: string) {
-  let queryResult = await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
-    circlesAddress: circlesAddress,
-  });
-
-  return queryResult;
-}
+//async function getBusiness(circlesAddress: string) {
+//  let queryResult = await ApiClient.query<Businesses[], AllBusinessesQueryVariables>(AllBusinessesDocument, {
+//    circlesAddress: circlesAddress,
+//  });
+//
+//  return queryResult;
+//}
 </script>
 
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business.length}
     <div class="relative">
+      <!-- svelte-ignore a11y-img-redundant-alt -->
       <img src="{business[0].picture}" alt="picture of the business" class="h-full w-full rounded-2xl" />
 
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
-        on:click="{() => {
-          toggleFavorite(business[0].circlesAddress);
+        on:click="{async () => {
+          isFavorite = await favoriteBusinesses.toggleFavorite(business[0].circlesAddress);
+          me.reload();
+          business = await favoriteBusinesses.getBusiness(id);
         }}">
         {#if isFavorite}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />

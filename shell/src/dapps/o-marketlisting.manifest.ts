@@ -20,7 +20,8 @@ const detailPage: Page<any, ContactsDappState> = {
   component: MarketlistingDetail,
   title: "detail",
   type: "page",
-  position: "modal"
+  position: "modal",
+  isSystem: true
 };
 
 
