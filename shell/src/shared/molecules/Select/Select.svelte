@@ -163,19 +163,23 @@ $: {
     selectedValue = selectedValue.map((item) => (typeof item === "string" ? { value: item, label: item } : item));
   }
 
-  // This is some Hardcoded shit to display the currently selected Value into the placeholder of the input.
-  // Since we have different types of results, we need to call different keys..
-  if (selectedValue && selectedValue.__typename == "Profile") {
-    displayableSelectedValue = selectedValue.displayName;
-  } else if (selectedValue && selectedValue.__typename == "City") {
-    displayableSelectedValue = selectedValue.name;
-    if (selectedValue.country) {
-      displayableSelectedValue = displayableSelectedValue + ",  " + selectedValue.country;
+  if (selectedValue && getSelectionLabel) {
+    displayableSelectedValue = getSelectionLabel(selectedValue);
+  } else {
+    // This is some Hardcoded shit to display the currently selected Value into the placeholder of the input.
+    // Since we have different types of results, we need to call different keys..
+    if (selectedValue && selectedValue.__typename == "Profile") {
+      displayableSelectedValue = selectedValue.displayName;
+    } else if (selectedValue && selectedValue.__typename == "City") {
+      displayableSelectedValue = selectedValue.name;
+      if (selectedValue.country) {
+        displayableSelectedValue = displayableSelectedValue + ",  " + selectedValue.country;
+      }
+    } else if (selectedValue && selectedValue.__typename == "Tag") {
+      displayableSelectedValue = selectedValue.value;
+    } else if (selectedValue && selectedValue.__typename == "Currency") {
+      displayableSelectedValue = selectedValue.label;
     }
-  } else if (selectedValue && selectedValue.__typename == "Tag") {
-    displayableSelectedValue = selectedValue.value;
-  } else if (selectedValue && selectedValue.__typename == "Currency") {
-    displayableSelectedValue = selectedValue.label;
   }
 }
 
