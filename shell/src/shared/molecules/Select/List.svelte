@@ -37,6 +37,7 @@ export let noOptionsMessage = "No options";
 export let isMulti = false;
 export let activeItemIndex = 0;
 export let filterText = "";
+export let getHighlight = undefined;
 
 let isScrollingTimer = 0;
 let isScrolling = false;
@@ -272,6 +273,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
             item="{item}"
             filterText="{filterText}"
             getOptionLabel="{getOptionLabel}"
+            getHighlight={getHighlight}
             isFirst="{isItemFirst(i)}"
             isActive="{isItemActive(item, selectedValue, optionIdentifier)}"
             isHover="{isItemHover(hoverItemIndex, item, i, items)}" />
