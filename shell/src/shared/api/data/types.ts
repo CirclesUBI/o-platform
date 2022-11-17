@@ -692,6 +692,9 @@ export type Organisation = {
   displayName?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   largeBannerUrl?: Maybe<Scalars['String']>;
+  lat?: Maybe<Scalars['Float']>;
+  location?: Maybe<Scalars['String']>;
+  lon?: Maybe<Scalars['Float']>;
   members?: Maybe<Array<ProfileOrOrganisation>>;
   name: Scalars['String'];
   smallBannerUrl?: Maybe<Scalars['String']>;
@@ -741,7 +744,9 @@ export type Profile = {
   invitationTransaction?: Maybe<ProfileEvent>;
   largeBannerUrl?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+  lat?: Maybe<Scalars['Float']>;
   location?: Maybe<Scalars['String']>;
+  lon?: Maybe<Scalars['Float']>;
   members?: Maybe<Array<Profile>>;
   memberships?: Maybe<Array<Membership>>;
   newsletter?: Maybe<Scalars['Boolean']>;
@@ -1051,6 +1056,7 @@ export type QueryVerificationsArgs = {
 
 export type QueryAllBusinessesConditions = {
   inCategories?: Maybe<Array<Scalars['Int']>>;
+  inCirclesAddress?: Maybe<Array<Scalars['String']>>;
 };
 
 export type QueryAllBusinessesOrder = {
@@ -1059,6 +1065,7 @@ export type QueryAllBusinessesOrder = {
 
 export enum QueryAllBusinessesOrderOptions {
   Alphabetical = 'Alphabetical',
+  Favorites = 'Favorites',
   MostPopular = 'MostPopular',
   Nearest = 'Nearest',
   Newest = 'Newest',
@@ -1260,6 +1267,9 @@ export type UpsertOrganisationInput = {
   displayCurrency?: Maybe<DisplayCurrency>;
   id?: Maybe<Scalars['Int']>;
   largeBannerUrl?: Maybe<Scalars['String']>;
+  lat?: Maybe<Scalars['Float']>;
+  location?: Maybe<Scalars['String']>;
+  lon?: Maybe<Scalars['Float']>;
   name: Scalars['String'];
   smallBannerUrl?: Maybe<Scalars['String']>;
 };
@@ -1282,7 +1292,9 @@ export type UpsertProfileInput = {
   gender?: Maybe<Gender>;
   id?: Maybe<Scalars['Int']>;
   lastName?: Maybe<Scalars['String']>;
+  lat?: Maybe<Scalars['Float']>;
   location?: Maybe<Scalars['String']>;
+  lon?: Maybe<Scalars['Float']>;
   newsletter?: Maybe<Scalars['Boolean']>;
   status: Scalars['String'];
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
@@ -1538,6 +1550,8 @@ export type UpsertProfileMutationVariables = Exact<{
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  lat?: Maybe<Scalars['Float']>;
+  lon?: Maybe<Scalars['Float']>;
 }>;
 
 
@@ -1545,7 +1559,7 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location' | 'lat' | 'lon'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -1576,24 +1590,7 @@ export type UpsertOrganisationMutation = (
     & Pick<CreateOrganisationResult, 'success' | 'error'>
     & { organisation?: Maybe<(
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name'>
-    )> }
-  ) }
-);
-
-export type UpsertRegionMutationVariables = Exact<{
-  organisation: UpsertOrganisationInput;
-}>;
-
-
-export type UpsertRegionMutation = (
-  { __typename?: 'Mutation' }
-  & { upsertRegion: (
-    { __typename?: 'CreateOrganisationResult' }
-    & Pick<CreateOrganisationResult, 'success' | 'error'>
-    & { organisation?: Maybe<(
-      { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name'>
+      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name' | 'location' | 'lat' | 'lon'>
     )> }
   ) }
 );
@@ -2572,7 +2569,18 @@ export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
+    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
+  )> }
+);
+
+export type AllBusinessCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBusinessCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { allBusinessCategories: Array<(
+    { __typename?: 'BusinessCategory' }
+    & Pick<BusinessCategory, 'id' | 'name'>
   )> }
 );
 
@@ -2711,9 +2719,9 @@ export const TagTransactionDocument = gql`
 }
     `;
 export const UpsertProfileDocument = gql`
-    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String) {
+    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String, $lat: Float, $lon: Float) {
   upsertProfile(
-    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location}
+    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location, lat: $lat, lon: $lon}
   ) {
     id
     circlesAddress
@@ -2736,6 +2744,8 @@ export const UpsertProfileDocument = gql`
     displayCurrency
     gender
     location
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -2778,24 +2788,9 @@ export const UpsertOrganisationDocument = gql`
       createdAt
       description
       name
-    }
-  }
-}
-    `;
-export const UpsertRegionDocument = gql`
-    mutation upsertRegion($organisation: UpsertOrganisationInput!) {
-  upsertRegion(organisation: $organisation) {
-    success
-    error
-    organisation {
-      id
-      avatarMimeType
-      avatarUrl
-      circlesAddress
-      circlesSafeOwner
-      createdAt
-      description
-      name
+      location
+      lat
+      lon
     }
   }
 }
@@ -4125,6 +4120,7 @@ export const AllBusinessesDocument = gql`
     description
     picture
     phoneNumber
+    location
     businessHoursMonday
     businessHoursTuesday
     businessHoursWednesday
@@ -4134,6 +4130,14 @@ export const AllBusinessesDocument = gql`
     businessHoursSunday
     businessCategoryId
     businessCategory
+  }
+}
+    `;
+export const AllBusinessCategoriesDocument = gql`
+    query allBusinessCategories {
+  allBusinessCategories {
+    id
+    name
   }
 }
     `;
@@ -4199,9 +4203,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     upsertOrganisation(variables: UpsertOrganisationMutationVariables): Promise<UpsertOrganisationMutation> {
       return withWrapper(() => client.request<UpsertOrganisationMutation>(print(UpsertOrganisationDocument), variables));
-    },
-    upsertRegion(variables: UpsertRegionMutationVariables): Promise<UpsertRegionMutation> {
-      return withWrapper(() => client.request<UpsertRegionMutation>(print(UpsertRegionDocument), variables));
     },
     importOrganisations(variables?: ImportOrganisationsMutationVariables): Promise<ImportOrganisationsMutation> {
       return withWrapper(() => client.request<ImportOrganisationsMutation>(print(ImportOrganisationsDocument), variables));
@@ -4337,6 +4338,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
       return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
+    },
+    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
+      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));

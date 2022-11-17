@@ -407,6 +407,9 @@ type Organisation {
     displayName: String
     id: Int!
     largeBannerUrl: String
+    lat: Float
+    location: String
+    lon: Float
     members: [ProfileOrOrganisation!]
     name: String!
     smallBannerUrl: String
@@ -447,7 +450,9 @@ type Profile {
     invitationTransaction: ProfileEvent
     largeBannerUrl: String
     lastName: String
+    lat: Float
     location: String
+    lon: Float
     members: [Profile!]
     memberships: [Membership!]
     newsletter: Boolean
@@ -906,7 +911,9 @@ input UpsertOrganisationInput {
     displayCurrency: DisplayCurrency
     id: Int
     largeBannerUrl: String
+    lat: Float
     location: String
+    lon: Float
     name: String!
     smallBannerUrl: String
 }
@@ -929,7 +936,9 @@ input UpsertProfileInput {
     gender: Gender
     id: Int
     lastName: String
+    lat: Float
     location: String
+    lon: Float
     newsletter: Boolean
     status: String!
     successorOfCirclesAddress: String
