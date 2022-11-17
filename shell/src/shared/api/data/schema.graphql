@@ -364,9 +364,10 @@ type Mutation {
     requestUpdateSafe(data: RequestUpdateSafeInput!): RequestUpdateSafeResponse!
     revokeSafeVerification(safeAddress: String!): VerifySafeResult!
     sendMessage(content: String!, fromSafeAddress: String, toSafeAddress: String!): SendMessageResult!
+    setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
     setStringUpdateState(key: String): i18n
+    shareLink(targetKey: String!, targetType: LinkTargetType!): String!
     tagTransaction(tag: CreateTagInput!, transactionHash: String!): TagTransactionResult!
-    toggleFavorite(circlesAddress: String!): Boolean!
     updateSafe(data: UpdateSafeInput!): UpdateSafeResponse!
     updateValue(createdBy: String, key: String, lang: String, value: String): i18n
     upsertOrganisation(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
@@ -505,7 +506,7 @@ type PublicEvent {
 type Query {
     aggregates(filter: ProfileAggregateFilter, safeAddress: String!, types: [AggregateType!]!): [ProfileAggregate!]!
     allBusinessCategories: [BusinessCategory!]!
-    allBusinesses(categoryId: Int, circlesAddress: String, id: Int): [Businesses!]!
+    allBusinesses(queryParams: QueryAllBusinessesParameters): [Businesses!]!
     allProfiles(sinceLastChange: Date): [ExportProfile]!
     allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!
     claimedInvitation: ClaimedInvitation
@@ -775,6 +776,11 @@ enum Gender {
     MALE
 }
 
+enum LinkTargetType {
+    Business
+    Person
+}
+
 enum ProfileOrigin {
     CirclesGarden
     CirclesLand
@@ -785,6 +791,15 @@ enum ProfileType {
     ORGANISATION
     PERSON
     REGION
+}
+
+enum QueryAllBusinessesOrderOptions {
+    Alphabetical
+    Favorites
+    MostPopular
+    Nearest
+    Newest
+    Oldest
 }
 
 enum SortOrder {
@@ -814,6 +829,11 @@ input CreateTagInput {
     value: String
 }
 
+input Geolocation {
+    lat: Float!
+    lon: Float!
+}
+
 input PaginationArgs {
     continueAt: String
     continueAtId: Int
@@ -832,6 +852,21 @@ input ProfileEventFilter {
     to: String
     transactionHash: String
     with: String
+}
+
+input QueryAllBusinessesConditions {
+    inCategories: [Int!]
+    inCirclesAddress: [String!]
+}
+
+input QueryAllBusinessesOrder {
+    orderBy: QueryAllBusinessesOrderOptions!
+}
+
+input QueryAllBusinessesParameters {
+    order: QueryAllBusinessesOrder
+    ownCoordinates: Geolocation
+    where: QueryAllBusinessesConditions
 }
 
 input QueryProfileInput {
@@ -871,6 +906,7 @@ input UpsertOrganisationInput {
     displayCurrency: DisplayCurrency
     id: Int
     largeBannerUrl: String
+    location: String
     name: String!
     smallBannerUrl: String
 }

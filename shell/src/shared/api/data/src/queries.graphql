@@ -237,7 +237,6 @@ query myProfile {
         name
         description
         avatarUrl
-
       }
     }
     verifications {
@@ -1276,6 +1275,7 @@ query allBusinesses($circlesAddress: String) {
     description
     picture
     phoneNumber
+    location
     businessHoursMonday
     businessHoursTuesday
     businessHoursWednesday
@@ -1285,5 +1285,12 @@ query allBusinesses($circlesAddress: String) {
     businessHoursSunday
     businessCategoryId
     businessCategory
+  }
+}
+
+query allBusinessCategories {
+  allBusinessCategories {
+    id
+    name
   }
 }
