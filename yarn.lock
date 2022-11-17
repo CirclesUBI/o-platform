@@ -1779,11 +1779,6 @@
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.1.1.tgz"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@here/maps-api-for-javascript@3.1.35.3":
-  version "1.35.3"
-  resolved "https://repo.platform.here.com/artifactory/api/npm/maps-api-for-javascript/-/@here/maps-api-for-javascript-1.35.3.tgz#6f4bc3f3a6bb904e43ace37c9c847ef8dbdd6ca7"
-  integrity sha1-b0vD86a7kE5DrON8nIR++NvdbKc=
-
 "@iarna/toml@^2.2.5":
   version "2.2.5"
   resolved "https://registry.npmjs.org/@iarna/toml/-/toml-2.2.5.tgz"
@@ -6937,6 +6932,11 @@ header-case@^2.0.4:
   dependencies:
     capital-case "^1.0.4"
     tslib "^2.0.3"
+
+here-maps-svelte@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/here-maps-svelte/-/here-maps-svelte-0.0.7.tgz#68c7d75ce00c6d5d45bf313dc7b0d3bbb719d83b"
+  integrity sha512-IFQoGmmIi2MXkSTNhACZl1RPmlZuszxaMRJzZgpAAJFyo0m2ewD4Hp3k4VKryc/Xhq/ssCFo72D8fC7AnuWCTA==
 
 heroicons@^1.0.6:
   version "1.0.6"

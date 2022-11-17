@@ -1,27 +1,25 @@
 <script lang="ts">
-  import {RuntimeDapp} from "@o-platform/o-interfaces/dist/runtimeDapp";
-  import {Routable} from "@o-platform/o-interfaces/dist/routable";
-  import {onMount} from "svelte";
-  import {ApiClient} from "../../../shared/apiConnection";
-  import {
-    AllBusinessesDocument,
-    AllBusinessesQueryVariables,
-    Businesses,
-    LinkTargetType, MutationToggleFavoriteArgs, ToggleFavoriteDocument
-  } from "../../../shared/api/data/types";
-  import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-  import {fade} from "svelte/transition";
-  import {me} from "../../../shared/stores/me";
-  import Map from "src/dapps/o-marketlisting/atoms/Map.svelte";
-  import {ShareLinkDocument, ShareLinkMutationVariables} from "src/shared/api/data/types";
-  import {myLocation} from "src/shared/stores/myLocation";
-  import {businesses} from "../../../shared/stores/businesses";
+import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
+import { Routable } from "@o-platform/o-interfaces/dist/routable";
+import { onMount } from "svelte";
+import { ApiClient } from "../../../shared/apiConnection";
+import {
+  AllBusinessesDocument,
+  AllBusinessesQueryVariables,
+  Businesses,
+  LinkTargetType,
+} from "../../../shared/api/data/types";
+import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+import { fade } from "svelte/transition";
+import { me } from "../../../shared/stores/me";
+import Map from "../../../dapps/o-marketlisting/atoms/Map.svelte";
+import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
+import { myLocation } from "../../../shared/stores/myLocation";
+import { businesses } from "../../../shared/stores/businesses";
 
-  export let runtimeDapp: RuntimeDapp<any>;
-  export let routable: Routable;
-  export let circlesAddress: string;
+export let circlesAddress: string;
 
-let business: Businesses & {isFavorite:boolean};
+let business: Businesses & { isFavorite: boolean };
 
 let visible: boolean = false;
 let currentDayOpenHours = "";
@@ -61,7 +59,7 @@ onMount(async () => {
 async function shareLink() {
   const link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
     targetType: LinkTargetType.Business,
-    targetKey: circlesAddress
+    targetKey: circlesAddress,
   });
   alert(link);
 }
@@ -71,10 +69,11 @@ async function shareLink() {
 <section class="p-4">
   {#if business}
     <div class="relative">
-      <img src="{business.picture}" alt="picture of the business" class="h-full w-full rounded-2xl" />
+      <!-- svelte-ignore a11y-img-redundant-alt -->
+      <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
 
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
+        role="presentation"
         on:click="{() => {
           businesses.toggleFavorite(business.circlesAddress);
           reload();
@@ -90,13 +89,13 @@ async function shareLink() {
     <p>{business.description}</p>
     <p class="text-gray-400">{business.businessCategory}</p>
 
-    <button class="btn mr-2 ml-2 text-black bg-white border-1" on:click={shareLink}>
-      <span><Icon name="share" class="h-6 w-6" /></span>Share
+    <button class="ml-2 mr-2 text-black bg-white btn border-1" on:click="{shareLink}">
+      <span><Icon name="share" class="w-6 h-6" /></span>Share
     </button>
 
-    <div class="flex border-t-2 mt-4 pt-4">
-      <Icon name="clock" class="h-6 w-6" />
-      <p class="pr-4 pl-4">Opening Hours</p>
+    <div class="flex pt-4 mt-4 border-t-2">
+      <Icon name="clock" class="w-6 h-6" />
+      <p class="pl-4 pr-4">Opening Hours</p>
       <div>
         {#if visible}
           {#each everythingBeforeTheCurrentDay as day}
@@ -114,25 +113,25 @@ async function shareLink() {
       {#if !visible}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
-                on:click="{() => {
+          on:click="{() => {
             visible = !visible;
             console.log(visible);
           }}">
-          <Icon name="chevron-down" class="h-6 w-6" />
+          <Icon name="chevron-down" class="w-6 h-6" />
         </div>
       {/if}
     </div>
-    <div class="flex border-t-2 mt-4 pt-4">
-      <Icon name="phone" class="h-6 w-6" />
+    <div class="flex pt-4 mt-4 border-t-2">
+      <Icon name="phone" class="w-6 h-6" />
       <p class="pl-4">{business.phoneNumber}</p>
     </div>
-    <div class="flex border-t-2 mt-4 pt-4">
-      <Icon style="position: absolute;" name="location-marker" class="h-6 w-6" />
+    <div class="flex pt-4 mt-4 border-t-2">
+      <Icon style="position: absolute;" name="location-marker" class="w-6 h-6" />
       {#if $myLocation instanceof GeolocationPosition}
         <p>With route</p>
-        <Map width={"100%"} height={"8em"} />
+        <Map width="{'100%'}" height="{'8em'}" />
       {:else}
-        <Map width={"100%"} height={"8em"} />
+        <Map width="{'100%'}" height="{'8em'}" />
       {/if}
     </div>
   {:else}
