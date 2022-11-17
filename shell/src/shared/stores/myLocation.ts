@@ -7,7 +7,8 @@ export const myLocation = {
     // TODO: This doesn't open another access-prompt for the user (at least in FF)?!
     _myLocationState = null;
     _reload();
-  }
+  },
+  state: () => _myLocationState
 };
 
 let _myLocationState:GeolocationPosition|GeolocationPositionError|Error|null = null;
