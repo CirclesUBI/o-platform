@@ -1,9 +1,25 @@
-<script lang="ts">
-export let item = undefined;
+<script>
+
+  export let item = undefined;
+// export let isActive = false;
 export let isFirst = false;
 export let isHover = false;
-export let getOptionLabel:(item:any) => string;
+  export let getHighlight = undefined;
 
+  const getLabel = (value) => {
+    let label = value
+    console.log(getHighlight)
+    if (getHighlight) {
+      const highlight = getHighlight(item);
+      const beforeHighlight = label.substring(0, highlight.start);
+      const highlightContent = label.substring(highlight.start, highlight.end);
+      const afterHighlight = label.substring(highlight.end, label.length);
+      label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`
+    }
+    return label;
+  };
+
+let label = "";
 let itemClasses = "";
 
 $: {
@@ -22,6 +38,8 @@ $: {
     classes.push("hover");
   }
   itemClasses = classes.join(" ");
+
+  label = getLabel(item.title);
 }
 </script>
 
@@ -29,8 +47,11 @@ $: {
   <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
     <div class="relative flex-grow p-3 text-left truncate">
       <div class="max-w-full -mt-1 leading-8 cursor-pointer truncateThis">
-        {@html getOptionLabel(item)}
+        {@html label}
       </div>
+      <!-- <div class="text-xs text-left text-dark-lightest">
+        {item.country}
+      </div> -->
     </div>
   </div>
 </section>

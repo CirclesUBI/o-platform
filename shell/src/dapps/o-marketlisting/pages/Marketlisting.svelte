@@ -9,16 +9,23 @@
   import {businesses} from "src/shared/stores/businesses";
   import {QueryAllBusinessesOrderOptions} from "src/shared/api/data/types";
   import {onMount} from "svelte";
-  import {BusinessCategory} from "../../../shared/api/data/types";
+  import {
+    AllBusinessCategoriesDocument,
+    AllBusinessCategoriesQueryVariables,
+    BusinessCategory
+  } from "../../../shared/api/data/types";
   import {ApiClient} from "../../../shared/apiConnection";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
 
+  type SortedByTypes = "Most popular" | "Nearest" | "Newest" | "Oldest" | "Alphabetical";
+
   let categories: BusinessCategory[] = [];
+  let sortedBy: SortedByTypes = "Most popular";
 
   onMount(async () => {
-    categories = await ApiClient.query<BusinessCategory[], any>();
+    categories = await ApiClient.query<BusinessCategory[], AllBusinessCategoriesQueryVariables>(AllBusinessCategoriesDocument, {});
   });
 </script>
 
@@ -31,42 +38,50 @@
       ><span><Icon name="adjustments" class="h-6 w-6" /></span>Filter</button>
       <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
 
-        <li on:click={() => {
-        businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
-      }}><a>Sort by most popular</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Nearest);
-        }}>Sort by nearest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Newest);
-        }}>Sort by newest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
-        }}>Sort by oldest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
-        }}>Sort by name</a></li>
+        {#each categories as category}
+          <li on:click={() => {
+            businesses.reload();
+          }}><a>{category.name}</a></li>
+        {/each}
       </ul>
     </div>
-    <!--
-      myLocation.reload(); -->
       <div class="w-36 dropdown dropdown-end">
       <button class="btn w-36 text-black bg-white border-1"
-      ><span><Icon name="adjustments" class="h-6 w-6" /></span>Sort</button>
+      ><span><Icon name="adjustments" class="h-6 w-6" /></span>{sortedBy}</button>
       <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
         <li on:click={() => {
+          sortedBy = "Most popular";
         businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
       }}><a>Sort by most popular</a></li>
         <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Nearest);
+          sortedBy = "Nearest";
+          if ($myLocation instanceof GeolocationPosition) {
+            businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+          } else {
+            myLocation.reload();
+            let unsub = null;
+            unsub = myLocation.subscribe(o => {
+              if (unsub){
+                unsub();
+              }
+              if (o instanceof GeolocationPositionError) {
+                alert(`Couldn't get the location`)
+              } else {
+                businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+              }
+            })
+          }
         }}>Sort by nearest</a></li>
         <li><a on:click={() => {
+          sortedBy = "Newest";
           businesses.reload(QueryAllBusinessesOrderOptions.Newest);
         }}>Sort by newest</a></li>
         <li><a on:click={() => {
+          sortedBy = "Oldest";
           businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
         }}>Sort by oldest</a></li>
         <li><a on:click={() => {
+          sortedBy = "Alphabetical";
           businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
         }}>Sort by name</a></li>
       </ul>
@@ -74,22 +89,11 @@
   </div>
 
   <div class="p-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2 flex flex-wrap justify-evenly content-center">
-    {#if $myLocation}
-      <!-- Sort nearest first -->
-      <p>Nearest first:</p>
-      {#each $businesses.sort((a,b) => a.index > b.index ? 1: a.index < b.index ? -1 : 0) as business}
-        <BusinessCard
-                on:toggleFavorite={e => businesses.toggleFavorite(e.detail)}
-                business={business}
-        />
-      {/each}
-    {:else}
-      {#each $businesses.sort((a,b) => a.index > b.index ? 1: a.index < b.index ? -1 : 0) as business}
-        <BusinessCard
-                on:toggleFavorite={e => businesses.toggleFavorite(e.detail)}
-                business={business}
-        />
-      {/each}
-    {/if}
+    {#each $businesses.sort((a,b) => a.index > b.index ? 1: a.index < b.index ? -1 : 0) as business}
+      <BusinessCard
+              on:toggleFavorite={e => businesses.toggleFavorite(e.detail)}
+              business={business}
+      />
+    {/each}
   </div>
 </section>

@@ -13,6 +13,12 @@ type City = {
   title: string;
   country: string;
   address: Address;
+  highlights?: {
+    [name:string]:{
+      start: number,
+      end: number
+    }[]
+  }
 }
 
 type Address = {
@@ -49,7 +55,15 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
       submitButtonText: spec.params.view.submitButtonText,
       itemTemplate: DropDownCity,
       getKey: (o) => o.id,
-      getLabel: (o) => `${o.title}`,
+      getLabel: (o) => `${o?.title ?? ""}`,
+      getHighlight: (o) => {
+        if (o.highlights?.title?.length > 0) {
+          return {
+            start: o.highlights.title[0].start,
+            end: o.highlights.title[0].end
+          }
+        }
+      },
       keyProperty: "id",
       choices: {
         byKey: async (key: string) => {
@@ -58,12 +72,13 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
           return await response.json();
         },
         find: async (filter: string) => {
+          // https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics-api/code-autocomplete-result-type-filter.html
           const url =
-            `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&resultType='city'&apiKey=${Environment.hereApiKey}`;
+            `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&types=city&apiKey=${Environment.hereApiKey}`;
 
           const response = await fetch(url);
           const json = await response.json();
-          return json.items.length ? json.items : [];
+          return json.items.reverse().length ? json.items : [];
         },
       },
     },
