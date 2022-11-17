@@ -21,6 +21,12 @@ type Address = {
   countryName: string;
 }
 
+export async function cityByHereId(key: string) {
+  const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${Environment.hereApiKey}`
+  const response = await fetch(url);
+  return await response.json();
+}
+
 export function promptCity<TContext extends ProcessContext<any>, TEvent extends PlatformEvent>(spec: {
   id?: string;
   field: PromptField<TContext>;
@@ -53,9 +59,7 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
       keyProperty: "id",
       choices: {
         byKey: async (key: string) => {
-          const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${Environment.hereApiKey}`
-          const response = await fetch(url);
-          return await response.json();
+          return await cityByHereId(key);
         },
         find: async (filter: string) => {
           const url =

@@ -35,7 +35,9 @@ onMount(init);
   <div class="m-4 mb-40 ">
     <!--<LangSwitcher />-->
     <!-- bg-passport-light bg-passport bg-banking bg-banking-light bg-marketplace bg-marketplace-light bg-contacts bg-contacts-light -->
-    <DashboardInvitesWidget />
+    {#if $me && $me.__typename === "Profile"}
+      <DashboardInvitesWidget />
+    {/if}
     <div class="flex flex-col space-y-4">
       <DashboardColorCard
         color="passport"

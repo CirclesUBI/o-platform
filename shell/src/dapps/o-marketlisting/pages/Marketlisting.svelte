@@ -9,7 +9,11 @@
   import {businesses} from "src/shared/stores/businesses";
   import {QueryAllBusinessesOrderOptions} from "src/shared/api/data/types";
   import {onMount} from "svelte";
-  import {BusinessCategory} from "../../../shared/api/data/types";
+  import {
+    AllBusinessCategoriesDocument,
+    AllBusinessCategoriesQueryVariables,
+    BusinessCategory
+  } from "../../../shared/api/data/types";
   import {ApiClient} from "../../../shared/apiConnection";
 
   export let runtimeDapp: RuntimeDapp<any>;
@@ -18,7 +22,7 @@
   let categories: BusinessCategory[] = [];
 
   onMount(async () => {
-    categories = await ApiClient.query<BusinessCategory[], any>();
+    categories = await ApiClient.query<BusinessCategory[], AllBusinessCategoriesQueryVariables>(AllBusinessCategoriesDocument, {});
   });
 </script>
 

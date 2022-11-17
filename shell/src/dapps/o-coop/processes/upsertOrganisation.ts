@@ -12,7 +12,7 @@ import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
 import {show} from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
-import {promptCity} from "../../../shared/api/promptCity";
+import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data:CreateOrganisationContextData) => void,
@@ -123,6 +123,12 @@ const processDefinition = (processId: string) =>
         entry: () => console.log(`upsertOrganisation ...`),
         invoke: {
           src: async (context) => {
+            console.log(`upsertOrganisation location:`, context.data.location);
+            if (context.data.location) {
+              const city = await cityByHereId(context.data.location);
+              context.data.lat = city.position.lat;
+              context.data.lon = city.position.lng;
+            }
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
