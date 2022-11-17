@@ -29,6 +29,7 @@ export type CreateOrganisationContextData = {
   description: string;
   name: string;
   organisationSafeProxy: GnosisSafeProxy;
+  location: string;
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
@@ -252,6 +253,7 @@ const processDefinition = (processId: string) =>
               description: context.data.description,
               name: context.data.name,
               id: context.data.id,
+              location: context.data.location
             };
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();

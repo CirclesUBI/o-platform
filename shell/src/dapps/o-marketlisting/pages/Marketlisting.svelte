@@ -8,22 +8,51 @@
   import {myLocation} from "src/shared/stores/myLocation";
   import {businesses} from "src/shared/stores/businesses";
   import {QueryAllBusinessesOrderOptions} from "src/shared/api/data/types";
+  import {onMount} from "svelte";
+  import {BusinessCategory} from "../../../shared/api/data/types";
+  import {ApiClient} from "../../../shared/apiConnection";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
+
+  let categories: BusinessCategory[] = [];
+
+  onMount(async () => {
+    categories = await ApiClient.query<BusinessCategory[], any>();
+  });
 </script>
 
 <div style="visibility: hidden;" class="bg-market"></div>
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <section class="justify-center align-middle">
-  <div class="flex self-center justify-center content-between">
-    <button class="btn mr-2 ml-2 text-black bg-white border-1"
-      ><span><Icon name="adjustments" class="h-6 w-6" /></span>Filter by type</button>
+  <div class="p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2 flex justify-around">
+    <div class="w-36 dropdown">
+      <button class="btn w-36 text-black bg-white border-1"
+      ><span><Icon name="adjustments" class="h-6 w-6" /></span>Filter</button>
+      <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+
+        <li on:click={() => {
+        businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
+      }}><a>Sort by most popular</a></li>
+        <li><a on:click={() => {
+          businesses.reload(QueryAllBusinessesOrderOptions.Nearest);
+        }}>Sort by nearest</a></li>
+        <li><a on:click={() => {
+          businesses.reload(QueryAllBusinessesOrderOptions.Newest);
+        }}>Sort by newest</a></li>
+        <li><a on:click={() => {
+          businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
+        }}>Sort by oldest</a></li>
+        <li><a on:click={() => {
+          businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
+        }}>Sort by name</a></li>
+      </ul>
+    </div>
     <!--
       myLocation.reload(); -->
-    <div class="dropdown dropdown-end">
-      <button class="btn mr-2 ml-2 text-black bg-white border-1"
-      ><span><Icon name="adjustments" class="h-6 w-6" /></span>Order by</button>
+      <div class="w-36 dropdown dropdown-end">
+      <button class="btn w-36 text-black bg-white border-1"
+      ><span><Icon name="adjustments" class="h-6 w-6" /></span>Sort</button>
       <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
         <li on:click={() => {
         businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);

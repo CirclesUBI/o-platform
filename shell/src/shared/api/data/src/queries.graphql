@@ -206,7 +206,6 @@ query myProfile {
         name
         description
         avatarUrl
-
       }
     }
     verifications {
@@ -1245,6 +1244,7 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     description
     picture
     phoneNumber
+    location
     businessHoursMonday
     businessHoursTuesday
     businessHoursWednesday
@@ -1254,5 +1254,12 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     businessHoursSunday
     businessCategoryId
     businessCategory
+  }
+}
+
+query allBusinessCategories {
+  allBusinessCategories {
+    id
+    name
   }
 }
