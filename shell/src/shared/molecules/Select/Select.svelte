@@ -2,14 +2,10 @@
 import { beforeUpdate, createEventDispatcher, onDestroy, onMount, tick } from "svelte";
 import List from "./List.svelte";
 import ItemComponent from "./Item.svelte";
-import SelectionComponent from "./Selection.svelte";
 import MultiSelectionComponent from "./MultiSelection.svelte";
 import isOutOfViewport from "./utils/isOutOfViewport";
 import debounce from "./utils/debounce";
 import Icons from "../../molecules/Icons.svelte";
-import DefaultClearIcon from "./ClearIcon.svelte";
-import { isMobile } from "src/shared/functions/isMobile";
-import { Observable } from "rxjs";
 
 const dispatch = createEventDispatcher();
 
@@ -88,6 +84,7 @@ export let showIndicator = false;
 export let containerClasses = "";
 export let staticList = false;
 export let indicatorSvg = undefined;
+export let getHighlight = undefined;
 // export let ClearIcon = DefaultClearIcon;
 
 let target;
@@ -592,6 +589,7 @@ async function loadList() {
     getGroupHeaderLabel,
     items: filteredItems,
     itemHeight,
+    getHighlight
   };
 
   if (getOptionLabel) {
@@ -711,6 +709,7 @@ onDestroy(() => {
       getSelectionLabel="{getSelectionLabel}"
       activeSelectedValue="{activeSelectedValue}"
       isDisabled="{isDisabled}"
+      getHighlight={getHighlight}
       multiFullItemClearable="{multiFullItemClearable}"
       on:multiItemClear="{handleMultiItemClear}" />
   {/if}

@@ -1,5 +1,6 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import {createEventDispatcher, onMount} from 'svelte';
+  import {item} from "@o-platform/o-editors/src/dropdownItems/DropDownCity.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -8,6 +9,19 @@
   export let isDisabled = false;
   export let multiFullItemClearable = false;
   export let getSelectionLabel = undefined;
+  export let getHighlight = undefined;
+
+  const getLabel = (value) => {
+    let label = getSelectionLabel(value)
+    if (getHighlight) {
+      const highlight = getHighlight(item);
+      const beforeHighlight = label.substring(0, highlight.start);
+      const highlightContent = label.substring(highlight.start, highlight.end);
+      const afterHighlight = label.substring(highlight.end, label.length - 1);
+      label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`
+    }
+    return label;
+  };
 
   function handleClear(i, event) {
     event.stopPropagation();
