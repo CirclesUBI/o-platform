@@ -1,24 +1,31 @@
 <script lang="ts">
-  import {createEventDispatcher} from "svelte";
-  import { push } from "svelte-spa-router";
-  import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-  import {Businesses} from "../../../shared/api/data/types";
+import { createEventDispatcher } from "svelte";
+import { push } from "svelte-spa-router";
+import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+import { Businesses } from "../../../shared/api/data/types";
 
-  export let business: Businesses & {isFavorite: boolean};
+export let business: Businesses & { isFavorite: boolean };
 
-  const eventDispatcher = createEventDispatcher();
+const eventDispatcher = createEventDispatcher();
 
-  function loadDetailPage(circlesAddress) {
-    push(`/market/detail/${circlesAddress}`);
-  }
+function loadDetailPage(circlesAddress) {
+  push(`/market/detail/${circlesAddress}`);
+}
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-1">
   <div class="relative">
-    <img src={business.picture} alt="picture of the business" class="rounded-3xl h-full w-full" on:click={() => {
-      loadDetailPage(business.circlesAddress);
-    }}/>
+    <!-- svelte-ignore a11y-img-redundant-alt -->
+    <img
+      src="{business.picture}"
+      alt="picture of the business"
+      class="w-full h-full rounded-3xl"
+      role="presentation"
+      on:click="{() => {
+        loadDetailPage(business.circlesAddress);
+      }}" />
     <div
+      role="presentation"
       on:click="{() => {
         eventDispatcher('toggleFavorite', business.circlesAddress);
       }}">
