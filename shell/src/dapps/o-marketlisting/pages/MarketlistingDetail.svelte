@@ -26,6 +26,8 @@ let currentDayOpenHours = "";
 let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 
+let mapHeight = "16em";
+
 async function reload() {
   business = await businesses.findByCirclesAddress(circlesAddress);
 
@@ -125,13 +127,12 @@ async function shareLink() {
       <Icon name="phone" class="w-6 h-6" />
       <p class="pl-4">{business.phoneNumber}</p>
     </div>
-    <div class="flex pt-4 mt-4 border-t-2">
-      <Icon style="position: absolute;" name="location-marker" class="w-6 h-6" />
+    <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
+      <!--<Icon style="position: absolute;" name="location-marker" class="w-6 h-6" />-->
       {#if $myLocation instanceof GeolocationPosition}
-        <p>With route</p>
-        <Map width="{'100%'}" height="{'8em'}" />
+        <Map width="{'100%'}" height="{mapHeight}" />
       {:else}
-        <Map width="{'100%'}" height="{'8em'}" />
+        <Map width="{'100%'}" height="{mapHeight}" />
       {/if}
     </div>
   {:else}

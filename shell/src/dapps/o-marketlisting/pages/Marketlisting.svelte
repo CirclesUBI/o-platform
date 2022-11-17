@@ -41,12 +41,10 @@ onMount(async () => {
         ><span><Icon name="adjustments" class="w-6 h-6" /></span>Filter</button>
       <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
         {#each categories as category}
-          <li
-            role="presentation"
-            on:click="{() => {
+          <li>
+            <button class="block w-full" on:click="{() => {
               businesses.reload();
-            }}">
-            <span>{category.name}</span>
+            }}">{category.name}</button>
           </li>
         {/each}
       </ul>
@@ -56,13 +54,13 @@ onMount(async () => {
         ><span><Icon name="adjustments" class="w-6 h-6" /></span>{sortedBy}</button>
       <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
         <li>
-          <span><button on:click="{() => {
+          <button class="block w-full" on:click="{() => {
             sortedBy = 'Most popular';
             businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
-          }}">Sort by most popular</button></span>
+          }}">Sort by most popular</button>
         </li>
         <li>
-          <span><button on:click="{() => {
+          <button class="block w-full" on:click="{() => {
               sortedBy = 'Nearest';
               if ($myLocation instanceof GeolocationPosition) {
                 businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
@@ -80,25 +78,25 @@ onMount(async () => {
                   }
                 });
               }
-            }}">Sort by nearest</button></span>
+            }}">Sort by nearest</button>
         </li>
         <li>
-          <span><button on:click="{() => {
+          <button class="block w-full" on:click="{() => {
               sortedBy = 'Newest';
               businesses.reload(QueryAllBusinessesOrderOptions.Newest);
-            }}">Sort by newest</button></span>
+            }}">Sort by newest</button>
         </li>
         <li>
-          <span><button on:click="{() => {
+          <button class="block w-full" on:click="{() => {
               sortedBy = 'Oldest';
               businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
-            }}">Sort by oldest</button></span>
+            }}">Sort by oldest</button>
         </li>
         <li>
-          <span><button on:click="{() => {
+          <button class="block w-full" on:click="{() => {
               sortedBy = 'Alphabetical';
               businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
-            }}">Sort by name</button></span>
+            }}">Sort by name</button>
         </li>
       </ul>
     </div>
