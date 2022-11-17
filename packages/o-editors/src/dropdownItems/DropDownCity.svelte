@@ -6,7 +6,6 @@ export let isHover = false;
 
 let itemClasses = "";
 
-console.log("ITS MEEE");
 $: {
   const classes = [];
 
@@ -23,8 +22,6 @@ $: {
     classes.push("hover");
   }
   itemClasses = classes.join(" ");
-
-  console.log("ITEM: ", item);
 }
 </script>
 

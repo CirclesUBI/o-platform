@@ -795,6 +795,7 @@ enum ProfileType {
 
 enum QueryAllBusinessesOrderOptions {
     Alphabetical
+    Favorites
     MostPopular
     Nearest
     Newest
@@ -855,6 +856,7 @@ input ProfileEventFilter {
 
 input QueryAllBusinessesConditions {
     inCategories: [Int!]
+    inCirclesAddress: [String!]
 }
 
 input QueryAllBusinessesOrder {
@@ -904,6 +906,7 @@ input UpsertOrganisationInput {
     displayCurrency: DisplayCurrency
     id: Int
     largeBannerUrl: String
+    location: String
     name: String!
     smallBannerUrl: String
 }

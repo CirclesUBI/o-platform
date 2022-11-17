@@ -173,7 +173,7 @@ window.o = {
         sendAnswer(answer: PlatformEvent) {
           if (!this.lastReceivedBubble || this.lastReceivedBubble.noReply) {
             throw new Error(
-              "Cannot answer because no Bubble event was received before or the event hat the 'noReply' property set."
+              "Cannot answer because no Bubble event was received before or the event had the 'noReply' property set."
             );
           }
           process.sendEvent(<Sinker>{
