@@ -13,8 +13,8 @@ import {me} from "./me";
 
 export const businesses = {
   subscribe: (subscriber: Subscriber<(Businesses & { isFavorite: boolean })[]>) => _businessesStore.subscribe(subscriber),
-  reload: async (order:QueryAllBusinessesOrderOptions) => {
-    await reload(order)
+  reload: async (order:QueryAllBusinessesOrderOptions, position?: GeolocationPosition) => {
+    await reload(order, position)
     publish();
   },
   findByCirclesAddress: async (circlesAddress:string) => {
@@ -58,10 +58,12 @@ async function reloadBusinesses(order?:QueryAllBusinessesOrderOptions, ownLocati
           order: {
             orderBy: QueryAllBusinessesOrderOptions.Nearest
           },
-          ownCoordinates: {
-            lat: ownLocation.coords.latitude,
-            lon: ownLocation.coords.longitude
-          }
+          ... ownLocation ? {
+            ownCoordinates: {
+              lat: ownLocation.coords.latitude,
+              lon: ownLocation.coords.longitude
+            }
+          } : {}
         }
       }))
       .map((o, i) => {
@@ -90,14 +92,8 @@ async function reloadBusinesses(order?:QueryAllBusinessesOrderOptions, ownLocati
   }
 }
 
-async function reload(order?:QueryAllBusinessesOrderOptions) {
-  await Promise.all([reloadFavorites(), reloadBusinesses(order, <GeolocationPosition>{
-    coords: {
-      // TODO: Add the correct coordinates
-      latitude: -8.809899,
-      longitude: 115.221209
-    }
-  })]);
+async function reload(order?:QueryAllBusinessesOrderOptions, position?: GeolocationPosition) {
+  await Promise.all([reloadFavorites(), reloadBusinesses(order, position)]);
 }
 
 function publish() {

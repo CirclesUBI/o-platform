@@ -35,21 +35,11 @@
       ><span><Icon name="adjustments" class="h-6 w-6" /></span>Filter</button>
       <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
 
-        <li on:click={() => {
-        businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
-      }}><a>Sort by most popular</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Nearest);
-        }}>Sort by nearest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Newest);
-        }}>Sort by newest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
-        }}>Sort by oldest</a></li>
-        <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
-        }}>Sort by name</a></li>
+        {#each categories as category}
+          <li on:click={() => {
+            businesses.reload();
+          }}><a>{category.name}</a></li>
+        {/each}
       </ul>
     </div>
     <!--
@@ -62,7 +52,22 @@
         businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
       }}><a>Sort by most popular</a></li>
         <li><a on:click={() => {
-          businesses.reload(QueryAllBusinessesOrderOptions.Nearest);
+          if ($myLocation instanceof GeolocationPosition) {
+            businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+          } else {
+            myLocation.reload();
+            let unsub = null;
+            unsub = myLocation.subscribe(o => {
+              if (unsub){
+                unsub();
+              }
+              if (o instanceof GeolocationPositionError) {
+                alert(`Couldn't get the location`)
+              } else {
+                businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+              }
+            })
+          }
         }}>Sort by nearest</a></li>
         <li><a on:click={() => {
           businesses.reload(QueryAllBusinessesOrderOptions.Newest);
