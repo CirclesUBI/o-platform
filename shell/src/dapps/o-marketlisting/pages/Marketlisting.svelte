@@ -55,18 +55,14 @@ onMount(async () => {
       <button class="text-black bg-white btn w-36 border-1 whitespace-nowrap"
         ><span><Icon name="adjustments" class="w-6 h-6" /></span>{sortedBy}</button>
       <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-        <li
-          role="presentation"
-          on:click="{() => {
+        <li>
+          <span><button on:click="{() => {
             sortedBy = 'Most popular';
             businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
-          }}">
-          <span>Sort by most popular</span>
+          }}">Sort by most popular</button></span>
         </li>
         <li>
-          <span
-            role="presentation"
-            on:click="{() => {
+          <span><button on:click="{() => {
               sortedBy = 'Nearest';
               if ($myLocation instanceof GeolocationPosition) {
                 businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
@@ -84,31 +80,25 @@ onMount(async () => {
                   }
                 });
               }
-            }}">Sort by nearest</span>
+            }}">Sort by nearest</button></span>
         </li>
         <li>
-          <span
-            role="presentation"
-            on:click="{() => {
+          <span><button on:click="{() => {
               sortedBy = 'Newest';
               businesses.reload(QueryAllBusinessesOrderOptions.Newest);
-            }}">Sort by newest</span>
+            }}">Sort by newest</button></span>
         </li>
         <li>
-          <span
-            role="presentation"
-            on:click="{() => {
+          <span><button on:click="{() => {
               sortedBy = 'Oldest';
               businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
-            }}">Sort by oldest</span>
+            }}">Sort by oldest</button></span>
         </li>
         <li>
-          <span
-            role="presentation"
-            on:click="{() => {
+          <span><button on:click="{() => {
               sortedBy = 'Alphabetical';
               businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
-            }}">Sort by name</span>
+            }}">Sort by name</button></span>
         </li>
       </ul>
     </div>
