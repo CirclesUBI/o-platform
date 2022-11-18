@@ -46,9 +46,10 @@ console.log("!: OPENLOGIN_CLIENT_ID:", process.env.OPENLOGIN_CLIENT_ID);
 console.log("   - The OpenLogin client-id that's used to generate the user's key.")
 console.log("!: HERE_API_KEY:", process.env.HERE_API_KEY);
 console.log("   - The api key for the here.com geolocation services.")
+console.log("?: IS_PRODUCTION:", prod ? "true" : "false");
+console.log("   - Minimizes the bundle when 'true'.")
 console.log("?: USE_MOCKS:", __USE_MOCKS__);
 console.log("?: SHOW_LANGUAGE_SWITCHER:", __SHOW_LANGUAGE_SWITCHER__);
-console.log("?: IS_PRODUCTION:", prod ? "true" : "false");
 
 if (!process.env.API_ENDPOINT ||
     !process.env.CIRCLES_SUBGRAPH_ENDPOINT ||
@@ -94,7 +95,7 @@ module.exports = {
     chunkModules: VERBOSE,
     cached: VERBOSE,
     cachedAssets: VERBOSE,
-    
+    warningsFilter: ['../node_modules/']
   },
   output: {
     path: __dirname + "/public",
@@ -253,7 +254,6 @@ module.exports = {
             },
             // https://github.com/sveltejs/svelte-loader/issues/139
             emitCss: false,
-            hotReload: true,
             preprocess: sveltePreprocess({}),
           },
         },
@@ -286,9 +286,6 @@ module.exports = {
   optimization: {
     minimize: prod,
     minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
-  },
-  stats: {
-    warningsFilter: ['../node_modules/'],
   },
   devServer: {
     compress: false,
