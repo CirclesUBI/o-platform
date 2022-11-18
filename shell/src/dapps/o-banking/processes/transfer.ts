@@ -1,35 +1,30 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
 import CurrencyTransfer from "@o-platform/o-editors/src/CurrencyTransfer.svelte";
-import { ipc } from "@o-platform/o-process/dist/triggers/ipc";
-import { transferXdai } from "./transferXdai";
-import { transferCircles, TransitivePath } from "./transferCircles";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import {ipc} from "@o-platform/o-process/dist/triggers/ipc";
+import {transferXdai} from "./transferXdai";
+import {transferCircles, TransitivePath} from "./transferCircles";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
-import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
+import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import * as yup from "yup";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { BN } from "ethereumjs-util";
-import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
-import { SetTrustContext } from "./setTrust";
-import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfileId";
-import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
-
-import { me } from "../../../shared/stores/me";
-import {AllBusinessesDocument, DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
-import {
-  convertCirclesToTimeCircles,
-  convertTimeCirclesToCircles,
-  displayCirclesAmount
-} from "../../../shared/functions/displayCirclesAmount";
-import { TransactionReceipt } from "web3-core";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import {BN} from "ethereumjs-util";
+import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
+import {SetTrustContext} from "./setTrust";
+import {loadProfileByProfileId} from "../../../shared/api/loadProfileByProfileId";
+import {loadProfileBySafeAddress} from "../../../shared/api/loadProfileBySafeAddress";
+import {me} from "../../../shared/stores/me";
+import {DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
+import {convertCirclesToTimeCircles, convertTimeCirclesToCircles} from "../../../shared/functions/displayCirclesAmount";
+import {TransactionReceipt} from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";
 import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
-import { ApiClient } from "../../../shared/apiConnection";
-import { Currency } from "../../../shared/currency";
+import {ApiClient} from "../../../shared/apiConnection";
+import {Currency} from "../../../shared/currency";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 
 export type TransferContextData = {
@@ -54,12 +49,11 @@ export type TransferContextData = {
 
 export async function findDirectTransfers(from: string, to: string, amount: string) {
   // Find all tokens which are trusted by "to"
-  const result = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
+  return await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
     from: from,
     to: to,
     amount: amount,
   });
-  return result;
 }
 
 export type TransferContext = ProcessContext<TransferContextData>;
@@ -116,11 +110,6 @@ const editorContent: { [x: string]: EditorViewContext } = {
     description: "",
     submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.success.submitButtonText"),
   },
-};
-
-const currencyLookup = {
-  CRC: "Circles",
-  XDAI: "xDai",
 };
 
 const processDefinition = (processId: string) =>
@@ -326,8 +315,6 @@ const processDefinition = (processId: string) =>
             if (!context.data.recipientAddress) {
               throw new Error(window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.invoke"));
             }
-            // context.data.maxFlows = {};
-            // context.data.maxFlows["xdai"] = await RpcGateway.get().eth.getBalance(context.data.safeAddress);
 
             const amount = new Currency().convertTimeCirclesToCircles(
               Number.parseFloat(context.data.tokens.amount),
@@ -338,14 +325,11 @@ const processDefinition = (processId: string) =>
               .utils.toWei(amount.toString() ?? "0", "ether")
               .toString();
 
-            const flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
+            context.data.transitivePath = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
               from: context.data.safeAddress,
               to: context.data.recipientAddress,
               amount: circlesValueInWei,
             });
-
-            // context.data.maxFlows["crc"] = flow.flow;
-            context.data.transitivePath = flow;
           },
           onDone: "#checkAmount",
           onError: "#error",
@@ -355,7 +339,7 @@ const processDefinition = (processId: string) =>
         id: "checkAmount",
         always: [
           {
-            cond: (context, event) => {
+            cond: (context, _) => {
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] == "") return false;
 
               const maxFlowInWei = new BN(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
@@ -481,7 +465,7 @@ const processDefinition = (processId: string) =>
         invoke: {
           src: transferCircles.stateMachine(`${processId}:transfer:transferCircles`),
           data: {
-            data: (context, event) => {
+            data: (context, _) => {
               return {
                 safeAddress: context.data.safeAddress,
                 recipientAddress: context.data.recipientAddress,
@@ -513,7 +497,7 @@ const processDefinition = (processId: string) =>
         invoke: {
           src: transferXdai.stateMachine(`${processId}:transfer:transferXdai`),
           data: {
-            data: (context, event) => {
+            data: (context, _) => {
               return {
                 safeAddress: context.data.safeAddress,
                 recipientAddress: context.data.recipientAddress,
@@ -562,7 +546,7 @@ const processDefinition = (processId: string) =>
       success: {
         id: "success",
         type: "final",
-        data: (context, event: PlatformEvent) => {
+        data: () => {
           return "yeah!";
         },
       },

@@ -1,26 +1,25 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
-import { BN } from "ethereumjs-util";
-import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import {CirclesHub} from "@o-platform/o-circles/dist/circles/circlesHub";
+import {BN} from "ethereumjs-util";
+import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import TrustChangeConfirmation from "../molecules/TrustChangeConfirmation.svelte";
-import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
-import type { TransactionReceipt } from "web3-core";
-import { Environment } from "../../../shared/environment";
-import { ok, err, Result } from "neverthrow";
+import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
+import type {TransactionReceipt} from "web3-core";
+import {Environment} from "../../../shared/environment";
 import {
   Profile,
   ProfilesByCirclesAddressDocument,
   ProfilesByCirclesAddressQueryVariables,
 } from "../../../shared/api/data/types";
-import { ApiClient } from "../../../shared/apiConnection";
+import {ApiClient} from "../../../shared/apiConnection";
 
 export type SetTrustContextData = {
   safeAddress: string;
@@ -198,13 +197,10 @@ const processDefinition = (processId: string) =>
         invoke: {
           src: async (context) => {
             try {
-              const result = await ApiClient.query<
-                Profile,
-                ProfilesByCirclesAddressQueryVariables
-              >(ProfilesByCirclesAddressDocument, {
+              context.data.profile = await ApiClient.query<Profile,
+                ProfilesByCirclesAddressQueryVariables>(ProfilesByCirclesAddressDocument, {
                 circlesAddresses: [context.data.trustReceiver],
               });
-              context.data.profile = result;
             } catch (error) {
               console.info(
                 `Could not load Profile for circlesAddress: ${context.data.trustReceiver}`
@@ -269,7 +265,7 @@ const processDefinition = (processId: string) =>
       success: {
         type: "final",
         id: "success",
-        data: (context, event: PlatformEvent) => {
+        data: (context, _) => {
           if (context.data.successAction) {
             context.data.successAction(context.data);
           }
