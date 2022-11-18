@@ -33,6 +33,7 @@
     "sugarss": "^2.0.0",
     "svelte": "^3.50.1",
     "svelte-preprocess": "^4.10.7",
+    "tw-elements": "^1.0.0-alpha12",
     "web3": "^1.8.0",
     "xstate": "^4.33.6"
   },
