@@ -194,7 +194,6 @@ export function promptFile<
           data: {
             data: () => {
               return {
-                appId: Environment.filesAppId ,
                 fileName: file.fileName ?? "",
                 mimeType: file.mimeType,
                 bytes: file.bytes,
