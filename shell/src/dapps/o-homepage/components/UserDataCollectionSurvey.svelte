@@ -77,7 +77,7 @@ isValid = typeOfUser && genderOfUser && businessOffers;
           <DropDown selected='Select your type of user'items="{typeOfUserData}" id="userType" key="id" value="name" on:dropDownChange="{handleOnChange}" />
           {#if typeOfUser}
           <span class="text-6xl font-enso"
-          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2" /></span>
+          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
           {/if}
           {#if !typeOfUser}
           <span class="text-6xl font-enso"
@@ -91,7 +91,7 @@ isValid = typeOfUser && genderOfUser && businessOffers;
           <DropDown selected='Select gender' items="{genderOfUserData}" id="gender" key="id" value="name" on:dropDownChange="{handleOnChange}" />
           {#if genderOfUser}
           <span class="text-6xl font-enso"
-          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2" /></span>
+          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
           {/if}
           {#if !genderOfUser}
           <span class="text-6xl font-enso"
@@ -119,7 +119,7 @@ isValid = typeOfUser && genderOfUser && businessOffers;
           <DropDown selected='Select what your business offers' items="{businessOffersData}" id="businessOffers" key="id" value="name" on:dropDownChange="{handleOnChange}" />
           {#if businessOffers}
           <span class="text-6xl font-enso"
-          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2" /></span>
+          ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
           {/if}
           {#if !businessOffers}
           <span class="text-6xl font-enso"
