@@ -66,16 +66,6 @@ query init {
       }
       # init.ubi
       circlesTokenAddress
-      favorites {
-        createdAt
-        comment
-        favorite {
-          circlesAddress
-          avatarUrl
-          displayName
-          dream
-        }
-      }
     }
   }
 }
@@ -129,37 +119,6 @@ query safeInfo {
     safeAddress
     tokenAddress
     randomValue
-  }
-}
-
-query stats {
-  stats {
-    profilesCount
-    verificationsCount
-    goals {
-      lastGoal
-      currentValue
-      nextGoal
-    }
-    myRank {
-      rank
-      redeemedInvitationsCount
-    }
-    leaderboard {
-      createdByCirclesAddress
-      inviteCount
-      createdByProfile {
-        id
-        circlesAddress
-        displayCurrency
-        circlesSafeOwner
-        displayName
-        firstName
-        lastName
-        dream
-        avatarUrl
-      }
-    }
   }
 }
 
@@ -237,6 +196,7 @@ query myProfile {
         name
         description
         avatarUrl
+
       }
     }
     verifications {
@@ -249,16 +209,6 @@ query myProfile {
         displayCurrency
         avatarUrl
         name
-      }
-    }
-    favorites {
-      createdAt
-      comment
-      favorite {
-        circlesAddress
-        avatarUrl
-        displayName
-        dream
       }
     }
   }
@@ -1265,27 +1215,6 @@ query findInvitationCreator($code: String!) {
 
 query clientAssertionJwt {
   clientAssertionJwt
-}
-
-query allBusinesses($circlesAddress: String) {
-  allBusinesses(circlesAddress: $circlesAddress) {
-    id
-    circlesAddress
-    name
-    description
-    picture
-    phoneNumber
-    location
-    businessHoursMonday
-    businessHoursTuesday
-    businessHoursWednesday
-    businessHoursThursday
-    businessHoursFriday
-    businessHoursSaturday
-    businessHoursSunday
-    businessCategoryId
-    businessCategory
-  }
 }
 
 query allBusinessCategories {
