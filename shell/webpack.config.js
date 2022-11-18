@@ -8,119 +8,62 @@ const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 const mode = process.env.NODE_ENV || "development";
-let prod = mode === "production";
+const prod = !!process.env.IS_PRODUCTION;
 const dev = !prod;
 const DEBUG = !process.argv.includes("--release");
 const VERBOSE = process.argv.includes("--verbose");
 
-let __CIRCLES_GARDEN_API__ = "https://api.circles.garden/api/users/";
-let __AUTH_ENDPOINT__ = "https://auth.circles.name";
-let __API_ENDPOINT__ = "https://api.circles.land";
-let __HUMANODE_AUTH_URL__ = "https://auth.staging.oauth2.humanode.io/oauth2/auth";
-let __HUMANODE_TOKEN_URL__ = "https://auth.staging.oauth2.humanode.io/oauth2/token";
-let __HUMANODE_REDIRECT_URL__ = "http://localhost:5000/";
-let __HUMANODE_CLIENT_ID__ = "circles-ubi-jwks";
-let __HUMANODE_SCOPE__ = "openid";
-let __EXTERNAL_URL__ = "https://circles.land";
-let __CIRCLES_SUBGRAPH_ENDPOINT__ = "https://api.thegraph.com/subgraphs/name/circlesubi/circles";
-let __PATHFINDER_ENDPOINT__ = "https://rpc.circles.land/pathfinder";
-let __APP_ID__ = "circles.land";
-let __FILES_APP_ID__ = "files.circles.land";
-let __SAFE_SCHEMA_VERSION__ = "2";
-let __CIRCLES_HUB_ADDRESS__ = "0x29b9a7fBb8995b2423a71cC17cf9810798F6C543";
-let __CIRCLES_HUB_BLOCK__ = "12529458";
-let __SAFE_PROXY_FACTORY_ADDRESS__ = "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2";
-let __SAFE_ADDRESS__ = "0x3E5c63644E683549055b9Be8653de26E0B4CD36E";
-let __RPC_ENDPOINT__ = "https://rpc.circles.land";
-let __OPENLOGIN_CLIENT_ID__ =
-  process.env.OPENLOGIN_CLIENT_ID ??
-  "BHqazms23gbTZQ2fYvvUaFzv718Ft8Ox1XwSEqVt81jtZJRQRb-N5cnThtZGSjZF9Dtj9MQxkEQTUo47I_wiihE";
-let __ALLOW_VERIFY__ = "true"; // !process.env.ALLOW_VERIFY ? "false" : "true";
-let __ALLOW_CREATE_ORGANISATION__ = !process.env.ALLOW_CREATE_ORGANISATION ? "false" : "true";
-let __USE_MOCKS__ = !process.env.USE_MOCKS ? "false" : "true";
-let __FIXED_GAS_PRICE__ = !process.env.FIXED_GAS_PRICE ? "0" : process.env.FIXED_GAS_PRICE;
-let __SHOW_LANGUAGE_SWITCHER__ = "true";
-let __HERE_API_KEY__ = "fhiIkoASi1B-z8R7ytKBnfJltOpaUlYBV1kydXyK1sE";
+const __API_ENDPOINT__ = process.env.API_ENDPOINT;
+const __CIRCLES_SUBGRAPH_ENDPOINT__ = process.env.CIRCLES_SUBGRAPH_ENDPOINT;
+const __PATHFINDER_ENDPOINT__ = process.env.PATHFINDER_ENDPOINT;
+const __CIRCLES_HUB_ADDRESS__ = process.env.CIRCLES_HUB_ADDRESS;
+const __SAFE_PROXY_FACTORY_ADDRESS__ = process.env.SAFE_PROXY_FACTORY_ADDRESS;
+const __SAFE_ADDRESS__ = process.env.SAFE_ADDRESS;
+const __RPC_ENDPOINT__ = process.env.RPC_ENDPOINT;
+const __OPENLOGIN_CLIENT_ID__ = process.env.OPENLOGIN_CLIENT_ID;
+const __HERE_API_KEY__ = process.env.HERE_API_KEY;
 
-if (process.env.DEPLOY_ENVIRONMENT === "main") {
-  __AUTH_ENDPOINT__ = "https://auth.circles.name";
-  __API_ENDPOINT__ = "https://api.circles.land";
-  __APP_ID__ = "circles.land";
-  __EXTERNAL_URL__ = "https://circles.land";
-  __FILES_APP_ID__ = "files.circles.land";
-  __SHOW_LANGUAGE_SWITCHER__ = "false";
-  prod = true;
-} else if (process.env.DEPLOY_ENVIRONMENT === "dev") {
-  __AUTH_ENDPOINT__ = "https://dev.auth.circles.name";
-  __API_ENDPOINT__ = "https://dev.api.circles.land";
-  __APP_ID__ = "staging.circles.land";
-  __EXTERNAL_URL__ = "https://staging.circles.land";
-  __FILES_APP_ID__ = "dev.files.circles.land";
-  __HUMANODE_CLIENT_ID__ = "circles-ubi-staging";
-  __SHOW_LANGUAGE_SWITCHER__ = "false";
-  prod = false;
-} else if (process.env.DEPLOY_ENVIRONMENT === "local") {
-  __AUTH_ENDPOINT__ = "https://dev.auth.circles.name";
-  __API_ENDPOINT__ = "https://local.api.circles.land";
-  __APP_ID__ = "local.circles.land";
-  __EXTERNAL_URL__ = "https://localhost:5000";
-  __FILES_APP_ID__ = "dev.files.circles.land";
-  __HUMANODE_CLIENT_ID__ = "circles-ubi-staging";
-  prod = false;
-} else if (process.env.DEPLOY_ENVIRONMENT === "ultralocal") {
-  __AUTH_ENDPOINT__ = "https://dev.auth.circles.name";
-  __API_ENDPOINT__ = "http://localhost:8989";
-  __APP_ID__ = "ultralocal.circles.land";
-  __EXTERNAL_URL__ = "http://localhost:5000";
-  __FILES_APP_ID__ = "dev.files.circles.land";
-  __HUMANODE_CLIENT_ID__ = "circles-ubi-staging";
-  prod = false;
-} else if (process.env.DEPLOY_ENVIRONMENT === "docker") {
-  __AUTH_ENDPOINT__ = "https://dev.auth.circles.name";
-  __API_ENDPOINT__ = process.env.API_ENDPOINT ? process.env.API_ENDPOINT : "https://localhost:8989";
-  __APP_ID__ = "ultralocal.circles.land";
-  __FILES_APP_ID__ = "dev.files.circles.land";
-  __CIRCLES_HUB_ADDRESS__ = process.env.CIRCLES_HUB_ADDRESS;
-  __CIRCLES_HUB_BLOCK__ = process.env.CIRCLES_HUB_BLOCK;
-  __SAFE_PROXY_FACTORY_ADDRESS__ = process.env.SAFE_PROXY_FACTORY_ADDRESS;
-  __SAFE_ADDRESS__ = process.env.SAFE_ADDRESS;
-  __RPC_ENDPOINT__ = process.env.RPC_ENDPOINT ?? "http://localhost:8545";
-  __ALLOW_VERIFY__ = "true";
-  __ALLOW_CREATE_ORGANISATION__ = "true";
-  __FIXED_GAS_PRICE__ = "1";
-  __HUMANODE_CLIENT_ID__ = "circles-ubi-staging";
-  prod = false;
+const __USE_MOCKS__ = process.env.USE_MOCKS ? "true" : "false";
+const __SHOW_LANGUAGE_SWITCHER__ = process.env.SHOW_LANGUAGE_SWITCHER ? "true" : "false";
+
+console.log("Config from environment variables:")
+console.log("----------------------------------------")
+console.log("!: API_ENDPOINT:", process.env.API_ENDPOINT);
+console.log("   - The url to the application's graphql api.")
+console.log("!: CIRCLES_SUBGRAPH_ENDPOINT:", process.env.CIRCLES_SUBGRAPH_ENDPOINT);
+console.log("   - The url to the theGraph's circles subgraph.")
+console.log("!: PATHFINDER_ENDPOINT:", process.env.PATHFINDER_ENDPOINT);
+console.log("   - The url to the pathfinder2 json-rpc endpoint.")
+console.log("!: CIRCLES_HUB_ADDRESS:", process.env.CIRCLES_HUB_ADDRESS);
+console.log("   - The address of the deployed CirclesHub contract.")
+console.log("!: SAFE_PROXY_FACTORY_ADDRESS:", process.env.SAFE_PROXY_FACTORY_ADDRESS);
+console.log("   - The address of the deployed SafeProxyFactory contract.")
+console.log("!: SAFE_ADDRESS:", process.env.SAFE_ADDRESS);
+console.log("   - The address of the deployed master safe contract.")
+console.log("!: RPC_ENDPOINT:", process.env.RPC_ENDPOINT);
+console.log("   - The address to an EVM chain's json-rpc endpoint.")
+console.log("!: OPENLOGIN_CLIENT_ID:", process.env.OPENLOGIN_CLIENT_ID);
+console.log("   - The OpenLogin client-id that's used to generate the user's key.")
+console.log("!: HERE_API_KEY:", process.env.HERE_API_KEY);
+console.log("   - The api key for the here.com geolocation services.")
+console.log("?: USE_MOCKS:", __USE_MOCKS__);
+console.log("?: SHOW_LANGUAGE_SWITCHER:", __SHOW_LANGUAGE_SWITCHER__);
+console.log("?: IS_PRODUCTION:", prod ? "true" : "false");
+
+if (!process.env.API_ENDPOINT ||
+    !process.env.CIRCLES_SUBGRAPH_ENDPOINT ||
+    !process.env.PATHFINDER_ENDPOINT ||
+    !process.env.CIRCLES_HUB_ADDRESS ||
+    !process.env.SAFE_PROXY_FACTORY_ADDRESS ||
+    !process.env.SAFE_ADDRESS ||
+    !process.env.RPC_ENDPOINT ||
+    !process.env.OPENLOGIN_CLIENT_ID ||
+    !process.env.HERE_API_KEY) {
+  console.log("");
+  console.error("Error: All above mandatory (!) environment variables must be set.")
+  console.log("");
+  process.exit();
 }
-
-__HUMANODE_REDIRECT_URL__ = __EXTERNAL_URL__;
-
-console.log(`__AUTH_ENDPOINT__: ${__AUTH_ENDPOINT__}`);
-
-console.log(`__HUMANODE_AUTH_URL__: ${__HUMANODE_AUTH_URL__}`);
-console.log(`__HUMANODE_TOKEN_URL__: ${__HUMANODE_TOKEN_URL__}`);
-console.log(`__HUMANODE_REDIRECT_URL__: ${__HUMANODE_REDIRECT_URL__}`);
-console.log(`__HUMANODE_CLIENT_ID__: ${__HUMANODE_CLIENT_ID__}`);
-console.log(`__HUMANODE_SCOPE__: ${__HUMANODE_SCOPE__}`);
-
-console.log(`__APP_ID__: ${__APP_ID__}`);
-console.log(`__EXTERNAL_URL__: ${__EXTERNAL_URL__}`);
-console.log(`__FILES_APP_ID__: ${__FILES_APP_ID__}`);
-console.log(`__CIRCLES_GARDEN_API__: ${__CIRCLES_GARDEN_API__}`);
-console.log(`__SAFE_SCHEMA_VERSION__: ${__SAFE_SCHEMA_VERSION__}`);
-console.log(`__PATHFINDER_ENDPOINT__: ${__PATHFINDER_ENDPOINT__}`);
-console.log(`__CIRCLES_SUBGRAPH_ENDPOINT__: ${__CIRCLES_SUBGRAPH_ENDPOINT__}`);
-console.log(`__CIRCLES_HUB_ADDRESS__: ${__CIRCLES_HUB_ADDRESS__}`);
-console.log(`__CIRCLES_HUB_BLOCK__: ${__CIRCLES_HUB_BLOCK__}`);
-console.log(`__SAFE_PROXY_FACTORY_ADDRESS__: ${__SAFE_PROXY_FACTORY_ADDRESS__}`);
-console.log(`__SAFE_ADDRESS__: ${__SAFE_ADDRESS__}`);
-console.log(`__RPC_ENDPOINT__: ${__RPC_ENDPOINT__}`);
-console.log(`__OPENLOGIN_CLIENT_ID__: ${__OPENLOGIN_CLIENT_ID__}`);
-console.log(`__USE_MOCKS__: ${__USE_MOCKS__}`);
-console.log(`__ALLOW_VERIFY__: ${__ALLOW_VERIFY__}`);
-console.log(`__ALLOW_CREATE_ORGANISATION__: ${__ALLOW_CREATE_ORGANISATION__}`);
-console.log(`__FIXED_GAS_PRICE__: ${__FIXED_GAS_PRICE__}`);
-console.log(`__SHOW_LANGUAGE_SWITCHER__: ${__SHOW_LANGUAGE_SWITCHER__}`);
-console.log(`__HERE_API_KEY__: ${__HERE_API_KEY__}`);
 
 const sveltePath = path.resolve("node_modules", "svelte");
 
@@ -167,15 +110,6 @@ module.exports = {
         test: /\.ts|\.js|\.svelte$/,
         loader: "string-replace-loader",
         options: {
-          search: "__HUMANODE_SCOPE__",
-          replace: __HUMANODE_SCOPE__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
           search: "__HERE_API_KEY__",
           replace: __HERE_API_KEY__,
           flags: "g",
@@ -185,71 +119,8 @@ module.exports = {
         test: /\.ts|\.js|\.svelte$/,
         loader: "string-replace-loader",
         options: {
-          search: "__HUMANODE_CLIENT_ID__",
-          replace: __HUMANODE_CLIENT_ID__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__HUMANODE_REDIRECT_URL__",
-          replace: __HUMANODE_REDIRECT_URL__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__HUMANODE_TOKEN_URL__",
-          replace: __HUMANODE_TOKEN_URL__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__HUMANODE_AUTH_URL__",
-          replace: __HUMANODE_AUTH_URL__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__FIXED_GAS_PRICE__",
-          replace: __FIXED_GAS_PRICE__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
           search: "__USE_MOCKS__",
           replace: __USE_MOCKS__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__ALLOW_VERIFY__",
-          replace: __ALLOW_VERIFY__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__ALLOW_CREATE_ORGANISATION__",
-          replace: __ALLOW_CREATE_ORGANISATION__,
           flags: "g",
         },
       },
@@ -293,15 +164,6 @@ module.exports = {
         test: /\.ts|\.js|\.svelte$/,
         loader: "string-replace-loader",
         options: {
-          search: "__CIRCLES_HUB_BLOCK__",
-          replace: __CIRCLES_HUB_BLOCK__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.js|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
           search: "__PATHFINDER_ENDPOINT__",
           replace: __PATHFINDER_ENDPOINT__,
           flags: "g",
@@ -313,15 +175,6 @@ module.exports = {
         options: {
           search: "__CIRCLES_SUBGRAPH_ENDPOINT__",
           replace: __CIRCLES_SUBGRAPH_ENDPOINT__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__AUTH_ENDPOINT__",
-          replace: __AUTH_ENDPOINT__,
           flags: "g",
         },
       },
@@ -346,53 +199,8 @@ module.exports = {
         test: /\.ts|\.svelte$/,
         loader: "string-replace-loader",
         options: {
-          search: "__SAFE_SCHEMA_VERSION__",
-          replace: __SAFE_SCHEMA_VERSION__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
           search: "__RPC_ENDPOINT__",
           replace: __RPC_ENDPOINT__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__CIRCLES_GARDEN_API__",
-          replace: __CIRCLES_GARDEN_API__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__EXTERNAL_URL__",
-          replace: __EXTERNAL_URL__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__APP_ID__",
-          replace: __APP_ID__,
-          flags: "g",
-        },
-      },
-      {
-        test: /\.ts|\.svelte$/,
-        loader: "string-replace-loader",
-        options: {
-          search: "__FILES_APP_ID__",
-          replace: __FILES_APP_ID__,
           flags: "g",
         },
       },
