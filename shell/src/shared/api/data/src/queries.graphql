@@ -1216,3 +1216,10 @@ query findInvitationCreator($code: String!) {
 query clientAssertionJwt {
   clientAssertionJwt
 }
+
+query allBusinessCategories {
+  allBusinessCategories {
+    id
+    name
+  }
+}

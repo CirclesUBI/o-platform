@@ -64,6 +64,7 @@ type Profile {
   age: Int
   gender: Gender
   location: String
+  category: BusinessCategory
 }
 
 type ClaimedInvitation {
@@ -130,6 +131,11 @@ type Contact {
   lastContactAt: String!
   contactAddress: String!
   contactAddress_Profile: Profile
+}
+
+type BusinessCategory {
+  id: Int!
+  name: String
 }
 
 type CrcBalances implements IAggregatePayload {
@@ -684,6 +690,23 @@ type i18n {
   needsUpdate: Boolean
 }
 
+type Businesses {
+  id: Int!
+  name: String
+  description: String
+  picture: String
+  businessHoursMonday: String
+  businessHoursTuesday: String
+  businessHoursWednesday: String
+  businessHoursThursday: String
+  businessHoursFriday: String
+  businessHoursSaturday: String
+  businessHoursSunday: String
+  phoneNumber: String
+  location: String
+  businessCategory: String
+}
+
 enum SortOrder {
   ASC
   DESC
@@ -760,6 +783,14 @@ type FibonacciGoals {
 type MyInviteRank {
   rank: Int!
   redeemedInvitationsCount: Int!
+}
+
+type Stats {
+  profilesCount: Int!
+  verificationsCount: Int!
+  leaderboard: [LeaderboardEntry!]!
+  goals: FibonacciGoals!
+  myRank: MyInviteRank!
 }
 
 type TransitiveTransfer {
@@ -887,6 +918,7 @@ type Query {
   profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
   findSafesByOwner(owner: String!): [SafeInfo!]!
   search(query: SearchInput!): [Profile!]!
+  stats: Stats!
   tags(query: QueryTagsInput!): [Tag!]!
   tagById(id: Int!): Tag
   findInvitationCreator(code: String!): Profile
@@ -916,6 +948,8 @@ type Query {
   signMessage(message: String!, key: String!): String!
   directPath(from: String!, to: String!, amount: String!): TransitivePath!
   paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
+  allBusinessCategories: [BusinessCategory!]!
+  allBusinesses(categoryId: Int, id: Int): [Businesses!]!
 }
 
 type Subscription {
