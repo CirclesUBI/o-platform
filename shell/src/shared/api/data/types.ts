@@ -54,6 +54,30 @@ export type AssetBalance = {
   token_balance: Scalars['String'];
 };
 
+export type BusinessCategory = {
+  __typename?: 'BusinessCategory';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Businesses = {
+  __typename?: 'Businesses';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+  businessHoursMonday?: Maybe<Scalars['String']>;
+  businessHoursTuesday?: Maybe<Scalars['String']>;
+  businessHoursWednesday?: Maybe<Scalars['String']>;
+  businessHoursThursday?: Maybe<Scalars['String']>;
+  businessHoursFriday?: Maybe<Scalars['String']>;
+  businessHoursSaturday?: Maybe<Scalars['String']>;
+  businessHoursSunday?: Maybe<Scalars['String']>;
+  phoneNumber?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  businessCategory?: Maybe<Scalars['String']>;
+};
+
 export type Capability = {
   __typename?: 'Capability';
   type?: Maybe<CapabilityType>;
@@ -691,6 +715,7 @@ export type Profile = {
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  category?: Maybe<BusinessCategory>;
 };
 
 export type ProfileAggregate = {
@@ -793,6 +818,7 @@ export type Query = {
   profilesBySafeAddress: Array<Profile>;
   findSafesByOwner: Array<SafeInfo>;
   search: Array<Profile>;
+  stats: Stats;
   tags: Array<Tag>;
   tagById?: Maybe<Tag>;
   findInvitationCreator?: Maybe<Profile>;
@@ -811,6 +837,8 @@ export type Query = {
   signMessage: Scalars['String'];
   directPath: TransitivePath;
   paymentPath: TransitivePath;
+  allBusinessCategories: Array<BusinessCategory>;
+  allBusinesses: Array<Businesses>;
 };
 
 
@@ -980,6 +1008,12 @@ export type QueryPaymentPathArgs = {
   amount: Scalars['String'];
 };
 
+
+export type QueryAllBusinessesArgs = {
+  categoryId?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['Int']>;
+};
+
 export type QueryProfileInput = {
   id?: Maybe<Array<Scalars['Int']>>;
   firstName?: Maybe<Scalars['String']>;
@@ -1087,6 +1121,15 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type Stats = {
+  __typename?: 'Stats';
+  profilesCount: Scalars['Int'];
+  verificationsCount: Scalars['Int'];
+  leaderboard: Array<LeaderboardEntry>;
+  goals: FibonacciGoals;
+  myRank: MyInviteRank;
+};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -2425,6 +2468,17 @@ export type ClientAssertionJwtQueryVariables = Exact<{ [key: string]: never; }>;
 export type ClientAssertionJwtQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'clientAssertionJwt'>
+);
+
+export type AllBusinessCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBusinessCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { allBusinessCategories: Array<(
+    { __typename?: 'BusinessCategory' }
+    & Pick<BusinessCategory, 'id' | 'name'>
+  )> }
 );
 
 export type EventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -3937,6 +3991,14 @@ export const ClientAssertionJwtDocument = gql`
   clientAssertionJwt
 }
     `;
+export const AllBusinessCategoriesDocument = gql`
+    query allBusinessCategories {
+  allBusinessCategories {
+    id
+    name
+  }
+}
+    `;
 export const EventsDocument = gql`
     subscription events {
   events {
@@ -4128,6 +4190,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     clientAssertionJwt(variables?: ClientAssertionJwtQueryVariables): Promise<ClientAssertionJwtQuery> {
       return withWrapper(() => client.request<ClientAssertionJwtQuery>(print(ClientAssertionJwtDocument), variables));
+    },
+    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
+      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));
