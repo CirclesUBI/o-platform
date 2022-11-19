@@ -11,7 +11,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { connectSafe } from "../connectSafe";
 import {CirclesSafe} from "../../../o-banking/chain/circlesSafe";
 import {Utilities} from "../../../o-banking/chain/utilities";
-import {DefaultExecutionContext} from "../../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../../o-banking/chain/actions/defaultExecutionContext";
 
 export type PromptConnectOrCreateContextData = {
   forceCreate?: boolean;

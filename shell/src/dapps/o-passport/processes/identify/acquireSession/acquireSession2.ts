@@ -9,7 +9,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import HtmlViewer from "../../../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import ErrorPage from "../../../../../shared/atoms/Error.svelte";
-import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/defaultExecutionContext";
 
 
 export type AcquireSessionContextData = {

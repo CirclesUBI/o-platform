@@ -11,7 +11,7 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export type AddOwnerContextData = {
   successAction: (data: AddOwnerContextData) => void;

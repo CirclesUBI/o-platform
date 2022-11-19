@@ -15,8 +15,8 @@ import {
 } from "../../../shared/api/data/types";
 import {ApiClient} from "../../../shared/apiConnection";
 import {CirclesSafe} from "../chain/circlesSafe";
-import {DefaultExecutionContext} from "../chain/actions/action";
 import {SetTrustResultData} from "../chain/actions/setTrust";
+import {DefaultExecutionContext} from "../chain/actions/defaultExecutionContext";
 
 export type SetTrustContextData = {
   safeAddress: string;

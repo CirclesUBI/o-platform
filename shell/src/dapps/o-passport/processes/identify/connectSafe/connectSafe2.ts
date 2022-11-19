@@ -15,7 +15,7 @@ import PinInputEditor from "@o-platform/o-editors/src/Pin/PinInputEditor.svelte"
 import * as yup from "yup";
 import {Utilities} from "../../../../o-banking/chain/utilities";
 import {CirclesSafe} from "../../../../o-banking/chain/circlesSafe";
-import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/defaultExecutionContext";
 
 export type ConnectSafeContextData = {
   safeAddress?: string;

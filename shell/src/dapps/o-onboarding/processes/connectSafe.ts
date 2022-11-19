@@ -21,9 +21,9 @@ import DropDownCandidateSafe from "../views/atoms/DropDownCandidateSafe.svelte";
 import {ApiClient} from "../../../shared/apiConnection";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {Utilities} from "../../o-banking/chain/utilities";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 import {Environment} from "../../../shared/environment";
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export type ConnectSafeInfo = {
   success: boolean;
@@ -270,7 +270,7 @@ const processDefinition = (processId: string) =>
 
             // Transfer the 'controlledSafeMinBalance' to the eoa if it's got not enough balance to pay for gas
             const oldOwnerBalance = await Utilities.getBalance(
-              DefaultExecutionContext.readonly(),
+              DefaultExecutionContext.readonly,
               context.data.availableSafes.importedAccount.address);
 
             if (oldOwnerBalance.lt(Utilities.toWei(Environment.controlledSafeMinBalance))) {

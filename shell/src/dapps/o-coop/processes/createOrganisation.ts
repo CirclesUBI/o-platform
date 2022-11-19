@@ -16,7 +16,7 @@ import {setWindowLastError} from "../../../shared/processes/actions/setWindowLas
 import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
 import {Utilities} from "../../o-banking/chain/utilities";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;

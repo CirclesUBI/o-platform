@@ -4,8 +4,8 @@
   import {KeyManager} from "../../o-passport/data/keyManager";
   import {me} from "../../../shared/stores/me";
   import {Utilities} from "../chain/utilities";
-  import {DefaultExecutionContext} from "../chain/actions/action";
   import {BigNumber} from "ethers";
+  import {DefaultExecutionContext} from "../chain/actions/defaultExecutionContext";
 
   let accountxDai = {
   symbol: "xdai",
@@ -28,10 +28,10 @@ let balances = [];
 
 onMount(async () => {
   const safeAddress = $me.circlesAddress;
-  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), safeAddress);
+  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly, safeAddress);
   const km = new KeyManager(safeAddress);
   await km.load();
-  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), km.torusKeyAddress);
+  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly, km.torusKeyAddress);
 
   safexDai.balance = Number.parseFloat(Utilities.fromWei(safeBalance)).toFixed(2);
   safexDai.title = "Safe";

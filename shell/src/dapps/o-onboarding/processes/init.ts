@@ -28,8 +28,8 @@ import { ApiClient } from "../../../shared/apiConnection";
 import {me} from "../../../shared/stores/me";
 import { upsertIdentityShort } from "../../o-passport/processes/upsertIdentityShort";
 import {Utilities} from "../../o-banking/chain/utilities";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export function goToPreviouslyDesiredRouteIfExisting() {
   try {

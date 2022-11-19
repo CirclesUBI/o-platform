@@ -15,7 +15,7 @@ import { upsertIdentity } from "../../o-passport/processes/upsertIdentity";
 import { EoaData, SafeData } from "./initEvent";
 import {Utilities} from "../../o-banking/chain/utilities";
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export type FromCirclesLandContextData = {
   seedPhrase?: string;
@@ -195,7 +195,7 @@ const processDefinition = (processId: string) =>
               context.data.chooseSafeAddress?.trim() ??
               context.data.safe?.address;
             try {
-              const circlesSafe = new CirclesSafe(addressToCheck, DefaultExecutionContext.readonly());
+              const circlesSafe = new CirclesSafe(addressToCheck, DefaultExecutionContext.readonly);
               await circlesSafe.getNonce();
 
               context.data.safe = {

@@ -3,7 +3,7 @@ import {SafeInfo, Profile, SafeInfoDocument, SafeInfoQueryVariables} from "./api
 import {me} from "./stores/me";
 import {ApiClient} from "./apiConnection";
 import {CirclesSafe} from "../dapps/o-banking/chain/circlesSafe";
-import {DefaultExecutionContext} from "../dapps/o-banking/chain/actions/action";
+import {DefaultExecutionContext} from "../dapps/o-banking/chain/actions/defaultExecutionContext";
 
 export type UbiTimerContext = {
   nextUbiAt: number|null

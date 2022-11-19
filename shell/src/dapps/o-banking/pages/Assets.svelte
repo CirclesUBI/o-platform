@@ -13,7 +13,7 @@ import { assetBalances } from "../../../shared/stores/assetsBalances";
 import { BN } from "ethereumjs-util";
 import Label from "../../../shared/atoms/Label.svelte";
 import {Utilities} from "../chain/utilities";
-import {DefaultExecutionContext} from "../chain/actions/action";
+import {DefaultExecutionContext} from "../chain/actions/defaultExecutionContext";
 
 
 export let runtimeDapp: RuntimeDapp<any>;
@@ -42,10 +42,10 @@ let circles = {
 let erc20DisplayBalances: AssetBalance[] = [];
 
 async function updateXdaiBalance() {
-  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), $me.circlesAddress);
+  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly, $me.circlesAddress);
   const km = new KeyManager($me.circlesAddress);
   await km.load();
-  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), km.torusKeyAddress);
+  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly, km.torusKeyAddress);
 
   xdai.balance = Number.parseFloat(
     Utilities.fromWei(safeBalance.add(eoaBalance))

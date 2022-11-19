@@ -5,8 +5,8 @@ import {createMachine} from "xstate";
 import {BN} from "ethereumjs-util";
 import {TagTransactionDocument} from "../../../shared/api/data/types";
 import {CirclesSafe} from "../chain/circlesSafe";
-import {DefaultExecutionContext} from "../chain/actions/action";
 import {TransferThroughResultData} from "../chain/actions/transferThrough";
+import {DefaultExecutionContext} from "../chain/actions/defaultExecutionContext";
 
 export type TransferCirclesContextData = {
   safeAddress: string;

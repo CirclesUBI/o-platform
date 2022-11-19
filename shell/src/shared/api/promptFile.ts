@@ -8,14 +8,12 @@ import {
   prompt,
   PromptField,
 } from "@o-platform/o-process/dist/states/prompt";
-import EditorView from "@o-platform/o-editors/src/shared/EditorView.svelte";
 import PictureEditor from "@o-platform/o-editors/src/PictureEditor.svelte";
 import PicturePreview from "@o-platform/o-editors/src/PicturePreview.svelte";
 import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import { Generate } from "@o-platform/o-utils/dist/generate";
 import { StateNodeConfig } from "xstate/lib/types";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
-import {Environment} from "../environment";
 
 type UploadPictureSpec<TContext extends ProcessContext<any>> = {
   id?: string;
@@ -67,8 +65,7 @@ export function promptFile<
 
   const field = normalizePromptField(spec.field);
   spec.id = spec.id ? spec.id : field.name;
-  const generatedId = Generate.randomHexString(4);
-  const id = (x: string) => x; // `${spec.id}/${generatedId}/${x}`;
+  const id = (x: string) => x;
 
   const editDataFieldConfig: StateNodeConfig<TContext, StateSchema, TEvent> = {
     id: spec.id,

@@ -1,6 +1,6 @@
 import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
-import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 import {Utilities} from "../../o-banking/chain/utilities";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/defaultExecutionContext";
 
 export type EncryptedKey = {
   iv:  string,
@@ -30,7 +30,7 @@ export class KeyManager {
 
   constructor(safeAddress:string) {
     if (safeAddress) {
-      this._safeProxy = new CirclesSafe(safeAddress, DefaultExecutionContext.readonly());
+      this._safeProxy = new CirclesSafe(safeAddress, DefaultExecutionContext.readonly);
     }
   }
 
