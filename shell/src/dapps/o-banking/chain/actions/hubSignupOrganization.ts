@@ -1,5 +1,6 @@
-import {Action, ActionExecutionContext} from "./action";
+import {Action} from "./action";
 import {ethers} from "ethers";
+import {ActionExecutionContext} from "./actionExecutionContext";
 
 export type HubSignupOrganizationResultData = {
   safeAddress:string;

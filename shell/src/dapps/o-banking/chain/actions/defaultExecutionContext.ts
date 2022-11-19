@@ -1,4 +1,3 @@
-import {ActionExecutionContext} from "./action";
 import {EthAdapter, MetaTransactionData} from "@gnosis.pm/safe-core-sdk-types";
 import {CirclesNetworkConfig} from "../circlesNetworkConfig";
 import {Contract, ContractReceipt, ethers, Signer, Wallet} from "ethers";
@@ -7,6 +6,7 @@ import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import {Utilities} from "../utilities";
 import Safe, {SafeTransactionOptionalProps} from "@gnosis.pm/safe-core-sdk";
 import {OperationType} from "@gnosis.pm/safe-core-sdk-types/dist/src/types";
+import {ActionExecutionContext} from "./actionExecutionContext";
 
 export class DefaultExecutionContext implements ActionExecutionContext {
   readonly ethAdapter: EthAdapter;
@@ -21,7 +21,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
   }
   private static _readonlyExecutionContext: ActionExecutionContext|undefined;
 
-  static fromKey(privateKey:string) : DefaultExecutionContext {
+  static fromKey(privateKey:string) : ActionExecutionContext {
     const provider = new ethers.providers.JsonRpcProvider({
       url: defaultNetworkConfig.rpcUrl
     });
@@ -33,7 +33,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
     return new DefaultExecutionContext(signer, ethAdapter, defaultNetworkConfig);
   }
 
-  private static _readonly() : DefaultExecutionContext {
+  private static _readonly() : ActionExecutionContext {
     const provider = new ethers.providers.JsonRpcProvider({
       url: defaultNetworkConfig.rpcUrl
     });
@@ -44,6 +44,10 @@ export class DefaultExecutionContext implements ActionExecutionContext {
       signer: signer
     });
     return new DefaultExecutionContext(signer, ethAdapter, defaultNetworkConfig);
+  }
+
+  async signMessage(message: string): Promise<string> {
+    return this.ethAdapter.signMessage(message);
   }
 
   constructor(signer: Signer, ethAdapter:EthAdapter, networkConfig: CirclesNetworkConfig) {

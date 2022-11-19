@@ -105,7 +105,7 @@ const processDefinition = (processId: string) =>
               );
             }
             const executionContext = DefaultExecutionContext.fromKey(pk);
-            const signature = await executionContext.signer.signMessage(challenge);
+            const signature = await executionContext.signMessage(challenge);
 
             const sessionResult = await apiClient.mutate({
               mutation: VerifySessionChallengeDocument,

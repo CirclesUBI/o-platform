@@ -1,4 +1,5 @@
-import {Action, ActionExecutionContext} from "./action";
+import {Action} from "./action";
+import {ActionExecutionContext} from "./actionExecutionContext";
 
 export type RemoveOwnerResultData = {
   safeAddress:string;

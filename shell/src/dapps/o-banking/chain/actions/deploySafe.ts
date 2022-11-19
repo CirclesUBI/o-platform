@@ -1,5 +1,6 @@
-import {Action, ActionExecutionContext} from "./action";
+import {Action} from "./action";
 import {SafeAccountConfig, SafeFactory} from "@gnosis.pm/safe-core-sdk";
+import {ActionExecutionContext} from "./actionExecutionContext";
 
 export type DeploySafeResultData = {
   safeAddress:string;

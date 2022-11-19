@@ -1,4 +1,4 @@
-import {Action, ActionExecutionContext} from "./actions/action";
+import {Action} from "./actions/action";
 import {AddOwner, AddOwnerResultData} from "./actions/addOwner";
 import {HubSignupOrganization, HubSignupOrganizationResultData} from "./actions/hubSignupOrganization";
 import {HubSignupPerson, HubSignupPersonResultData} from "./actions/hubSignupPerson";
@@ -11,6 +11,7 @@ import {EthAdapter} from "@gnosis.pm/safe-core-sdk-types";
 import {CirclesNetworkConfig} from "./circlesNetworkConfig";
 import {DeploySafe} from "./actions/deploySafe";
 import {DefaultExecutionContext} from "./actions/defaultExecutionContext";
+import {ActionExecutionContext} from "./actions/actionExecutionContext";
 
 export class CirclesSafe {
   readonly safeAddress: string;

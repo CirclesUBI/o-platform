@@ -18,7 +18,6 @@ import {loadProfileBySafeAddress} from "../../../shared/api/loadProfileBySafeAdd
 import {me} from "../../../shared/stores/me";
 import {DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
 import {convertCirclesToTimeCircles, convertTimeCirclesToCircles} from "../../../shared/functions/displayCirclesAmount";
-import {TransactionReceipt} from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";
 import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
 import {ApiClient} from "../../../shared/apiConnection";
@@ -26,6 +25,7 @@ import {Currency} from "../../../shared/currency";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import {Utilities} from "../chain/utilities";
 import {BigNumber} from "ethers";
+import {TransferThroughResultData} from "../chain/actions/transferThrough";
 
 export type TransferContextData = {
   safeAddress: string;
@@ -33,7 +33,7 @@ export type TransferContextData = {
   recipientProfileId?: number;
   recipientProfile?: Profile;
   transitivePath: TransitivePath;
-  receipt: TransactionReceipt;
+  receipt: TransferThroughResultData;
   message?: string;
   tokens?: {
     currency: string;
