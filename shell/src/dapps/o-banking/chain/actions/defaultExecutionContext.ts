@@ -47,6 +47,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
   }
 
   constructor(signer: Signer, ethAdapter:EthAdapter, networkConfig: CirclesNetworkConfig) {
+    this.signer = signer;
     this.ethAdapter = ethAdapter;
     this.networkConfig = networkConfig;
   }

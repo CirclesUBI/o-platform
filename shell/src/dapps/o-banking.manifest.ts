@@ -2,13 +2,10 @@ import Transactions from "./o-banking/pages/Transactions.svelte";
 import Assets from "./o-banking/pages/Assets.svelte";
 import CrcDetail from "./o-banking/pages/CrcDetail.svelte";
 import XDaiDetail from "./o-banking/pages/XDaiDetail.svelte";
-
 import TransactionDetailPage from "./o-banking/pages/TransactionDetail.svelte";
-
 import { transfer, TransferContextData } from "./o-banking/processes/transfer";
 import { init } from "./o-banking/init";
 import { me } from "../shared/stores/me";
-
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
@@ -18,7 +15,6 @@ import { loadProfileByProfileId } from "../shared/api/loadProfileByProfileId";
 import { Profile } from "../shared/api/data/types";
 import { push } from "svelte-spa-router";
 import {Utilities} from "./o-banking/chain/utilities";
-// import {getUbi, getUbiInfo} from "../shared/ubiTimer2";
 
 const transactions: Page<any, BankingDappState> = {
   routeParts: ["=transactions"],
@@ -194,10 +190,6 @@ const xdaiDetail: Page<{ symbol: string }, BankingDappState> = {
   title: "common.asset",
   type: "page",
 };
-
-export interface DappState {
-  // put state here
-}
 
 export class BankingDappState {
   /**

@@ -1,9 +1,6 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
-import Card from "src/shared/atoms/Card.svelte";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import { AssetBalance } from "../../../shared/api/data/types";
-import { Currency } from "../../../shared/currency";
 
 export let symbol: string;
 export let title: string;
@@ -11,7 +8,6 @@ export let balance: string;
 export let variety: number;
 export let description: string;
 
-console.log("SUM ", symbol);
 let pictureUrl: string;
 let varietyDetail;
 

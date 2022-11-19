@@ -6,7 +6,7 @@ import {prompt} from "@o-platform/o-process/dist/states/prompt";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
-import TrustChangeConfirmation from "../molecules/TrustChangeConfirmation.svelte";
+import TrustChangeConfirmation from "../atoms/TrustChangeConfirmation.svelte";
 import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
 import {
   Profile,
@@ -15,7 +15,6 @@ import {
 } from "../../../shared/api/data/types";
 import {ApiClient} from "../../../shared/apiConnection";
 import {CirclesSafe} from "../chain/circlesSafe";
-import {SetTrustResultData} from "../chain/actions/setTrust";
 import {DefaultExecutionContext} from "../chain/actions/defaultExecutionContext";
 
 export type SetTrustContextData = {
@@ -28,16 +27,7 @@ export type SetTrustContextData = {
   successAction?: (data: SetTrustContextData) => void;
 };
 
-/**
- * This is the context on which the process will work.
- * The actual fields are defined above in the 'AuthenticateContextData' type.
- * The 'AuthenticateContextData' type is also the return value of the process (see bottom for the signature).
- */
 export type SetTrustContext = ProcessContext<SetTrustContextData>;
-
-/**
- * In case you want to translate the flow later, it's nice to have the strings at one place.
- */
 
 const editorContent: { [x: string]: EditorViewContext } = {
   recipient: {
@@ -89,11 +79,6 @@ const editorContent: { [x: string]: EditorViewContext } = {
     ),
   },
 };
-
-export async function fSetTrust(context: ProcessContext<SetTrustContextData>): Promise<SetTrustResultData> {
-  return new CirclesSafe(context.data.safeAddress, DefaultExecutionContext.fromKey(context.data.privateKey))
-    .setTrust(context.data.trustReceiver, context.data.trustLimit);
-}
 
 const processDefinition = (processId: string) =>
   createMachine<SetTrustContext, any>({
@@ -190,7 +175,8 @@ const processDefinition = (processId: string) =>
               );
             }
 
-            return await fSetTrust(context);
+            return await new CirclesSafe(context.data.safeAddress, DefaultExecutionContext.fromKey(context.data.privateKey))
+              .setTrust(context.data.trustReceiver, context.data.trustLimit);
           },
           onDone: "#showSuccess",
 

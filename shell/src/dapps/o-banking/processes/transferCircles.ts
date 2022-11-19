@@ -39,43 +39,6 @@ export type TransitivePath = {
   transfers: TransitivePathStep[]
 }
 
-export async function fTransferCircles (safeAddress:string, privateKey:string, path:TransitivePath, message:string) {
-  try {
-    const tokenOwners = [];
-    const sources = [];
-    const destinations = [];
-    const values = [];
-
-    path.transfers.forEach(transfer => {
-      tokenOwners.push(transfer.tokenOwner);
-      sources.push(transfer.from);
-      destinations.push(transfer.to);
-      values.push(new BN(transfer.value));
-    });
-
-    const transferTroughResult = await new CirclesSafe(safeAddress, DefaultExecutionContext.fromKey(privateKey))
-      .transferTrough(tokenOwners, sources, destinations, values);
-
-    if (transferTroughResult && message) {
-      const api = await window.o.apiClient.client.subscribeToResult();
-      await api.mutate({
-        mutation: TagTransactionDocument,
-        variables: {
-          tag: {
-            typeId: "o-banking:transfer:message:1",
-            value: message
-          },
-          transactionHash: transferTroughResult.txHash
-        }
-      });
-    }
-    return transferTroughResult;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
 const processDefinition = (processId: string) =>
   createMachine<TransferCirclesContext, any>({
     id: `${processId}:transferCircles`,
@@ -88,11 +51,38 @@ const processDefinition = (processId: string) =>
         id: "transferCircles",
         invoke: {
           src: async (context) => {
-            context.data.receipt = await fTransferCircles(
+            const tokenOwners = [];
+            const sources = [];
+            const destinations = [];
+            const values = [];
+
+            context.data.transitivePath.transfers.forEach(transfer => {
+              tokenOwners.push(transfer.tokenOwner);
+              sources.push(transfer.from);
+              destinations.push(transfer.to);
+              values.push(new BN(transfer.value));
+            });
+
+            const transferTroughResult = await new CirclesSafe(
               context.data.safeAddress,
-              context.data.privateKey,
-              context.data.transitivePath,
-              context.data.message);
+              DefaultExecutionContext.fromKey(context.data.privateKey))
+              .transferTrough(tokenOwners, sources, destinations, values);
+
+            if (transferTroughResult && context.data.message) {
+              const api = await window.o.apiClient.client.subscribeToResult();
+              await api.mutate({
+                mutation: TagTransactionDocument,
+                variables: {
+                  tag: {
+                    typeId: "o-banking:transfer:message:1",
+                    value: context.data.message
+                  },
+                  transactionHash: transferTroughResult.txHash
+                }
+              });
+            }
+            return transferTroughResult;
+
           },
           onDone: "#success",
           onError: "#error",
