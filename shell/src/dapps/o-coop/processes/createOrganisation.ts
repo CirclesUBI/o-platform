@@ -1,24 +1,22 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
 import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import * as yup from "yup";
-import { promptFile } from "../../../shared/api/promptFile";
-import { Profile, UpsertOrganisationDocument } from "../../../shared/api/data/types";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { me } from "../../../shared/stores/me";
-import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
-import { show } from "@o-platform/o-process/dist/actions/show";
+import {promptFile} from "../../../shared/api/promptFile";
+import {Profile, UpsertOrganisationDocument} from "../../../shared/api/data/types";
+import {me} from "../../../shared/stores/me";
+import {show} from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import { Environment } from "../../../shared/environment";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
 import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {Utilities} from "../../o-banking/chain/utilities";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -28,7 +26,7 @@ export type CreateOrganisationContextData = {
   circlesAddress: string;
   description: string;
   name: string;
-  organisationSafeProxy: GnosisSafeProxy;
+  organisationSafeProxy: CirclesSafe;
   location: string;
   lat: number;
   lon: number;
@@ -128,7 +126,7 @@ const processDefinition = (processId: string) =>
       }),
       avatarUrl: promptFile<CreateOrganisationContext, any>({
         field: "avatarUrl",
-        uploaded: (context, event) => {
+        uploaded: (_,__) => {
           //context.data.avatarUrl = event.data?.url;
           //context.data.avatarMimeType = event.data?.mimeType;
         },
@@ -199,14 +197,17 @@ const processDefinition = (processId: string) =>
               );
             }
 
-            const proxyFactory = new GnosisSafeProxyFactory(
-              RpcGateway.get(),
-              Environment.safeProxyFactoryAddress,
-              Environment.masterSafeAddress
-            );
 
-            context.data.organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
-            context.data.circlesAddress = context.data.organisationSafeProxy.address;
+            const ownerAddress = Utilities.addressFromPrivateKey(privateKey);
+            const executionContext = DefaultExecutionContext.fromKey(privateKey);
+
+            context.data.organisationSafeProxy = await CirclesSafe.deploySafe(
+              [ownerAddress],
+              1,
+              executionContext.signer,
+              executionContext.ethAdapter,
+              executionContext.networkConfig);
+            context.data.circlesAddress = context.data.organisationSafeProxy.safeAddress;
 
             console.log(context.data.organisationSafeProxy);
           },
@@ -221,7 +222,7 @@ const processDefinition = (processId: string) =>
         id: "signupOrganisation",
         entry: () => console.log(`signupOrganisation ...`),
         invoke: {
-          src: async (context, event) => {
+          src: async (context, _) => {
             const privateKey = sessionStorage.getItem("circlesKey");
             if (!privateKey) {
               throw new Error(
@@ -230,9 +231,7 @@ const processDefinition = (processId: string) =>
                 )
               );
             }
-
-            const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
-            const receipt = await hub.signupOrganisation(privateKey, context.data.organisationSafeProxy);
+            const receipt = await context.data.organisationSafeProxy.hubSignupOrganization();
             console.log(receipt);
           },
           onDone: "#upsertOrganisation",
@@ -266,7 +265,7 @@ const processDefinition = (processId: string) =>
             };
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
-            const result = await apiClient.mutate({
+            await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
               variables: {
                 organisation: organisation,
@@ -289,7 +288,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (_) => {},
           },
         }),
       },

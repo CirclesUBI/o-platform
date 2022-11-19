@@ -1,8 +1,8 @@
 import { loadProfileByProfileId } from "../api/loadProfileByProfileId";
 import { loadProfileBySafeAddress } from "../api/loadProfileBySafeAddress";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import {CommonTrust, CommonTrustDocument, CommonTrustQueryVariables, Profile} from "../api/data/types";
 import {ApiClient} from "../apiConnection";
+import {Utilities} from "../../dapps/o-banking/chain/utilities";
 
 export async function loadProfile(id: string, $me) {
   if (!id) {
@@ -15,7 +15,7 @@ export async function loadProfile(id: string, $me) {
   if (Number.parseInt(id) && !id.startsWith("0x")) {
     const profile = await loadProfileByProfileId(Number.parseInt(id));
     await setProfile(profile, $me);
-  } else if (RpcGateway.get().utils.isAddress(id)) {
+  } else if (Utilities.isAddress(id)) {
     const profile = await loadProfileBySafeAddress(id);
     return await setProfile(profile, $me);
   } else {

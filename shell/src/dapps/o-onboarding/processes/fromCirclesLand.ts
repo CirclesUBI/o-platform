@@ -4,18 +4,18 @@ import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import TextareaEditor from "../../../../../packages/o-editors/src/TextareaEditor.svelte";
-import { Account } from "web3-core";
 import * as bip39 from "bip39";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import gql from "graphql-tag";
 import DropdownSelectEditor from "../../../../../packages/o-editors/src/DropdownSelectEditor.svelte";
 import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import DropDownString from "../../../../../packages/o-editors/src/dropdownItems/DropDownString.svelte";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
 import { ConnectSafeContext } from "../../o-passport/processes/identify/connectSafe/connectSafe2";
 import { BN } from "ethereumjs-util";
 import { upsertIdentity } from "../../o-passport/processes/upsertIdentity";
 import { EoaData, SafeData } from "./initEvent";
+import {Utilities} from "../../o-banking/chain/utilities";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 
 export type FromCirclesLandContextData = {
   seedPhrase?: string;
@@ -60,7 +60,7 @@ const processDefinition = (processId: string) =>
             context.messages["seedPhrase"] = "";
 
             let keyFromMnemonic: string;
-            let account: Account;
+            let account: string;
 
             try {
               keyFromMnemonic =
@@ -76,10 +76,7 @@ const processDefinition = (processId: string) =>
             }
 
             try {
-              account =
-                RpcGateway.get().eth.accounts.privateKeyToAccount(
-                  keyFromMnemonic
-                );
+              account = Utilities.addressFromPrivateKey(keyFromMnemonic);
             } catch (e) {
               context.messages[
                 "seedPhrase"
@@ -110,7 +107,7 @@ const processDefinition = (processId: string) =>
                   }
                 `,
                 variables: {
-                  id: account.address.toLowerCase(),
+                  id: account.toLowerCase(),
                 },
               });
 
@@ -125,14 +122,14 @@ const processDefinition = (processId: string) =>
                 .map((o) => o.id);
 
               if (!context.data.foundSafeAddresses.length) {
-                const msg = window.o.i18n("dapps.o-onboarding.processes.fromCirclesLand.checkSeedphrase.errors.couldNotFindSafe", { values: { accountAddress: account.address }});
+                const msg = window.o.i18n("dapps.o-onboarding.processes.fromCirclesLand.checkSeedphrase.errors.couldNotFindSafe", { values: { accountAddress: account }});
                 context.messages["seedPhrase"] = msg;
                 throw new Error(msg);
               }
             }
 
             context.data.eoa = {
-              address: account.address,
+              address: account,
               privateKey: keyFromMnemonic,
               origin: "Imported",
               balance: new BN("0"),
@@ -198,8 +195,8 @@ const processDefinition = (processId: string) =>
               context.data.chooseSafeAddress?.trim() ??
               context.data.safe?.address;
             try {
-              const safeProxy = new GnosisSafeProxy(RpcGateway.get(), addressToCheck);
-              await safeProxy.getNonce();
+              const circlesSafe = new CirclesSafe(addressToCheck, DefaultExecutionContext.readonly());
+              await circlesSafe.getNonce();
 
               context.data.safe = {
                 address: addressToCheck,
@@ -223,7 +220,7 @@ const processDefinition = (processId: string) =>
       success: {
         id: "success",
         type: "final",
-        entry: (context) => {
+        entry: () => {
           // Start the upsert identity flow with the circles.garden profile
           // data:
           window.o.runProcess(upsertIdentity, {

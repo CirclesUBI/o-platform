@@ -12,15 +12,12 @@ import {
   InvitationTransactionQueryVariables, Profile,
   ProfileEvent
 } from "../../../shared/api/data/types";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { upsertIdentity } from "../../o-passport/processes/upsertIdentity";
 import { upsertRegistration } from "./registration/promptRegistration";
 import { promptConnectOrCreate } from "./connectOrCreate/promptConnectOrCreate";
 import { promptRedeemInvitation } from "./invitation/promptRedeemInvitation";
 import { promptGetInvited } from "./invitation/promptGetInvited";
 import { acquireSession } from "../../o-passport/processes/identify/acquireSession/acquireSession2";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { KeyManager } from "../../o-passport/data/keyManager";
 import { unlockKey } from "./unlockKey/unlockKey";
@@ -28,9 +25,11 @@ import { InitEvent, UbiData } from "./initEvent";
 import { InitContext } from "./initContext";
 import { push } from "svelte-spa-router";
 import { ApiClient } from "../../../shared/apiConnection";
-import { Environment } from "../../../shared/environment";
 import {me} from "../../../shared/stores/me";
 import { upsertIdentityShort } from "../../o-passport/processes/upsertIdentityShort";
+import {Utilities} from "../../o-banking/chain/utilities";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
 
 export function goToPreviouslyDesiredRouteIfExisting() {
   try {
@@ -127,7 +126,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
             actions: () => console.log(`!!context.safe?.address && !!context.ubi?.tokenAddress  -->  init.finalize`),
             target: "finalize"
           }, {
-            cond: context => false, // !!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != "",
+            cond: _ => false, // !!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != "",
             actions: () => console.log(`!!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != ""  -->  init.ubi`),
             target: "ubi"
           }, {
@@ -351,7 +350,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
                   forceCreate:
                     context.profile.successorOfCirclesAddress &&
                     !context.profile.circlesAddress,
-                  successAction: (data) => {
+                  successAction: () => {
                     (<any>window).runInitMachine();
                   },
                 });
@@ -537,7 +536,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           });
         }
       },
-      loadProfile: (ctx) => async (callback) => {
+      loadProfile: () => async (callback) => {
         try {
           const profile = await loadProfile();
           if (profile.firstName.trim() !== "" && profile.askedForEmailAddress) {
@@ -571,8 +570,8 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           return;
         }
         try {
-          const eoa = RpcGateway.get().eth.accounts.privateKeyToAccount(key);
-          if (!eoa) {
+          const eoa = Utilities.addressFromPrivateKey(key);
+          if (!Utilities.isAddress(eoa)) {
             callback({
               type: "EOA_ERROR",
               error: new Error(
@@ -582,14 +581,14 @@ export const initMachine = createMachine<InitContext, InitEvent>(
             return;
           }
 
-          const balance = await RpcGateway.get().eth.getBalance(eoa.address);
+          const balance = await Utilities.getBalance(DefaultExecutionContext.fromKey(key), eoa);
           callback({
             type: "GOT_EOA",
             eoa: {
-              address: eoa.address,
+              address: eoa,
               privateKey: key,
               origin: "Created",
-              balance: new BN(balance),
+              balance: new BN(balance.toString()),
             },
           });
         } catch (e) {
@@ -646,7 +645,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           });
         }
       },
-      loadUbi: (ctx) => async (callback) => {
+      loadUbi: () => async (callback) => {
         // TODO: This is missing an error response
         const hubSignupTransaction = await ApiClient.query<
           ProfileEvent,
@@ -664,27 +663,22 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           callback({ type: "NO_UBI" });
         }
       },
-      signupForUbi: (ctx) => async (callback) => {
+      signupForUbi: async (ctx) => {
         window.o.publishEvent(<any>{
           type: "shell.progress",
           message: "Retrieving your first UBI  ..",
         });
-        const hub = new CirclesHub(
-          RpcGateway.get(),
-          Environment.circlesHubAddress
-        );
+
         const privateKey = sessionStorage.getItem("circlesKey");
         if (!privateKey) throw new Error(`The private key is not unlocked`);
-        const safeProxy = new GnosisSafeProxy(
-          RpcGateway.get(),
-          ctx.safe.address
-        );
-        const receipt = await await hub.signup(privateKey, safeProxy);
+
+        const receipt = await new CirclesSafe(ctx.safe.address, DefaultExecutionContext.fromKey(privateKey))
+          .hubSignupPerson();
+
         console.log(receipt);
       },
-      validateInvitation: async (context, event) => {
+      validateInvitation: async () => {
         send({ type: "INVITATION_USED" });
-        // send({type: "INVITATION_UNUSED"});
       },
       sendAuthenticatedEvent: async (context) => {
         window.o.publishEvent(<PlatformEvent>{
@@ -711,14 +705,14 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           askedForEmailAddress: false,
           firstName: context.openLoginUserInfo?.name,
           avatarUrl: context.openLoginUserInfo?.profileImage,
-          successAction: (data) => {
+          successAction: () => {
             (<any>window).runInitMachine(context);
           },
         });
       },
       promptGetInvitedAndRestart: (context) => {
         window.o.runProcess(promptGetInvited, {
-          successAction: (data) => {
+          successAction: () => {
             (<any>window).runInitMachine(context);
           },
         });
@@ -732,7 +726,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
             ...context.profile,
             firstName: null,
             lastName: null,
-            successAction: (data) => {
+            successAction: () => {
               (<any>window).runInitMachine(context);
             },
           },
@@ -741,7 +735,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
       },
       unlockEoaAndRestart: (context) => {
         window.o.runProcess(unlockKey, {
-          successAction: (data) => {
+          successAction: () => {
             (<any>window).runInitMachine(context);
           },
         });
@@ -751,7 +745,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           forceCreate:
             context.profile.successorOfCirclesAddress &&
             !context.profile.circlesAddress,
-          successAction: (data) => {
+          successAction: () => {
             (<any>window).runInitMachine(context);
           },
         });

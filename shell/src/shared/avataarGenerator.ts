@@ -1,6 +1,6 @@
 import {createAvatar} from "@dicebear/avatars";
 import * as style from "@dicebear/avatars-avataaars-sprites";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import {Utilities} from "../dapps/o-banking/chain/utilities";
 
 export class AvataarGenerator {
     public static generate(seed:string) {
@@ -8,11 +8,11 @@ export class AvataarGenerator {
             return this.default();
         }
 
-        if (seed.startsWith("0x") && RpcGateway.get().utils.isAddress(seed)) {
-            seed = RpcGateway.get().utils.toChecksumAddress(seed);
+        if (seed.startsWith("0x") && Utilities.isAddress(seed)) {
+            seed = Utilities.toChecksumAddress(seed);
         }
 
-        const svg = createAvatar(style, {
+        return createAvatar(style, {
             seed: seed,
             // backgroundColor: "#65C9FF",
             topChance: 100,
@@ -30,11 +30,10 @@ export class AvataarGenerator {
             style: "transparent",
             dataUri: true,
         });
-        return svg;
     }
 
     public static default() {
-        const svg = createAvatar(style, {
+        return createAvatar(style, {
             seed: "default",
             // backgroundColor: "#65C9FF",
             topChance: 100,
@@ -52,6 +51,5 @@ export class AvataarGenerator {
             style: "transparent",
             dataUri: true,
         });
-        return svg;
     }
 }

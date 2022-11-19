@@ -2,9 +2,10 @@ import {ethers} from "ethers";
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {ActionExecutionContext} from "./actions/action";
 import {HDNode} from "ethers/lib/utils";
+import {TransactionReceipt} from "@ethersproject/abstract-provider";
 
 export class Utilities {
-  isAddress(value: string): boolean {
+  static isAddress(value: string): boolean {
     try {
       return !!ethers.utils.getAddress(value);
     } catch {
@@ -12,15 +13,30 @@ export class Utilities {
     }
   }
 
-  fromWei(value: BigNumberish): string {
+  static generateRandomKey() : {
+    address: string,
+    privateKey: string
+  } {
+    const wallet = ethers.Wallet.createRandom();
+    return {
+      address: wallet.address,
+      privateKey: wallet.privateKey
+    }
+  }
+
+  static toChecksumAddress(address: string): string {
+    return ethers.utils.getAddress(address);
+  }
+
+  static fromWei(value: BigNumberish): string {
     return ethers.utils.formatEther(value);
   }
 
-  toWei(value: number|string): BigNumber {
+  static toWei(value: number|string): BigNumber {
     return ethers.utils.parseEther(value.toString());
   }
 
-  mnemonicToPrivateKey(mnemonic:string) : {
+  static mnemonicToPrivateKey(mnemonic:string) : {
     address: string,
     privateKey: string
   } {
@@ -31,11 +47,22 @@ export class Utilities {
     };
   }
 
-  addressFromPrivateKey(privateKey:string) : string {
+  static addressFromPrivateKey(privateKey:string) : string {
     return new ethers.Wallet(privateKey, undefined).address;
   }
 
-  async getBalance(context: ActionExecutionContext, address: string): Promise<BigNumber> {
+  static async getBalance(context: ActionExecutionContext, address: string): Promise<BigNumber> {
     return context.ethAdapter.getBalance(address);
+  }
+
+  static async transferEth(context: ActionExecutionContext, fromAddress: string, toAddress: string, weiValue: BigNumber) : Promise<TransactionReceipt> {
+    const transactionResponse = await context.signer.sendTransaction({
+      from: fromAddress,
+      to: toAddress,
+      value: weiValue.toString(),
+      data: "0x"
+    });
+
+    return await transactionResponse.wait();
   }
 }

@@ -1,13 +1,13 @@
 <script lang="ts">
-import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import { onMount } from "svelte";
-import { KeyManager } from "../../o-passport/data/keyManager";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { BN } from "ethereumjs-util";
-import { me } from "../../../shared/stores/me";
-import Web3 from "web3";
+  import ItemCard from "../../../shared/atoms/ItemCard.svelte";
+  import {onMount} from "svelte";
+  import {KeyManager} from "../../o-passport/data/keyManager";
+  import {me} from "../../../shared/stores/me";
+  import {Utilities} from "../chain/utilities";
+  import {DefaultExecutionContext} from "../chain/actions/action";
+  import {BigNumber} from "ethers";
 
-let accountxDai = {
+  let accountxDai = {
   symbol: "xdai",
   icon: "",
   balance: "0",
@@ -28,29 +28,20 @@ let balances = [];
 
 onMount(async () => {
   const safeAddress = $me.circlesAddress;
-  const safeBalance = await RpcGateway.get().eth.getBalance(safeAddress);
+  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), safeAddress);
   const km = new KeyManager(safeAddress);
   await km.load();
-  const eoaBalance = await RpcGateway.get().eth.getBalance(km.torusKeyAddress);
+  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), km.torusKeyAddress);
 
-  const safeBalanceBn = new BN(safeBalance);
-  const safeBalanceAmount = Number.parseFloat(
-    Web3.utils.fromWei(new BN(safeBalance).toString(), "ether")
-  ).toFixed(2);
-
-  safexDai.balance = safeBalanceAmount;
+  safexDai.balance = Number.parseFloat(Utilities.fromWei(safeBalance)).toFixed(2);
   safexDai.title = "Safe";
   safexDai.address = safeAddress;
 
-  const eoaBalanceAmount = Number.parseFloat(
-    Web3.utils.fromWei(new BN(eoaBalance).toString(), "ether")
-  ).toFixed(2);
-
-  accountxDai.balance = eoaBalanceAmount;
+  accountxDai.balance = Number.parseFloat(Utilities.fromWei(eoaBalance)).toFixed(2);
   accountxDai.title = "Safe Owner";
   accountxDai.address = km.torusKeyAddress;
 
-  if (safeBalanceBn.gt(new BN("0"))) {
+  if (safeBalance.gt(BigNumber.from(0))) {
     balances = [accountxDai, safexDai];
   } else {
     balances = [accountxDai];

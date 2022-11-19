@@ -1,4 +1,3 @@
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -20,13 +19,10 @@ import { Sinker } from "@o-platform/o-process/dist/events/sinker";
 import { shellEvents } from "./shared/shellEvents";
 import { ApiConnection } from "./shared/apiConnection";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
-import { me } from "./shared/stores/me";
 import { Environment } from "./shared/environment";
 import { IShell } from "./iShell";
 
-
 dayjs.extend(relativeTime);
-RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 
 // TODO: Use a service like 'https://github.com/ipfs/js-ipfs/blob/6870873f0696bb5d8d91fce4a4ef1f7420443993/packages/ipfs-message-port-server/src/server.js#L134'
 //       to share data between different app domains.
@@ -81,11 +77,6 @@ export async function getProcessContext(): Promise<ProcessContext<any>> {
   };
 }
 
-(<any>window).rpcGateway = RpcGateway.get();
-
-
-
-
 const runningProcesses: {
   [id: string]: Process;
 } = {};
@@ -107,7 +98,7 @@ window.o = {
       const machineOptions = {
         context: contextModifier ? await contextModifier(await getProcessContext()) : await getProcessContext(),
       };
-      const { service, state, send } = useMachine(machine, machineOptions);
+      const { service, send } = useMachine(machine, machineOptions);
 
       const outEvents = new Subject<ProcessEvent>();
       const inEvents = new Subject<ProcessEvent>();

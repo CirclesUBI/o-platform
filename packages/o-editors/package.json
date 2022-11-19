@@ -13,7 +13,9 @@
     "svelte-file-dropzone": "^1.0.0",
     "yup": "^0.32.9",
     "ua-parser-js": "^0.7.28",
-    "qr-code-styling": "^1.6.0-rc.1"
+    "qr-code-styling": "^1.6.0-rc.1",
+    "bn.js": "^5.2.1",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
     "@types/yup": "^0.29.11",

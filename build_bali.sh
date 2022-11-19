@@ -42,11 +42,6 @@ cd .. || exit
 echo "Building 'o-process' .."
 cd o-process || exit
 npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'o-circles' .."
-cd o-circles || exit
-npx --no-install tsc || exit
 cd ../.. || exit
 
 echo "Generating graphql types for shared/api/data"

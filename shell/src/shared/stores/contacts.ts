@@ -2,8 +2,8 @@ import { readable } from "svelte/store";
 import { AggregateType, Contact, Contacts, EventType, Profile } from "../api/data/types";
 import { me } from "./me";
 import { Subscription } from "rxjs";
-import { ZERO_ADDRESS } from "@o-platform/o-circles/dist/consts";
 import { ApiClient } from "../apiConnection";
+import {ZERO_ADDRESS} from "../../dapps/o-banking/chain/consts";
 
 let contactsBySafeAddress: { [address: string]: Contact } = {};
 

@@ -14,10 +14,10 @@ import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { Jumplist } from "@o-platform/o-interfaces/dist/routables/jumplist";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { loadProfileByProfileId } from "../shared/api/loadProfileByProfileId";
 import { Profile } from "../shared/api/data/types";
 import { push } from "svelte-spa-router";
+import {Utilities} from "./o-banking/chain/utilities";
 // import {getUbi, getUbiInfo} from "../shared/ubiTimer2";
 
 const transactions: Page<any, BankingDappState> = {
@@ -43,9 +43,9 @@ const profileJumplist: Jumplist<any, BankingDappState> = {
   title: "Actions",
   isSystem: false,
   routeParts: ["=actions"],
-  items: async (params, runtimeDapp) => {
+  items: async (params) => {
     const getRecipientAddress = async () => {
-      if (RpcGateway.get().utils.isAddress(params.id)) {
+      if (Utilities.isAddress(params.id)) {
         return params.id;
       } else if (Number.isInteger(params.id)) {
         const profile = await loadProfileByProfileId(parseInt(params.id));
@@ -113,7 +113,7 @@ const assets: Page<any, BankingDappState> = {
 
 const transferTrigger: Trigger<any, BankingDappState> = {
   routeParts: ["=send", ":amount", ":to"],
-  action: async (params: any, runtimeDapp: DappManifest<any>) => {
+  action: async (params: any) => {
     const $me = handleTransferTrigger(params);
     window.o.runProcess(transfer, <TransferContextData>{
       safeAddress: $me.circlesAddress,
@@ -131,7 +131,7 @@ const transferTrigger: Trigger<any, BankingDappState> = {
 
 const transferTriggerRedirect: Trigger<any, BankingDappState> = {
   routeParts: ["=send", ":amount", ":to", ":redirectUrl"],
-  action: async (params: any, runtimeDapp: DappManifest<any>) => {
+  action: async (params: any) => {
     const $me = handleTransferTrigger(params);
     window.o.runProcess(transfer, <TransferContextData>{
       safeAddress: $me.circlesAddress,
@@ -140,7 +140,7 @@ const transferTriggerRedirect: Trigger<any, BankingDappState> = {
         currency: "crc",
         amount: params.amount,
       },
-      successAction: (context) => {
+      successAction: (_) => {
         window.location = params.redirectUrl;
         /*console.log("Transfer completed");
         window.close();*/
@@ -156,7 +156,7 @@ function handleTransferTrigger(params) {
   let $me: Profile;
   me.subscribe((me) => ($me = me))();
   console.log(params);
-  if (!RpcGateway.get().utils.isAddress(params.to)) {
+  if (!Utilities.isAddress(params.to)) {
     return $me;
   }
   if (!sessionStorage.getItem("circlesKey")) {
@@ -225,7 +225,7 @@ export const banking: DappManifest<BankingDappState> = {
   isEnabled: true,
   jumplist: profileJumplist,
 
-  initialize: async (stack, runtimeDapp) => {
+  initialize: async () => {
     // Do init stuff here
     const myProfileResult = await new Promise<Profile>((resolve) => {
       const unsub = me.subscribe((myProfile) => {

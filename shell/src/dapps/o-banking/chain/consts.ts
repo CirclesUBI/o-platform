@@ -1,13 +1,10 @@
-export const RPC_ENDPOINT = "https://rpc.circles.land";
-export const CRC_HUB_ADDRESS = "0x29b9a7fBb8995b2423a71cC17cf9810798F6C543";
-export const SAFE_MASTER_COPY_ADDRESS = "0x3E5c63644E683549055b9Be8653de26E0B4CD36E";
-export const SAFE_PROXY_FACTORY_ADDRESS = "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2";
 export const MULTI_SEND_CALL_ONLY_ADDRESS = "";
 export const MULTI_SEND_ADDRESS = "";
 export const SAFE_PROXY_FACTORY_ABI = [];
 export const MULTI_SEND_ABI = [];
 export const SAFE_MASTER_COPY_ABI = [];
 export const MULTI_SEND_CALL_ONLY_ABI = [];
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const CRC_ABI = [
   {
     "inputs": [

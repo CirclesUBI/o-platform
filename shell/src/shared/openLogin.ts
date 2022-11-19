@@ -1,6 +1,6 @@
 import OpenLogin, {OpenloginUserInfo} from "@toruslabs/openlogin";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
 import {Environment} from "./environment";
+import {Utilities} from "../dapps/o-banking/chain/utilities";
 
 let openLogin: OpenLogin;
 
@@ -10,8 +10,8 @@ export async function getOpenLogin(): Promise<GetOpenLoginResult> {
   if (Environment.useMockLogin)
   {
     return <GetOpenLoginResult>{
-      async login(params: any): Promise<{ privKey: string }> {
-        const acc = RpcGateway.get().eth.accounts.create();
+      async login(_): Promise<{ privKey: string }> {
+        const acc = Utilities.generateRandomKey();
         return {
           privKey: acc.privateKey
         };

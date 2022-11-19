@@ -5,9 +5,9 @@ import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import TextViewer from "@o-platform/o-editors/src/TextViewer.svelte";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import * as yup from "yup";
 import * as bip39 from "bip39";
+import {Utilities} from "../../../../o-banking/chain/utilities";
 
 export type CreateSafeContextData = {
   privateKey?: string;
@@ -18,27 +18,6 @@ export type CreateSafeContextData = {
 };
 
 export type CreateSafeContext = ProcessContext<CreateSafeContextData>;
-
-/**
- * In case you want to translate the flow later, it's nice to have the strings at one place.
- */
-const strings = {
-  choiceConnect: window.o.i18n("dapps.o-passport.processes.identify.createSafe.createSafe.strings.choiceConnect"),
-  choiceCreate: window.o.i18n("dapps.o-passport.processes.identify.createSafe.createSafe.strings.choiceCreate"),
-  labelExportSeedphrase: window.o.i18n(
-    "dapps.o-passport.processes.identify.createSafe.createSafe.strings.labelExportSeedphrase"
-  ),
-  buttonExportSeedphrase: window.o.i18n(
-    "dapps.o-passport.processes.identify.createSafe.createSafe.strings.buttonExportSeedphrase"
-  ),
-  // labelCheckSeedphrase: (context: CreateSafeContext) => `Please enter the ${context.data.checkWordIndex == 0 ? (context.data.checkWordIndex + 1).toString() + "st" : (context.data.checkWordIndex + 1).toString() + "nd"} word of your seedphrase:`,
-  labelCheckSeedphrase: window.o.i18n(
-    "dapps.o-passport.processes.identify.createSafe.createSafe.strings.labelCheckSeedphrase"
-  ),
-  buttonCheckSeedphrase: window.o.i18n(
-    "dapps.o-passport.processes.identify.createSafe.createSafe.strings.buttonCheckSeedphrase"
-  ),
-};
 
 const editorContent = {
   seedphrase: {
@@ -80,7 +59,7 @@ const processDefinition = (processId: string) =>
         id: "generateSeedPhrase",
         invoke: {
           src: async (context) => {
-            context.data.privateKey = RpcGateway.get().eth.accounts.create().privateKey;
+            context.data.privateKey = Utilities.generateRandomKey().privateKey;
             context.data.seedPhrase = bip39.entropyToMnemonic(context.data.privateKey.replace("0x", ""));
             const wordCount = context.data.seedPhrase.split(" ").length;
             context.data.checkWordIndex = randomIntFromInterval(0, wordCount - 1);
@@ -155,7 +134,6 @@ const processDefinition = (processId: string) =>
       storeSeedPhrase: {
         id: "storeSeedPhrase",
         entry: (context) => {
-          localStorage.setItem("isCreatingSafe", "true");
           localStorage.setItem("circlesKey", context.data.privateKey);
         },
         always: "#success",

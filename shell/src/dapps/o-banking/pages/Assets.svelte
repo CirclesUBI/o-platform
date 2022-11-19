@@ -5,15 +5,15 @@ import AssetCard from "../atoms/AssetCard.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { me } from "../../../shared/stores/me";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { KeyManager } from "../../o-passport/data/keyManager";
 import { displayCirclesAmount } from "src/shared/functions/displayCirclesAmount";
-import Web3 from "web3";
 import { AssetBalance } from "../../../shared/api/data/types";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import { assetBalances } from "../../../shared/stores/assetsBalances";
 import { BN } from "ethereumjs-util";
 import Label from "../../../shared/atoms/Label.svelte";
+import {Utilities} from "../chain/utilities";
+import {DefaultExecutionContext} from "../chain/actions/action";
 
 
 export let runtimeDapp: RuntimeDapp<any>;
@@ -42,16 +42,13 @@ let circles = {
 let erc20DisplayBalances: AssetBalance[] = [];
 
 async function updateXdaiBalance() {
-  const safeBalance = await RpcGateway.get().eth.getBalance($me.circlesAddress);
+  const safeBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), $me.circlesAddress);
   const km = new KeyManager($me.circlesAddress);
   await km.load();
-  const eoaBalance = await RpcGateway.get().eth.getBalance(km.torusKeyAddress);
+  const eoaBalance = await Utilities.getBalance(DefaultExecutionContext.readonly(), km.torusKeyAddress);
 
   xdai.balance = Number.parseFloat(
-    Web3.utils.fromWei(
-      new BN(safeBalance).add(new BN(eoaBalance)).toString(),
-      "ether"
-    )
+    Utilities.fromWei(safeBalance.add(eoaBalance))
   ).toFixed(2);
 }
 
@@ -126,7 +123,7 @@ $: {
         return {
           ...o,
           token_balance: (o.token_balance = parseFloat(
-            RpcGateway.get().utils.fromWei(o.token_balance, "ether")
+            Utilities.fromWei(o.token_balance)
           ).toFixed(2)),
         };
       }

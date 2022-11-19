@@ -7,11 +7,11 @@ import { promptChoice } from "../../../o-passport/processes/identify/prompts/pro
 import ButtonStackSelector from "@o-platform/o-editors/src/ButtonStackSelector.svelte";
 import { UpsertRegistrationContext } from "../registration/promptRegistration";
 import { loadProfile } from "../../../o-passport/processes/identify/services/loadProfile";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { connectSafe } from "../connectSafe";
-import { Environment } from "../../../../shared/environment";
+import {CirclesSafe} from "../../../o-banking/chain/circlesSafe";
+import {Utilities} from "../../../o-banking/chain/utilities";
+import {DefaultExecutionContext} from "../../../o-banking/chain/actions/action";
 
 export type PromptConnectOrCreateContextData = {
   forceCreate?: boolean;
@@ -85,8 +85,7 @@ const processDefinition = (processId: string) =>
               "dapps.o-onboarding.processes.connectOrCreate.promptConnectOrCreate.processDefinition.connectOrCreate.options.newSafe"
             ),
             target: "#newSafe",
-            class: "btn btn-outline",
-            action: (context) => {},
+            class: "btn btn-outline"
           },
           {
             key: "importSafe",
@@ -94,8 +93,7 @@ const processDefinition = (processId: string) =>
               "dapps.o-onboarding.processes.connectOrCreate.promptConnectOrCreate.processDefinition.connectOrCreate.options.importSafe"
             ),
             target: "#importSafe",
-            class: "btn btn-outline",
-            action: (context) => {},
+            class: "btn btn-outline"
           },
         ],
         navigation: {
@@ -113,7 +111,7 @@ const processDefinition = (processId: string) =>
           });
         },
         invoke: {
-          src: async (context) => {
+          src: async (_) => {
             const myProfile = await loadProfile();
 
             const privateKey = sessionStorage.getItem("circlesKey");
@@ -125,12 +123,14 @@ const processDefinition = (processId: string) =>
               );
             }
 
-            const proxyFactory = new GnosisSafeProxyFactory(
-              RpcGateway.get(),
-              Environment.safeProxyFactoryAddress,
-              Environment.masterSafeAddress
-            );
-            const safeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
+            const ownerAddress = Utilities.addressFromPrivateKey(privateKey);
+            const executionContext = DefaultExecutionContext.fromKey(privateKey);
+            const circlesSafe = await CirclesSafe.deploySafe(
+              [ownerAddress],
+              1,
+              executionContext.signer,
+              executionContext.ethAdapter,
+              executionContext.networkConfig);
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
@@ -138,7 +138,7 @@ const processDefinition = (processId: string) =>
               variables: {
                 ...myProfile,
                 status: "eoa",
-                circlesAddress: safeProxy.address,
+                circlesAddress: circlesSafe.safeAddress,
                 displayCurrency: DisplayCurrency.Eurs,
               },
             });
@@ -171,8 +171,6 @@ const processDefinition = (processId: string) =>
         id: "importSafe",
         invoke: {
           src: async (context) => {
-            //            const myProfile = await loadProfile();
-
             const privateKey = sessionStorage.getItem("circlesKey");
             if (!privateKey) {
               throw new Error(

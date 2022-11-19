@@ -2,6 +2,15 @@
  * Contains environment variables which are filled in by webpack.
  */
 export class Environment {
+  /**
+   * When an imported EOA doesn't have enough xDai to perform an
+   * interaction then this is the amount that will be transferred
+   * to the EOA in order to do the transaction.
+   */
+  static get controlledSafeMinBalance() {
+    return 0.005
+  };
+
   public static get showLanguageSwitcher(): boolean {
     // @ts-ignore
     return "__SHOW_LANGUAGE_SWITCHER__" == "true";

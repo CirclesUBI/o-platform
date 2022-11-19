@@ -5,13 +5,11 @@ import {createMachine} from "xstate";
 import {prompt} from "@o-platform/o-process/dist/states/prompt";
 import CurrencyTransfer from "@o-platform/o-editors/src/CurrencyTransfer.svelte";
 import {ipc} from "@o-platform/o-process/dist/triggers/ipc";
-import {transferXdai} from "./transferXdai";
 import {transferCircles, TransitivePath} from "./transferCircles";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import * as yup from "yup";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
 import {BN} from "ethereumjs-util";
 import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
 import {SetTrustContext} from "./setTrust";
@@ -26,6 +24,8 @@ import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
 import {ApiClient} from "../../../shared/apiConnection";
 import {Currency} from "../../../shared/currency";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
+import {Utilities} from "../chain/utilities";
+import {BigNumber} from "ethers";
 
 export type TransferContextData = {
   safeAddress: string;
@@ -126,12 +126,10 @@ const processDefinition = (processId: string) =>
         always: [
           {
             cond: (context) => {
-              const web3 = RpcGateway.get();
-
-              const hasSender = web3.utils.isAddress(context.data.safeAddress);
-              const hasRecipient = web3.utils.isAddress(context.data.recipientAddress);
+              const hasSender = Utilities.isAddress(context.data.safeAddress);
+              const hasRecipient = Utilities.isAddress(context.data.recipientAddress);
               const amount = new BN(
-                !context.data.tokens?.amount ? "0" : web3.utils.toWei(context.data.tokens?.amount?.toString(), "ether")
+                !context.data.tokens?.amount ? "0" : Utilities.toWei(context.data.tokens?.amount?.toString()).toString()
               );
               const hasAmount = amount.gt(new BN("0"));
               //const isXdai = context.data.tokens?.currency == "xdai";
@@ -279,12 +277,7 @@ const processDefinition = (processId: string) =>
                 "dapps.o-banking.processes.transfer.strings.currencyCircles"
               )),
               __typename: "Currency",
-            },
-            {
-              value: "xdai",
-              label: (strings.currencyXdai = window.o.i18n("dapps.o-banking.processes.transfer.strings.currencyXdai")),
-              __typename: "Currency",
-            },
+            }
           ],
         },
         dataSchema: yup.object().shape({
@@ -321,8 +314,7 @@ const processDefinition = (processId: string) =>
               null
             );
 
-            const circlesValueInWei = RpcGateway.get()
-              .utils.toWei(amount.toString() ?? "0", "ether")
+            const circlesValueInWei = Utilities.toWei(amount)
               .toString();
 
             context.data.transitivePath = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
@@ -342,7 +334,7 @@ const processDefinition = (processId: string) =>
             cond: (context, _) => {
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] == "") return false;
 
-              const maxFlowInWei = new BN(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
+              const maxFlowInWei = BigNumber.from(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
               console.log("maxFlowInWei", maxFlowInWei);
 
               const amount =
@@ -353,12 +345,7 @@ const processDefinition = (processId: string) =>
                     ).toString()
                   : context.data.tokens.amount;
 
-              const circlesValueInWei = new BN(
-                RpcGateway.get()
-                  .utils.toWei(amount.toString() ?? "0", "ether")
-                  .toString()
-              );
-
+              const circlesValueInWei = Utilities.toWei(amount.toString() ?? 0);
               if (maxFlowInWei.lt(circlesValueInWei) || context.data.transitivePath.transfers.length == 0) {
                 console.log(
                   `The max flow is smaller than the entered value (${circlesValueInWei}). Max flow: ${maxFlowInWei}`
@@ -380,7 +367,7 @@ const processDefinition = (processId: string) =>
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] != "") {
                 formattedMax =
                   convertCirclesToTimeCircles(parseFloat(
-                    RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether")
+                    Utilities.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()])
                       .toString()), new Date().toJSON()
                   ).toFixed(0) + ".00";
               }
@@ -431,26 +418,9 @@ const processDefinition = (processId: string) =>
         },
         navigation: {
           previous: "#message",
-          next: "#checkChoice",
+          next: "#callCirclesTransfer",
         },
       }),
-      checkChoice: {
-        id: "checkChoice",
-        always: [
-          {
-            cond: (context) => {
-              return context.data.tokens.currency.toLowerCase() == "crc";
-            },
-            target: "callCirclesTransfer",
-          },
-          {
-            cond: (context) => {
-              return context.data.tokens.currency.toLowerCase() == "xdai";
-            },
-            target: "callXdaiTransfer",
-          },
-        ],
-      },
       callCirclesTransfer: {
         id: "callCirclesTransfer",
         on: <any>{
@@ -484,35 +454,6 @@ const processDefinition = (processId: string) =>
               context.data.transitivePath = event.data.transitivePath;
               context.data.receipt = event.data.receipt;
               console.log("Transfer CRC returned:", event.data);
-            },
-          },
-          onError: "#error",
-        },
-      },
-      callXdaiTransfer: {
-        id: "callXdaiTransfer",
-        on: <any>{
-          ...ipc("callXdaiTransfer"),
-        },
-        invoke: {
-          src: transferXdai.stateMachine(`${processId}:transfer:transferXdai`),
-          data: {
-            data: (context, _) => {
-              return {
-                safeAddress: context.data.safeAddress,
-                recipientAddress: context.data.recipientAddress,
-                amount: context.data.tokens.amount,
-                privateKey: sessionStorage.getItem("circlesKey"),
-                message: context.data.message,
-              };
-            },
-            messages: {},
-            dirtyFlags: {},
-          },
-          onDone: {
-            target: "#showSuccess",
-            actions: (context, event) => {
-              context.data.receipt = event.data.receipt;
             },
           },
           onError: "#error",

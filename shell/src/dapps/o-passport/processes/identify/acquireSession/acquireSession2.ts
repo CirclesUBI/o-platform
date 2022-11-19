@@ -3,16 +3,17 @@ import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processCon
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import { ipc } from "@o-platform/o-process/dist/triggers/ipc";
-import { AuthenticateContext } from "./authenticate/authenticate2";
 import { RequestSessionChallengeDocument, VerifySessionChallengeDocument } from "../../../../../shared/api/data/types";
 import { loginWithTorus } from "../../../../o-onboarding/processes/loginWithTorus";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import HtmlViewer from "../../../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import ErrorPage from "../../../../../shared/atoms/Error.svelte";
+import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/action";
+
 
 export type AcquireSessionContextData = {
+  errorRequestingChallenge?: string;
   appId?: string;
   eoaAddress?: string;
   userInfo?: any;
@@ -30,7 +31,7 @@ const processDefinition = (processId: string) =>
     states: {
       // Include a default 'error' state that propagates the error by re-throwing it in an action.
       // TODO: Check if this works as intended
-      ...fatalError<AuthenticateContext, any>("error"),
+      ...fatalError<AcquireSessionContext, any>("error"),
 
       loginWithTorus: {
         on: {
@@ -39,7 +40,7 @@ const processDefinition = (processId: string) =>
         invoke: {
           id: "loginWithTorus",
           src: loginWithTorus.stateMachine(`loginWithTorus`),
-          data: (context, event) => {
+          data: (context) => {
             return {
               data: {
                 useMockProfileIndex: context.data.useMockProfileIndex
@@ -103,13 +104,13 @@ const processDefinition = (processId: string) =>
                 )
               );
             }
-            const acc = RpcGateway.get().eth.accounts.privateKeyToAccount(pk);
-            const { message, signature } = acc.sign(challenge);
+            const executionContext = DefaultExecutionContext.fromKey(pk);
+            const signature = executionContext.signer.signMessage(challenge);
 
             const sessionResult = await apiClient.mutate({
               mutation: VerifySessionChallengeDocument,
               variables: {
-                challenge: message,
+                challenge: challenge,
                 signature: signature,
               },
             });
@@ -145,7 +146,7 @@ const processDefinition = (processId: string) =>
       }),
 
       // Wait for the user to enter the code he received in the login-email
-      errorRequestingChallenge: prompt<AuthenticateContext, any>({
+      errorRequestingChallenge: prompt<AcquireSessionContext, any>({
         field: "errorRequestingChallenge",
         entry: (context) => {
           context.data.errorRequestingChallenge = window.o.i18n(
@@ -158,7 +159,7 @@ const processDefinition = (processId: string) =>
           submitButtonText: window.o.i18n(
             "dapps.o-passport.processes.identify.acquireSession.acquireSession2.acquireSession.errorRequestingChallenge.submitButtonText"
           ),
-          html: (context) => context.data.errorSendingAuthMail,
+          html: (context) => context.data.errorRequestingChallenge,
         },
         navigation: {
           next: "#acquireSession",
@@ -178,7 +179,7 @@ const processDefinition = (processId: string) =>
             context.data.successAction(context.data);
           }
         },
-        data: (context) => {
+        data: () => {
           return "if you don't always return something, everything will break!";
         },
         type: "final",

@@ -1,9 +1,11 @@
 import {EthAdapter, MetaTransactionData} from "@gnosis.pm/safe-core-sdk-types";
 import Safe, {SafeTransactionOptionalProps} from "@gnosis.pm/safe-core-sdk";
 import {OperationType} from "@gnosis.pm/safe-core-sdk-types/dist/src/types";
-import {TransactionReceipt} from "web3-core";
-import {Contract} from "ethers";
+import {Contract, ContractReceipt, ethers, Signer, Wallet} from "ethers";
 import {CirclesNetworkConfig} from "../circlesNetworkConfig";
+import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
+import {defaultNetworkConfig} from "../defaultNetworkConfig";
+import {Utilities} from "../utilities";
 
 export interface Action<TResult> {
   execute(context: ActionExecutionContext) : Promise<TResult>;
@@ -12,16 +14,43 @@ export interface Action<TResult> {
 export interface ActionExecutionContext {
   networkConfig: CirclesNetworkConfig;
   ethAdapter: EthAdapter;
+  signer: Signer;
   getSafe(safeAddress:string) : Promise<Safe>;
-  callContract(safeAddress:string, contractAddress: string, callData: string) : Promise<TransactionReceipt>;
+  callContract(safeAddress:string, contractAddress: string, callData: string) : Promise<ContractReceipt>;
   getTokenAddress(safeAddress:string): Promise<string|undefined>;
 }
 
 export class DefaultExecutionContext implements ActionExecutionContext {
   readonly ethAdapter: EthAdapter;
   readonly networkConfig: CirclesNetworkConfig;
+  readonly signer: Signer;
 
-  constructor(ethAdapter:EthAdapter, networkConfig: CirclesNetworkConfig) {
+  static fromKey(privateKey:string) : DefaultExecutionContext {
+    const provider = new ethers.providers.JsonRpcProvider({
+      url: defaultNetworkConfig.rpcUrl ,
+    });
+    const signer = new Wallet(privateKey, provider);
+    const ethAdapter = new EthersAdapter({
+      ethers,
+      signer: signer
+    });
+    return new DefaultExecutionContext(signer, ethAdapter, defaultNetworkConfig);
+  }
+
+  static readonly() : DefaultExecutionContext {
+    const provider = new ethers.providers.JsonRpcProvider({
+      url: defaultNetworkConfig.rpcUrl ,
+    });
+    const randomKey = Utilities.generateRandomKey();
+    const signer = new Wallet(randomKey.privateKey, provider);
+    const ethAdapter = new EthersAdapter({
+      ethers,
+      signer: signer
+    });
+    return new DefaultExecutionContext(signer, ethAdapter, defaultNetworkConfig);
+  }
+
+  constructor(signer: Signer, ethAdapter:EthAdapter, networkConfig: CirclesNetworkConfig) {
     this.ethAdapter = ethAdapter;
     this.networkConfig = networkConfig;
   }
@@ -35,7 +64,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
     });
   }
 
-  async callContract(safeAddress:string, contractAddress: string, callData: string) : Promise<TransactionReceipt> {
+  async callContract(safeAddress:string, contractAddress: string, callData: string) : Promise<ContractReceipt> {
     const transactions: MetaTransactionData[] = [{
       to: contractAddress,
       data: callData,
@@ -54,7 +83,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
     await safe.signTransaction(transaction);
 
     const txResult = await safe.executeTransaction(transaction);
-    return txResult.promiEvent;
+    return await txResult.transactionResponse.wait();
   }
 
   async getTokenAddress(safeAddress: string): Promise<string | undefined | null> {

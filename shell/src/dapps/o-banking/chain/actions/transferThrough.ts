@@ -4,6 +4,8 @@ import {BigNumber, ethers} from "ethers";
 export type TransferThroughResultData = {
   safeAddress:string;
   txHash:string;
+  blockHash:string;
+  blockNumber:number;
 };
 
 export class TransferThrough implements Action<TransferThroughResultData> {
@@ -34,7 +36,7 @@ export class TransferThrough implements Action<TransferThroughResultData> {
         this.tokenOwners,
         this.sources,
         this.destinations,
-        this.values
+        this.values.map(o => o.toString())
       ]
     );
 
@@ -45,7 +47,9 @@ export class TransferThrough implements Action<TransferThroughResultData> {
 
     return {
       safeAddress: this.safeAddress,
-      txHash: transferThroughReceipt.transactionHash
+      txHash: transferThroughReceipt.transactionHash,
+      blockHash: transferThroughReceipt.blockHash,
+      blockNumber: transferThroughReceipt.blockNumber
     }
   }
 }

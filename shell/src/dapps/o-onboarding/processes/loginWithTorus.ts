@@ -8,7 +8,6 @@ import PinInputEditor from "../../../../../packages/o-editors/src/Pin/PinInputEd
 import * as yup from "yup";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import { KeyManager } from "../../o-passport/data/keyManager";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { show } from "@o-platform/o-process/dist/actions/show";
@@ -24,6 +23,7 @@ import { AvataarGenerator } from "../../../shared/avataarGenerator";
 import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
 import { OpenloginUserInfo } from "@toruslabs/openlogin";
 import { Environment } from "../../../shared/environment";
+import {Utilities} from "../../o-banking/chain/utilities";
 
 export type LoginWithTorusContextData = {
   chooseFlow?: {
@@ -127,7 +127,7 @@ const processDefinition = (processId: string) =>
               ),
             },
             html: (context) =>
-              `<img style="max-width:128px;" src="${
+              `<img alt="inviter profile" style="max-width:128px;" src="${
                 !context.data.inviterProfile.avatarUrl
                   ? AvataarGenerator.generate(context.data.inviterProfile.circlesAddress)
                   : context.data.inviterProfile.avatarUrl
@@ -226,7 +226,7 @@ const processDefinition = (processId: string) =>
             src: async (context) => {
               const mockProfile = Environment.getTestProfile(context.data.useMockProfileIndex);
               const openLogin = <GetOpenLoginResult>{
-                async login(params: any): Promise<{ privKey: string }> {
+                async login(): Promise<{ privKey: string }> {
                   return {
                     privKey: mockProfile.privateKey,
                   };
@@ -282,23 +282,7 @@ const processDefinition = (processId: string) =>
             },
           ],
           invoke: {
-            src: async (context) => {
-              /*
-              const openLogin = await getOpenLogin();
-              const authResult = await openLogin.triggerLogin({
-                typeOfLogin: "google",
-                verifier: "circles-google-testnet",
-                clientId:
-                  "906916064114-5m4nsuvu0uhs2gnav4me4rsdrnlf445k.apps.googleusercontent.com",
-              });
-              context.data.privateKey = authResult.privateKey;
-              context.data.userInfo = authResult.userInfo;
-              return {
-                privateKey: context.data.privateKey,
-                userInfo: context.data.userInfo,
-              };
-
-               */
+            src: async () => {
               const openLogin = await getOpenLogin();
               const privateKey = await openLogin.login({
                 loginProvider: "google",
@@ -346,7 +330,7 @@ const processDefinition = (processId: string) =>
             },
           ],
           invoke: {
-            src: async (context) => {
+            src: async () => {
               const openLogin = await getOpenLogin();
               const privateKey = await openLogin.login({
                 loginProvider: "apple",
@@ -378,7 +362,7 @@ const processDefinition = (processId: string) =>
       facebook: {
         id: "facebook",
         invoke: {
-          src: async (context) => {
+          src: async () => {
             const openLogin = await getOpenLogin();
             const privateKey = await openLogin.login({
               loginProvider: "facebook",
@@ -518,12 +502,12 @@ const processDefinition = (processId: string) =>
           invoke: {
             src: async (context) => {
               const km = new KeyManager(null);
-              const account = RpcGateway.get().eth.accounts.privateKeyToAccount(context.data.privateKey);
+              const account = Utilities.addressFromPrivateKey(context.data.privateKey);
 
-              await km.addEoa(account.address, account.privateKey, context.data.encryptionPin, "torus");
+              await km.addEoa(account, context.data.privateKey, context.data.encryptionPin, "torus");
 
-              context.data.accountAddress = account.address;
-              sessionStorage.setItem("circlesKey", account.privateKey);
+              context.data.accountAddress = account;
+              sessionStorage.setItem("circlesKey", context.data.privateKey);
 
               delete context.data.privateKey;
               delete context.data.encryptionPin;
@@ -544,19 +528,19 @@ const processDefinition = (processId: string) =>
             field: {
               name: "",
               get: () => undefined,
-              set: (o: any) => {},
+              set: (_) => {},
             },
           }),
         },
         success: {
           id: "success",
           type: "final",
-          entry: (context, event: PlatformEvent) => {
+          entry: (context) => {
             if (context.data.successAction) {
               context.data.successAction(context.data);
             }
           },
-          data: (context, event) => {
+          data: (context) => {
             delete context.data.privateKey;
             return context.data;
           },

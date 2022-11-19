@@ -1,29 +1,34 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
 import TextareaEditor from "../../../../../packages/o-editors/src/TextareaEditor.svelte";
-import { ConnectSafeContext } from "../../o-passport/processes/identify/connectSafe/connectSafe2";
-import * as bip39 from "bip39";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { Account } from "web3-core";
-import {FindSafesByOwnerDocument,FindSafesByOwnerQueryVariables,ImportOrganisationsDocument,SafeInfo,UpsertProfileDocument,} from "../../../shared/api/data/types";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+import {ConnectSafeContext} from "../../o-passport/processes/identify/connectSafe/connectSafe2";
+import {
+  FindSafesByOwnerDocument,
+  FindSafesByOwnerQueryVariables,
+  ImportOrganisationsDocument,
+  SafeInfo,
+  UpsertProfileDocument,
+} from "../../../shared/api/data/types";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
-import { KeyManager } from "../../o-passport/data/keyManager";
-import { loadProfile } from "../../o-passport/processes/identify/services/loadProfile";
+import {KeyManager} from "../../o-passport/data/keyManager";
+import {loadProfile} from "../../o-passport/processes/identify/services/loadProfile";
 import SimpleDropDownEditor from "../../../../../packages/o-editors/src/SimpleDropDownEditor.svelte";
-import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
+import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import DropDownCandidateSafe from "../views/atoms/DropDownCandidateSafe.svelte";
-import { ApiClient } from "../../../shared/apiConnection";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { BN } from "ethereumjs-util";
+import {ApiClient} from "../../../shared/apiConnection";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {Utilities} from "../../o-banking/chain/utilities";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {Environment} from "../../../shared/environment";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
 
 export type ConnectSafeInfo = {
   success: boolean;
   errorMessage?: string;
-  importedAccount?: Account;
+  importedAccount?: { address: string, privateKey: string };
   ownedSafes?: { [x: string]: SafeInfo & { isAlive: boolean } };
 };
 
@@ -62,9 +67,10 @@ const editorContent = {
 };
 
 async function safeInfoFromSeedphrase(context: ConnectSafeContext): Promise<ConnectSafeInfo> {
-  let keyFromMnemonic: string;
+  let keyFromMnemonic: { privateKey: string, address: string };
   try {
-    keyFromMnemonic = "0x" + bip39.mnemonicToEntropy(context.data.seedPhrase.replace(/\s\s+/g, " "));
+    keyFromMnemonic = Utilities.mnemonicToPrivateKey(context.data.seedPhrase.replace(/\s\s+/g, " "));
+    //keyFromMnemonic = "0x" + bip39.mnemonicToEntropy();
   } catch (e) {
     return {
       success: false,
@@ -72,10 +78,8 @@ async function safeInfoFromSeedphrase(context: ConnectSafeContext): Promise<Conn
     };
   }
 
-  const importedAccount = RpcGateway.get().eth.accounts.privateKeyToAccount(keyFromMnemonic);
-
   const candidates = await ApiClient.query<SafeInfo[], FindSafesByOwnerQueryVariables>(FindSafesByOwnerDocument, {
-    owner: importedAccount.address.toLowerCase(),
+    owner: keyFromMnemonic.address.toLowerCase(),
   });
 
   if (candidates.length == 0) {
@@ -83,7 +87,7 @@ async function safeInfoFromSeedphrase(context: ConnectSafeContext): Promise<Conn
       success: false,
       errorMessage:
         window.o.i18n("dapps.o-onboarding.processes.connectSafe.safeInfoFromSeedphrase.foundNoSafes") +
-        `${importedAccount.address.toLowerCase()}.`,
+        `${keyFromMnemonic.address.toLowerCase()}.`,
     };
   }
 
@@ -94,7 +98,7 @@ async function safeInfoFromSeedphrase(context: ConnectSafeContext): Promise<Conn
 
   return {
     success: true,
-    importedAccount: importedAccount,
+    importedAccount: keyFromMnemonic,
     ownedSafes: Object.values(candidatesBySafeAddress)
       .map((o) => {
         const nowMinus90days = Date.now() - 90 * 24 * 60 * 60 * 1000;
@@ -264,40 +268,38 @@ const processDefinition = (processId: string) =>
               context.data.selectedSafe = context.data.availableSafes[context.data.selectedSafe];
             }
 
-            const oldOwnerBalance = await RpcGateway.get().eth.getBalance(
-              context.data.availableSafes.importedAccount.address
-            );
-            if (new BN(oldOwnerBalance).lt(new BN(RpcGateway.get().utils.toWei("0.01", "ether")))) {
-              const currentTorusEoa = RpcGateway.get().eth.accounts.privateKeyToAccount(
+            // Transfer the 'controlledSafeMinBalance' to the eoa if it's got not enough balance to pay for gas
+            const oldOwnerBalance = await Utilities.getBalance(
+              DefaultExecutionContext.readonly(),
+              context.data.availableSafes.importedAccount.address);
+
+            if (oldOwnerBalance.lt(Utilities.toWei(Environment.controlledSafeMinBalance))) {
+              const circlesKey = sessionStorage.getItem("circlesKey");
+              const currentTorusEoa = Utilities.addressFromPrivateKey(
                 sessionStorage.getItem("circlesKey")
               );
-              const signedTx = await currentTorusEoa.signTransaction({
-                from: currentTorusEoa.address,
-                to: context.data.availableSafes.importedAccount.address,
-                value: new BN(RpcGateway.get().utils.toWei("0.01", "ether")),
-                gasPrice: await RpcGateway.getGasPrice(),
-                gas: 37000,
-                nonce: await RpcGateway.get().eth.getTransactionCount(currentTorusEoa.address),
-              });
 
-              await RpcGateway.get().eth.sendSignedTransaction(signedTx.rawTransaction);
+              const result = await Utilities.transferEth(
+                DefaultExecutionContext.fromKey(circlesKey),
+                currentTorusEoa,
+                context.data.availableSafes.importedAccount.address,
+                Utilities.toWei(0.01));
+
+              console.log(`Transferred ${Environment.controlledSafeMinBalance} xdai to ${context.data.availableSafes.importedAccount.address}. Tx hash: ${result.transactionHash}`)
             }
 
-            const safeProxy = new GnosisSafeProxy(RpcGateway.get(), context.data.selectedSafe.safeAddress);
+            const importedSafe = new CirclesSafe(
+              context.data.selectedSafe.safeAddress,
+              DefaultExecutionContext.fromKey(context.data.availableSafes.importedAccount.privateKey));
 
             var km = new KeyManager(null);
             await km.load();
 
-            const currentOwners = await safeProxy.getOwners();
+            const currentOwners = await importedSafe.getOwners();
             if (currentOwners.find((o) => o.toLowerCase() == km.torusKeyAddress.toLowerCase())) {
               console.log("The new safe owner was already added.");
             } else {
-              const receipt = await safeProxy.addOwnerWithThreshold(
-                context.data.availableSafes.importedAccount.privateKey,
-                km.torusKeyAddress,
-                1
-              );
-
+              const receipt = await importedSafe.addOwner(km.torusKeyAddress);
               console.log("Added new owner to safe: ", receipt);
             }
           },
@@ -344,16 +346,16 @@ const processDefinition = (processId: string) =>
               window.o.publishEvent(<PlatformEvent>{
                 type: "shell.progress",
                 message: window.o.i18n("dapps.o-onboarding.processes.connectSafe.updateRegistration.addingYouAsOwner", {
-                  values: { orgaName: orga.name },
+                  values: {orgaName: orga.name},
                 }),
               });
               try {
-                const safeProxy = new GnosisSafeProxy(RpcGateway.get(), orga.circlesAddress);
-                await safeProxy.addOwnerWithThreshold(
-                  context.data.availableSafes.importedAccount.privateKey,
-                  km.torusKeyAddress,
-                  1
-                );
+                const safe = new CirclesSafe(
+                  orga.circlesAddress,
+                  DefaultExecutionContext.fromKey(context.data.availableSafes.importedAccount.privateKey));
+
+                const receipt = await safe.addOwner(km.torusKeyAddress);
+                console.log(`Added current torus owner as new owner for imported orga ${orga.circlesAddress}:`, receipt);
               } catch (e) {
                 console.error(e);
               }
@@ -370,11 +372,11 @@ const processDefinition = (processId: string) =>
               ? context.data.selectedSafe.safeProfile?.firstName
               : "";
 
-            if (RpcGateway.get().utils.isAddress(importedFirstName)) {
+            if (Utilities.isAddress(importedFirstName)) {
               importedFirstName = "";
             }
 
-            const result = await apiClient.mutate({
+            await apiClient.mutate({
               mutation: UpsertProfileDocument,
               variables: {
                 id: $me.id,
@@ -390,15 +392,15 @@ const processDefinition = (processId: string) =>
                 avatarUrl: $me.avatarUrl
                   ? $me.avatarUrl
                   : context.data.selectedSafe.safeProfile?.avatarUrl
-                  ? context.data.selectedSafe.safeProfile?.avatarUrl
-                  : null,
+                    ? context.data.selectedSafe.safeProfile?.avatarUrl
+                    : null,
                 avatarMimeType: $me.avatarMimeType,
                 firstName: $me.firstName && $me.firstName != "" ? $me.firstName : importedFirstName,
                 lastName: $me.lastName
                   ? $me.lastName
                   : context.data.selectedSafe.safeProfile?.lastName
-                  ? context.data.selectedSafe.safeProfile?.lastName
-                  : null,
+                    ? context.data.selectedSafe.safeProfile?.lastName
+                    : null,
                 country: $me.country,
                 dream: $me.dream,
                 newsletter: $me.newsletter,

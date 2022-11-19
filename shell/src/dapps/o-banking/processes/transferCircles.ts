@@ -2,14 +2,11 @@ import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processMa
 import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
 import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
 import {createMachine} from "xstate";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {BN} from "ethereumjs-util";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
-import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import {CirclesHub} from "@o-platform/o-circles/dist/circles/circlesHub";
 import {TagTransactionDocument} from "../../../shared/api/data/types";
-import type {TransactionReceipt} from "web3-core";
-import {Environment} from "../../../shared/environment";
+import {CirclesSafe} from "../chain/circlesSafe";
+import {DefaultExecutionContext} from "../chain/actions/action";
+import {TransferThroughResultData} from "../chain/actions/transferThrough";
 
 export type TransferCirclesContextData = {
   safeAddress: string;
@@ -18,7 +15,7 @@ export type TransferCirclesContextData = {
   amount: string;
   privateKey: string;
   transitivePath?: TransitivePath;
-  receipt:TransactionReceipt;
+  receipt:TransferThroughResultData;
   pathToRecipient?: {
     tokenOwners: string[];
     sources: string[];
@@ -29,14 +26,6 @@ export type TransferCirclesContextData = {
 
 
 export type TransferCirclesContext = ProcessContext<TransferCirclesContextData>;
-
-/**
- * In case you want to translate the flow later, it's nice to have the strings at one place.
- */
-const strings = {
-  labelRecipientAddress: "",
-  labelAmount: ""
-};
 
 export type TransitivePathStep = {
   from: string,
@@ -50,36 +39,7 @@ export type TransitivePath = {
   transfers: TransitivePathStep[]
 }
 
-export async function fTransferCirclesHashOnly(safeAddress:string, privateKey:string, path:TransitivePath) {
-  const gnosisSafeProxy = new GnosisSafeProxy(RpcGateway.get(), safeAddress);
-
-  const tokenOwners = [];
-  const sources = [];
-  const destinations = [];
-  const values = [];
-
-  path.transfers.forEach(transfer => {
-    tokenOwners.push(transfer.tokenOwner);
-    sources.push(transfer.from);
-    destinations.push(transfer.to);
-    values.push(new BN(transfer.value));
-  });
-
-  const transferTroughTxHash = await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTroughTxHash(
-      privateKey,
-      gnosisSafeProxy,
-      tokenOwners,
-      sources,
-      destinations,
-      values
-  );
-
-  return transferTroughTxHash;
-}
-
 export async function fTransferCircles (safeAddress:string, privateKey:string, path:TransitivePath, message:string) {
-  const gnosisSafeProxy = new GnosisSafeProxy(RpcGateway.get(), safeAddress);
-
   try {
     const tokenOwners = [];
     const sources = [];
@@ -93,24 +53,10 @@ export async function fTransferCircles (safeAddress:string, privateKey:string, p
       values.push(new BN(transfer.value));
     });
 
-    const transferTroughResult = await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTrough(
-      privateKey,
-      gnosisSafeProxy,
-      tokenOwners,
-      sources,
-      destinations,
-      values
-    );
+    const transferTroughResult = await new CirclesSafe(safeAddress, DefaultExecutionContext.fromKey(privateKey))
+      .transferTrough(tokenOwners, sources, destinations, values);
 
-    /*
-    let txHashSubscription: Subscription;
-    txHashSubscription = transferTroughResult.observable.subscribe(async o => {
-
-    });
-     */
-
-    const receipt = transferTroughResult;
-    if (receipt && message) {
+    if (transferTroughResult && message) {
       const api = await window.o.apiClient.client.subscribeToResult();
       await api.mutate({
         mutation: TagTransactionDocument,
@@ -119,11 +65,11 @@ export async function fTransferCircles (safeAddress:string, privateKey:string, p
             typeId: "o-banking:transfer:message:1",
             value: message
           },
-          transactionHash: receipt.transactionHash
+          transactionHash: transferTroughResult.txHash
         }
       });
     }
-    return receipt;
+    return transferTroughResult;
   } catch (e) {
     console.error(e);
     throw e;
@@ -155,7 +101,7 @@ const processDefinition = (processId: string) =>
       success: {
         id: 'success',
         type: 'final',
-        data: (context, event: PlatformEvent) => {
+        data: (context) => {
           return context.data;
         }
       }

@@ -5,17 +5,13 @@ import { createMachine } from "xstate";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
 import { AddMemberDocument } from "../../../shared/api/data/types";
-import { promptProfileId } from "../../../shared/api/promptProfileId";
-import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfileId";
 import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
 import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import TrustChangeConfirmation from "../../o-banking/molecules/TrustChangeConfirmation.svelte";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
 
 export type AddOwnerContextData = {
   successAction: (data: AddOwnerContextData) => void;
@@ -62,12 +58,11 @@ const processDefinition = (processId: string) =>
               throw new Error(`The owner eoa address for safe ${context.data.memberAddress} is not known.`);
             }
 
-            const safeProxy = new GnosisSafeProxy(RpcGateway.get(), context.data.groupId.toString());
-            const addOwnerResult = await safeProxy.addOwnerWithThreshold(
-              sessionStorage.getItem("circlesKey"),
-              memberProfile.circlesSafeOwner,
-              1
-            );
+            const circlesSafe = new CirclesSafe(
+              context.data.groupId.toString(),
+              DefaultExecutionContext.fromKey(sessionStorage.getItem("circlesKey")));
+
+            const addOwnerResult = await circlesSafe.addOwner(memberProfile.circlesSafeOwner);
             console.log(addOwnerResult);
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
@@ -78,6 +73,7 @@ const processDefinition = (processId: string) =>
                 memberAddress: context.data.memberAddress,
               },
             });
+            console.log(`AddMember result:`, result);
           },
           onDone: "#showSuccess",
           onError: {
@@ -94,7 +90,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (_) => {},
           },
         }),
       },
@@ -119,7 +115,7 @@ const processDefinition = (processId: string) =>
             context.data.successAction(context.data);
           }
         },
-        data: (context, event: PlatformEvent) => {
+        data: (context) => {
           return context.data;
         },
       },

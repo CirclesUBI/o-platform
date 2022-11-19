@@ -1,9 +1,9 @@
 import { me } from "../../shared/stores/me";
 import { Subscription } from "rxjs";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { Banking } from "./banking";
 import { Profile } from "../../shared/api/data/types";
+import {Utilities} from "./chain/utilities";
 
 let profile: Profile | undefined;
 let shellEventSubscription: Subscription | undefined;
@@ -24,7 +24,7 @@ export async function init() {
     profile = profileOrNull;
     if (
       !bankingInstance &&
-      RpcGateway.get().utils.isAddress(profileOrNull?.circlesAddress)
+      Utilities.isAddress(profileOrNull?.circlesAddress)
     ) {
       bankingInstance = new Banking();
     } else {

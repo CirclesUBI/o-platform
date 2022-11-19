@@ -6,7 +6,7 @@ import {RemoveOwner, RemoveOwnerResultData} from "./actions/removeOwner";
 import {RequestUbi, RequestUbiResultData} from "./actions/requestUbi";
 import {SetTrust, SetTrustResultData} from "./actions/setTrust";
 import {TransferThrough, TransferThroughResultData} from "./actions/transferThrough";
-import {BigNumber} from "ethers";
+import {BigNumber, Signer} from "ethers";
 import {EthAdapter} from "@gnosis.pm/safe-core-sdk-types";
 import {CirclesNetworkConfig} from "./circlesNetworkConfig";
 import {DeploySafe} from "./actions/deploySafe";
@@ -23,11 +23,23 @@ export class CirclesSafe {
   static async deploySafe(
     owners: string[],
     signatureThreshold: number,
+    signer: Signer,
     ethAdapter: EthAdapter,
     networkConfig: CirclesNetworkConfig): Promise<CirclesSafe> {
-    const actionExecutionContext = new DefaultExecutionContext(ethAdapter, networkConfig);
+
+    const actionExecutionContext = new DefaultExecutionContext(signer, ethAdapter, networkConfig);
     const deploySafeResult = await new DeploySafe(owners, signatureThreshold).execute(actionExecutionContext);
     return new CirclesSafe(deploySafeResult.safeAddress, actionExecutionContext);
+  }
+
+  async getOwners() : Promise<string[]> {
+    const safe = await this.actionExecutionContext.getSafe(this.safeAddress)
+    return safe.getOwners();
+  }
+
+  async getNonce() {
+    const safe = await this.actionExecutionContext.getSafe(this.safeAddress)
+    return safe.getNonce();
   }
 
   async addOwner(newOwner: string): Promise<AddOwnerResultData> {

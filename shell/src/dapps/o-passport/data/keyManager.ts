@@ -1,6 +1,6 @@
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
-import OpenLogin from "@toruslabs/openlogin";
-import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+import {CirclesSafe} from "../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../o-banking/chain/actions/action";
+import {Utilities} from "../../o-banking/chain/utilities";
 
 export type EncryptedKey = {
   iv:  string,
@@ -26,11 +26,11 @@ export class KeyManager {
     return this._eoas;
   }
   private _eoas: AddressEoaMap = {};
-  private _safeProxy: GnosisSafeProxy|null = null;
+  private _safeProxy: CirclesSafe|null = null;
 
   constructor(safeAddress:string) {
     if (safeAddress) {
-      this._safeProxy = new GnosisSafeProxy(RpcGateway.get(), safeAddress);
+      this._safeProxy = new CirclesSafe(safeAddress, DefaultExecutionContext.readonly());
     }
   }
 
@@ -104,11 +104,11 @@ export class KeyManager {
   }
 
   async setKey(address:string, passphrase:string, privateKey:string) {
-    const acc = RpcGateway.get().eth.accounts.privateKeyToAccount(privateKey);
+    const acc = Utilities.addressFromPrivateKey(privateKey);
     const localStorageKeysJson = localStorage.getItem("circlesKeys");
     const localStorageKeysMap:AddressEoaMap = localStorageKeysJson ? JSON.parse(localStorageKeysJson) : {};
 
-    if (!localStorageKeysMap[acc.address]) {
+    if (!localStorageKeysMap[acc]) {
       throw new Error(`Address ${address} is not known.`);
     }
 
@@ -127,17 +127,17 @@ export class KeyManager {
       throw new Error("Password must be at least six characters long");
     }
 
-    const acc = RpcGateway.get().eth.accounts.privateKeyToAccount(privateKey);
+    const acc = Utilities.addressFromPrivateKey(privateKey);
     const localStorageKeysJson = localStorage.getItem("circlesKeys");
     const localStorageKeysMap:AddressEoaMap = localStorageKeysJson ? JSON.parse(localStorageKeysJson) : {};
 
-    if (localStorageKeysMap[acc.address]) {
+    if (localStorageKeysMap[acc]) {
       throw new Error(`The eoa already exists`);
     }
 
     const encryptedPrivateKey = await this.encryptWithPassphrase(passphrase, privateKey);
-    localStorageKeysMap[acc.address] = {
-      address: acc.address,
+    localStorageKeysMap[acc] = {
+      address: acc,
       privateKey: null,
       source: source,
       name: name,

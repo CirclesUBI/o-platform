@@ -1,21 +1,21 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
 import * as bip39 from "bip39";
-import { Account } from "web3-core";
 import gql from "graphql-tag";
-import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
+import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import DropDownString from "@o-platform/o-editors/src/dropdownItems/DropDownString.svelte";
-import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
-import { AddressEoaMap, Eoa, KeyManager } from "../../../data/keyManager";
+import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
+import {AddressEoaMap, Eoa, KeyManager} from "../../../data/keyManager";
 import PinInputEditor from "@o-platform/o-editors/src/Pin/PinInputEditor.svelte";
 import * as yup from "yup";
+import {Utilities} from "../../../../o-banking/chain/utilities";
+import {CirclesSafe} from "../../../../o-banking/chain/circlesSafe";
+import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/action";
 
 export type ConnectSafeContextData = {
   safeAddress?: string;
@@ -77,22 +77,18 @@ const processDefinition = (processId: string) =>
         //always: "#seedPhrase",
         always: [
           {
-            cond: (context, event) => {
+            cond: (context) => {
               const availableKeys = Object.values(context.data.availableKeys);
-              const result =
-                availableKeys.filter((o) => o.isOwner && o.encryptedPrivateKey)
-                  .length > 0;
-              return result;
+              return availableKeys.filter((o) => o.isOwner && o.encryptedPrivateKey)
+                .length > 0;
             },
             target: "#unlockKeyPin",
           },
           {
-            cond: (context, event) => {
+            cond: (context) => {
               const availableKeys = Object.values(context.data.availableKeys);
-              const result =
-                availableKeys.filter((o) => o.isOwner && o.encryptedPrivateKey)
-                  .length == 0;
-              return result;
+              return availableKeys.filter((o) => o.isOwner && o.encryptedPrivateKey)
+                .length == 0;
             },
             target: "#seedPhrase",
           },
@@ -121,7 +117,7 @@ const processDefinition = (processId: string) =>
       unlockKey: {
         id: "unlockKey",
         invoke: {
-          src: async (context, event) => {
+          src: async (context) => {
             const key = Object.values(context.data.availableKeys).filter(
               (o) => o.isOwner && o.encryptedPrivateKey
             )[0];
@@ -161,7 +157,7 @@ const processDefinition = (processId: string) =>
             context.messages["seedPhrase"] = "";
 
             let keyFromMnemonic: string;
-            let account: Account;
+            let account: string;
 
             try {
               keyFromMnemonic =
@@ -177,10 +173,7 @@ const processDefinition = (processId: string) =>
             }
 
             try {
-              account =
-                RpcGateway.get().eth.accounts.privateKeyToAccount(
-                  keyFromMnemonic
-                );
+              account = Utilities.addressFromPrivateKey(keyFromMnemonic);
             } catch (e) {
               context.messages[
                 "seedPhrase"
@@ -202,7 +195,7 @@ const processDefinition = (processId: string) =>
                   }
                 `,
                 variables: {
-                  id: account.address.toLowerCase(),
+                  id: account.toLowerCase(),
                 },
               });
 
@@ -215,20 +208,20 @@ const processDefinition = (processId: string) =>
               context.data.foundSafeAddresses =
                 foundSafes.data.user?.safeAddresses ?? [];
               if (!context.data.foundSafeAddresses.length) {
-                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage4", { values: { accountAddress: account.address}});
+                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage4", { values: { accountAddress: account}});
                 context.messages["seedPhrase"] = msg;
                 throw new Error(msg);
               }
             }
 
-            localStorage.setItem("circlesAccount", account.address);
+            localStorage.setItem("circlesAccount", account);
 
-            context.data.accountAddress = account.address;
+            context.data.accountAddress = account;
             context.data.privateKey = keyFromMnemonic;
 
             const km = new KeyManager(context.data.safeAddress);
             await km.load();
-            await km.setKey(account.address, "123456", keyFromMnemonic);
+            // await km.setKey(account, "123456", keyFromMnemonic);
           },
           onDone: [
             {
@@ -284,22 +277,11 @@ const processDefinition = (processId: string) =>
           src: async (context) => {
             context.messages["safeAddress"] = ``;
             context.data.safeAddress = context.data.safeAddress?.trim();
-            try {
-                const safeProxy = new GnosisSafeProxy(
-                  RpcGateway.get(),
-                  context.data.safeAddress
-                );
-                context.data.safeOwners = await safeProxy.getOwners();
-              return true;
-            } catch (e) {
-              if (e.message == "slow_provider") {
-                throw e;
-              }
-              context.messages[
-                "safeAddress"
-              ] = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSafeAddress.contextMessage", { values: { contextDataSafeAddress: context.data.safeAddress}});
-              throw e;
-            }
+
+            const circlesSafe = new CirclesSafe(context.data.safeAddress, DefaultExecutionContext.fromKey(context.data.privateKey));
+            context.data.safeOwners = await circlesSafe.getOwners();
+
+            return true;
           },
           onDone: "#success",
           onError: "#safeAddress",

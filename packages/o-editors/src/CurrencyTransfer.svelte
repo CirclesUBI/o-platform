@@ -5,7 +5,7 @@ import ProcessNavigation from "./ProcessNavigation.svelte";
 import Icons from "../../../shell/src/shared/molecules/Icons.svelte";
 import circlesIcon from "./dropdownItems/CirclesIcon.svelte";
 import xdaiIcon from "./dropdownItems/XdaiIcon.svelte";
-import { RpcGateway } from "../../o-circles/dist/rpcGateway";
+import {ethers} from "ethers";
 
 export let context: CurrencyTransferContext;
 
@@ -28,7 +28,7 @@ $: {
     const key = selected.toLowerCase();
     if (context.data.maxFlows[key]) {
       maxAmount = parseFloat(
-        RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether")
+        ethers.utils.formatEther(context.data.maxFlows[key])
       )
         .toFixed(2)
         .toString();
@@ -82,7 +82,7 @@ function onkeydown(e: KeyboardEvent) {
             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
           ></path>
         </svg>
-        <label for="input">{context.messages[context.field]} </label>
+        <label for="price">{context.messages[context.field]} </label>
       </div>
     </div>
   {/if}

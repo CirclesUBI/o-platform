@@ -4,7 +4,6 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
-import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import EmailAddressEditor from "@o-platform/o-editors/src/EmailAddressEditor.svelte";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
@@ -13,9 +12,9 @@ import { promptChoice, PromptChoiceSpec } from "./identify/prompts/promptChoice"
 import ChoiceSelector from "@o-platform/o-editors/src/ChoiceSelector.svelte";
 import { promptFile } from "../../../shared/api/promptFile";
 import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 import NumberEditor from "@o-platform/o-editors/src/NumberEditor.svelte";
+import {Utilities} from "../../o-banking/chain/utilities";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -349,7 +348,7 @@ const processDefinition = (processId: string) =>
             const safeOwnerAddress =
               context.data.circlesSafeOwner ??
               (sessionStorage.getItem("circlesKey")
-                ? RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).address
+                ? Utilities.addressFromPrivateKey(sessionStorage.getItem("circlesKey"))
                 : undefined);
             const result = await apiClient.mutate({
               mutation: UpsertProfileDocument,

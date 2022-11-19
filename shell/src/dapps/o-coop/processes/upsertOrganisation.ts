@@ -8,7 +8,6 @@ import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
 import * as yup from "yup";
 import { promptFile } from "../../../shared/api/promptFile";
 import {UpsertOrganisationDocument} from "../../../shared/api/data/types";
-import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
 import {show} from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
@@ -23,14 +22,12 @@ export type CreateOrganisationContextData = {
   description: string,
   name: string,
   displayName: string,
-  organisationSafeProxy: GnosisSafeProxy,
   location: string,
   lat: number,
   lon: number
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
-
 
 const processDefinition = (processId: string) =>
   createMachine<CreateOrganisationContext, any>({
@@ -168,7 +165,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (_) => {},
           },
         }),
       },
@@ -180,7 +177,7 @@ const processDefinition = (processId: string) =>
             context.data.successAction(context.data);
           }
         },
-        data: (context, event: any) => {
+        data: (context) => {
           return context.data;
         },
       }

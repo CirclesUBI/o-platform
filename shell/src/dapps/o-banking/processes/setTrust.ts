@@ -4,22 +4,19 @@ import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
 import {createMachine} from "xstate";
 import {prompt} from "@o-platform/o-process/dist/states/prompt";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
-import {CirclesHub} from "@o-platform/o-circles/dist/circles/circlesHub";
-import {BN} from "ethereumjs-util";
 import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import TrustChangeConfirmation from "../molecules/TrustChangeConfirmation.svelte";
 import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
-import type {TransactionReceipt} from "web3-core";
-import {Environment} from "../../../shared/environment";
 import {
   Profile,
   ProfilesByCirclesAddressDocument,
   ProfilesByCirclesAddressQueryVariables,
 } from "../../../shared/api/data/types";
 import {ApiClient} from "../../../shared/apiConnection";
+import {CirclesSafe} from "../chain/circlesSafe";
+import {DefaultExecutionContext} from "../chain/actions/action";
+import {SetTrustResultData} from "../chain/actions/setTrust";
 
 export type SetTrustContextData = {
   safeAddress: string;
@@ -93,23 +90,9 @@ const editorContent: { [x: string]: EditorViewContext } = {
   },
 };
 
-export async function fSetTrust(
-  context: ProcessContext<SetTrustContextData>
-): Promise<TransactionReceipt> {
-  const gnosisSafeProxy = new GnosisSafeProxy(
-    RpcGateway.get(),
-    context.data.safeAddress
-  );
-
-  return await new CirclesHub(
-    RpcGateway.get(),
-    Environment.circlesHubAddress
-  ).setTrust(
-    context.data.privateKey,
-    gnosisSafeProxy,
-    context.data.trustReceiver,
-    new BN(context.data.trustLimit.toString())
-  );
+export async function fSetTrust(context: ProcessContext<SetTrustContextData>): Promise<SetTrustResultData> {
+  return new CirclesSafe(context.data.safeAddress, DefaultExecutionContext.fromKey(context.data.privateKey))
+    .setTrust(context.data.trustReceiver, context.data.trustLimit);
 }
 
 const processDefinition = (processId: string) =>

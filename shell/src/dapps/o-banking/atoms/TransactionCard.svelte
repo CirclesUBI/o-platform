@@ -13,7 +13,7 @@ import {
   Profile,
   ProfileEvent,
 } from "../../../shared/api/data/types";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {Utilities} from "../chain/utilities";
 
 export let event: ProfileEvent;
 
@@ -73,14 +73,9 @@ $: {
       lastName: "",
       circlesAddress: ercTransfer.to,
     };
-    amount = parseFloat(RpcGateway.get().utils.fromWei(ercTransfer.value, "ether")).toFixed(2);
+    amount = parseFloat(Utilities.fromWei(ercTransfer.value)).toFixed(2);
     message = "ERC-20 Transfer";
     amountTime = amount;
-    /*
-    amountTime = Currency.instance()
-      .displayAmount(amount ? amount : "0", event.timestamp, "TIME_CRC", null)
-      .toString();
- */
   }
 
   if (event && event.payload?.__typename == "CrcHubTransfer") {

@@ -12,9 +12,9 @@ import { promptChoice } from "./identify/prompts/promptChoice";
 import ChoiceSelector from "@o-platform/o-editors/src/ChoiceSelector.svelte";
 import { promptFile } from "../../../shared/api/promptFile";
 import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 import {promptCity} from "../../../shared/api/promptCity";
+import {Utilities} from "../../o-banking/chain/utilities";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -285,7 +285,7 @@ const processDefinition = (processId: string) =>
             const safeOwnerAddress =
               context.data.circlesSafeOwner ??
               (sessionStorage.getItem("circlesKey")
-                ? RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).address
+                ? Utilities.addressFromPrivateKey(sessionStorage.getItem("circlesKey"))
                 : undefined);
 
             const result = await apiClient.mutate({
