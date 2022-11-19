@@ -85,7 +85,8 @@ export class DefaultExecutionContext implements ActionExecutionContext {
   async getTokenAddress(safeAddress: string): Promise<string | undefined | null> {
     const crcHubContract = new Contract(
       this.networkConfig.crcHubAddress,
-      this.networkConfig.crcHubAbi);
+      this.networkConfig.crcHubAbi,
+      DefaultExecutionContext.readonly.signer);
 
     return await crcHubContract.userToToken(safeAddress);
   }

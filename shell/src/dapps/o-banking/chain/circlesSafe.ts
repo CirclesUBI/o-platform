@@ -1,4 +1,4 @@
-import {ActionExecutionContext} from "./actions/action";
+import {Action, ActionExecutionContext} from "./actions/action";
 import {AddOwner, AddOwnerResultData} from "./actions/addOwner";
 import {HubSignupOrganization, HubSignupOrganizationResultData} from "./actions/hubSignupOrganization";
 import {HubSignupPerson, HubSignupPersonResultData} from "./actions/hubSignupPerson";
@@ -33,6 +33,15 @@ export class CirclesSafe {
     return new CirclesSafe(deploySafeResult.safeAddress, actionExecutionContext);
   }
 
+  async executeAction<T>(action:Action<T>) {
+    try {
+      return await action.execute(this.actionExecutionContext);
+    }
+    catch (e) {
+      console.error(`An error occurred while executing an action on the chain:`, e);
+    }
+  }
+
   async getOwners() : Promise<string[]> {
     const safe = await this.actionExecutionContext.getSafe(this.safeAddress)
     return safe.getOwners();
@@ -44,40 +53,33 @@ export class CirclesSafe {
   }
 
   async addOwner(newOwner: string): Promise<AddOwnerResultData> {
-    return new AddOwner(this.safeAddress, newOwner)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new AddOwner(this.safeAddress, newOwner));
   }
 
   async hubSignupOrganization(): Promise<HubSignupOrganizationResultData> {
-    return new HubSignupOrganization(this.safeAddress)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new HubSignupOrganization(this.safeAddress));
   }
 
   async hubSignupPerson(): Promise<HubSignupPersonResultData> {
-    return new HubSignupPerson(this.safeAddress)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new HubSignupPerson(this.safeAddress));
   }
 
   async removeOwner(oldOwner: string): Promise<RemoveOwnerResultData> {
-    return new RemoveOwner(this.safeAddress, oldOwner)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new RemoveOwner(this.safeAddress, oldOwner));
   }
 
   async requestUbi(): Promise<RequestUbiResultData> {
-    return new RequestUbi(this.safeAddress)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new RequestUbi(this.safeAddress));
   }
 
   async setTrust(trustAddress: string, trustLimit: number): Promise<SetTrustResultData> {
-    return new SetTrust(this.safeAddress, trustAddress, trustLimit)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new SetTrust(this.safeAddress, trustAddress, trustLimit));
   }
 
   async transferTrough(tokenOwners: string[],
                        sources: string[],
                        destinations: string[],
                        values: BigNumber[]): Promise<TransferThroughResultData> {
-    return new TransferThrough(this.safeAddress, tokenOwners, sources, destinations, values)
-      .execute(this.actionExecutionContext);
+    return this.executeAction(new TransferThrough(this.safeAddress, tokenOwners, sources, destinations, values));
   }
 }
