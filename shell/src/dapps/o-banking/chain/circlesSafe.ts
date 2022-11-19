@@ -39,6 +39,7 @@ export class CirclesSafe {
     }
     catch (e) {
       console.error(`An error occurred while executing an action on the chain:`, e);
+      throw e;
     }
   }
 
