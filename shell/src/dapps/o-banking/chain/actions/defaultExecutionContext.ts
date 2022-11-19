@@ -47,7 +47,8 @@ export class DefaultExecutionContext implements ActionExecutionContext {
   }
 
   async signMessage(message: string): Promise<string> {
-    return this.ethAdapter.signMessage(message);
+    const messageHash = ethers.utils.solidityKeccak256(['string'], [message]);
+    return this.ethAdapter.signMessage(messageHash);
   }
 
   constructor(signer: Signer, ethAdapter:EthAdapter, networkConfig: CirclesNetworkConfig) {

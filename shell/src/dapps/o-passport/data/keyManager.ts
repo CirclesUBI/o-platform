@@ -162,7 +162,7 @@ export class KeyManager {
 
   async encryptWithPassphrase(passphrase:string, clearTextHexKey:string) : Promise<EncryptedKey> {
     const subtleKey = await this.keyFromPassphrase(passphrase);
-    const keyBytes = Buffer.from(clearTextHexKey.replace("0x", ""), "hex");
+    const keyBytes = Buffer.from(clearTextHexKey, "hex");
     const iv = crypto.getRandomValues(new Uint8Array(16));
     const cypherText = await crypto.subtle.encrypt(
       {name: "AES-CBC", iv},
@@ -191,7 +191,7 @@ export class KeyManager {
       {name: "AES-CBC", iv: ivBytes},
       subtleKey,
       base64CypherTextBytes);
-    const decryptedKey = "0x" + Buffer.from(clearTextBytes).toString("hex");
+    const decryptedKey = Buffer.from(clearTextBytes).toString("hex");
     const digest = await crypto.subtle.digest("SHA-256", Buffer.from(decryptedKey));
     const verifyHash = Buffer.from(digest).toString("hex");
     if (verifyHash != base64CypherText.privateKeyHash) {

@@ -16,7 +16,7 @@ import { Profile } from "../shared/api/data/types";
 import { push } from "svelte-spa-router";
 import {Utilities} from "./o-banking/chain/utilities";
 
-const transactions: Page<any, BankingDappState> = {
+const transactions: Page<any, any> = {
   routeParts: ["=transactions"],
   component: Transactions,
   title: "common.transactions",
@@ -28,13 +28,12 @@ const transactions: Page<any, BankingDappState> = {
       props: {
         icon: "dashbanking",
         backgroundColorClass: "banking",
-        // action: () => processNavigation.back(),
       },
     },
   },
 };
 
-const profileJumplist: Jumplist<any, BankingDappState> = {
+const profileJumplist: Jumplist<any, any> = {
   type: "jumplist",
   title: "Actions",
   isSystem: false,
@@ -79,7 +78,7 @@ const profileJumplist: Jumplist<any, BankingDappState> = {
   },
 };
 
-const transactionDetail: Page<{ transactionHash: string }, BankingDappState> = {
+const transactionDetail: Page<{ transactionHash: string }, any> = {
   type: "page",
   isSystem: true,
   position: "modal",
@@ -89,7 +88,7 @@ const transactionDetail: Page<{ transactionHash: string }, BankingDappState> = {
   jumplist: profileJumplist,
 };
 
-const assets: Page<any, BankingDappState> = {
+const assets: Page<any, any> = {
   routeParts: ["=assets"],
   component: Assets,
   title: "common.assets",
@@ -107,7 +106,7 @@ const assets: Page<any, BankingDappState> = {
   },
 };
 
-const transferTrigger: Trigger<any, BankingDappState> = {
+const transferTrigger: Trigger<any, any> = {
   routeParts: ["=send", ":amount", ":to"],
   action: async (params: any) => {
     const $me = handleTransferTrigger(params);
@@ -125,7 +124,7 @@ const transferTrigger: Trigger<any, BankingDappState> = {
   type: "trigger",
 };
 
-const transferTriggerRedirect: Trigger<any, BankingDappState> = {
+const transferTriggerRedirect: Trigger<any, any> = {
   routeParts: ["=send", ":amount", ":to", ":redirectUrl"],
   action: async (params: any) => {
     const $me = handleTransferTrigger(params);
@@ -172,7 +171,7 @@ function handleTransferTrigger(params) {
   return $me;
 }
 
-const crcDetail: Page<{ symbol: string }, BankingDappState> = {
+const crcDetail: Page<{ symbol: string }, any> = {
   isSystem: true,
   position: "modal",
   routeParts: ["=assets", "=time"],
@@ -181,7 +180,7 @@ const crcDetail: Page<{ symbol: string }, BankingDappState> = {
   title: "common.asset",
   type: "page",
 };
-const xdaiDetail: Page<{ symbol: string }, BankingDappState> = {
+const xdaiDetail: Page<{ symbol: string }, any> = {
   isSystem: true,
   position: "modal",
   routeParts: ["=assets", "=xdai"],
@@ -191,20 +190,7 @@ const xdaiDetail: Page<{ symbol: string }, BankingDappState> = {
   type: "page",
 };
 
-export class BankingDappState {
-  /**
-   * The currently displayed profile (e.g. in the profile detail)
-   */
-  currentProfileId?: number;
-  /**
-   * The address of the currently displayed safe (e.g. in the profile detail)
-   */
-  currentSafeAddress?: string;
-
-  trusted?: boolean;
-}
-
-export const banking: DappManifest<BankingDappState> = {
+export const banking: DappManifest<any> = {
   dappId: "banking:1",
   type: "dapp",
   isSingleton: true,
