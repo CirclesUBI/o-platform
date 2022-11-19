@@ -23,5 +23,6 @@ export const defaultNetworkConfig: CirclesNetworkConfig = {
   multiSendAddress: MULTI_SEND_ADDRESS,
   multiSendAbi: MULTI_SEND_ABI,
   multiSendCallOnlyAbi: MULTI_SEND_CALL_ONLY_ABI,
-  multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS
+  multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
+  chainId: 100
 };

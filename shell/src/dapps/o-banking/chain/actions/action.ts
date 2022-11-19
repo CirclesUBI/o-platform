@@ -27,7 +27,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
 
   static fromKey(privateKey:string) : DefaultExecutionContext {
     const provider = new ethers.providers.JsonRpcProvider({
-      url: defaultNetworkConfig.rpcUrl ,
+      url: defaultNetworkConfig.rpcUrl
     });
     const signer = new Wallet(privateKey, provider);
     const ethAdapter = new EthersAdapter({
@@ -39,7 +39,7 @@ export class DefaultExecutionContext implements ActionExecutionContext {
 
   static readonly() : DefaultExecutionContext {
     const provider = new ethers.providers.JsonRpcProvider({
-      url: defaultNetworkConfig.rpcUrl ,
+      url: defaultNetworkConfig.rpcUrl
     });
     const randomKey = Utilities.generateRandomKey();
     const signer = new Wallet(randomKey.privateKey, provider);
@@ -56,11 +56,10 @@ export class DefaultExecutionContext implements ActionExecutionContext {
   }
 
   async getSafe(safeAddress: string): Promise<Safe> {
-    const networkId = await this.ethAdapter.getChainId()
     return await Safe.create({
       ethAdapter: this.ethAdapter,
       safeAddress: safeAddress,
-      contractNetworks: {[networkId]: this.networkConfig}
+      contractNetworks: {[this.networkConfig.chainId]: this.networkConfig}
     });
   }
 

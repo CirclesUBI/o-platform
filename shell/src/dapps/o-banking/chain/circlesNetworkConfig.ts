@@ -11,4 +11,5 @@ export interface CirclesNetworkConfig extends ContractNetworkConfig {
   crcHubAbi:any[];
   crcTokenAbi:any[];
   rpcUrl: string;
+  chainId: number;
 }
