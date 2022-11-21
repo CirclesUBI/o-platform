@@ -47,11 +47,6 @@ async function reload() {
   if (currentDateIndex < businessHours.length) {
     everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
   }
-
-  console.log("before", everythingBeforeTheCurrentDay);
-  console.log("today", currentDayOpenHours);
-  console.log("after", everythingAfterTheCurrentDay);
-  console.log("current day index", new Date().getDay());
 }
 
 onMount(async () => {
@@ -127,12 +122,15 @@ async function shareLink() {
       <Icon name="phone" class="w-6 h-6" />
       <p class="pl-4">{business.phoneNumber}</p>
     </div>
+
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
-      <!--<Icon style="position: absolute;" name="location-marker" class="w-6 h-6" />-->
-      {#if $myLocation instanceof GeolocationPosition}
-        <Map width="{'100%'}" height="{mapHeight}" />
-      {:else}
-        <Map width="{'100%'}" height="{mapHeight}" />
+      {#if business.lat && business.lon}
+        {#if $myLocation instanceof GeolocationPosition}
+          <p>With route</p>
+          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
+        {:else}
+          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
+        {/if}
       {/if}
     </div>
   {:else}
