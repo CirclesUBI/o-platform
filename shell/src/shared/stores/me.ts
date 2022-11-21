@@ -1,11 +1,6 @@
 import {readable} from "svelte/store";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {
-  InitDocument,
-  InitQueryVariables,
-  Profile,
-  SessionInfo,
-} from "../api/data/types";
+import {InitDocument, InitQueryVariables, Profile, ProfileType, SessionInfo,} from "../api/data/types";
 import {Subscriber} from "svelte/types/runtime/store";
 import {getSessionInfo} from "../../dapps/o-passport/processes/identify/services/getSessionInfo";
 import {ApiClient} from "../apiConnection";
@@ -21,14 +16,20 @@ export const me = {
     return sessionInfo;
   },
   reload: async () => {
-    const sessionInfo = await ApiClient.query<SessionInfo, InitQueryVariables>(InitDocument, {});
-
-    if (sessionInfo.profile) {
-      window.o.publishEvent(<PlatformEvent>{
-        type: "shell.authenticated",
-        profile: sessionInfo.profile,
-      });
+    const freshSessionInfo = await ApiClient.query<SessionInfo, InitQueryVariables>(InitDocument, {});
+    if (freshSessionInfo.profile) {
+      if ((<any>sessionInfo.profile)?.__typename === "Person") {
+        window.o.publishEvent(<PlatformEvent>{
+          type: "shell.authenticated",
+          profile: freshSessionInfo.profile,
+        });
+      } else {
+        // TODO: Need to implement real session change
+        console.log("$me.reload() -> reload organisation")
+      }
     }
+
+    return freshSessionInfo.profile;
   }
 };
 const _me = readable<Profile|null>(null, function start(set) {

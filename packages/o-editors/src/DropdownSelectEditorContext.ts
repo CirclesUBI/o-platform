@@ -12,6 +12,7 @@ export type DropdownSelectorParams<
   keyProperty?: string;
   getLabel: (option: TOption) => string;
   getKey: (option: TOption) => TKey;
+  getHighlight?: (option: TOption) => {start: number, end: number};
   itemTemplate?: any;
   showResultsOnLoad?: boolean;
   choices: {

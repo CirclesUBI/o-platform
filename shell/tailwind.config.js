@@ -122,10 +122,6 @@ module.exports = {
           DEFAULT: "#F26240",
           light: "#FF8874",
         },
-        marketplace: {
-          DEFAULT: "#70BD9E",
-          light: "#89D4BA",
-        },
         contacts: {
           DEFAULT: "#3CC1CA",
           light: "#49D7DC",
@@ -160,6 +156,10 @@ module.exports = {
         dappbackground: {
           DEFAULT: "#F9F9FB",
         },
+        market: {
+          DEFAULT: "#70BD9E",
+          light: "#89D4BA",
+        }
       },
       fontSize: {
         "4rem": "4rem",

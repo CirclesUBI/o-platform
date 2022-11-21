@@ -32,6 +32,7 @@ export type UpsertIdentityContextData = {
   avatarUrl?: string;
   avatarMimeType?: string;
   successAction?: (data: UpsertIdentityContextData) => void;
+  location: string;
 };
 
 export type UpsertIdentityContext = ProcessContext<UpsertIdentityContextData>;
@@ -305,6 +306,7 @@ const processDefinition = (processId: string) =>
                 avatarMimeType: context.data.avatarMimeType,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
+                location: context.data.location
               },
             });
             sessionStorage.setItem("askedForEmailAddress", "true");

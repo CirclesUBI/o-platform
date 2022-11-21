@@ -7,6 +7,7 @@ import { contacts } from "./dapps/o-contacts.manifest";
 import { coop } from "./dapps/o-coop.manifest";
 import { translation } from "./dapps/o-translation.manifest";
 import { notifications } from "./dapps/o-notification.manifest";
+import { marketlisting } from "./dapps/o-marketlisting.manifest";
 
 export const dapps: DappManifest<any>[] = [
   homepage,
@@ -16,5 +17,6 @@ export const dapps: DappManifest<any>[] = [
   contacts,
   coop,
   translation,
-  notifications
+  notifications,
+  marketlisting
 ];
