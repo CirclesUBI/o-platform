@@ -30,6 +30,8 @@ query init {
       displayCurrency
       provenUniqueness
       location
+      lat
+      lon
       memberships {
         isAdmin
         organisation {
@@ -276,7 +278,6 @@ query profiles($id: [Int!]!) {
   }
 }
 
-
 query profilesByName($searchString: String!) {
   search(query: { searchString: $searchString }) {
     id
@@ -467,6 +468,8 @@ query profileById($id: Int!) {
     dream
     provenUniqueness
     location
+    lat
+    lon
     verifications {
       createdAt
       revokedAt
@@ -553,7 +556,6 @@ query tags($typeId_in: [String!]!, $value_like: String) {
     order
   }
 }
-
 
 query organisations($pagination: PaginationArgs) {
   organisations(pagination: $pagination) {
@@ -1103,10 +1105,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
   }
 }
 
-
-
-
-
 query getAllStringsByMaxVersion {
   getAllStringsByMaxVersion {
     lang
@@ -1151,8 +1149,6 @@ query getOlderVersionsByKeyAndLang($key: String, $lang: String) {
     value
   }
 }
-
-
 
 query getPaginatedStrings($pagination_key: String, $key: String, $lang: String, $value: String) {
   getPaginatedStrings(pagination_key: $pagination_key, key: $key, lang: $lang, value: $value) {
@@ -1245,6 +1241,8 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     picture
     phoneNumber
     location
+    lat
+    lon
     businessHoursMonday
     businessHoursTuesday
     businessHoursWednesday
