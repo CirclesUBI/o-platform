@@ -35,7 +35,9 @@ onMount(init);
   <div class="m-4 mb-40 ">
     <!--<LangSwitcher />-->
     <!-- bg-passport-light bg-passport bg-banking bg-banking-light bg-marketplace bg-marketplace-light bg-contacts bg-contacts-light -->
-    <DashboardInvitesWidget />
+    {#if $me && $me.__typename === "Profile"}
+      <DashboardInvitesWidget />
+    {/if}
     <div class="flex flex-col space-y-4">
       <DashboardColorCard
         color="passport"
@@ -52,11 +54,18 @@ onMount(init);
         title="dapps.o-dashboard.pages.home.banking" />
 
       <DashboardColorCard
-        color="contacts"
-        link="/contacts"
-        blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
-        icon="dashfriends"
-        title="dapps.o-dashboard.pages.home.contacts" />
+              color="contacts"
+              link="/contacts"
+              blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
+              icon="dashfriends"
+              title="dapps.o-dashboard.pages.home.contacts" />
+
+      <DashboardColorCard
+              color="market"
+              link="/market/listing"
+              blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
+              icon="cart"
+              title="dapps.o-dashboard.pages.home.marketlisting" />
     </div>
   </div>
 </div>

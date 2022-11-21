@@ -122,6 +122,8 @@ mutation upsertProfile(
   $successorOfCirclesAddress: String
   $gender: Gender
   $location: String
+  $lat: Float
+  $lon: Float
 ) {
   upsertProfile(
     data: {
@@ -144,6 +146,8 @@ mutation upsertProfile(
       successorOfCirclesAddress: $successorOfCirclesAddress
       gender: $gender
       location: $location
+      lat: $lat
+      lon: $lon
     }
   ) {
     id
@@ -167,6 +171,8 @@ mutation upsertProfile(
     displayCurrency
     gender
     location
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -208,23 +214,9 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       createdAt
       description
       name
-    }
-  }
-}
-
-mutation upsertRegion($organisation: UpsertOrganisationInput!) {
-  upsertRegion(organisation: $organisation) {
-    success
-    error
-    organisation {
-      id
-      avatarMimeType
-      avatarUrl
-      circlesAddress
-      circlesSafeOwner
-      createdAt
-      description
-      name
+      location
+      lat
+      lon
     }
   }
 }
@@ -255,4 +247,12 @@ mutation proofUniqueness($humanodeToken: String!) {
   proofUniqueness(humanodeToken: $humanodeToken) {
     existingSafe
   }
+}
+
+mutation setIsFavorite($circlesAddress: String! $isFavorite: Boolean!) {
+  setIsFavorite(circlesAddress: $circlesAddress isFavorite: $isFavorite)
+}
+
+mutation shareLink($targetType:LinkTargetType! $targetKey:String!) {
+  shareLink(targetType: $targetType targetKey: $targetKey)
 }

@@ -64,6 +64,10 @@ type Profile {
   age: Int
   gender: Gender
   location: String
+  lat: Float
+  lon: Float
+  category: BusinessCategory
+  favorites: [Favorite!]
 }
 
 type ClaimedInvitation {
@@ -132,6 +136,18 @@ type Contact {
   contactAddress_Profile: Profile
 }
 
+type BusinessCategory {
+  id: Int!
+  name: String
+}
+
+type Favorite {
+  createdAt: String!
+  createdBy: Profile!
+  favorite: Profile!
+  comment: String
+}
+
 type CrcBalances implements IAggregatePayload {
   lastUpdatedAt: String!
   total: String
@@ -158,6 +174,9 @@ type Organisation {
   displayCurrency: DisplayCurrency
   members: [ProfileOrOrganisation!]
   trustsYou: Int
+  location: String
+  lat: Float
+  lon: Float
 }
 
 union ProfileOrOrganisation = Profile | Organisation
@@ -200,6 +219,8 @@ input UpsertProfileInput {
   age: Int
   gender: Gender
   location: String
+  lat: Float
+  lon: Float
 }
 
 type Tag {
@@ -530,12 +551,7 @@ type ContactPoint {
   timestamps: [String!]!
 }
 
-union AggregatePayload =
-    CrcBalances
-  | Erc20Balances
-  | Contacts
-  | Memberships
-  | Members
+union AggregatePayload = CrcBalances | Erc20Balances | Contacts | Memberships | Members
 
 type ProfileAggregate {
   type: String!
@@ -648,6 +664,9 @@ input UpsertOrganisationInput {
   smallBannerUrl: String
   avatarMimeType: String
   displayCurrency: DisplayCurrency
+  location: String
+  lat: Float
+  lon: Float
 }
 
 type AddMemberResult {
@@ -682,6 +701,27 @@ type i18n {
   value: String
   pagination_key: String
   needsUpdate: Boolean
+}
+
+type Businesses {
+  id: Int!
+  circlesAddress: String!
+  name: String
+  description: String
+  picture: String
+  businessHoursMonday: String
+  businessHoursTuesday: String
+  businessHoursWednesday: String
+  businessHoursThursday: String
+  businessHoursFriday: String
+  businessHoursSaturday: String
+  businessHoursSunday: String
+  phoneNumber: String
+  location: String
+  lat: Float
+  lon: Float
+  businessCategory: String
+  businessCategoryId: Int
 }
 
 enum SortOrder {
@@ -762,11 +802,19 @@ type MyInviteRank {
   redeemedInvitationsCount: Int!
 }
 
+type Stats {
+  profilesCount: Int!
+  verificationsCount: Int!
+  leaderboard: [LeaderboardEntry!]!
+  goals: FibonacciGoals!
+  myRank: MyInviteRank!
+}
+
 type TransitiveTransfer {
   isHubTransfer: Boolean
   from: String!
   to: String!
-  token: String!
+  token: String
   tokenOwner: String!
   value: String!
 }
@@ -788,12 +836,8 @@ type Mutation {
   requestUpdateSafe(data: RequestUpdateSafeInput!): RequestUpdateSafeResponse!
   updateSafe(data: UpdateSafeInput!): UpdateSafeResponse!
   upsertTag(data: UpsertTagInput!): Tag!
-  upsertOrganisation(
-    organisation: UpsertOrganisationInput!
-  ): CreateOrganisationResult!
-  upsertRegion(
-    organisation: UpsertOrganisationInput!
-  ): CreateOrganisationResult!
+  upsertOrganisation(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
+  upsertRegion(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
   addMember(groupId: String!, memberAddress: String!): AddMemberResult
   acceptMembership(membershipId: Int!): AcceptMembershipResult
   removeMember(groupId: String!, memberAddress: String!): RemoveMemberResult
@@ -802,34 +846,25 @@ type Mutation {
   createTestInvitation: CreateInvitationResult!
   claimInvitation(code: String!): ClaimInvitationResult!
   redeemClaimedInvitation: RedeemClaimedInvitationResult!
-  tagTransaction(
-    transactionHash: String!
-    tag: CreateTagInput!
-  ): TagTransactionResult!
-  sendMessage(
-    fromSafeAddress: String
-    toSafeAddress: String!
-    content: String!
-  ): SendMessageResult!
+  tagTransaction(transactionHash: String!, tag: CreateTagInput!): TagTransactionResult!
+  sendMessage(fromSafeAddress: String, toSafeAddress: String!, content: String!): SendMessageResult!
   requestSessionChallenge(address: String!): String!
-  verifySessionChallenge(
-    challenge: String!
-    signature: String!
-  ): ExchangeTokenResponse
+  verifySessionChallenge(challenge: String!, signature: String!): ExchangeTokenResponse
   importOrganisationsOfAccount: [Organisation!]!
   verifySafe(safeAddress: String!): VerifySafeResult!
   revokeSafeVerification(safeAddress: String!): VerifySafeResult!
   proofUniqueness(humanodeToken: String!): ProofUniquenessResult!
   updateValue(lang: String, key: String, createdBy: String, value: String): i18n
   addNewLang(langToCreate: String, langToCopyFrom: String): Int
-  createNewStringAndKey(
-    lang: String
-    key: String
-    createdBy: String
-    value: String
-    version: Int
-  ): i18n
+  createNewStringAndKey(lang: String, key: String, createdBy: String, value: String, version: Int): i18n
   setStringUpdateState(key: String): i18n
+  setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
+  shareLink(targetType: LinkTargetType!, targetKey: String!): String!
+}
+
+enum LinkTargetType {
+  Business
+  Person
 }
 
 type ExportProfile {
@@ -860,21 +895,14 @@ type Query {
   hubSignupTransaction: ProfileEvent
   safeInfo(safeAddress: String): SafeInfo
   lastAcknowledgedAt(safeAddress: String!): Date
-  verifications(
-    pagination: PaginationArgs
-    filter: VerifiedSafesFilter
-  ): [Verification!]!
+  verifications(pagination: PaginationArgs, filter: VerifiedSafesFilter): [Verification!]!
   events(
     types: [EventType!]!
     safeAddress: String!
     pagination: PaginationArgs!
     filter: ProfileEventFilter
   ): [ProfileEvent!]!
-  aggregates(
-    types: [AggregateType!]!
-    safeAddress: String!
-    filter: ProfileAggregateFilter
-  ): [ProfileAggregate!]!
+  aggregates(types: [AggregateType!]!, safeAddress: String!, filter: ProfileAggregateFilter): [ProfileAggregate!]!
   organisations(pagination: PaginationArgs): [Organisation!]!
   regions(pagination: PaginationArgs): [Organisation!]!
   organisationsByAddress(addresses: [String!]!): [Organisation!]!
@@ -887,6 +915,7 @@ type Query {
   profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
   findSafesByOwner(owner: String!): [SafeInfo!]!
   search(query: SearchInput!): [Profile!]!
+  stats: Stats!
   tags(query: QueryTagsInput!): [Tag!]!
   tagById(id: Int!): Tag
   findInvitationCreator(code: String!): Profile
@@ -896,12 +925,7 @@ type Query {
   getAllStringsByMaxVersion: [i18n]
   getAllStringsByMaxVersionAndLang(lang: String): [i18n]
   getOlderVersionsByKeyAndLang(key: String, lang: String): [i18n]
-  getPaginatedStrings(
-    pagination_key: String
-    key: String
-    lang: String
-    value: String
-  ): [i18n]
+  getPaginatedStrings(pagination_key: String, key: String, lang: String, value: String): [i18n]
   getPaginatedStringsToUpdate(
     pagination_key: String
     key: String
@@ -916,6 +940,37 @@ type Query {
   signMessage(message: String!, key: String!): String!
   directPath(from: String!, to: String!, amount: String!): TransitivePath!
   paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
+  allBusinessCategories: [BusinessCategory!]!
+  allBusinesses(queryParams: QueryAllBusinessesParameters): [Businesses!]!
+}
+
+input QueryAllBusinessesParameters {
+  where: QueryAllBusinessesConditions
+  order: QueryAllBusinessesOrder
+  ownCoordinates: Geolocation
+}
+
+input QueryAllBusinessesConditions {
+  inCategories: [Int!]
+  inCirclesAddress: [String!]
+}
+
+input QueryAllBusinessesOrder {
+  orderBy: QueryAllBusinessesOrderOptions!
+}
+
+input Geolocation {
+  lat: Float!
+  lon: Float!
+}
+
+enum QueryAllBusinessesOrderOptions {
+  Favorites
+  Newest
+  Oldest
+  MostPopular
+  Nearest
+  Alphabetical
 }
 
 type Subscription {

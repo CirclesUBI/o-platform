@@ -49,7 +49,6 @@ onMount(async () => {
 });
 
 function handleSelect(event) {
-  console.log("OH YES ", event);
   selected = event.detail;
   context.editorDirtyFlags[field.name] = true;
 }
@@ -103,7 +102,9 @@ function toggleInputView() {
             bind:value="{_context.data[context.field]}"
             on:focus
             on:blur
-            on:change="{() => (context.editorDirtyFlags[context.field] = true)}" />
+            on:change="{() => {
+              context.editorDirtyFlags[context.field] = true;
+            }}" />
           <div>
             <ProcessNavigation on:buttonClick="{submitSafeAddressInput}" context="{context}" type="small" />
           </div>
@@ -118,6 +119,7 @@ function toggleInputView() {
           noOptionsMessage=""
           placeholder="Search..."
           listAutoWidth="{false}"
+          getHighlight={context.params.getHighlight}
           inlineSubmit="{true}"
           isCreatable="{false}"
           listPlacement="top"

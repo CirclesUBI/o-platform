@@ -19,8 +19,12 @@ import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfile
 import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
 
 import { me } from "../../../shared/stores/me";
-import { DirectPathDocument, Profile, QueryDirectPathArgs } from "../../../shared/api/data/types";
-import { convertTimeCirclesToCircles, displayCirclesAmount } from "../../../shared/functions/displayCirclesAmount";
+import {AllBusinessesDocument, DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
+import {
+  convertCirclesToTimeCircles,
+  convertTimeCirclesToCircles,
+  displayCirclesAmount
+} from "../../../shared/functions/displayCirclesAmount";
 import { TransactionReceipt } from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";
 import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
@@ -355,11 +359,12 @@ const processDefinition = (processId: string) =>
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] == "") return false;
 
               const maxFlowInWei = new BN(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
+              console.log("maxFlowInWei", maxFlowInWei);
 
               const amount =
                 context.data.tokens.currency == "crc"
                   ? convertTimeCirclesToCircles(
-                      Number.parseFloat(context.data.tokens.amount), // HARDCODED TO 10* for now
+                      Number.parseFloat(context.data.tokens.amount),
                       null
                     ).toString()
                   : context.data.tokens.amount;
@@ -390,14 +395,9 @@ const processDefinition = (processId: string) =>
               let formattedMax: string = "0.00";
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] != "") {
                 formattedMax =
-                  parseFloat(
-                    new Currency()
-                      .displayAmount(
-                        context.data.maxFlows[context.data.tokens.currency.toLowerCase()].toString(),
-                        null,
-                        "EURS"
-                      )
-                      .toString()
+                  convertCirclesToTimeCircles(parseFloat(
+                    RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether")
+                      .toString()), new Date().toJSON()
                   ).toFixed(0) + ".00";
               }
 

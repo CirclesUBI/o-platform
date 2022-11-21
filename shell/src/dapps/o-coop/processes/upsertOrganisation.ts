@@ -11,10 +11,8 @@ import {UpsertOrganisationDocument} from "../../../shared/api/data/types";
 import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
 import {show} from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
-import {promptCity} from "../../../shared/api/promptCity";
-import {UpsertIdentityContext} from "../../o-passport/processes/upsertIdentity";
+import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data:CreateOrganisationContextData) => void,
@@ -25,7 +23,10 @@ export type CreateOrganisationContextData = {
   description: string,
   name: string,
   displayName: string,
-  organisationSafeProxy: GnosisSafeProxy
+  organisationSafeProxy: GnosisSafeProxy,
+  location: string,
+  lat: number,
+  lon: number
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
@@ -122,6 +123,12 @@ const processDefinition = (processId: string) =>
         entry: () => console.log(`upsertOrganisation ...`),
         invoke: {
           src: async (context) => {
+            console.log(`upsertOrganisation location:`, context.data.location);
+            if (context.data.location) {
+              const city = await cityByHereId(context.data.location);
+              context.data.lat = city.position.lat;
+              context.data.lon = city.position.lng;
+            }
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
@@ -132,7 +139,10 @@ const processDefinition = (processId: string) =>
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
                   description: context.data.description,
-                  name: context.data.name
+                  name: context.data.name,
+                  location: context.data.location,
+                  lat: context.data.lat,
+                  lon: context.data.lon
                 }
               }
             });

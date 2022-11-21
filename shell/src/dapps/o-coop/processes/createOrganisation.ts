@@ -18,7 +18,7 @@ import ErrorView from "../../../shared/atoms/Error.svelte";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
-import {promptCity} from "../../../shared/api/promptCity";
+import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -29,6 +29,9 @@ export type CreateOrganisationContextData = {
   description: string;
   name: string;
   organisationSafeProxy: GnosisSafeProxy;
+  location: string;
+  lat: number;
+  lon: number;
 };
 
 export type CreateOrganisationContext = ProcessContext<CreateOrganisationContextData>;
@@ -245,6 +248,11 @@ const processDefinition = (processId: string) =>
         invoke: {
           src: async (context) => {
             // return result.data.upsertProfile;
+            if (context.data.location) {
+              const city = await cityByHereId(context.data.location);
+              context.data.lat = city.position.lat;
+              context.data.lon = city.position.lng;
+            }
             const organisation = {
               avatarMimeType: context.data.avatarMimeType,
               avatarUrl: context.data.avatarUrl,
@@ -252,6 +260,9 @@ const processDefinition = (processId: string) =>
               description: context.data.description,
               name: context.data.name,
               id: context.data.id,
+              location: context.data.location,
+              lat: context.data.lat,
+              lon: context.data.lon
             };
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
