@@ -3,7 +3,6 @@ import Map from "here-maps-svelte";
 import { onMount } from "svelte";
 import { Environment } from "src/shared/environment";
 
-export let width = "100%";
 export let height = "400px";
 export let position = {};
 
@@ -21,7 +20,7 @@ onMount(() => {
 </script>
 
 {#if options}
-  <div id="map" style="width:{width}; height: {height};">
+  <div id="map" class="w-full" style="height: {height};">
     <Map options="{options}" />
   </div>
 {/if}
