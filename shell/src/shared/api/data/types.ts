@@ -76,6 +76,7 @@ export type Businesses = {
   businessHoursSunday?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
   businessCategory?: Maybe<Scalars['String']>;
@@ -698,6 +699,7 @@ export type Organisation = {
   members?: Maybe<Array<ProfileOrOrganisation>>;
   trustsYou?: Maybe<Scalars['Int']>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
 };
@@ -754,6 +756,7 @@ export type Profile = {
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
   category?: Maybe<BusinessCategory>;
@@ -1271,6 +1274,7 @@ export type UpsertOrganisationInput = {
   avatarMimeType?: Maybe<Scalars['String']>;
   displayCurrency?: Maybe<DisplayCurrency>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
 };
@@ -1297,6 +1301,7 @@ export type UpsertProfileInput = {
   age?: Maybe<Scalars['Int']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
 };
@@ -1551,6 +1556,7 @@ export type UpsertProfileMutationVariables = Exact<{
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
   gender?: Maybe<Gender>;
   location?: Maybe<Scalars['String']>;
+  locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
 }>;
@@ -1560,7 +1566,7 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location' | 'lat' | 'lon'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location' | 'locationName' | 'lat' | 'lon'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -1591,7 +1597,7 @@ export type UpsertOrganisationMutation = (
     & Pick<CreateOrganisationResult, 'success' | 'error'>
     & { organisation?: Maybe<(
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name' | 'location' | 'lat' | 'lon'>
+      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name' | 'location' | 'locationName' | 'lat' | 'lon'>
     )> }
   ) }
 );
@@ -1681,7 +1687,7 @@ export type InitQuery = (
       & Pick<Capability, 'type'>
     )>, profile?: Maybe<(
       { __typename?: 'Profile' }
-      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'lat' | 'lon' | 'circlesTokenAddress'>
+      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'circlesTokenAddress'>
       & { memberships?: Maybe<Array<(
         { __typename?: 'Membership' }
         & Pick<Membership, 'isAdmin'>
@@ -2008,7 +2014,7 @@ export type ProfileByIdQuery = (
   { __typename?: 'Query' }
   & { profilesById: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness' | 'location' | 'lat' | 'lon'>
+    & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon'>
     & { verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
@@ -2570,7 +2576,7 @@ export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
+    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
   )> }
 );
 
@@ -2720,9 +2726,9 @@ export const TagTransactionDocument = gql`
 }
     `;
 export const UpsertProfileDocument = gql`
-    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String, $lat: Float, $lon: Float) {
+    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String, $locationName: String, $lat: Float, $lon: Float) {
   upsertProfile(
-    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location, lat: $lat, lon: $lon}
+    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location, locationName: $locationName, lat: $lat, lon: $lon}
   ) {
     id
     circlesAddress
@@ -2745,6 +2751,7 @@ export const UpsertProfileDocument = gql`
     displayCurrency
     gender
     location
+    locationName
     lat
     lon
     memberships {
@@ -2790,6 +2797,7 @@ export const UpsertOrganisationDocument = gql`
       description
       name
       location
+      locationName
       lat
       lon
     }
@@ -2870,6 +2878,7 @@ export const InitDocument = gql`
       displayCurrency
       provenUniqueness
       location
+      locationName
       lat
       lon
       memberships {
@@ -3320,6 +3329,7 @@ export const ProfileByIdDocument = gql`
     dream
     provenUniqueness
     location
+    locationName
     lat
     lon
     verifications {
@@ -4126,6 +4136,7 @@ export const AllBusinessesDocument = gql`
     picture
     phoneNumber
     location
+    locationName
     lat
     lon
     businessHoursMonday
