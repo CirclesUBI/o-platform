@@ -30,14 +30,6 @@ export type TransferCirclesContextData = {
 
 export type TransferCirclesContext = ProcessContext<TransferCirclesContextData>;
 
-/**
- * In case you want to translate the flow later, it's nice to have the strings at one place.
- */
-const strings = {
-  labelRecipientAddress: "",
-  labelAmount: ""
-};
-
 export type TransitivePathStep = {
   from: string,
   to: string,
@@ -65,16 +57,14 @@ export async function fTransferCirclesHashOnly(safeAddress:string, privateKey:st
     values.push(new BN(transfer.value));
   });
 
-  const transferTroughTxHash = await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTroughTxHash(
-      privateKey,
-      gnosisSafeProxy,
-      tokenOwners,
-      sources,
-      destinations,
-      values
+  return await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTroughTxHash(
+    privateKey,
+    gnosisSafeProxy,
+    tokenOwners,
+    sources,
+    destinations,
+    values
   );
-
-  return transferTroughTxHash;
 }
 
 export async function fTransferCircles (safeAddress:string, privateKey:string, path:TransitivePath, message:string) {
@@ -93,7 +83,14 @@ export async function fTransferCircles (safeAddress:string, privateKey:string, p
       values.push(new BN(transfer.value));
     });
 
-    const transferTroughResult = await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTrough(
+    /*
+    let txHashSubscription: Subscription;
+    txHashSubscription = transferTroughResult.observable.subscribe(async o => {
+
+    });
+     */
+
+    const receipt = await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).transferTrough(
       privateKey,
       gnosisSafeProxy,
       tokenOwners,
@@ -102,14 +99,6 @@ export async function fTransferCircles (safeAddress:string, privateKey:string, p
       values
     );
 
-    /*
-    let txHashSubscription: Subscription;
-    txHashSubscription = transferTroughResult.observable.subscribe(async o => {
-
-    });
-     */
-
-    const receipt = transferTroughResult;
     if (receipt && message) {
       const api = await window.o.apiClient.client.subscribeToResult();
       await api.mutate({
@@ -155,7 +144,7 @@ const processDefinition = (processId: string) =>
       success: {
         id: 'success',
         type: 'final',
-        data: (context, event: PlatformEvent) => {
+        data: (context, _: PlatformEvent) => {
           return context.data;
         }
       }

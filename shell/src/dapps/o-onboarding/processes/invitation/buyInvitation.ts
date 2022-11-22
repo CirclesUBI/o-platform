@@ -4,13 +4,9 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import TextareaEditor from "@o-platform/o-editors/src/TextareaEditor.svelte";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import * as yup from "yup";
 import HtmlViewer from "../../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import { ClaimInvitationDocument } from "../../../../shared/api/data/types";
-import { loadProfile } from "../../../o-passport/processes/identify/services/loadProfile";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { BN } from "ethereumjs-util";
 
 export type PromptGetInvitedData = {
   needsInvitation: boolean;
@@ -37,29 +33,7 @@ const processDefinition = (processId: string) =>
     id: `${processId}:promptGetInvited`,
     initial: "info",
     states: {
-      // Include a default 'error' state that propagates the error by re-throwing it in an action.
-      // TODO: Check if this works as intended
       ...fatalError<PromptGetInvitedContext, any>("error"),
-      /*
-      checkEoaBalance: {
-        id: "checkEoaBalance",
-        invoke: {
-          src: async (context) => {
-            const myProfile = await loadProfile();
-            const eoaBalance = await RpcGateway.get().eth.getBalance(myProfile.circlesSafeOwner);
-            context.data.needsInvitation = new BN(eoaBalance).lt(new BN("1"));
-          },
-          onDone: [{
-            cond: (context) => !context.data.needsInvitation,
-            target: "#success"
-          },{
-            cond: (context) => context.data.needsInvitation,
-            target: "#info"
-          }]
-        }
-      },
-      */
-
       info: prompt({
         id: "info",
         field: "__",
@@ -134,7 +108,7 @@ const processDefinition = (processId: string) =>
       success: {
         id: "success",
         type: "final",
-        entry: (context, event: PlatformEvent) => {
+        entry: (context) => {
           if (context.data.successAction) {
             context.data.successAction(context.data);
           }
