@@ -1,6 +1,6 @@
 <script lang="ts">
 import Label from "./Label.svelte";
-import {Environment} from "../environment";
+
 export let data: {
   error: Error;
 };
@@ -38,12 +38,12 @@ $: {
     </div>
   </div>
   <div class="mt-4">
-    <a href="{window.o.i18n("common.supportUrl")}">
+    <a href="{window.o.i18n('common.supportUrl')}">
       <Label key="shared.atoms.error.pleaseTryToReload" /><a
-        href="{window.o.i18n("common.supportUrl")}"
+        href="{window.o.i18n('common.supportUrl')}"
         rel="noreferrer"
         target="_blank"
-        class="btn-link">{window.o.i18n("common.supportUrl")}</a
+        class="btn-link">{window.o.i18n('common.supportUrl')}</a
       ><Label key="shared.atoms.error.ifTheProblemPersists" />
     </a>
   </div>
