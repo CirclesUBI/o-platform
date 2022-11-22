@@ -82,13 +82,15 @@ async function shareLink() {
         {/if}
       </div>
     </div>
-    <h1 class="font-bold">{business.name}</h1>
-    <p>{business.description}</p>
-    <p class="text-gray-400">{business.businessCategory}</p>
+    <h1 class="mt-1 font-bold">{business.name}</h1>
+    <p>{business.description ? business.description : ""}</p>
 
-    <button class="ml-2 mr-2 text-black bg-white btn border-1" on:click="{shareLink}">
-      <span><Icon name="share" class="w-6 h-6" /></span>Share
-    </button>
+    <div class="flex flex-row w-full mt-1">
+      <p class="flex-grow text-gray-400">{business.businessCategory}</p>
+      <button class="self-end -mt-1 btn btn-outline btn-sm" on:click="{shareLink}">
+        <span><Icon name="share" class="w-6 h-6" /></span>Share
+      </button>
+    </div>
 
     <div class="flex pt-4 mt-4 border-t-2">
       <Icon name="clock" class="w-6 h-6" />
