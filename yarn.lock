@@ -2446,13 +2446,6 @@
   dependencies:
     "@testing-library/dom" "^8.1.0"
 
-"@tinymce/tinymce-svelte@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@tinymce/tinymce-svelte/-/tinymce-svelte-1.0.0.tgz"
-  integrity sha512-wrI0jeTiqdEJLIsUMXtqWjY/m4TQzug+MMASkg3hj+1uBkZeDyTVwe9x/zbYprThujfiyB/lXmaBku+d9g514A==
-  dependencies:
-    rollup-plugin-execute "^1.1.1"
-
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz"
@@ -5149,9 +5142,9 @@ d@1, d@^1.0.1:
     type "^1.0.1"
 
 daisyui@^2.31.0:
-  version "2.40.1"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-2.40.1.tgz#26e87d3bcc25d657684a60b79099f466eb2431f7"
-  integrity sha512-nzLpcU8kCLU4zoMQ0hUKw1orRRn2x/LJLZenIsHF+UlGVsml02U4u20nb/knN7B06MPpDZ4RAZyp0rEp67iwzQ==
+  version "2.41.0"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-2.41.0.tgz#56659d423086d40b835e23f4e58fe2e220f4925c"
+  integrity sha512-M/MPbTERJK4iBIXRGQpQdHTmy53HRqrgca4rsbPhio1Sqq0w2GH/RJSVX8b14hYB0E9E8R+t5bHIeqW1oHT97A==
   dependencies:
     color "^4.2"
     css-selector-tokenizer "^0.8.0"
@@ -6314,7 +6307,7 @@ file-loader@^6.2.0:
 
 file-selector@^0.2.4:
   version "0.2.4"
-  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.2.4.tgz#7b98286f9dbb9925f420130ea5ed0a69238d4d80"
+  resolved "https://registry.npmjs.org/file-selector/-/file-selector-0.2.4.tgz"
   integrity sha512-ZDsQNbrv6qRi1YTDOEWzf5J2KjZ9KMI1Q2SGeTkCJmNNW25Jg4TW4UMcmoqcg4WrAyKRcpBXdbWRxkfrOzVRbA==
   dependencies:
     tslib "^2.0.3"
@@ -6935,7 +6928,7 @@ header-case@^2.0.4:
 
 here-maps-svelte@^0.0.7:
   version "0.0.7"
-  resolved "https://registry.yarnpkg.com/here-maps-svelte/-/here-maps-svelte-0.0.7.tgz#68c7d75ce00c6d5d45bf313dc7b0d3bbb719d83b"
+  resolved "https://registry.npmjs.org/here-maps-svelte/-/here-maps-svelte-0.0.7.tgz"
   integrity sha512-IFQoGmmIi2MXkSTNhACZl1RPmlZuszxaMRJzZgpAAJFyo0m2ewD4Hp3k4VKryc/Xhq/ssCFo72D8fC7AnuWCTA==
 
 heroicons@^1.0.6:
@@ -11596,11 +11589,6 @@ rlp@^2.2.3, rlp@^2.2.4:
   dependencies:
     bn.js "^5.2.0"
 
-rollup-plugin-execute@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/rollup-plugin-execute/-/rollup-plugin-execute-1.1.1.tgz"
-  integrity sha512-isCNR/VrwlEfWJMwsnmt5TBRod8dW1IjVRxcXCBrxDmVTeA1IXjzeLSS3inFBmRD7KDPlo38KSb2mh5v5BoWgA==
-
 rollup-plugin-terser@^7.0.0:
   version "7.0.2"
   resolved "https://registry.npmjs.org/rollup-plugin-terser/-/rollup-plugin-terser-7.0.2.tgz"
@@ -12493,7 +12481,7 @@ svelte-easy-crop@^1.0.7:
 
 svelte-file-dropzone@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/svelte-file-dropzone/-/svelte-file-dropzone-1.0.0.tgz#5a2cf0747d90ddcdac6167ebf0b54f62dfc3c4fa"
+  resolved "https://registry.npmjs.org/svelte-file-dropzone/-/svelte-file-dropzone-1.0.0.tgz"
   integrity sha512-F2DN+wN2w7bKuUJFYQOFsdtTgaohQ/rNKau5m5n2l3LHJRRIccYS4wpq8f6dz/h5aSxYse3oRclmYdW6FWAfjw==
   dependencies:
     file-selector "^0.2.4"
@@ -12875,11 +12863,6 @@ tinydate@^1.0.0:
   version "1.3.0"
   resolved "https://registry.npmjs.org/tinydate/-/tinydate-1.3.0.tgz"
   integrity sha512-7cR8rLy2QhYHpsBDBVYnnWXm8uRTr38RoZakFSW7Bs7PzfMPNZthuMLkwqZv7MTu8lhQ91cOFYS5a7iFj2oR3w==
-
-tinymce@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.npmjs.org/tinymce/-/tinymce-6.2.0.tgz"
-  integrity sha512-zLjbFrg0hbtJ6PxmZUjQY6zyIOM/mLrWGTvhBec7XwYwoW1E0xXMQzy2tgMTh3OvJpsclgqf2ZMjmwcv4Cludw==
 
 title-case@^3.0.3:
   version "3.0.3"
