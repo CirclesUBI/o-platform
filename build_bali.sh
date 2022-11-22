@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export API_ENDPOINT="https://fe91fd0.dev.api.circles.land/"
+export API_ENDPOINT="https://staging.api.circlesubi.id/"
 export CIRCLES_SUBGRAPH_ENDPOINT="https://api.thegraph.com/subgraphs/name/circlesubi/circles"
 export PATHFINDER_ENDPOINT="https://rpc.circles.land/pathfinder"
 export CIRCLES_HUB_ADDRESS="0x29b9a7fBb8995b2423a71cC17cf9810798F6C543"

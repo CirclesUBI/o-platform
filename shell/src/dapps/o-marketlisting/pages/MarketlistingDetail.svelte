@@ -128,7 +128,6 @@ async function shareLink() {
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
       {#if business.lat && business.lon}
         {#if $myLocation instanceof GeolocationPosition}
-          <p>With route</p>
           <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
         {:else}
           <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
