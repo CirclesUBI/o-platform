@@ -2517,7 +2517,7 @@ export type DirectPathQuery = (
   { __typename?: 'Query' }
   & { directPath: (
     { __typename?: 'TransitivePath' }
-    & Pick<TransitivePath, 'flow'>
+    & Pick<TransitivePath, 'flow' | 'isValid'>
     & { transfers: Array<(
       { __typename?: 'TransitiveTransfer' }
       & Pick<TransitiveTransfer, 'from' | 'to' | 'token' | 'tokenOwner' | 'value'>
@@ -4072,6 +4072,7 @@ export const DirectPathDocument = gql`
     query directPath($from: String!, $to: String!, $amount: String!) {
   directPath(from: $from, to: $to, amount: $amount) {
     flow
+    isValid
     transfers {
       from
       to

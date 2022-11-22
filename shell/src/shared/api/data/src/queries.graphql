@@ -1183,6 +1183,7 @@ query getAvailableLanguages {
 query directPath($from: String!, $to: String!, $amount: String!) {
   directPath(from: $from, to: $to, amount: $amount) {
     flow
+    isValid
     transfers {
       from
       to

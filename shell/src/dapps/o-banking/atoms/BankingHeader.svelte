@@ -3,13 +3,11 @@ import TopNav from "src/shared/atoms/TopNav.svelte";
 import PageHeader from "src/shared/atoms/PageHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { me } from "../../../shared/stores/me";
 
 import { Currency } from "../../../shared/currency";
 import { BN } from "ethereumjs-util";
 import { assetBalances } from "../../../shared/stores/assetsBalances";
 import Icons from "../../../shared/molecules/Icons.svelte";
-import { Environment } from "../../../shared/environment";
 
 export let balanceEuro: string = "0";
 export let balanceTime: string = "0";
