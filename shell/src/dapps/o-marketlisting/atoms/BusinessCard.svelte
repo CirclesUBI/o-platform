@@ -13,7 +13,7 @@ function loadDetailPage(circlesAddress) {
 }
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-1">
+<section class="flex-row w-[50%] h-[50%] p-2">
   <div class="relative">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
@@ -36,6 +36,8 @@ function loadDetailPage(circlesAddress) {
       {/if}
     </div>
   </div>
-  <div class="font-bold">{business.name}</div>
-  <div class="flex-wrap">{business.description}</div>
+  <div class="p-4">
+    <div class="text-sm font-bold">{business.name}</div>
+    <div class="flex-wrap text-sm">{business.description}</div>
+  </div>
 </section>
