@@ -39,7 +39,7 @@ const processDefinition = (processId: string) =>
         invoke: {
           id: "loginWithTorus",
           src: loginWithTorus.stateMachine(`loginWithTorus`),
-          data: (context, event) => {
+          data: (context, _) => {
             return {
               data: {
                 useMockProfileIndex: context.data.useMockProfileIndex
@@ -104,12 +104,13 @@ const processDefinition = (processId: string) =>
               );
             }
             const acc = RpcGateway.get().eth.accounts.privateKeyToAccount(pk);
-            const { message, signature } = acc.sign(challenge);
+            const ch = RpcGateway.get().utils.sha3(challenge);
+            const { signature } = acc.sign(ch);
 
             const sessionResult = await apiClient.mutate({
               mutation: VerifySessionChallengeDocument,
               variables: {
-                challenge: message,
+                challenge: challenge,
                 signature: signature,
               },
             });
@@ -178,7 +179,7 @@ const processDefinition = (processId: string) =>
             context.data.successAction(context.data);
           }
         },
-        data: (context) => {
+        data: (_) => {
           return "if you don't always return something, everything will break!";
         },
         type: "final",
