@@ -30,6 +30,7 @@ query init {
       displayCurrency
       provenUniqueness
       location
+      locationName
       lat
       lon
       memberships {
@@ -468,6 +469,7 @@ query profileById($id: Int!) {
     dream
     provenUniqueness
     location
+    locationName
     lat
     lon
     verifications {
@@ -1241,6 +1243,7 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     picture
     phoneNumber
     location
+    locationName
     lat
     lon
     businessHoursMonday

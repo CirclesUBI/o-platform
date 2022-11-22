@@ -1,11 +1,11 @@
-import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {normalizePromptField, prompt, PromptField} from "@o-platform/o-process/dist/states/prompt";
+import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { normalizePromptField, prompt, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
-import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
+import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import DropDownCity from "@o-platform/o-editors/src/dropdownItems/DropDownCity.svelte";
-import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
-import {Environment} from "../environment";
+import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
+import { Environment } from "../environment";
 
 type City = {
   id: string;
@@ -14,21 +14,23 @@ type City = {
   country: string;
   address: Address;
   highlights?: {
-    [name:string]:{
-      start: number,
-      end: number
-    }[]
-  }
-}
+    [name: string]: {
+      start: number;
+      end: number;
+    }[];
+  };
+};
 
 type Address = {
   label: string;
   countryCode: string;
   countryName: string;
-}
+};
 
 export async function cityByHereId(key: string) {
-  const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${Environment.hereApiKey}`
+  const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${
+    Environment.hereApiKey
+  }`;
   const response = await fetch(url);
   return await response.json();
 }
@@ -66,8 +68,8 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
         if (o.highlights?.title?.length > 0) {
           return {
             start: o.highlights.title[0].start,
-            end: o.highlights.title[0].end
-          }
+            end: o.highlights.title[0].end,
+          };
         }
       },
       keyProperty: "id",
@@ -77,8 +79,9 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
         },
         find: async (filter: string) => {
           // https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics-api/code-autocomplete-result-type-filter.html
-          const url =
-            `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&types=city&apiKey=${Environment.hereApiKey}`;
+          const url = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(
+            filter
+          )}&types=city&apiKey=${Environment.hereApiKey}`;
 
           const response = await fetch(url);
           const json = await response.json();

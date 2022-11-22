@@ -86,14 +86,12 @@ function editProfileField(onlyThesePages: string[]) {
           </h2>
         </div>
         {#if profile}
-          {#if profile.location}
+          {#if profile.locationName}
             <div
               class="relative mt-1 text-sm text-center cursor-pointer"
               role="presentation"
               on:click="{() => editProfileField(['location'])}">
-              {profile.location ? profile.location : ""}
-              HEY DUDE
-              <!-- {profile.city ? ", " + profile.city.country : ", " + getCountryName(profile)} -->
+              {profile.locationName ? profile.locationName : ""}
             </div>
           {:else}
             <div
