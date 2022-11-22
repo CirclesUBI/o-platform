@@ -43,8 +43,8 @@ type AssetBalance {
 }
 
 type BusinessCategory {
-    category: BusinessCategory
     id: Int!
+    name: String!
 }
 
 type Businesses {
