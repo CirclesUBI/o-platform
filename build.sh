@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-export DEPLOY_ENVIRONMENT=$1
-export API_ENDPOINT=$2
-
 search='__TIMESTAMP__'
 replace=`date +"%s"`
 search_replace="s/$search/$replace/g"
