@@ -17,14 +17,12 @@ import {loadProfileByProfileId} from "../../../shared/api/loadProfileByProfileId
 import {loadProfileBySafeAddress} from "../../../shared/api/loadProfileBySafeAddress";
 import {me} from "../../../shared/stores/me";
 import {DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
-import {convertCirclesToTimeCircles, convertTimeCirclesToCircles} from "../../../shared/functions/displayCirclesAmount";
+import {convertTimeCirclesToCircles} from "../../../shared/functions/displayCirclesAmount";
 import TransferSummary from "../atoms/TransferSummary.svelte";
 import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
 import {ApiClient} from "../../../shared/apiConnection";
 import {Currency} from "../../../shared/currency";
-import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import {Utilities} from "../chain/utilities";
-import {BigNumber} from "ethers";
 import {TransferThroughResultData} from "../chain/actions/transferThrough";
 
 export type TransferContextData = {
@@ -39,22 +37,10 @@ export type TransferContextData = {
     currency: string;
     amount: string;
   };
-  maxFlows?: {
-    [currency: string]: string;
-  };
   summaryHtml?: string;
   acceptSummary?: boolean;
   successAction: (data: TransferContextData) => void;
 };
-
-export async function findDirectTransfers(from: string, to: string, amount: string) {
-  // Find all tokens which are trusted by "to"
-  return await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
-    from: from,
-    to: to,
-    amount: amount,
-  });
-}
 
 export type TransferContext = ProcessContext<TransferContextData>;
 
@@ -132,9 +118,7 @@ const processDefinition = (processId: string) =>
                 !context.data.tokens?.amount ? "0" : Utilities.toWei(context.data.tokens?.amount?.toString()).toString()
               );
               const hasAmount = amount.gt(new BN("0"));
-              //const isXdai = context.data.tokens?.currency == "xdai";
-
-              return hasSender && hasRecipient && hasAmount /* && isXdai*/;
+              return hasSender && hasRecipient && hasAmount;
             },
             target: "#loadRecipientProfile",
           },
@@ -192,44 +176,7 @@ const processDefinition = (processId: string) =>
           onDone: [
             {
               cond: (context) => !!context.data.recipientProfile,
-              target: "#getMaxFlow",
-            },
-            {
-              target: "#getMaxFlow",
-            },
-          ],
-          onError: "#error",
-        },
-      },
-      getMaxFlow: {
-        id: "getMaxFlow",
-        entry: () => {
-          window.o.publishEvent(<PlatformEvent>{
-            type: "shell.progress",
-            message: window.o.i18n("dapps.o-banking.processes.transfer.findMaxFlow.entry.message"),
-          });
-        },
-        invoke: {
-          id: "getMaxFlow",
-          src: async (context) => {
-            const flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
-              from: context.data.safeAddress,
-              to: context.data.recipientAddress,
-              amount: "9999999999999999999999999999999999",
-            });
-
-            if (!context.data.maxFlows) {
-              context.data.maxFlows = {};
-            }
-            context.data.maxFlows["crc"] = flow.flow;
-          },
-          onDone: [
-            {
-              cond: (context) => {
-                console.log('context.data.maxFlows["crc"] == "0"', context.data.maxFlows["crc"]);
-                return context.data.maxFlows["crc"] == "";
-              },
-              target: "#noTrust",
+              target: "#tokens",
             },
             {
               target: "#tokens",
@@ -238,27 +185,6 @@ const processDefinition = (processId: string) =>
           onError: "#error",
         },
       },
-      noTrust: prompt<TransferContext, any>({
-        id: "noTrust",
-        field: "__",
-        component: HtmlViewer,
-        params: (context) => {
-          return {
-            view: {
-              title: "Not trusted",
-              description: `${context.data.recipientProfile.displayName} isn't trusting you.`,
-              submitButtonText: "Go back",
-            },
-            html: () => "",
-            hideNav: false,
-          };
-        },
-        navigation: {
-          next: "#recipientAddress",
-          canGoBack: () => false,
-          canSkip: () => false,
-        },
-      }),
       tokens: prompt<TransferContext, any>({
         field: "tokens",
         component: CurrencyTransfer,
@@ -317,69 +243,21 @@ const processDefinition = (processId: string) =>
             const circlesValueInWei = Utilities.toWei(amount)
               .toString();
 
+            console.log(`Searching path for time circles amount: ${context.data.tokens.amount}`);
+            console.log(`Searching path for circles amount: ${amount}`);
+            console.log(`Searching path for circles amount in wei: ${context.data.tokens.amount}`);
+
             context.data.transitivePath = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
               from: context.data.safeAddress,
               to: context.data.recipientAddress,
               amount: circlesValueInWei,
             });
+
+            console.log(`Got a path:`, context.data.transitivePath);
           },
-          onDone: "#checkAmount",
+          onDone: "#message",
           onError: "#error",
         },
-      },
-      checkAmount: {
-        id: "checkAmount",
-        always: [
-          {
-            cond: (context, _) => {
-              if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] == "") return false;
-
-              const maxFlowInWei = BigNumber.from(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
-              console.log("maxFlowInWei", maxFlowInWei);
-
-              const amount =
-                context.data.tokens.currency == "crc"
-                  ? convertTimeCirclesToCircles(
-                      Number.parseFloat(context.data.tokens.amount),
-                      null
-                    ).toString()
-                  : context.data.tokens.amount;
-
-              const circlesValueInWei = Utilities.toWei(amount.toString() ?? 0);
-              if (maxFlowInWei.lt(circlesValueInWei) || context.data.transitivePath.transfers.length == 0) {
-                console.log(
-                  `The max flow is smaller than the entered value (${circlesValueInWei}). Max flow: ${maxFlowInWei}`
-                );
-              }
-
-              return maxFlowInWei.gte(circlesValueInWei) && context.data.transitivePath.transfers.length != 0;
-            },
-            target: "#message",
-          },
-          {
-            actions: (context) => {
-              let displayTimeCircles = true;
-              me.subscribe(($me) => {
-                displayTimeCircles = $me.displayTimeCircles || $me.displayTimeCircles === undefined;
-              })();
-
-              let formattedMax: string = "0.00";
-              if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] != "") {
-                formattedMax =
-                  convertCirclesToTimeCircles(parseFloat(
-                    Utilities.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()])
-                      .toString()), new Date().toJSON()
-                  ).toFixed(0) + ".00";
-              }
-
-              context.messages["tokens"] = window.o.i18n(
-                "dapps.o-banking.processes.transfer.checkAmount.contextMessages",
-                { values: { formattedMax: formattedMax } }
-              );
-            },
-            target: "#tokens",
-          },
-        ],
       },
       message: prompt<TransferContext, any>({
         field: "message",

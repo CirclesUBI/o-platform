@@ -11,7 +11,6 @@ import HtmlViewer from "../../../../../../../packages/o-editors/src/HtmlViewer.s
 import ErrorPage from "../../../../../shared/atoms/Error.svelte";
 import {DefaultExecutionContext} from "../../../../o-banking/chain/actions/defaultExecutionContext";
 
-
 export type AcquireSessionContextData = {
   errorRequestingChallenge?: string;
   appId?: string;

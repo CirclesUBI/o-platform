@@ -44,14 +44,18 @@ async function loadBalances(safeAddress: string) {
 
 let _set:(value:any) => void;
 
-async function _update(safeAddress:string) {
-  if (!_set)
-    return;
+async function _update(safeAddress:string) : Promise<{crcBalances:  AssetBalance[], erc20Balances:  AssetBalance[]}> {
   const balances = await loadBalances(safeAddress);
-  _set({
+  if (_set) {
+    _set({
+      crcBalances: balances.crcBalances,
+      erc20Balances: balances.erc20Balances
+    });
+  }
+  return {
     crcBalances: balances.crcBalances,
     erc20Balances: balances.erc20Balances
-  });
+  };
 }
 
 const _assetsBalances = readable<{
@@ -103,8 +107,11 @@ const _assetsBalances = readable<{
 export const assetBalances = {
   subscribe: _assetsBalances.subscribe,
   update: () => {
-    me.subscribe(async $me => {
-      _update($me.circlesAddress);
-    })();
+    return new Promise<{crcBalances:  AssetBalance[], erc20Balances:  AssetBalance[]}>(async (resolve) => {
+      me.subscribe(async $me => {
+        const balances = await _update($me.circlesAddress);
+        resolve(balances);
+      })();
+    })
   }
 }
