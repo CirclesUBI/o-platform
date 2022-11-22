@@ -1,29 +1,29 @@
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { createMachine } from "xstate";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { promptChoice } from "../../o-passport/processes/identify/prompts/promptChoice";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {createMachine} from "xstate";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {promptChoice} from "../../o-passport/processes/identify/prompts/promptChoice";
 import ButtonStackSelector from "@o-platform/o-editors/src/ButtonStackSelector.svelte";
 import PinInputEditor from "../../../../../packages/o-editors/src/Pin/PinInputEditor.svelte";
 import * as yup from "yup";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import { KeyManager } from "../../o-passport/data/keyManager";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
+import {KeyManager} from "../../o-passport/data/keyManager";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { show } from "@o-platform/o-process/dist/actions/show";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {show} from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import { getOpenLogin, GetOpenLoginResult } from "../../../shared/openLogin";
+import {getOpenLogin, GetOpenLoginResult} from "../../../shared/openLogin";
 import {
   FindInvitationCreatorDocument,
   Profile,
   QueryFindInvitationCreatorArgs,
 } from "../../../shared/api/data/types";
-import { ApiClient } from "../../../shared/apiConnection";
-import { AvataarGenerator } from "../../../shared/avataarGenerator";
-import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
-import { OpenloginUserInfo } from "@toruslabs/openlogin";
-import { Environment } from "../../../shared/environment";
+import {ApiClient} from "../../../shared/apiConnection";
+import {AvataarGenerator} from "../../../shared/avataarGenerator";
+import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
+import {OpenloginUserInfo} from "@toruslabs/openlogin";
+import {Environment} from "../../../shared/environment";
 
 export type LoginWithTorusContextData = {
   chooseFlow?: {
@@ -64,20 +64,19 @@ let loginOptions = [
     class: "btn btn-outline",
     icon: "facebook",
   },
-  /*
   {
     key: "github",
     label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
     target: "#github",
     class: "btn btn-outline",
     icon: "github",
-  } 
-          {
-            key: "email",
-            label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.email.label"),
-            target: "#email",
-            class: "btn-info",
-          }*/
+  },
+  {
+    key: "email",
+    label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.email.label"),
+    target: "#email",
+    class: "btn-info",
+  }
 ];
 
 const processDefinition = (processId: string) =>
@@ -207,6 +206,19 @@ const processDefinition = (processId: string) =>
               class: "btn btn-outline",
               icon: "facebook",
             },
+            {
+              key: "github",
+              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
+              target: "#github",
+              class: "btn btn-outline",
+              icon: "github",
+            },
+            {
+              key: "email",
+              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.email.label"),
+              target: "#email",
+              class: "btn-info",
+            }
           ]),
         }),
         useMockProfile: {
@@ -375,48 +387,69 @@ const processDefinition = (processId: string) =>
             ],
           },
         },
-      facebook: {
-        id: "facebook",
-        invoke: {
-          src: async (context) => {
-            const openLogin = await getOpenLogin();
-            const privateKey = await openLogin.login({
-              loginProvider: "facebook",
-            });
-            return {
-              privateKey: privateKey,
-              userInfo: await openLogin.getUserInfo(),
-            };
-          },
-          onDone: {
-            actions: "assignPrivateKeyAndUserInfoToContext",
-            target: "#enterEncryptionPin"
-          },
-          onError: {
-            target: "#chooseFlow",
+        facebook: {
+          id: "facebook",
+          invoke: {
+            src: async (context) => {
+              const openLogin = await getOpenLogin();
+              const privateKey = await openLogin.login({
+                loginProvider: "facebook",
+              });
+              return {
+                privateKey: privateKey.privKey,
+                userInfo: await openLogin.getUserInfo(),
+              };
+            },
+            onDone: {
+              actions: "assignPrivateKeyAndUserInfoToContext",
+              target: "#enterEncryptionPin"
+            },
+            onError: {
+              target: "#chooseFlow",
+            }
           }
-        }
-      },
-      /*
-      email: {
-        id: "email",
-        invoke: {
-          src: async (context) => {
-            const openLogin = await getOpenLogin();
-            const privateKey = await openLogin.login({
-              loginProvider: "email_passwordless",
-            });
-            return {
-              privateKey: privateKey,
-              userInfo: await openLogin.getUserInfo()
-            };
+        },
+        github: {
+          id: "github",
+          invoke: {
+            src: async (context) => {
+              const openLogin = await getOpenLogin();
+              const privateKey = await openLogin.login({
+                loginProvider: "github"
+              });
+              return {
+                privateKey: privateKey.privKey,
+                userInfo: await openLogin.getUserInfo()
+              };
+            },
+            onDone: {
+              actions: "assignPrivateKeyAndUserInfoToContext",
+              target: "#enterEncryptionPin",
+            },
+            onError: {
+              target: "#chooseFlow",
+            },
           },
-          onDone: {
-            actions: "assignPrivateKeyAndUserInfoToContext",
-            target: "#enterEncryptionPin"
+        },
+        email: {
+          id: "email",
+          invoke: {
+            src: async (context) => {
+              const openLogin = await getOpenLogin();
+              const privateKey = await openLogin.login({
+                loginProvider: "email_passwordless",
+              });
+              return {
+                privateKey: privateKey.privKey,
+                userInfo: await openLogin.getUserInfo()
+              };
+            },
+            onDone: {
+              actions: "assignPrivateKeyAndUserInfoToContext",
+              target: "#enterEncryptionPin"
+            }
           }
-        }
-      },*/
+        },
         enterEncryptionPin: prompt<LoginWithTorusContext, any>({
           id: "enterEncryptionPin",
           field: "encryptionPin",
@@ -518,7 +551,7 @@ const processDefinition = (processId: string) =>
           invoke: {
             src: async (context) => {
               const km = new KeyManager(null);
-              const account = RpcGateway.get().eth.accounts.privateKeyToAccount(context.data.privateKey);
+              const account = (<any>window).rpcGateway.eth.accounts.privateKeyToAccount(context.data.privateKey);
 
               await km.addEoa(account.address, account.privateKey, context.data.encryptionPin, "torus");
 
@@ -544,7 +577,8 @@ const processDefinition = (processId: string) =>
             field: {
               name: "",
               get: () => undefined,
-              set: (o: any) => {},
+              set: (o: any) => {
+              },
             },
           }),
         },
