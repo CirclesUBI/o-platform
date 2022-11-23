@@ -69,16 +69,6 @@ query init {
       }
       # init.ubi
       circlesTokenAddress
-      favorites {
-        createdAt
-        comment
-        favorite {
-          circlesAddress
-          avatarUrl
-          displayName
-          dream
-        }
-      }
     }
   }
 }
@@ -221,16 +211,6 @@ query myProfile {
         displayCurrency
         avatarUrl
         name
-      }
-    }
-    favorites {
-      createdAt
-      comment
-      favorite {
-        circlesAddress
-        avatarUrl
-        displayName
-        dream
       }
     }
   }
@@ -1263,5 +1243,14 @@ query allBusinessCategories {
   allBusinessCategories {
     id
     name
+  }
+}
+
+query myFavorites {
+  myFavorites {
+    createdAt
+    createdByAddress
+    favoriteAddress
+    comment
   }
 }

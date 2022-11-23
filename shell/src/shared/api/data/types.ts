@@ -345,8 +345,9 @@ export type Favorite = {
   __typename?: 'Favorite';
   comment?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
-  createdBy: Profile;
-  favorite: Profile;
+  createdByAddress: Scalars['String'];
+  favorite?: Maybe<Profile>;
+  favoriteAddress: Scalars['String'];
 };
 
 export type FibonacciGoals = {
@@ -866,6 +867,7 @@ export type Query = {
   init: SessionInfo;
   invitationTransaction?: Maybe<ProfileEvent>;
   lastAcknowledgedAt?: Maybe<Scalars['Date']>;
+  myFavorites: Array<Favorite>;
   myInvitations: Array<CreatedInvitation>;
   myProfile?: Maybe<Profile>;
   organisations: Array<Organisation>;
@@ -1708,14 +1710,7 @@ export type InitQuery = (
       )>, invitationTransaction?: Maybe<(
         { __typename?: 'ProfileEvent' }
         & Pick<ProfileEvent, 'timestamp' | 'transaction_hash'>
-      )>, favorites?: Maybe<Array<(
-        { __typename?: 'Favorite' }
-        & Pick<Favorite, 'createdAt' | 'comment'>
-        & { favorite: (
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'circlesAddress' | 'avatarUrl' | 'displayName' | 'dream'>
-        ) }
-      )>> }
+      )> }
     )> }
   ) }
 );
@@ -1847,13 +1842,6 @@ export type MyProfileQuery = (
         { __typename?: 'Organisation' }
         & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
       )> }
-    )>>, favorites?: Maybe<Array<(
-      { __typename?: 'Favorite' }
-      & Pick<Favorite, 'createdAt' | 'comment'>
-      & { favorite: (
-        { __typename?: 'Profile' }
-        & Pick<Profile, 'circlesAddress' | 'avatarUrl' | 'displayName' | 'dream'>
-      ) }
     )>> }
   )> }
 );
@@ -2591,6 +2579,17 @@ export type AllBusinessCategoriesQuery = (
   )> }
 );
 
+export type MyFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyFavoritesQuery = (
+  { __typename?: 'Query' }
+  & { myFavorites: Array<(
+    { __typename?: 'Favorite' }
+    & Pick<Favorite, 'createdAt' | 'createdByAddress' | 'favoriteAddress' | 'comment'>
+  )> }
+);
+
 export type EventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2914,16 +2913,6 @@ export const InitDocument = gql`
         transaction_hash
       }
       circlesTokenAddress
-      favorites {
-        createdAt
-        comment
-        favorite {
-          circlesAddress
-          avatarUrl
-          displayName
-          dream
-        }
-      }
     }
   }
 }
@@ -3074,16 +3063,6 @@ export const MyProfileDocument = gql`
         displayCurrency
         avatarUrl
         name
-      }
-    }
-    favorites {
-      createdAt
-      comment
-      favorite {
-        circlesAddress
-        avatarUrl
-        displayName
-        dream
       }
     }
   }
@@ -4160,6 +4139,16 @@ export const AllBusinessCategoriesDocument = gql`
   }
 }
     `;
+export const MyFavoritesDocument = gql`
+    query myFavorites {
+  myFavorites {
+    createdAt
+    createdByAddress
+    favoriteAddress
+    comment
+  }
+}
+    `;
 export const EventsDocument = gql`
     subscription events {
   events {
@@ -4360,6 +4349,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
       return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
+    },
+    myFavorites(variables?: MyFavoritesQueryVariables): Promise<MyFavoritesQuery> {
+      return withWrapper(() => client.request<MyFavoritesQuery>(print(MyFavoritesDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));

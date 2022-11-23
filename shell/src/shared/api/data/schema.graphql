@@ -244,8 +244,9 @@ type ExportTrustRelation {
 type Favorite {
     comment: String
     createdAt: String!
-    createdBy: Profile!
-    favorite: Profile!
+    createdByAddress: String!
+    favorite: Profile
+    favoriteAddress: String!
 }
 
 type FibonacciGoals {
@@ -539,6 +540,7 @@ type Query {
     init: SessionInfo!
     invitationTransaction: ProfileEvent
     lastAcknowledgedAt(safeAddress: String!): Date
+    myFavorites: [Favorite!]!
     myInvitations: [CreatedInvitation!]!
     myProfile: Profile
     organisations(pagination: PaginationArgs): [Organisation!]!
