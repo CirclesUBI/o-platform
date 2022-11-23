@@ -12,6 +12,7 @@ import {CapabilityType, Organisation, Profile} from "../shared/api/data/types";
 import {me} from "../shared/stores/me";
 import {getSessionInfo} from "./o-passport/processes/identify/services/getSessionInfo";
 import {addOwner} from "./o-coop/processes/addOwner";
+import {push} from "svelte-spa-router";
 
 const index: Page<any, ContactsDappState> = {
   routeParts: ["=organisations"],
@@ -76,9 +77,12 @@ export const coop: DappManifest<DappState> = {
                     __typename: "Organisation",
                     type: "Organisation",
                     name: createdOrga.profile.firstName,
-                    description: createdOrga.profile.dream
+                    description: createdOrga.profile.dream,
+                    locationName: createdOrga.profile.locationName,
+                    location: createdOrga.profile.location
                   },
                 });
+                push("#/passport/profile");
                 // location.reload();
               },
             },
