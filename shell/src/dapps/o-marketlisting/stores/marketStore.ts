@@ -6,6 +6,7 @@ import {myLocation} from "../../../shared/stores/myLocation";
 export type MarketListingData = {
   businesses: Businesses[]
   orderBy: QueryAllBusinessesOrderOptions
+  filter?: number[]
   messages: string[]
 }
 
@@ -27,7 +28,7 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
   }
 });
 
-function reload(orderBy: QueryAllBusinessesOrderOptions) {
+function reload(orderBy: QueryAllBusinessesOrderOptions, filter?:number[]) {
   let ownLocation: GeolocationPosition | undefined;
 
   if (orderBy == QueryAllBusinessesOrderOptions.Nearest) {
@@ -46,6 +47,10 @@ function reload(orderBy: QueryAllBusinessesOrderOptions) {
       ? _marketListingData.orderBy
       : QueryAllBusinessesOrderOptions.Nearest;
 
+  if (filter?.length === 0) {
+    filter = undefined;
+  }
+
   if (orderBy != newOrder) {
     _marketListingData.messages = ["The last action couldn't be completed without you current location. Please try it again once the location is available."];
   } else {
@@ -62,11 +67,17 @@ function reload(orderBy: QueryAllBusinessesOrderOptions) {
           lat: ownLocation.coords.latitude,
           lon: ownLocation.coords.longitude
         }
+      } : {},
+      ...filter ? {
+        where: {
+          inCategories: filter
+        }
       } : {}
     }
   })
   .then(businesses => {
     _marketListingData.orderBy = orderBy;
+    _marketListingData.filter = filter;
     _marketListingData.businesses = businesses;
     _set(_marketListingData);
   });
