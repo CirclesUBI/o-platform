@@ -29,12 +29,16 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
 
 function reload(orderBy: QueryAllBusinessesOrderOptions) {
   let ownLocation: GeolocationPosition | undefined;
-  myLocation.subscribe(loc => {
-    if (!loc || loc instanceof Error || loc instanceof GeolocationPositionError) {
-      return;
-    }
-    ownLocation = loc;
-  })();
+
+  if (orderBy == QueryAllBusinessesOrderOptions.Nearest) {
+    myLocation.subscribe((o) => {
+      if (!o || o instanceof GeolocationPositionError || o instanceof Error) {
+        myLocation.reload();
+      } else {
+        ownLocation = o;
+      }
+    })();
+  }
 
   const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest
     ? orderBy
@@ -43,7 +47,9 @@ function reload(orderBy: QueryAllBusinessesOrderOptions) {
       : QueryAllBusinessesOrderOptions.Nearest;
 
   if (orderBy != newOrder) {
-    _marketListingData.messages.push("Location unknown.");
+    _marketListingData.messages = ["The last action couldn't be completed without you current location. Please try it again once the location is available."];
+  } else {
+    _marketListingData.messages = [];
   }
 
   ApiClient.query<Businesses[], any>(AllBusinessesDocument, {

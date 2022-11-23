@@ -52,7 +52,7 @@ onMount(async () => {
     </div>
     <div class="w-36 dropdown dropdown-end">
       <button class="text-black bg-white btn w-36 border-1 whitespace-nowrap"
-        ><span><Icon name="chevron-down" class="w-6 h-6" /></span>{sortedBy}</button>
+        ><span><Icon name="chevron-down" class="w-6 h-6" /></span>{$marketStore.orderBy}</button>
       <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
         <li>
           <button class="block w-full" on:click="{() => {
@@ -63,22 +63,7 @@ onMount(async () => {
         <li>
           <button class="block w-full" on:click="{() => {
               sortedBy = 'Nearest';
-              if ($myLocation instanceof GeolocationPosition) {
-                marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
-              } else {
-                myLocation.reload();
-                let unsub = null;
-                unsub = myLocation.subscribe((o) => {
-                  if (unsub) {
-                    unsub();
-                  }
-                  if (o instanceof GeolocationPositionError) {
-                    alert(`Couldn't get the location`);
-                  } else {
-                    marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
-                  }
-                });
-              }
+              marketStore.reload(QueryAllBusinessesOrderOptions.Nearest);
             }}">Sort by nearest</button>
         </li>
         <li>
