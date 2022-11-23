@@ -3,6 +3,7 @@ import { createEventDispatcher } from "svelte";
 import { push } from "svelte-spa-router";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { Businesses } from "../../../shared/api/data/types";
+import {marketFavoritesStore} from "../stores/marketFavoritesStore";
 
 export let business: Businesses & { isFavorite: boolean };
 
@@ -29,7 +30,7 @@ function loadDetailPage(circlesAddress) {
       on:click="{() => {
         eventDispatcher('toggleFavorite', business.circlesAddress);
       }}">
-      {#if business.isFavorite}
+      {#if $marketFavoritesStore[business.circlesAddress]}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
       {:else}
         <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />

@@ -1,25 +1,21 @@
 <script lang="ts">
-import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { onMount } from "svelte";
 import { ApiClient } from "../../../shared/apiConnection";
 import {
-  AllBusinessesDocument,
-  AllBusinessesQueryVariables,
   Businesses,
   LinkTargetType,
 } from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
-import { me } from "../../../shared/stores/me";
 import Map from "../../../dapps/o-marketlisting/atoms/Map.svelte";
 import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
 import { myLocation } from "../../../shared/stores/myLocation";
-import { businesses } from "../../../shared/stores/businesses";
+import {marketFavoritesStore} from "../stores/marketFavoritesStore";
+import {marketStore} from "../stores/marketStore";
 
 export let circlesAddress: string;
 
-let business: Businesses & { isFavorite: boolean };
+let business: Businesses;
 
 let visible: boolean = false;
 let currentDayOpenHours = "";
@@ -28,29 +24,31 @@ let everythingAfterTheCurrentDay = [];
 
 let mapHeight = "16em";
 
-async function reload() {
-  business = await businesses.findByCirclesAddress(circlesAddress);
-
-  const currentDateIndex = new Date().getDay();
-  const businessHours = [
-    business.businessHoursSunday + " Sunday",
-    business.businessHoursMonday + " Monday",
-    business.businessHoursTuesday + " Tuesday",
-    business.businessHoursWednesday + " Wednesday",
-    business.businessHoursThursday + " Thursday",
-    business.businessHoursFriday + " Friday",
-    business.businessHoursSaturday + " Saturday",
-  ];
-
-  currentDayOpenHours = businessHours[currentDateIndex];
-  everythingBeforeTheCurrentDay = businessHours.slice(0, currentDateIndex);
-  if (currentDateIndex < businessHours.length) {
-    everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
-  }
-}
-
 onMount(async () => {
-  await reload();
+  return marketStore.subscribe(data => {
+    if (!data || data.businesses.length == 0) {
+      return;
+    }
+
+    business = data.businesses.find(o => o.circlesAddress == circlesAddress);
+
+    const currentDateIndex = new Date().getDay();
+    const businessHours = [
+      business.businessHoursSunday + " Sunday",
+      business.businessHoursMonday + " Monday",
+      business.businessHoursTuesday + " Tuesday",
+      business.businessHoursWednesday + " Wednesday",
+      business.businessHoursThursday + " Thursday",
+      business.businessHoursFriday + " Friday",
+      business.businessHoursSaturday + " Saturday",
+    ];
+
+    currentDayOpenHours = businessHours[currentDateIndex];
+    everythingBeforeTheCurrentDay = businessHours.slice(0, currentDateIndex);
+    if (currentDateIndex < businessHours.length) {
+      everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
+    }
+  });
 });
 
 async function shareLink() {
@@ -72,10 +70,9 @@ async function shareLink() {
       <div
         role="presentation"
         on:click="{() => {
-          businesses.toggleFavorite(business.circlesAddress);
-          reload();
+          marketFavoritesStore.toggleFavorite(business.circlesAddress);
         }}">
-        {#if business.isFavorite}
+        {#if $marketFavoritesStore[business.circlesAddress]}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
         {:else}
           <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />

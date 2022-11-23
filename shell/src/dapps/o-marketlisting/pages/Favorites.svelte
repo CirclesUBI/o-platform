@@ -6,6 +6,7 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import BusinessCard from "../atoms/BusinessCard.svelte";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { myLocation } from "src/shared/stores/myLocation";
+import { businesses } from "src/shared/stores/businesses";
 import { QueryAllBusinessesOrderOptions } from "src/shared/api/data/types";
 import { onMount } from "svelte";
 import {
@@ -15,7 +16,6 @@ import {
 } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
 import {marketFavoritesStore} from "../stores/marketFavoritesStore";
-import {marketStore} from "../stores/marketStore";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -44,7 +44,7 @@ onMount(async () => {
         {#each categories as category}
           <li>
             <button class="block w-full" on:click="{() => {
-              marketStore.reload();
+              businesses.reload();
             }}">{category.name}</button>
           </li>
         {/each}
@@ -57,14 +57,14 @@ onMount(async () => {
         <li>
           <button class="block w-full" on:click="{() => {
             sortedBy = 'Most popular';
-            marketStore.reload(QueryAllBusinessesOrderOptions.MostPopular);
+            businesses.reload(QueryAllBusinessesOrderOptions.MostPopular);
           }}">Sort by most popular</button>
         </li>
         <li>
           <button class="block w-full" on:click="{() => {
               sortedBy = 'Nearest';
               if ($myLocation instanceof GeolocationPosition) {
-                marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+                businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
               } else {
                 myLocation.reload();
                 let unsub = null;
@@ -75,7 +75,7 @@ onMount(async () => {
                   if (o instanceof GeolocationPositionError) {
                     alert(`Couldn't get the location`);
                   } else {
-                    marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
+                    businesses.reload(QueryAllBusinessesOrderOptions.Nearest, $myLocation);
                   }
                 });
               }
@@ -84,19 +84,19 @@ onMount(async () => {
         <li>
           <button class="block w-full" on:click="{() => {
               sortedBy = 'Newest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Newest);
+              businesses.reload(QueryAllBusinessesOrderOptions.Newest);
             }}">Sort by newest</button>
         </li>
         <li>
           <button class="block w-full" on:click="{() => {
               sortedBy = 'Oldest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Oldest);
+              businesses.reload(QueryAllBusinessesOrderOptions.Oldest);
             }}">Sort by oldest</button>
         </li>
         <li>
           <button class="block w-full" on:click="{() => {
               sortedBy = 'Alphabetical';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Alphabetical);
+              businesses.reload(QueryAllBusinessesOrderOptions.Alphabetical);
             }}">Sort by name</button>
         </li>
       </ul>
@@ -104,12 +104,7 @@ onMount(async () => {
   </div>
 
   <div class="flex flex-wrap content-center p-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2 justify-evenly">
-    {#if $marketStore.messages.length > 0}
-      {#each $marketStore.messages as message}
-        <p>{message}</p>
-      {/each}
-    {/if}
-    {#each $marketStore.businesses as business}
+    {#each $businesses.sort((a, b) => (a.index > b.index ? 1 : a.index < b.index ? -1 : 0)) as business}
       <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
     {/each}
   </div>
