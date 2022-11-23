@@ -28,6 +28,7 @@ export type CreateOrganisationContextData = {
   circlesAddress: string;
   description: string;
   name: string;
+  displayName: string;
   organisationSafeProxy: GnosisSafeProxy;
   location: string;
   locationName: string;
@@ -247,26 +248,23 @@ const processDefinition = (processId: string) =>
         entry: () => console.log(`upsertOrganisation ...`),
         invoke: {
           src: async (context) => {
-            // return result.data.upsertProfile;
             if (context.data.location) {
               const city = await cityByHereId(context.data.location);
               context.data.lat = city.position.lat;
               context.data.lon = city.position.lng;
               context.data.locationName = city.title;
-              console.log("LOCATIONNAME: ", city.address.city);
             }
-
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
               variables: {
                 organisation: {
+
                   avatarMimeType: context.data.avatarMimeType,
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
                   description: context.data.description,
                   name: context.data.name,
-                  id: context.data.id,
                   location: context.data.location,
                   lat: context.data.lat,
                   lon: context.data.lon,
@@ -274,6 +272,7 @@ const processDefinition = (processId: string) =>
                 },
               },
             });
+            context.data.displayName = context.data.name;
             context.data = {
               ...context.data,
               ...result.data.upsertOrganisation.organisation,

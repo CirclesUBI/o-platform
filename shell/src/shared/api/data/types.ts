@@ -2071,7 +2071,7 @@ export type OrganisationsQuery = (
   { __typename?: 'Query' }
   & { organisations: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl' | 'location' | 'locationName'>
   )> }
 );
 
@@ -2095,7 +2095,7 @@ export type OrganisationsByAddressQuery = (
   { __typename?: 'Query' }
   & { organisationsByAddress: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl' | 'displayName'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl' | 'displayName' | 'location' | 'locationName'>
     & { members?: Maybe<Array<(
       { __typename?: 'Organisation' }
       & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'displayName' | 'avatarUrl'>
@@ -2235,7 +2235,7 @@ export type StreamQuery = (
       & Pick<MemberAdded, 'createdBy' | 'isAdmin' | 'member' | 'organisation'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MembershipAccepted' }
@@ -2245,7 +2245,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MembershipOffer' }
@@ -2255,7 +2255,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MembershipRejected' }
@@ -2265,7 +2265,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'NewUser' }
@@ -2278,14 +2278,14 @@ export type StreamQuery = (
       & Pick<OrganisationCreated, 'organisation'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'SafeVerified' }
       & Pick<SafeVerified, 'safe_address'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency'>
+        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'WelcomeMessage' }
@@ -2330,7 +2330,7 @@ export type AggregatesQuery = (
             & Pick<Membership, 'isAdmin'>
             & { organisation: (
               { __typename?: 'Organisation' }
-              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl' | 'locationName' | 'location'>
             ) }
           )>>, members?: Maybe<Array<(
             { __typename?: 'Profile' }
@@ -3405,6 +3405,8 @@ export const OrganisationsDocument = gql`
     createdAt
     name
     avatarUrl
+    location
+    locationName
   }
 }
     `;
@@ -3430,6 +3432,8 @@ export const OrganisationsByAddressDocument = gql`
     name
     avatarUrl
     displayName
+    location
+    locationName
     members {
       ... on Organisation {
         id
@@ -3687,6 +3691,8 @@ export const StreamDocument = gql`
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
         isAdmin
       }
@@ -3709,6 +3715,8 @@ export const StreamDocument = gql`
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MembershipRejected {
@@ -3729,6 +3737,8 @@ export const StreamDocument = gql`
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on WelcomeMessage {
@@ -3771,6 +3781,8 @@ export const StreamDocument = gql`
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MemberAdded {
@@ -3784,6 +3796,8 @@ export const StreamDocument = gql`
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on SafeVerified {
@@ -3794,6 +3808,8 @@ export const StreamDocument = gql`
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on NewUser {
@@ -3897,6 +3913,8 @@ export const AggregatesDocument = gql`
                 name
                 description
                 avatarUrl
+                locationName
+                location
               }
             }
             members {
