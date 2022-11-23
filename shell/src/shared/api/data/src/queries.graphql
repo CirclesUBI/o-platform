@@ -334,6 +334,10 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
     dream
     avatarUrl
     provenUniqueness
+    location
+    locationName
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -376,6 +380,10 @@ query profilesByIds($id: [Int!]!) {
     dream
     avatarUrl
     provenUniqueness
+    location
+    locationName
+    lat
+    lon
     verifications {
       createdAt
       revokedAt
@@ -406,6 +414,10 @@ query trustRelations($safeAddress: String!) {
       circlesAddress
       displayCurrency
       provenUniqueness
+      location
+      locationName
+      lat
+      lon
     }
     direction
     otherSafeAddress
@@ -419,6 +431,10 @@ query trustRelations($safeAddress: String!) {
       circlesAddress
       displayCurrency
       provenUniqueness
+      location
+      locationName
+      lat
+      lon
       verifications {
         createdAt
         revokedAt
@@ -490,7 +506,10 @@ query profileBySafeAddress($safeAddress: String!) {
     displayTimeCircles
     displayCurrency
     provenUniqueness
-
+    location
+    locationName
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
