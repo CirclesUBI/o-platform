@@ -295,22 +295,6 @@ const processDefinition = (processId: string) =>
           ],
           invoke: {
             src: async (context) => {
-              /*
-              const openLogin = await getOpenLogin();
-              const authResult = await openLogin.triggerLogin({
-                typeOfLogin: "google",
-                verifier: "circles-google-testnet",
-                clientId:
-                  "906916064114-5m4nsuvu0uhs2gnav4me4rsdrnlf445k.apps.googleusercontent.com",
-              });
-              context.data.privateKey = authResult.privateKey;
-              context.data.userInfo = authResult.userInfo;
-              return {
-                privateKey: context.data.privateKey,
-                userInfo: context.data.userInfo,
-              };
-
-               */
               const openLogin = await getOpenLogin();
               const privateKey = await openLogin.login({
                 loginProvider: "google",
@@ -404,9 +388,18 @@ const processDefinition = (processId: string) =>
               actions: "assignPrivateKeyAndUserInfoToContext",
               target: "#enterEncryptionPin"
             },
-            onError: {
-              target: "#chooseFlow",
-            }
+            onError: [
+              {
+                // user closed popup
+                cond: (context, event) => event.data.message == "user closed popup",
+                target: "#chooseFlow",
+              },
+              {
+                cond: (context, event) => (window.o.lastError = event.data),
+                actions: setWindowLastError,
+                target: "#showError",
+              },
+            ],
           }
         },
         github: {
@@ -426,9 +419,18 @@ const processDefinition = (processId: string) =>
               actions: "assignPrivateKeyAndUserInfoToContext",
               target: "#enterEncryptionPin",
             },
-            onError: {
-              target: "#chooseFlow",
-            },
+            onError: [
+              {
+                // user closed popup
+                cond: (context, event) => event.data.message == "user closed popup",
+                target: "#chooseFlow",
+              },
+              {
+                cond: (context, event) => (window.o.lastError = event.data),
+                actions: setWindowLastError,
+                target: "#showError",
+              },
+            ],
           },
         },
         email: {
@@ -447,7 +449,19 @@ const processDefinition = (processId: string) =>
             onDone: {
               actions: "assignPrivateKeyAndUserInfoToContext",
               target: "#enterEncryptionPin"
-            }
+            },
+            onError: [
+              {
+                // user closed popup
+                cond: (context, event) => event.data.message == "user closed popup",
+                target: "#chooseFlow",
+              },
+              {
+                cond: (context, event) => (window.o.lastError = event.data),
+                actions: setWindowLastError,
+                target: "#showError",
+              },
+            ],
           }
         },
         enterEncryptionPin: prompt<LoginWithTorusContext, any>({

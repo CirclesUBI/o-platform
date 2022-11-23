@@ -158,7 +158,7 @@ const processDefinition = (processId: string) =>
               const city = await cityByHereId(context.data.location);
               context.data.lat = city.position.lat;
               context.data.lon = city.position.lng;
-              context.data.locationName = city.address.city;
+              context.data.locationName = city.title;
             }
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({

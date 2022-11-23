@@ -289,7 +289,6 @@ const processDefinition = (processId: string) =>
               context.data.lat = city.position.lat;
               context.data.lon = city.position.lng;
               context.data.locationName = city.address.city;
-              console.log("LOCATIONNAME: ", city.address.city);
             }
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();

@@ -8,7 +8,7 @@ import {addMember} from "./o-coop/processes/addMember";
 import {JumplistItem} from "@o-platform/o-interfaces/dist/routables/jumplist";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {loadProfile} from "../shared/functions/loadProfile";
-import {CapabilityType, Profile} from "../shared/api/data/types";
+import {CapabilityType, Organisation, Profile} from "../shared/api/data/types";
 import {me} from "../shared/stores/me";
 import {getSessionInfo} from "./o-passport/processes/identify/services/getSessionInfo";
 import {addOwner} from "./o-coop/processes/addOwner";
@@ -71,9 +71,15 @@ export const coop: DappManifest<DappState> = {
                 });
                 window.o.publishEvent(<PlatformEvent>{
                   type: "shell.authenticated",
-                  profile: createdOrga.profile,
+                  profile: {
+                    ...createdOrga.profile,
+                    __typename: "Organisation",
+                    type: "Organisation",
+                    name: createdOrga.profile.firstName,
+                    description: createdOrga.profile.dream
+                  },
                 });
-                location.reload();
+                // location.reload();
               },
             },
             {}
