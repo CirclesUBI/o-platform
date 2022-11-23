@@ -13,6 +13,9 @@
 
 <div style="visibility: hidden;" class="bg-market"></div>
 <MarketlistingFrame runtimeDapp="{runtimeDapp}" routable="{routable}">
+  {#if $marketStore.businesses.filter(o => $marketFavoritesStore[o.circlesAddress]).length == 0}
+    <p>No entries</p>
+  {/if}
   {#each $marketStore.businesses.filter(o => $marketFavoritesStore[o.circlesAddress]) as business}
     <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
   {/each}

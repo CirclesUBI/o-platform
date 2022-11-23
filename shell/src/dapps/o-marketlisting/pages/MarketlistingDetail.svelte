@@ -31,6 +31,8 @@ onMount(async () => {
     }
 
     business = data.businesses.find(o => o.circlesAddress == circlesAddress);
+    if (!business)
+      return;
 
     const currentDateIndex = new Date().getDay();
     const businessHours = [
