@@ -547,6 +547,8 @@ query organisations($pagination: PaginationArgs) {
     createdAt
     name
     avatarUrl
+    location
+    locationName
   }
 }
 
@@ -570,6 +572,8 @@ query organisationsByAddress($addresses: [String!]!) {
     name
     avatarUrl
     displayName
+    location
+    locationName
     members {
       ... on Organisation {
         id
@@ -819,6 +823,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
         isAdmin
       }
@@ -841,6 +847,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MembershipRejected {
@@ -861,6 +869,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on WelcomeMessage {
@@ -903,6 +913,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MemberAdded {
@@ -916,6 +928,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on SafeVerified {
@@ -926,6 +940,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on NewUser {
@@ -1028,6 +1044,8 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 name
                 description
                 avatarUrl
+                locationName
+                location
               }
             }
             members {
