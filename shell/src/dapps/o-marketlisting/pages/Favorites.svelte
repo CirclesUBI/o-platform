@@ -6,9 +6,12 @@
   import {marketFavoritesStore} from "../stores/marketFavoritesStore";
   import {marketStore} from "../stores/marketStore";
   import MarketlistingFrame from "../molecules/MarketlistingFrame.svelte";
+  import {marketFilterStore} from "../stores/marketFilterStore";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
+
+  console.log($marketFilterStore);
 </script>
 
 <div style="visibility: hidden;" class="bg-market"></div>

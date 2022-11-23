@@ -23,7 +23,7 @@ const initial = {
 
 const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
-  reload(QueryAllBusinessesOrderOptions.MostPopular);
+  reload(_marketListingData.orderBy, _marketListingData.filter);
   return function stop() {
   }
 });

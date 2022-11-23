@@ -13,6 +13,7 @@
   } from "../../../shared/api/data/types";
   import {ApiClient} from "../../../shared/apiConnection";
   import {marketStore} from "../stores/marketStore";
+  import {marketFilterStore} from "../stores/marketFilterStore";
 
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
@@ -21,8 +22,7 @@
 
   let categories: BusinessCategory[] = [];
   let sortedBy: SortedByTypes = "Most popular";
-  let categoryFilter: number[] = [];
-
+  
   onMount(async () => {
     categories = await ApiClient.query<BusinessCategory[], AllBusinessCategoriesQueryVariables>(
       AllBusinessCategoriesDocument,
@@ -37,30 +37,29 @@
     <div class="flex justify-around p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2">
         <div class="w-36 dropdown">
             <button class="text-black bg-white btn w-36 border-1"
-            ><span><Icon name="adjustments" class="w-6 h-6"/></span>Filter {categoryFilter.length > 0 ? `(${categoryFilter.length})` : ``}
+            ><span><Icon name="adjustments" class="w-6 h-6"/></span>Filter {$marketFilterStore.length > 0 ? `(${$marketFilterStore.length})` : ``}
             </button>
             <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-                {#if categoryFilter.length > 0}
+                {#if $marketFilterStore.length > 0}
                 <li>
                     <button class="block w-full" on:click="{() => {
-                      categoryFilter = [];
-                      marketStore.reload($marketStore.orderBy, categoryFilter);
+                      $marketFilterStore = [];
+                      marketStore.reload($marketStore.orderBy, $marketFilterStore);
                     }}"><b>x Clear</b></button>
                 </li>
                 {/if}
                 {#each categories as category}
                     <li>
-                    {#if categoryFilter.indexOf(category.id) >= 0}
+                    {#if $marketFilterStore.indexOf(category.id) >= 0}
                         <button class="block w-full" on:click="{() => {
-                          categoryFilter.splice(categoryFilter.indexOf(category.id), 1);
-                          categoryFilter = categoryFilter;
-                          marketStore.reload($marketStore.orderBy, categoryFilter);
+                          $marketFilterStore.splice($marketFilterStore.indexOf(category.id), 1);
+                          $marketFilterStore = $marketFilterStore;
+                          marketStore.reload($marketStore.orderBy, $marketFilterStore);
                         }}"> ✓ {category.name}</button>
                     {:else}
                         <button class="block w-full" on:click="{() => {
-                          categoryFilter = categoryFilter.concat([category.id]);
-                          categoryFilter = categoryFilter;
-                          marketStore.reload($marketStore.orderBy, categoryFilter);
+                          $marketFilterStore = $marketFilterStore.concat([category.id]);
+                          marketStore.reload($marketStore.orderBy, $marketFilterStore);
                         }}">{category.name}</button>
                     {/if}
                     </li>
@@ -74,35 +73,35 @@
                 <li>
                     <button class="block w-full" on:click="{() => {
                         sortedBy = 'Most popular';
-                        marketStore.reload(QueryAllBusinessesOrderOptions.MostPopular, categoryFilter);
+                        marketStore.reload(QueryAllBusinessesOrderOptions.MostPopular, $marketFilterStore);
           }}">Sort by most popular
                     </button>
                 </li>
                 <li>
                     <button class="block w-full" on:click="{() => {
               sortedBy = 'Nearest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, categoryFilter);
+              marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $marketFilterStore);
             }}">Sort by nearest
                     </button>
                 </li>
                 <li>
                     <button class="block w-full" on:click="{() => {
               sortedBy = 'Newest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Newest, categoryFilter);
+              marketStore.reload(QueryAllBusinessesOrderOptions.Newest, $marketFilterStore);
             }}">Sort by newest
                     </button>
                 </li>
                 <li>
                     <button class="block w-full" on:click="{() => {
               sortedBy = 'Oldest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Oldest, categoryFilter);
+              marketStore.reload(QueryAllBusinessesOrderOptions.Oldest, $marketFilterStore);
             }}">Sort by oldest
                     </button>
                 </li>
                 <li>
                     <button class="block w-full" on:click="{() => {
               sortedBy = 'Alphabetical';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Alphabetical, categoryFilter);
+              marketStore.reload(QueryAllBusinessesOrderOptions.Alphabetical, $marketFilterStore);
             }}">Sort by name
                     </button>
                 </li>
