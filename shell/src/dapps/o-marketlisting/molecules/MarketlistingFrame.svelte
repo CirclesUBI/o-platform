@@ -37,7 +37,7 @@
     <div class="flex justify-around p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2">
         <div class="w-36 dropdown">
             <button class="text-black bg-white btn w-36 border-1"
-            ><span><Icon name="adjustments" class="w-6 h-6"/></span>Filter
+            ><span><Icon name="adjustments" class="w-6 h-6"/></span>Filter {categoryFilter.length > 0 ? `(${categoryFilter.length})` : ``}
             </button>
             <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
                 {#if categoryFilter.length > 0}
@@ -45,7 +45,7 @@
                     <button class="block w-full" on:click="{() => {
                       categoryFilter = [];
                       marketStore.reload($marketStore.orderBy, categoryFilter);
-                    }}"> x Clear all filters</button>
+                    }}"><b>x Clear</b></button>
                 </li>
                 {/if}
                 {#each categories as category}
