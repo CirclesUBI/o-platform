@@ -3,11 +3,20 @@ import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { ContactsDappState } from "./o-contacts.manifest";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
 import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
+import Favorites from "./o-marketlisting/pages/Favorites.svelte";
 
 const listing: Page<any, ContactsDappState> = {
   routeParts: ["=listing"],
   component: Marketlisting,
   title: "Market",
+  type: "page",
+  position: "main"
+};
+
+const favorites: Page<any, ContactsDappState> = {
+  routeParts: ["=favorites"],
+  component: Favorites,
+  title: "Favorites",
   type: "page",
   position: "main"
 };
@@ -44,5 +53,5 @@ export const marketlisting: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [listing, detailPage],
+  routables: [listing, detailPage, favorites],
 };
