@@ -1,957 +1,149 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
 directive @cost(value: Int) on FIELD_DEFINITION
 
 directive @costFactor(value: Int) on FIELD_DEFINITION
 
-# A date and time value in JSON format.
+"A date and time value in JSON format."
 scalar Date
 
-type Server {
-  version: String!
-}
-
-enum ProfileOrigin {
-  CirclesGarden
-  CirclesLand
-  Unknown
-}
-
-enum ProfileType {
-  PERSON
-  ORGANISATION
-  REGION
-}
-
-enum Gender {
-  MALE
-  FEMALE
-  DIVERS
-}
-
-type Profile {
-  id: Int!
-  type: ProfileType
-  origin: ProfileOrigin
-  status: String
-  circlesAddress: String
-  successorOfCirclesAddress: String
-  circlesSafeOwner: String
-  circlesTokenAddress: String
-  displayName: String
-  firstName: String!
-  lastName: String
-  confirmedLegalAge: Int
-  emailAddress: String
-  askedForEmailAddress: Boolean!
-  dream: String
-  country: String
-  avatarUrl: String
-  largeBannerUrl: String
-  smallBannerUrl: String
-  avatarCid: String
-  avatarMimeType: String
-  newsletter: Boolean
-  displayTimeCircles: Boolean
-  claimedInvitation: ClaimedInvitation
-  invitationTransaction: ProfileEvent
-  invitationLink: String
-  memberships: [Membership!]
-  members: [Profile!]
-  displayCurrency: DisplayCurrency
-  verifications: [Verification!]
-  balances: ProfileBalances
-  contacts: [Contact!]
-  provenUniqueness: Boolean
-  age: Int
-  gender: Gender
-  location: String
-  category: BusinessCategory
-}
-
-type ClaimedInvitation {
-  createdBy: Profile
-  createdByProfileId: Int!
-  createdAt: String!
-  claimedBy: Profile
-  claimedByProfileId: Int!
-  claimedAt: String!
-}
-
-type ProfileEvent {
-  timestamp: String!
-  block_number: Int
-  transaction_index: Int
-  transaction_hash: String
-  type: String!
-  safe_address: String!
-  safe_address_profile: Profile
-  contact_address: String
-  contact_address_profile: Profile
-  direction: String!
-  value: String
-  payload: EventPayload
-  tags: [Tag!]
-}
-
-type Membership {
-  createdAt: String!
-  createdBy: Profile
-  createdByProfileId: Int!
-  acceptedAt: String
-  rejectedAt: String
-  validTo: String
-  isAdmin: Boolean!
-  organisation: Organisation!
-}
-
-enum DisplayCurrency {
-  CRC
-  TIME_CRC
-  EURS
-}
-
-type Verification {
-  createdAt: String!
-  verifierSafeAddress: String!
-  verifierProfile: Organisation
-  verifiedSafeAddress: String!
-  verifiedProfile: Profile
-  revokedAt: String
-  revokedProfile: Profile
-  verificationRewardTransactionHash: String!
-  verificationRewardTransaction: ProfileEvent
-}
-
-type ProfileBalances {
-  crcBalances: CrcBalances
-  erc20Balances: Erc20Balances
-}
-
-type Contact {
-  metadata: [ContactPoint!]!
-  lastContactAt: String!
-  contactAddress: String!
-  contactAddress_Profile: Profile
-}
-
-type BusinessCategory {
-  id: Int!
-  name: String
-}
-
-type CrcBalances implements IAggregatePayload {
-  lastUpdatedAt: String!
-  total: String
-  balances: [AssetBalance!]!
-}
-
-type Erc20Balances implements IAggregatePayload {
-  lastUpdatedAt: String!
-  balances: [AssetBalance!]!
-}
-
-type Organisation {
-  id: Int!
-  createdAt: String!
-  circlesAddress: String
-  circlesSafeOwner: String
-  displayName: String
-  name: String!
-  description: String
-  avatarUrl: String
-  largeBannerUrl: String
-  smallBannerUrl: String
-  avatarMimeType: String
-  displayCurrency: DisplayCurrency
-  members: [ProfileOrOrganisation!]
-  trustsYou: Int
-}
-
-union ProfileOrOrganisation = Profile | Organisation
-
-input QueryUniqueProfileInput {
-  id: Int!
-}
-
-input QueryProfileInput {
-  id: [Int!]
-  firstName: String
-  lastName: String
-  country: String
-  circlesAddress: [String!]
-}
-
-input SearchInput {
-  searchString: String!
-}
-
-input UpsertProfileInput {
-  id: Int
-  status: String!
-  firstName: String!
-  lastName: String
-  dream: String
-  country: String
-  emailAddress: String
-  askedForEmailAddress: Boolean
-  successorOfCirclesAddress: String
-  circlesAddress: String
-  circlesSafeOwner: String
-  circlesTokenAddress: String
-  avatarUrl: String
-  avatarCid: String
-  avatarMimeType: String
-  newsletter: Boolean
-  displayTimeCircles: Boolean
-  displayCurrency: DisplayCurrency
-  age: Int
-  gender: Gender
-  location: String
-}
-
-type Tag {
-  id: Int!
-  typeId: String!
-  value: String
-  order: Int
-}
-
-input CreateTagInput {
-  typeId: String!
-  value: String
-}
-
-input UpsertTagInput {
-  id: Int
-  typeId: String!
-  value: String
-}
-
-type ExchangeTokenResponse {
-  success: Boolean!
-  errorMessage: String
-}
-
-type LogoutResponse {
-  success: Boolean!
-  errorMessage: String
-}
-
-type SessionInfo {
-  isLoggedOn: Boolean!
-  hasProfile: Boolean
-  profileId: Int
-  profile: Profile
-  capabilities: [Capability!]!
-  useShortSignup: Boolean
-}
-
-type Capability {
-  type: CapabilityType
-}
-
-enum CapabilityType {
-  Verify
-  Invite
-  Translate
-  PreviewFeatures
-  Tickets
-  VerifiedByHumanode
-}
-
-type Version {
-  major: Int!
-  minor: Int!
-  revision: Int!
-}
-
-input RequestUpdateSafeInput {
-  newSafeAddress: String!
-}
-
-type RequestUpdateSafeResponse {
-  success: Boolean!
-  errorMessage: String
-  challenge: String
-}
-
-input UpdateSafeInput {
-  signature: String!
-}
-
-type UpdateSafeResponse {
-  success: Boolean!
-  errorMessage: String
-  newSafeAddress: String
-}
-
-input QueryTagsInput {
-  typeId_in: [String!]!
-  value_like: String
-}
-
-interface IEventPayload {
-  transaction_hash: String
-}
-
-type CrcSignup implements IEventPayload {
-  transaction_hash: String!
-  user: String!
-  user_profile: Profile
-  token: String!
-}
-
-type CrcTrust implements IEventPayload {
-  transaction_hash: String!
-  address: String!
-  address_profile: Profile
-  can_send_to: String!
-  can_send_to_profile: Profile
-  limit: Int!
-}
-
-type Erc20Transfer implements IEventPayload {
-  transaction_hash: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  token: String!
-  value: String!
-}
-
-type CrcTokenTransfer implements IEventPayload {
-  transaction_hash: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  token: String!
-  value: String!
-}
-
-type CrcHubTransfer implements IEventPayload {
-  transaction_hash: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  flow: String!
-  transfers: [CrcTokenTransfer!]!
-  tags: [Tag!]!
-}
-
-type CrcMinting implements IEventPayload {
-  transaction_hash: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  value: String!
-  token: String!
-}
-
-type EthTransfer implements IEventPayload {
-  transaction_hash: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  value: String!
-  tags: [Tag!]!
-}
-
-type GnosisSafeEthTransfer implements IEventPayload {
-  transaction_hash: String!
-  initiator: String!
-  from: String!
-  from_profile: Profile
-  to: String!
-  to_profile: Profile
-  value: String!
-  tags: [Tag!]!
-}
-
-type MembershipOffer implements IEventPayload {
-  transaction_hash: String
-  createdBy: String!
-  createdBy_profile: Profile
-  isAdmin: Boolean!
-  organisation: String!
-  organisation_profile: Organisation
-}
-
-type MemberAdded implements IEventPayload {
-  transaction_hash: String
-  createdBy: String!
-  createdBy_profile: Profile
-  member: String!
-  member_profile: Profile
-  isAdmin: Boolean!
-  organisation: String!
-  organisation_profile: Organisation
-}
-
-type NewUser implements IEventPayload {
-  transaction_hash: String
-  profile: Profile!
-}
-
-type MembershipAccepted implements IEventPayload {
-  transaction_hash: String
-  createdBy: String!
-  createdBy_profile: Profile
-  member: String!
-  member_profile: Profile
-  organisation: String!
-  organisation_profile: Organisation
-}
-
-type MembershipRejected implements IEventPayload {
-  transaction_hash: String
-  member: String!
-  member_profile: Profile
-  organisation: String!
-  organisation_profile: Organisation
-}
-
-type InvitationCreated implements IEventPayload {
-  transaction_hash: String
-  name: String!
-  code: String!
-}
-
-type InvitationRedeemed implements IEventPayload {
-  transaction_hash: String
-  name: String!
-  code: String!
-  redeemedBy: String
-  redeemedBy_profile: Profile
-}
-
-type WelcomeMessage implements IEventPayload {
-  transaction_hash: String
-  invitedBy: String!
-  invitedBy_profile: Profile
-}
-
-type OrganisationCreated implements IEventPayload {
-  transaction_hash: String
-  organisation: String!
-  organisation_profile: Organisation
-}
-
-type SafeVerified implements IEventPayload {
-  transaction_hash: String
-  organisation: String!
-  organisation_profile: Organisation
-  safe_address: String!
-}
-
-interface IAggregatePayload {
-  lastUpdatedAt: String
-}
-
-type Contacts implements IAggregatePayload {
-  lastUpdatedAt: String!
-  contacts: [Contact!]!
-}
-
-type Memberships implements IAggregatePayload {
-  lastUpdatedAt: String!
-  organisations: [Organisation!]!
-}
-
-type Members implements IAggregatePayload {
-  lastUpdatedAt: String!
-  members: [ProfileOrOrganisation!]!
-}
-
-union EventPayload =
-    CrcSignup
-  | CrcTrust
-  | CrcTokenTransfer
-  | CrcHubTransfer
-  | CrcMinting
-  | EthTransfer
-  | Erc20Transfer
-  | GnosisSafeEthTransfer
-  | MembershipOffer
-  | MembershipAccepted
-  | MembershipRejected
-  | WelcomeMessage
-  | InvitationCreated
-  | InvitationRedeemed
-  | OrganisationCreated
-  | MemberAdded
-  | SafeVerified
-  | NewUser
-
-enum EventType {
-  CrcSignup
-  CrcTrust
-  CrcTokenTransfer
-  CrcHubTransfer
-  Erc20Transfer
-  CrcMinting
-  EthTransfer
-  GnosisSafeEthTransfer
-  MembershipOffer
-  MembershipAccepted
-  MembershipRejected
-  WelcomeMessage
-  InvitationCreated
-  InvitationRedeemed
-  OrganisationCreated
-  MemberAdded
-  SafeVerified
-  NewUser
-}
-
-enum AggregateType {
-  CrcBalances
-  Erc20Balances
-  Contacts
-  Memberships
-  Members
-  Sales
-}
-
-type AssetBalance {
-  token_symbol: String
-  token_address: String!
-  token_owner_address: String!
-  token_owner_profile: Profile
-  token_balance: String!
-}
-
-enum ContactDirection {
-  In
-  Out
-}
-
-type ContactPoint {
-  name: String!
-  directions: [ContactDirection!]!
-  values: [String!]!
-  timestamps: [String!]!
-}
-
-union AggregatePayload =
-    CrcBalances
-  | Erc20Balances
-  | Contacts
-  | Memberships
-  | Members
-
-type ProfileAggregate {
-  type: String!
-  safe_address: String!
-  safe_address_profile: Profile
-  payload: AggregatePayload!
-}
-
-type PublicEvent {
-  timestamp: String!
-  block_number: Int
-  transaction_index: Int
-  transaction_hash: String
-  type: String!
-  contact_address: String
-  contact_address_profile: Profile
-  payload: EventPayload
-}
-
-type NotificationEvent {
-  type: String!
-  from: String!
-  to: String!
-  itemId: Int
-  transaction_hash: String
-}
-
-type CreatedInvitation {
-  createdBy: Profile
-  createdByProfileId: Int!
-  createdAt: String!
-  claimedBy: Profile
-  claimedByProfileId: Int
-  claimedAt: String
-  name: String!
-  address: String!
-  balance: String!
-  code: String!
-}
-
-type ClaimInvitationResult {
-  success: Boolean!
-  claimedInvitation: ClaimedInvitation
-}
-
-type RedeemClaimedInvitationResult {
-  success: Boolean!
-  error: String
-  transactionHash: String
-}
-
-type CreatedInviteEoa {
-  for: String!
-  address: String!
-  fee: String!
-}
-
-type CreateInvitationResult {
-  success: Boolean!
-  error: String
-  createdInviteEoas: [CreatedInvitation!]!
-}
-
-type SendMessageResult {
-  success: Boolean!
-  error: String
-  event: ProfileEvent
-}
-
-enum TrustDirection {
-  IN
-  OUT
-  MUTUAL
-}
-
-type TrustRelation {
-  safeAddress: String!
-  safeAddressProfile: Profile
-  otherSafeAddress: String!
-  otherSafeAddressProfile: Profile
-  direction: TrustDirection!
-}
-
-type CommonTrust {
-  type: String!
-  safeAddress1: String!
-  safeAddress2: String!
-  profile: Profile
-}
-
-type TagTransactionResult {
-  success: Boolean!
-  error: String
-  tag: Tag
-}
-
-type CreateOrganisationResult {
-  success: Boolean!
-  error: String
-  organisation: Organisation
-}
-
-input UpsertOrganisationInput {
-  id: Int
-  name: String!
-  description: String
-  circlesAddress: String
-  avatarUrl: String
-  largeBannerUrl: String
-  smallBannerUrl: String
-  avatarMimeType: String
-  displayCurrency: DisplayCurrency
-}
-
-type AddMemberResult {
-  success: Boolean!
-  error: String
-}
-
-type AcceptMembershipResult {
-  success: Boolean!
-  error: String
-}
-
-type RejectMembershipResult {
-  success: Boolean!
-  error: String
-}
-
-type RemoveMemberResult {
-  success: Boolean!
-  error: String
-}
-
-type VerifySafeResult {
-  success: Boolean!
-}
-
-type i18n {
-  lang: String
-  key: String
-  createdBy: String
-  version: Int
-  value: String
-  pagination_key: String
-  needsUpdate: Boolean
-}
-
-type Businesses {
-  id: Int!
-  name: String
-  description: String
-  picture: String
-  businessHoursMonday: String
-  businessHoursTuesday: String
-  businessHoursWednesday: String
-  businessHoursThursday: String
-  businessHoursFriday: String
-  businessHoursSaturday: String
-  businessHoursSunday: String
-  phoneNumber: String
-  location: String
-  businessCategory: String
-}
-
-enum SortOrder {
-  ASC
-  DESC
-}
-
-input PaginationArgs {
-  continueAt: String
-  continueAtId: Int
-  order: SortOrder!
-  limit: Int!
-}
-
-enum Direction {
-  in
-  out
-}
-
-input ProfileEventFilter {
-  direction: Direction
-  from: String
-  to: String
-  with: String
-  transactionHash: String
-}
-
 input ContactAggregateFilter {
-  addresses: [String!]!
+    addresses: [String!]!
 }
 
 input CrcBalanceAggregateFilter {
-  tokenAddresses: [String!]!
+    tokenAddresses: [String!]!
+}
+
+input CreateTagInput {
+    typeId: String!
+    value: String
+}
+
+input Geolocation {
+    lat: Float!
+    lon: Float!
+}
+
+input PaginationArgs {
+    continueAt: String
+    continueAtId: Int
+    limit: Int!
+    order: SortOrder!
 }
 
 input ProfileAggregateFilter {
-  contacts: ContactAggregateFilter
-  crcBalance: CrcBalanceAggregateFilter
+    contacts: ContactAggregateFilter
+    crcBalance: CrcBalanceAggregateFilter
 }
 
-enum AccountType {
-  Person
-  Organisation
+input ProfileEventFilter {
+    direction: Direction
+    from: String
+    to: String
+    transactionHash: String
+    with: String
 }
 
-type SafeInfo {
-  type: AccountType!
-  safeAddress: String!
-  lastUbiAt: String
-  tokenAddress: String
-  randomValue: String
-  safeProfile: Profile
+input QueryAllBusinessesConditions {
+    inCategories: [Int!]
+    inCirclesAddress: [String!]
 }
 
-type SafeAddressByOwnerResult {
-  type: String!
-  safeAddress: String!
+input QueryAllBusinessesOrder {
+    orderBy: QueryAllBusinessesOrderOptions!
+}
+
+input QueryAllBusinessesParameters {
+    order: QueryAllBusinessesOrder
+    ownCoordinates: Geolocation
+    where: QueryAllBusinessesConditions
+}
+
+input QueryProfileInput {
+    circlesAddress: [String!]
+    country: String
+    firstName: String
+    id: [Int!]
+    lastName: String
+}
+
+input QueryTagsInput {
+    typeId_in: [String!]!
+    value_like: String
+}
+
+input QueryUniqueProfileInput {
+    id: Int!
+}
+
+input RequestUpdateSafeInput {
+    newSafeAddress: String!
+}
+
+input SearchInput {
+    searchString: String!
+}
+
+input UpdateSafeInput {
+    signature: String!
+}
+
+input UpsertOrganisationInput {
+    avatarMimeType: String
+    avatarUrl: String
+    circlesAddress: String
+    description: String
+    displayCurrency: DisplayCurrency
+    id: Int
+    largeBannerUrl: String
+    lat: Float
+    location: String
+    locationName: String
+    lon: Float
+    name: String!
+    smallBannerUrl: String
+}
+
+input UpsertProfileInput {
+    age: Int
+    askedForEmailAddress: Boolean
+    avatarCid: String
+    avatarMimeType: String
+    avatarUrl: String
+    circlesAddress: String
+    circlesSafeOwner: String
+    circlesTokenAddress: String
+    country: String
+    displayCurrency: DisplayCurrency
+    displayTimeCircles: Boolean
+    dream: String
+    emailAddress: String
+    firstName: String!
+    gender: Gender
+    id: Int
+    lastName: String
+    lat: Float
+    location: String
+    locationName: String
+    lon: Float
+    newsletter: Boolean
+    status: String!
+    successorOfCirclesAddress: String
+}
+
+input UpsertTagInput {
+    id: Int
+    typeId: String!
+    value: String
 }
 
 input VerifiedSafesFilter {
-  addresses: [String!]
-}
-
-type LeaderboardEntry {
-  createdByCirclesAddress: String!
-  createdByProfile: Profile
-  inviteCount: Int!
-}
-
-type FibonacciGoals {
-  lastGoal: Int!
-  currentValue: Int!
-  nextGoal: Int!
-}
-
-type MyInviteRank {
-  rank: Int!
-  redeemedInvitationsCount: Int!
-}
-
-type Stats {
-  profilesCount: Int!
-  verificationsCount: Int!
-  leaderboard: [LeaderboardEntry!]!
-  goals: FibonacciGoals!
-  myRank: MyInviteRank!
-}
-
-type TransitiveTransfer {
-  isHubTransfer: Boolean
-  from: String!
-  to: String!
-  token: String!
-  tokenOwner: String!
-  value: String!
-}
-
-type TransitivePath {
-  requestedAmount: String!
-  flow: String!
-  success: Boolean!
-  transfers: [TransitiveTransfer!]!
-}
-
-type ProofUniquenessResult {
-  existingSafe: String
-}
-
-type Mutation {
-  logout: LogoutResponse!
-  upsertProfile(data: UpsertProfileInput!): Profile!
-  requestUpdateSafe(data: RequestUpdateSafeInput!): RequestUpdateSafeResponse!
-  updateSafe(data: UpdateSafeInput!): UpdateSafeResponse!
-  upsertTag(data: UpsertTagInput!): Tag!
-  upsertOrganisation(
-    organisation: UpsertOrganisationInput!
-  ): CreateOrganisationResult!
-  upsertRegion(
-    organisation: UpsertOrganisationInput!
-  ): CreateOrganisationResult!
-  addMember(groupId: String!, memberAddress: String!): AddMemberResult
-  acceptMembership(membershipId: Int!): AcceptMembershipResult
-  removeMember(groupId: String!, memberAddress: String!): RemoveMemberResult
-  rejectMembership(membershipId: Int!): RejectMembershipResult
-  acknowledge(until: Date!, safeAddress: String): Boolean!
-  createTestInvitation: CreateInvitationResult!
-  claimInvitation(code: String!): ClaimInvitationResult!
-  redeemClaimedInvitation: RedeemClaimedInvitationResult!
-  tagTransaction(
-    transactionHash: String!
-    tag: CreateTagInput!
-  ): TagTransactionResult!
-  sendMessage(
-    fromSafeAddress: String
-    toSafeAddress: String!
-    content: String!
-  ): SendMessageResult!
-  requestSessionChallenge(address: String!): String!
-  verifySessionChallenge(
-    challenge: String!
-    signature: String!
-  ): ExchangeTokenResponse
-  importOrganisationsOfAccount: [Organisation!]!
-  verifySafe(safeAddress: String!): VerifySafeResult!
-  revokeSafeVerification(safeAddress: String!): VerifySafeResult!
-  proofUniqueness(humanodeToken: String!): ProofUniquenessResult!
-  updateValue(lang: String, key: String, createdBy: String, value: String): i18n
-  addNewLang(langToCreate: String, langToCopyFrom: String): Int
-  createNewStringAndKey(
-    lang: String
-    key: String
-    createdBy: String
-    value: String
-    version: Int
-  ): i18n
-  setStringUpdateState(key: String): i18n
-}
-
-type ExportProfile {
-  lastChange: Date!
-  circlesAddress: String!
-  displayName: String!
-  avatarUrl: String
-}
-
-type ExportTrustRelation {
-  lastChange: Date!
-  trusterAddress: String!
-  trusteeAddress: String!
-  trustLimit: Int!
-}
-
-type RandomAccount {
-  privateKey: String
-  address: String
-}
-
-type Query {
-  version: Version!
-  sessionInfo: SessionInfo!
-  init: SessionInfo!
-  claimedInvitation: ClaimedInvitation
-  invitationTransaction: ProfileEvent
-  hubSignupTransaction: ProfileEvent
-  safeInfo(safeAddress: String): SafeInfo
-  lastAcknowledgedAt(safeAddress: String!): Date
-  verifications(
-    pagination: PaginationArgs
-    filter: VerifiedSafesFilter
-  ): [Verification!]!
-  events(
-    types: [EventType!]!
-    safeAddress: String!
-    pagination: PaginationArgs!
-    filter: ProfileEventFilter
-  ): [ProfileEvent!]!
-  aggregates(
-    types: [AggregateType!]!
-    safeAddress: String!
-    filter: ProfileAggregateFilter
-  ): [ProfileAggregate!]!
-  organisations(pagination: PaginationArgs): [Organisation!]!
-  regions(pagination: PaginationArgs): [Organisation!]!
-  organisationsByAddress(addresses: [String!]!): [Organisation!]!
-  myInvitations: [CreatedInvitation!]!
-  commonTrust(safeAddress1: String!, safeAddress2: String!): [CommonTrust!]!
-  trustRelations(safeAddress: String!): [TrustRelation!]!
-  myProfile: Profile
-  profilesById(ids: [Int!]!): [Profile!]!
-  recentProfiles(pagination: PaginationArgs): [Profile!]!
-  profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
-  findSafesByOwner(owner: String!): [SafeInfo!]!
-  search(query: SearchInput!): [Profile!]!
-  stats: Stats!
-  tags(query: QueryTagsInput!): [Tag!]!
-  tagById(id: Int!): Tag
-  findInvitationCreator(code: String!): Profile
-  clientAssertionJwt: String!
-  getStringByMaxVersion(lang: String, key: String): i18n
-  getAvailableLanguages: [i18n]
-  getAllStringsByMaxVersion: [i18n]
-  getAllStringsByMaxVersionAndLang(lang: String): [i18n]
-  getOlderVersionsByKeyAndLang(key: String, lang: String): [i18n]
-  getPaginatedStrings(
-    pagination_key: String
-    key: String
-    lang: String
-    value: String
-  ): [i18n]
-  getPaginatedStringsToUpdate(
-    pagination_key: String
-    key: String
-    lang: String
-    value: String
-    needsUpdate: Boolean
-  ): [i18n]
-  getStringsToBeUpdatedAmount(lang: String, key: String): Int
-  allProfiles(sinceLastChange: Date): [ExportProfile]!
-  allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!
-  getRandomAccount: RandomAccount
-  signMessage(message: String!, key: String!): String!
-  directPath(from: String!, to: String!, amount: String!): TransitivePath!
-  paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
-  allBusinessCategories: [BusinessCategory!]!
-  allBusinesses(categoryId: Int, id: Int): [Businesses!]!
-}
-
-type Subscription {
-  events: NotificationEvent!
+    addresses: [String!]
 }
