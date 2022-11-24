@@ -1,23 +1,31 @@
 <script>
-  import Map from "here-maps-svelte";
-  import { onMount } from "svelte";
-  import { Environment } from "src/shared/environment";
+import Map from "here-maps-svelte";
+import { onMount } from "svelte";
+import { Environment } from "src/shared/environment";
 
-  export let width = "100%";
-  export let height = "400px";
-  export let position = {};
+export let width = "100%";
+export let height = "400px";
+export let bubbletext = "Location";
+export let position = {};
 
-  let options;
+let options;
 
-  onMount(() => {
-    options = {
-      api: Environment.hereApiKey,
-      mapdata: {
-        zoom: 10,
-        center: { lat: position.lat, lng: position.long },
-      },
-    };
-  });
+onMount(() => {
+  options = {
+    api: Environment.hereApiKey,
+    mapdata: {
+      zoom: 10,
+      center: { lat: position.lat, lng: position.long },
+      markers: [
+        {
+          bubbletext: `<p>${bubbletext}</p>`,
+          lat: position.lat,
+          lng: position.long,
+        },
+      ],
+    },
+  };
+});
 </script>
 
 {#if options}

@@ -1,17 +1,14 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { ApiClient } from "../../../shared/apiConnection";
-import {
-  Businesses,
-  LinkTargetType,
-} from "../../../shared/api/data/types";
+import { Businesses, LinkTargetType } from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
 import Map from "../../../dapps/o-marketlisting/atoms/Map.svelte";
 import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
 import { myLocation } from "../../../shared/stores/myLocation";
-import {marketFavoritesStore} from "../stores/marketFavoritesStore";
-import {marketStore} from "../stores/marketStore";
+import { marketFavoritesStore } from "../stores/marketFavoritesStore";
+import { marketStore } from "../stores/marketStore";
 
 export let circlesAddress: string;
 
@@ -25,14 +22,13 @@ let everythingAfterTheCurrentDay = [];
 let mapHeight = "16em";
 
 onMount(async () => {
-  return marketStore.subscribe(data => {
+  return marketStore.subscribe((data) => {
     if (!data || data.businesses.length == 0) {
       return;
     }
 
-    business = data.businesses.find(o => o.circlesAddress == circlesAddress);
-    if (!business)
-      return;
+    business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
+    if (!business) return;
 
     const currentDateIndex = new Date().getDay();
     const businessHours = [
@@ -127,9 +123,15 @@ async function shareLink() {
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
       {#if business.lat && business.lon}
         {#if $myLocation instanceof GeolocationPosition}
-          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
+          <Map
+            height="{mapHeight}"
+            position="{{ lat: business.lat, long: business.lon }}"
+            bubbletext="{business.name}" />
         {:else}
-          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" />
+          <Map
+            height="{mapHeight}"
+            position="{{ lat: business.lat, long: business.lon }}"
+            bubbletext="{business.name}" />
         {/if}
       {/if}
     </div>
