@@ -12,6 +12,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
+import UpsertOrganization from "./o-passport/pages/UpsertOrganization.svelte";
 
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
@@ -45,7 +46,7 @@ const profile: Page<any, DappState> = {
   routeParts: ["=profile", ":profileId"],
   component: Home,
   title: "Profile",
-  
+
   type: "page",
   navigation: {
     leftSlot: {
@@ -58,6 +59,45 @@ const profile: Page<any, DappState> = {
     },
   },
 };
+
+const newOrganization: Page<any, DappState> = {
+  isSystem: false,
+  routeParts: ["=new-organization"],
+  component: UpsertOrganization,
+  title: "Create organization",
+
+  type: "page",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "myprofile",
+        backgroundColorClass: "passport",
+        // action: () => processNavigation.back(),
+      },
+    },
+  },
+};
+
+const editOrganization: Page<any, DappState> = {
+  isSystem: false,
+  routeParts: ["=edit-organization", ":cirlcesAddress"],
+  component: UpsertOrganization,
+  title: "Orga 1",
+
+  type: "page",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "myprofile",
+        backgroundColorClass: "passport",
+        // action: () => processNavigation.back(),
+      },
+    },
+  },
+};
+
 const account: Page<any, DappState> = {
   routeParts: ["=accounts"],
   component: Account,
@@ -217,5 +257,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, settings, verifyEmail, logmeout, logmein],
+  routables: [index, profile, account, settings, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
 };
