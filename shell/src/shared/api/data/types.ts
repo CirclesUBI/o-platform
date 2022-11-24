@@ -728,6 +728,7 @@ export type Profile = {
   avatarMimeType?: Maybe<Scalars['String']>;
   avatarUrl?: Maybe<Scalars['String']>;
   balances?: Maybe<ProfileBalances>;
+  category?: Maybe<BusinessCategory>;
   circlesAddress?: Maybe<Scalars['String']>;
   circlesSafeOwner?: Maybe<Scalars['String']>;
   circlesTokenAddress?: Maybe<Scalars['String']>;
@@ -750,7 +751,6 @@ export type Profile = {
   lastName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   location?: Maybe<Scalars['String']>;
-  category?: Maybe<BusinessCategory>;
   locationName?: Maybe<Scalars['String']>;
   lon?: Maybe<Scalars['Float']>;
   members?: Maybe<Array<Profile>>;
@@ -843,15 +843,6 @@ export type PublicEvent = {
 export type Query = {
   __typename?: 'Query';
   aggregates: Array<ProfileAggregate>;
-  regions: Array<Organisation>;
-  trustRelations: Array<TrustRelation>;
-  profilesById: Array<Profile>;
-  recentProfiles: Array<Profile>;
-  profilesBySafeAddress: Array<Profile>;
-  search: Array<Profile>;
-  stats: Stats;
-  tags: Array<Tag>;
-  tagById?: Maybe<Tag>;
   allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
   allProfiles: Array<Maybe<ExportProfile>>;
@@ -882,13 +873,6 @@ export type Query = {
   organisations: Array<Organisation>;
   organisationsByAddress: Array<Organisation>;
   paymentPath: TransitivePath;
-};
-
-export type QueryEventsArgs = {
-  types: Array<EventType>;
-  safeAddress: Scalars['String'];
-  pagination: PaginationArgs;
-  filter?: Maybe<ProfileEventFilter>;
   profilesById: Array<Profile>;
   profilesBySafeAddress: Array<Profile>;
   recentProfiles: Array<Profile>;
@@ -912,6 +896,12 @@ export type QueryAggregatesArgs = {
   types: Array<AggregateType>;
 };
 
+
+export type QueryAllBusinessesArgs = {
+  queryParams?: Maybe<QueryAllBusinessesParameters>;
+};
+
+
 export type QueryAllProfilesArgs = {
   sinceLastChange?: Maybe<Scalars['Date']>;
 };
@@ -932,6 +922,14 @@ export type QueryDirectPathArgs = {
   amount: Scalars['String'];
   from: Scalars['String'];
   to: Scalars['String'];
+};
+
+
+export type QueryEventsArgs = {
+  filter?: Maybe<ProfileEventFilter>;
+  pagination: PaginationArgs;
+  safeAddress: Scalars['String'];
+  types: Array<EventType>;
 };
 
 
@@ -1087,12 +1085,6 @@ export type QueryAllBusinessesParameters = {
   where?: Maybe<QueryAllBusinessesConditions>;
 };
 
-
-export type QueryAllBusinessesArgs = {
-  categoryId?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['Int']>;
-};
-
 export type QueryProfileInput = {
   circlesAddress?: Maybe<Array<Scalars['String']>>;
   country?: Maybe<Scalars['String']>;
@@ -1203,11 +1195,11 @@ export enum SortOrder {
 
 export type Stats = {
   __typename?: 'Stats';
+  goals: FibonacciGoals;
+  leaderboard: Array<LeaderboardEntry>;
+  myRank: MyInviteRank;
   profilesCount: Scalars['Int'];
   verificationsCount: Scalars['Int'];
-  leaderboard: Array<LeaderboardEntry>;
-  goals: FibonacciGoals;
-  myRank: MyInviteRank;
 };
 
 export type Subscription = {
@@ -4390,11 +4382,11 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     clientAssertionJwt(variables?: ClientAssertionJwtQueryVariables): Promise<ClientAssertionJwtQuery> {
       return withWrapper(() => client.request<ClientAssertionJwtQuery>(print(ClientAssertionJwtDocument), variables));
     },
-    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
-      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
-    },
     allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
       return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
+    },
+    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
+      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
     },
     myFavorites(variables?: MyFavoritesQueryVariables): Promise<MyFavoritesQuery> {
       return withWrapper(() => client.request<MyFavoritesQuery>(print(MyFavoritesDocument), variables));

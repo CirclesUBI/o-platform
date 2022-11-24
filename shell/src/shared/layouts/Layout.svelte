@@ -18,14 +18,8 @@ const eventDispatcher = createEventDispatcher();
 
 export let layout: RuntimeLayout;
 export let navigation: NavigationManifest;
-export let pageBackgroundClass: string = null;
-export let isSurveyPage: boolean;
 
 $: {
-  const url = window.location.href;
-  if (url.indexOf('homepage/survey') > -1) {
-    isSurveyPage = true;
-  }
   // console.log("LayoutChanged:", layout);
   if (
     (layout?.dialogs.center && layout?.dialogs.center.isOpen) ||
@@ -65,13 +59,10 @@ function onkeydown(e: KeyboardEvent) {
 
 <svelte:window on:keydown="{onkeydown}" />
 {#if layout}
-  <div
-    class="absolute flex flex-row w-full min-h-screen overflow-auto {pageBackgroundClass
-      ? pageBackgroundClass
-      : 'bg-dappbackground'}">
-    <main id="main" class="relative w-full overflow-hidden">
+  <div class="absolute flex flex-row w-full overflow-auto">
+    <main id="main" class="relative w-full overflow-auto overflow-hidden">
       <div
-        class="flex flex-row w-full mainContent"
+        class="flex flex-row w-full bg-dappbackground mainContent"
         class:mb-16="{layout.dialogs.center && !layout.dialogs.center.isOpen && dapp === 'homepage:1'}"
         class:blur="{layout.dialogs.center && layout.dialogs.center.isOpen}">
         <div class="z-50">
@@ -160,7 +151,7 @@ function onkeydown(e: KeyboardEvent) {
       {/if}
     {/await}
   {/if}
-  {#if navigation && !isSurveyPage}
+  {#if navigation}
     <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" />
   {/if}
 

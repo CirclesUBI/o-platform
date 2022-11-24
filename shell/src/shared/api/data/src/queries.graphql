@@ -30,6 +30,9 @@ query init {
       displayCurrency
       provenUniqueness
       location
+      locationName
+      lat
+      lon
       memberships {
         isAdmin
         organisation {
@@ -196,7 +199,6 @@ query myProfile {
         name
         description
         avatarUrl
-
       }
     }
     verifications {
@@ -256,7 +258,6 @@ query profiles($id: [Int!]!) {
     }
   }
 }
-
 
 query profilesByName($searchString: String!) {
   search(query: { searchString: $searchString }) {
@@ -333,6 +334,10 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
     dream
     avatarUrl
     provenUniqueness
+    location
+    locationName
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -375,6 +380,10 @@ query profilesByIds($id: [Int!]!) {
     dream
     avatarUrl
     provenUniqueness
+    location
+    locationName
+    lat
+    lon
     verifications {
       createdAt
       revokedAt
@@ -405,6 +414,10 @@ query trustRelations($safeAddress: String!) {
       circlesAddress
       displayCurrency
       provenUniqueness
+      location
+      locationName
+      lat
+      lon
     }
     direction
     otherSafeAddress
@@ -418,6 +431,10 @@ query trustRelations($safeAddress: String!) {
       circlesAddress
       displayCurrency
       provenUniqueness
+      location
+      locationName
+      lat
+      lon
       verifications {
         createdAt
         revokedAt
@@ -448,6 +465,9 @@ query profileById($id: Int!) {
     dream
     provenUniqueness
     location
+    locationName
+    lat
+    lon
     verifications {
       createdAt
       revokedAt
@@ -486,7 +506,10 @@ query profileBySafeAddress($safeAddress: String!) {
     displayTimeCircles
     displayCurrency
     provenUniqueness
-
+    location
+    locationName
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -535,7 +558,6 @@ query tags($typeId_in: [String!]!, $value_like: String) {
   }
 }
 
-
 query organisations($pagination: PaginationArgs) {
   organisations(pagination: $pagination) {
     id
@@ -544,6 +566,8 @@ query organisations($pagination: PaginationArgs) {
     createdAt
     name
     avatarUrl
+    location
+    locationName
   }
 }
 
@@ -567,6 +591,8 @@ query organisationsByAddress($addresses: [String!]!) {
     name
     avatarUrl
     displayName
+    location
+    locationName
     members {
       ... on Organisation {
         id
@@ -816,6 +842,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
         isAdmin
       }
@@ -838,6 +866,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MembershipRejected {
@@ -858,6 +888,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           avatarUrl
           circlesAddress
           displayCurrency
+          locationName
+          location
         }
       }
       ... on WelcomeMessage {
@@ -900,6 +932,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on MemberAdded {
@@ -913,6 +947,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on SafeVerified {
@@ -923,6 +959,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           circlesAddress
           displayCurrency
           displayCurrency
+          locationName
+          location
         }
       }
       ... on NewUser {
@@ -1025,6 +1063,8 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 name
                 description
                 avatarUrl
+                locationName
+                location
               }
             }
             members {
@@ -1084,10 +1124,6 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
   }
 }
 
-
-
-
-
 query getAllStringsByMaxVersion {
   getAllStringsByMaxVersion {
     lang
@@ -1133,8 +1169,6 @@ query getOlderVersionsByKeyAndLang($key: String, $lang: String) {
   }
 }
 
-
-
 query getPaginatedStrings($pagination_key: String, $key: String, $lang: String, $value: String) {
   getPaginatedStrings(pagination_key: $pagination_key, key: $key, lang: $lang, value: $value) {
     lang
@@ -1166,6 +1200,7 @@ query getAvailableLanguages {
 query directPath($from: String!, $to: String!, $amount: String!) {
   directPath(from: $from, to: $to, amount: $amount) {
     flow
+    isValid
     transfers {
       from
       to
@@ -1217,9 +1252,42 @@ query clientAssertionJwt {
   clientAssertionJwt
 }
 
+query allBusinesses($queryParams: QueryAllBusinessesParameters) {
+  allBusinesses(queryParams: $queryParams) {
+    id
+    circlesAddress
+    name
+    description
+    picture
+    phoneNumber
+    location
+    locationName
+    lat
+    lon
+    businessHoursMonday
+    businessHoursTuesday
+    businessHoursWednesday
+    businessHoursThursday
+    businessHoursFriday
+    businessHoursSaturday
+    businessHoursSunday
+    businessCategoryId
+    businessCategory
+  }
+}
+
 query allBusinessCategories {
   allBusinessCategories {
     id
     name
+  }
+}
+
+query myFavorites {
+  myFavorites {
+    createdAt
+    createdByAddress
+    favoriteAddress
+    comment
   }
 }
