@@ -10,6 +10,291 @@ directive @cost(value: Int) on FIELD_DEFINITION
 
 directive @costFactor(value: Int) on FIELD_DEFINITION
 
+# A date and time value in JSON format.
+scalar Date
+
+type Server {
+  version: String!
+}
+
+enum ProfileOrigin {
+  CirclesGarden
+  CirclesLand
+  Unknown
+}
+
+enum ProfileType {
+  PERSON
+  ORGANISATION
+  REGION
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  DIVERS
+}
+
+type Profile {
+  id: Int!
+  type: ProfileType
+  origin: ProfileOrigin
+  status: String
+  circlesAddress: String
+  successorOfCirclesAddress: String
+  circlesSafeOwner: String
+  circlesTokenAddress: String
+  displayName: String
+  firstName: String!
+  lastName: String
+  confirmedLegalAge: Int
+  emailAddress: String
+  askedForEmailAddress: Boolean!
+  dream: String
+  country: String
+  avatarUrl: String
+  largeBannerUrl: String
+  smallBannerUrl: String
+  avatarCid: String
+  avatarMimeType: String
+  newsletter: Boolean
+  displayTimeCircles: Boolean
+  claimedInvitation: ClaimedInvitation
+  invitationTransaction: ProfileEvent
+  invitationLink: String
+  memberships: [Membership!]
+  members: [Profile!]
+  displayCurrency: DisplayCurrency
+  verifications: [Verification!]
+  balances: ProfileBalances
+  contacts: [Contact!]
+  provenUniqueness: Boolean
+  age: Int
+  gender: Gender
+  location: String
+  category: BusinessCategory
+}
+
+type ClaimedInvitation {
+  createdBy: Profile
+  createdByProfileId: Int!
+  createdAt: String!
+  claimedBy: Profile
+  claimedByProfileId: Int!
+  claimedAt: String!
+}
+
+type ProfileEvent {
+  timestamp: String!
+  block_number: Int
+  transaction_index: Int
+  transaction_hash: String
+  type: String!
+  safe_address: String!
+  safe_address_profile: Profile
+  contact_address: String
+  contact_address_profile: Profile
+  direction: String!
+  value: String
+  payload: EventPayload
+  tags: [Tag!]
+}
+
+type Membership {
+  createdAt: String!
+  createdBy: Profile
+  createdByProfileId: Int!
+  acceptedAt: String
+  rejectedAt: String
+  validTo: String
+  isAdmin: Boolean!
+  organisation: Organisation!
+}
+
+enum DisplayCurrency {
+  CRC
+  TIME_CRC
+  EURS
+}
+
+type Verification {
+  createdAt: String!
+  verifierSafeAddress: String!
+  verifierProfile: Organisation
+  verifiedSafeAddress: String!
+  verifiedProfile: Profile
+  revokedAt: String
+  revokedProfile: Profile
+  verificationRewardTransactionHash: String!
+  verificationRewardTransaction: ProfileEvent
+}
+
+type ProfileBalances {
+  crcBalances: CrcBalances
+  erc20Balances: Erc20Balances
+}
+
+type Contact {
+  metadata: [ContactPoint!]!
+  lastContactAt: String!
+  contactAddress: String!
+  contactAddress_Profile: Profile
+}
+
+type BusinessCategory {
+  id: Int!
+  name: String
+}
+
+type CrcBalances implements IAggregatePayload {
+  lastUpdatedAt: String!
+  total: String
+  balances: [AssetBalance!]!
+}
+
+type Erc20Balances implements IAggregatePayload {
+  lastUpdatedAt: String!
+  balances: [AssetBalance!]!
+}
+
+type Organisation {
+  id: Int!
+  createdAt: String!
+  circlesAddress: String
+  circlesSafeOwner: String
+  displayName: String
+  name: String!
+  description: String
+  avatarUrl: String
+  largeBannerUrl: String
+  smallBannerUrl: String
+  avatarMimeType: String
+  displayCurrency: DisplayCurrency
+  members: [ProfileOrOrganisation!]
+  trustsYou: Int
+}
+
+union ProfileOrOrganisation = Profile | Organisation
+
+input QueryUniqueProfileInput {
+  id: Int!
+}
+
+input QueryProfileInput {
+  id: [Int!]
+  firstName: String
+  lastName: String
+  country: String
+  circlesAddress: [String!]
+}
+
+input SearchInput {
+  searchString: String!
+}
+
+input UpsertProfileInput {
+  id: Int
+  status: String!
+  firstName: String!
+  lastName: String
+  dream: String
+  country: String
+  emailAddress: String
+  askedForEmailAddress: Boolean
+  successorOfCirclesAddress: String
+  circlesAddress: String
+  circlesSafeOwner: String
+  circlesTokenAddress: String
+  avatarUrl: String
+  avatarCid: String
+  avatarMimeType: String
+  newsletter: Boolean
+  displayTimeCircles: Boolean
+  displayCurrency: DisplayCurrency
+  age: Int
+  gender: Gender
+  location: String
+}
+
+type Tag {
+  id: Int!
+  typeId: String!
+  value: String
+  order: Int
+}
+
+input CreateTagInput {
+  typeId: String!
+  value: String
+}
+
+input UpsertTagInput {
+  id: Int
+  typeId: String!
+  value: String
+}
+
+type ExchangeTokenResponse {
+  success: Boolean!
+  errorMessage: String
+}
+
+type LogoutResponse {
+  success: Boolean!
+  errorMessage: String
+}
+
+type SessionInfo {
+  isLoggedOn: Boolean!
+  hasProfile: Boolean
+  profileId: Int
+  profile: Profile
+  capabilities: [Capability!]!
+  useShortSignup: Boolean
+}
+
+type Capability {
+  type: CapabilityType
+}
+
+enum CapabilityType {
+  Verify
+  Invite
+  Translate
+  PreviewFeatures
+  Tickets
+  VerifiedByHumanode
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  revision: Int!
+}
+
+input RequestUpdateSafeInput {
+  newSafeAddress: String!
+}
+
+type RequestUpdateSafeResponse {
+  success: Boolean!
+  errorMessage: String
+  challenge: String
+}
+
+input UpdateSafeInput {
+  signature: String!
+}
+
+type UpdateSafeResponse {
+  success: Boolean!
+  errorMessage: String
+  newSafeAddress: String
+}
+
+input QueryTagsInput {
+  typeId_in: [String!]!
+  value_like: String
 interface IAggregatePayload {
     lastUpdatedAt: String
 }
@@ -78,6 +363,26 @@ type ClaimInvitationResult {
     success: Boolean!
 }
 
+type Businesses {
+  id: Int!
+  name: String
+  description: String
+  picture: String
+  businessHoursMonday: String
+  businessHoursTuesday: String
+  businessHoursWednesday: String
+  businessHoursThursday: String
+  businessHoursFriday: String
+  businessHoursSaturday: String
+  businessHoursSunday: String
+  phoneNumber: String
+  location: String
+  businessCategory: String
+}
+
+enum SortOrder {
+  ASC
+  DESC
 type ClaimedInvitation {
     claimedAt: String!
     claimedBy: Profile
@@ -191,6 +496,21 @@ type CreatedInvitation {
     name: String!
 }
 
+type Stats {
+  profilesCount: Int!
+  verificationsCount: Int!
+  leaderboard: [LeaderboardEntry!]!
+  goals: FibonacciGoals!
+  myRank: MyInviteRank!
+}
+
+type TransitiveTransfer {
+  isHubTransfer: Boolean
+  from: String!
+  to: String!
+  token: String!
+  tokenOwner: String!
+  value: String!
 type CreatedInviteEoa {
     address: String!
     fee: String!
@@ -598,6 +918,52 @@ type SafeInfo {
     lastUbiAt: String
     randomValue: String
     safeAddress: String!
+    filter: ProfileAggregateFilter
+  ): [ProfileAggregate!]!
+  organisations(pagination: PaginationArgs): [Organisation!]!
+  regions(pagination: PaginationArgs): [Organisation!]!
+  organisationsByAddress(addresses: [String!]!): [Organisation!]!
+  myInvitations: [CreatedInvitation!]!
+  commonTrust(safeAddress1: String!, safeAddress2: String!): [CommonTrust!]!
+  trustRelations(safeAddress: String!): [TrustRelation!]!
+  myProfile: Profile
+  profilesById(ids: [Int!]!): [Profile!]!
+  recentProfiles(pagination: PaginationArgs): [Profile!]!
+  profilesBySafeAddress(safeAddresses: [String!]!): [Profile!]!
+  findSafesByOwner(owner: String!): [SafeInfo!]!
+  search(query: SearchInput!): [Profile!]!
+  stats: Stats!
+  tags(query: QueryTagsInput!): [Tag!]!
+  tagById(id: Int!): Tag
+  findInvitationCreator(code: String!): Profile
+  clientAssertionJwt: String!
+  getStringByMaxVersion(lang: String, key: String): i18n
+  getAvailableLanguages: [i18n]
+  getAllStringsByMaxVersion: [i18n]
+  getAllStringsByMaxVersionAndLang(lang: String): [i18n]
+  getOlderVersionsByKeyAndLang(key: String, lang: String): [i18n]
+  getPaginatedStrings(
+    pagination_key: String
+    key: String
+    lang: String
+    value: String
+  ): [i18n]
+  getPaginatedStringsToUpdate(
+    pagination_key: String
+    key: String
+    lang: String
+    value: String
+    needsUpdate: Boolean
+  ): [i18n]
+  getStringsToBeUpdatedAmount(lang: String, key: String): Int
+  allProfiles(sinceLastChange: Date): [ExportProfile]!
+  allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!
+  getRandomAccount: RandomAccount
+  signMessage(message: String!, key: String!): String!
+  directPath(from: String!, to: String!, amount: String!): TransitivePath!
+  paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
+  allBusinessCategories: [BusinessCategory!]!
+  allBusinesses(categoryId: Int, id: Int): [Businesses!]!
     safeProfile: Profile
     tokenAddress: String
     type: AccountType!
