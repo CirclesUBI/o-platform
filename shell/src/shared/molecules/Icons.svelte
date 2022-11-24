@@ -516,8 +516,8 @@
 
 {#if icon}
     {#if !icons[icon]}
-        <Icon name="{icon}" solid="{solid ? true : false}" class="{customClass} w-{size} h-{size}"/>
+        <span on:click ><Icon on:click name="{icon}" solid="{solid ? true : false}" class="{customClass} w-{size} h-{size}"/></span>
     {:else}
-        {@html icons[icon]}
+        <span on:click >{@html icons[icon]}</span>
     {/if}
 {/if}
