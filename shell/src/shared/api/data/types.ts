@@ -84,30 +84,6 @@ export type Businesses = {
   picture?: Maybe<Scalars['String']>;
 };
 
-export type BusinessCategory = {
-  __typename?: 'BusinessCategory';
-  id: Scalars['Int'];
-  name?: Maybe<Scalars['String']>;
-};
-
-export type Businesses = {
-  __typename?: 'Businesses';
-  id: Scalars['Int'];
-  name?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  picture?: Maybe<Scalars['String']>;
-  businessHoursMonday?: Maybe<Scalars['String']>;
-  businessHoursTuesday?: Maybe<Scalars['String']>;
-  businessHoursWednesday?: Maybe<Scalars['String']>;
-  businessHoursThursday?: Maybe<Scalars['String']>;
-  businessHoursFriday?: Maybe<Scalars['String']>;
-  businessHoursSaturday?: Maybe<Scalars['String']>;
-  businessHoursSunday?: Maybe<Scalars['String']>;
-  phoneNumber?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  businessCategory?: Maybe<Scalars['String']>;
-};
-
 export type Capability = {
   __typename?: 'Capability';
   type?: Maybe<CapabilityType>;
@@ -775,7 +751,6 @@ export type Profile = {
   lastName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   location?: Maybe<Scalars['String']>;
-  category?: Maybe<BusinessCategory>;
   locationName?: Maybe<Scalars['String']>;
   lon?: Maybe<Scalars['Float']>;
   members?: Maybe<Array<Profile>>;
@@ -868,22 +843,6 @@ export type PublicEvent = {
 export type Query = {
   __typename?: 'Query';
   aggregates: Array<ProfileAggregate>;
-  organisations: Array<Organisation>;
-  regions: Array<Organisation>;
-  organisationsByAddress: Array<Organisation>;
-  myInvitations: Array<CreatedInvitation>;
-  commonTrust: Array<CommonTrust>;
-  trustRelations: Array<TrustRelation>;
-  myProfile?: Maybe<Profile>;
-  profilesById: Array<Profile>;
-  recentProfiles: Array<Profile>;
-  profilesBySafeAddress: Array<Profile>;
-  findSafesByOwner: Array<SafeInfo>;
-  search: Array<Profile>;
-  stats: Stats;
-  tags: Array<Tag>;
-  tagById?: Maybe<Tag>;
-  findInvitationCreator?: Maybe<Profile>;
   allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
   allProfiles: Array<Maybe<ExportProfile>>;
@@ -914,32 +873,6 @@ export type Query = {
   organisations: Array<Organisation>;
   organisationsByAddress: Array<Organisation>;
   paymentPath: TransitivePath;
-  allBusinessCategories: Array<BusinessCategory>;
-  allBusinesses: Array<Businesses>;
-};
-
-
-export type QuerySafeInfoArgs = {
-  safeAddress?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryLastAcknowledgedAtArgs = {
-  safeAddress: Scalars['String'];
-};
-
-
-export type QueryVerificationsArgs = {
-  pagination?: Maybe<PaginationArgs>;
-  filter?: Maybe<VerifiedSafesFilter>;
-};
-
-
-export type QueryEventsArgs = {
-  types: Array<EventType>;
-  safeAddress: Scalars['String'];
-  pagination: PaginationArgs;
-  filter?: Maybe<ProfileEventFilter>;
   profilesById: Array<Profile>;
   profilesBySafeAddress: Array<Profile>;
   recentProfiles: Array<Profile>;
@@ -1152,12 +1085,6 @@ export type QueryAllBusinessesParameters = {
   where?: Maybe<QueryAllBusinessesConditions>;
 };
 
-
-export type QueryAllBusinessesArgs = {
-  categoryId?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['Int']>;
-};
-
 export type QueryProfileInput = {
   circlesAddress?: Maybe<Array<Scalars['String']>>;
   country?: Maybe<Scalars['String']>;
@@ -1268,11 +1195,6 @@ export enum SortOrder {
 
 export type Stats = {
   __typename?: 'Stats';
-  profilesCount: Scalars['Int'];
-  verificationsCount: Scalars['Int'];
-  leaderboard: Array<LeaderboardEntry>;
-  goals: FibonacciGoals;
-  myRank: MyInviteRank;
   goals: FibonacciGoals;
   leaderboard: Array<LeaderboardEntry>;
   myRank: MyInviteRank;
@@ -4459,9 +4381,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     clientAssertionJwt(variables?: ClientAssertionJwtQueryVariables): Promise<ClientAssertionJwtQuery> {
       return withWrapper(() => client.request<ClientAssertionJwtQuery>(print(ClientAssertionJwtDocument), variables));
-    },
-    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
-      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
     },
     allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
       return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
