@@ -14,7 +14,7 @@ import { promptFile } from "../../../shared/api/promptFile";
 import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
-import {promptCity} from "../../../shared/api/promptCity";
+import { cityByHereId, promptCity } from "../../../shared/api/promptCity";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -32,6 +32,10 @@ export type UpsertIdentityContextData = {
   avatarUrl?: string;
   avatarMimeType?: string;
   successAction?: (data: UpsertIdentityContextData) => void;
+  location: string;
+  locationName: string;
+  lat: number;
+  lon: number;
 };
 
 export type UpsertIdentityContext = ProcessContext<UpsertIdentityContextData>;
@@ -269,7 +273,7 @@ const processDefinition = (processId: string) =>
           next: "#upsertIdentity",
           previous: "#avatarUrl",
           canSkip: () => true,
-        }
+        },
       }),
 
       upsertIdentity: {
@@ -278,6 +282,13 @@ const processDefinition = (processId: string) =>
           src: async (context) => {
             if (!context.data.circlesSafeOwner && sessionStorage.getItem("circlesKey")) {
               localStorage.removeItem("circlesKey");
+            }
+
+            if (context.data.location) {
+              const city = await cityByHereId(context.data.location);
+              context.data.lat = city.position.lat;
+              context.data.lon = city.position.lng;
+              context.data.locationName = city.address?.city ?? city.countryName;
             }
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
@@ -305,6 +316,10 @@ const processDefinition = (processId: string) =>
                 avatarMimeType: context.data.avatarMimeType,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
+                location: context.data.location,
+                lat: context.data.lat,
+                lon: context.data.lon,
+                locationName: context.data.locationName,
               },
             });
             sessionStorage.setItem("askedForEmailAddress", "true");

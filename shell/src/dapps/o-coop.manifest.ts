@@ -1,17 +1,18 @@
 import Organisations from "./o-coop/pages/Organisations.svelte";
-import { Page } from "@o-platform/o-interfaces/dist/routables/page";
-import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
-import { createOrganisation } from "./o-coop/processes/createOrganisation";
-import { ContactsDappState } from "./o-contacts.manifest";
+import {Page} from "@o-platform/o-interfaces/dist/routables/page";
+import {DappManifest} from "@o-platform/o-interfaces/dist/dappManifest";
+import {createOrganisation} from "./o-coop/processes/createOrganisation";
+import {ContactsDappState} from "./o-contacts.manifest";
 import OrganisationDetail from "./o-coop/pages/OrganisationDetail.svelte";
-import { addMember } from "./o-coop/processes/addMember";
-import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { loadProfile } from "../shared/functions/loadProfile";
-import { CapabilityType, Profile } from "../shared/api/data/types";
-import { me } from "../shared/stores/me";
-import { getSessionInfo } from "./o-passport/processes/identify/services/getSessionInfo";
-import { addOwner } from "./o-coop/processes/addOwner";
+import {addMember} from "./o-coop/processes/addMember";
+import {JumplistItem} from "@o-platform/o-interfaces/dist/routables/jumplist";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {loadProfile} from "../shared/functions/loadProfile";
+import {CapabilityType, Organisation, Profile} from "../shared/api/data/types";
+import {me} from "../shared/stores/me";
+import {getSessionInfo} from "./o-passport/processes/identify/services/getSessionInfo";
+import {addOwner} from "./o-coop/processes/addOwner";
+import {push} from "svelte-spa-router";
 
 const index: Page<any, ContactsDappState> = {
   routeParts: ["=organisations"],
@@ -54,72 +55,79 @@ export const coop: DappManifest<DappState> = {
       me.subscribe((me) => ($me = me))();
 
       const list = [];
-      const sessionInfo = await getSessionInfo();
+      list.push(<JumplistItem>{
+        key: "createOrganisation",
+        type: "profile",
+        icon: "plus",
+        category: "Coops",
+        title: window.o.i18n("dapps.common.quickactions.createOrganization"),
+        action: async () => {
+          window.o.runProcess(
+            createOrganisation,
+            {
+              successAction: async (data) => {
+                const createdOrga = await loadProfile(data.circlesAddress, $me);
+                window.o.publishEvent(<PlatformEvent>{
+                  type: "shell.loggedOut",
+                });
+                window.o.publishEvent(<PlatformEvent>{
+                  type: "shell.authenticated",
+                  profile: {
+                    ...createdOrga.profile,
+                    __typename: "Organisation",
+                    type: "Organisation",
+                    name: createdOrga.profile.firstName,
+                    description: createdOrga.profile.dream,
+                    locationName: createdOrga.profile.locationName,
+                    location: createdOrga.profile.location
+                  },
+                });
+                push("#/passport/profile");
+                // location.reload();
+              },
+            },
+            {}
+          );
+        },
+      });
 
-      if (sessionInfo.capabilities.find((o) => o.type == CapabilityType.PreviewFeatures)) {
+      if (<string>$me.__typename === "Organisation") {
         list.push(<JumplistItem>{
-          key: "createOrganisation",
-          type: "profile",
+          category: $me.displayName,
+          key: "addMember",
+          type: "action",
           icon: "plus",
-          category: "Coops",
-          title: window.o.i18n("dapps.common.quickactions.createOrganization"),
+          title: window.o.i18n("dapps.common.quickactions.addMember"),
           action: async () => {
             window.o.runProcess(
-              createOrganisation,
+              addMember,
               {
-                successAction: async (data) => {
-                  const createdOrga = await loadProfile(data.circlesAddress, $me);
-                  window.o.publishEvent(<PlatformEvent>{
-                    type: "shell.loggedOut",
-                  });
-                  window.o.publishEvent(<PlatformEvent>{
-                    type: "shell.authenticated",
-                    profile: createdOrga.profile,
-                  });
-                  location.reload();
+                groupId: $me.circlesAddress,
+                successAction: (data: any) => {
                 },
               },
               {}
             );
           },
         });
-
-        if (<string>$me.__typename === "Organisation") {
-          list.push(<JumplistItem>{
-            category: $me.displayName,
-            key: "addMember",
-            type: "action",
-            icon: "plus",
-            title: window.o.i18n("dapps.common.quickactions.addMember"),
-            action: async () => {
-              window.o.runProcess(
-                addMember,
-                {
-                  groupId: $me.circlesAddress,
-                  successAction: (data: any) => {},
+        list.push(<JumplistItem>{
+          category: $me.displayName,
+          key: "addOwner",
+          type: "action",
+          icon: "plus",
+          title: window.o.i18n("dapps.common.quickactions.addOwner"),
+          action: async () => {
+            window.o.runProcess(
+              addOwner,
+              {
+                groupId: $me.circlesAddress,
+                successAction: (data: any) => {
                 },
-                {}
-              );
-            },
-          });
-          list.push(<JumplistItem>{
-            category: $me.displayName,
-            key: "addOwner",
-            type: "action",
-            icon: "plus",
-            title: window.o.i18n("dapps.common.quickactions.addOwner"),
-            action: async () => {
-              window.o.runProcess(
-                addOwner,
-                {
-                  groupId: $me.circlesAddress,
-                  successAction: (data: any) => {},
-                },
-                {}
-              );
-            },
-          });
-        }
+              },
+              {}
+            );
+          },
+        });
       }
 
       return list;

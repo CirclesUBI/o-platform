@@ -79,6 +79,7 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
 
                     <CopyToClipboard text="{name}" let:copy>
                       <svg
+                        role="presentation"
                         on:click="{copy}"
                         xmlns="http://www.w3.org/2000/svg"
                         class="inline w-4 h-4 stroke-current text-primary"

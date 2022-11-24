@@ -2,7 +2,6 @@
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import ProcessNavigation from "@o-platform/o-editors/src/ProcessNavigation.svelte";
 import UserImage from "src/shared/atoms/UserImage.svelte";
-import Label from "../../../shared/atoms/Label.svelte";
 
 export let context: any;
 let _context: any;

@@ -34,8 +34,9 @@ function changeHandler() {
 
 <div class="z-10 flex justify-evenly">
   {#each availableLanguages as { lang }}
-    <div class="w-20 h-12 flex flex-row mt-2 -mr-2 hover:cursor-pointer">
+    <div class="flex flex-row w-20 h-12 mt-2 -mr-2 hover:cursor-pointer">
       <svg
+      role="presentation"
         on:click="{() => {
           selectedValue = lang;
           changeHandler();

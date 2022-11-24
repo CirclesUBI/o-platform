@@ -1,4 +1,3 @@
-
 mutation requestSessionChallenge($address: String!) {
   requestSessionChallenge(address: $address)
 }
@@ -62,7 +61,6 @@ mutation acknowledge($until: Date!, $safeAddress: String) {
   acknowledge(until: $until, safeAddress: $safeAddress)
 }
 
-
 mutation addMember($groupId: String!, $memberAddress: String!) {
   addMember(groupId: $groupId, memberAddress: $memberAddress) {
     error
@@ -122,6 +120,9 @@ mutation upsertProfile(
   $successorOfCirclesAddress: String
   $gender: Gender
   $location: String
+  $locationName: String
+  $lat: Float
+  $lon: Float
 ) {
   upsertProfile(
     data: {
@@ -144,6 +145,9 @@ mutation upsertProfile(
       successorOfCirclesAddress: $successorOfCirclesAddress
       gender: $gender
       location: $location
+      locationName: $locationName
+      lat: $lat
+      lon: $lon
     }
   ) {
     id
@@ -167,6 +171,9 @@ mutation upsertProfile(
     displayCurrency
     gender
     location
+    locationName
+    lat
+    lon
     memberships {
       isAdmin
       organisation {
@@ -208,23 +215,10 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       createdAt
       description
       name
-    }
-  }
-}
-
-mutation upsertRegion($organisation: UpsertOrganisationInput!) {
-  upsertRegion(organisation: $organisation) {
-    success
-    error
-    organisation {
-      id
-      avatarMimeType
-      avatarUrl
-      circlesAddress
-      circlesSafeOwner
-      createdAt
-      description
-      name
+      location
+      locationName
+      lat
+      lon
     }
   }
 }
@@ -255,4 +249,12 @@ mutation proofUniqueness($humanodeToken: String!) {
   proofUniqueness(humanodeToken: $humanodeToken) {
     existingSafe
   }
+}
+
+mutation setIsFavorite($circlesAddress: String!, $isFavorite: Boolean!) {
+  setIsFavorite(circlesAddress: $circlesAddress, isFavorite: $isFavorite)
+}
+
+mutation shareLink($targetType: LinkTargetType!, $targetKey: String!) {
+  shareLink(targetType: $targetType, targetKey: $targetKey)
 }

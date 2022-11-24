@@ -333,7 +333,7 @@ function setNav(navArgs: GenerateNavManifestArgs) {
  */
 
 let shellEventSubscription: ZenObservable.Subscription;
-const blblblbl = new Audio("blblblbl.mp3");
+// const blblblbl = new Audio("blblblbl.mp3");
 let sessionInfo: SessionInfo;
 function initSession(session: SessionInfo) {
   sessionInfo = session;
@@ -347,7 +347,7 @@ function initSession(session: SessionInfo) {
         })
         .subscribe(async (next) => {
           const event: NotificationEvent = next.data.events;
-          let playBlblblbl = false;
+          // let playBlblblbl = false;
           if (
             event.type == EventType.CrcHubTransfer ||
             event.type == EventType.CrcMinting ||
@@ -361,21 +361,23 @@ function initSession(session: SessionInfo) {
             myTransactions.refresh(true);
             assetBalances.update();
 
-            if (event.type != EventType.CrcMinting) {
-              playBlblblbl = true;
-            }
-          } else if (event.type == EventType.CrcTrust) {
-            if (event.from != $me.circlesAddress) {
-              playBlblblbl = true;
-            }
+            // if (event.type != EventType.CrcMinting) {
+            //   playBlblblbl = true;
+            // }
           }
+          // else if (event.type == EventType.CrcTrust) {
+          //   if (event.from != $me.circlesAddress) {
+          //     playBlblblbl = true;
+          //   }
+          // }
           //inbox.refresh();
 
-          if (!playBlblblbl) {
-            return;
-          } else {
-            blblblbl.play();
-          }
+          return;
+          // if (!playBlblblbl) {
+
+          // } else {
+          //   blblblbl.play();
+          // }
         });
     });
 
@@ -399,7 +401,7 @@ async function init() {
     centerIsOpen: false,
     rightIsOpen: false,
     leftIsOpen: false,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
   });
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
@@ -457,7 +459,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount:0,//  $inbox ? $inbox.length : 0,
+    notificationCount: 0, //  $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -474,7 +476,7 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -498,7 +500,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -517,7 +519,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
   });
   window.scrollTo(0, _scrollY);
 }
@@ -601,7 +603,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -614,7 +616,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -629,7 +631,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -1003,7 +1005,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }
@@ -1072,7 +1074,7 @@ function showModalPage(
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: 0,// $inbox ? $inbox.length : 0,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
     rightIsOpen: false,
   });
 }

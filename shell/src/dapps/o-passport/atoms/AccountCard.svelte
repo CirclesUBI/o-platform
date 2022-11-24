@@ -29,7 +29,7 @@ let seedphrase =
         <div class="self-end justify-end pl-2 text-right whitespace-nowrap text-primary">
           <span>
             {#if key.encryptedPrivateKey}
-              <div on:click="{toggle}">
+              <div role="presentation" on:click="{toggle}">
                 <svg
                   class="self-end h-6"
                   fill="none"
@@ -84,6 +84,7 @@ let seedphrase =
                 {seedphrase}
                 <CopyToClipboard text="{seedphrase}" let:copy>
                   <svg
+                    role="presentation"
                     on:click="{copy}"
                     xmlns="http://www.w3.org/2000/svg"
                     class="inline w-4 h-4 stroke-current text-primary"
