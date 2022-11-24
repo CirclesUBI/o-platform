@@ -84,6 +84,30 @@ export type Businesses = {
   picture?: Maybe<Scalars['String']>;
 };
 
+export type BusinessCategory = {
+  __typename?: 'BusinessCategory';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Businesses = {
+  __typename?: 'Businesses';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+  businessHoursMonday?: Maybe<Scalars['String']>;
+  businessHoursTuesday?: Maybe<Scalars['String']>;
+  businessHoursWednesday?: Maybe<Scalars['String']>;
+  businessHoursThursday?: Maybe<Scalars['String']>;
+  businessHoursFriday?: Maybe<Scalars['String']>;
+  businessHoursSaturday?: Maybe<Scalars['String']>;
+  businessHoursSunday?: Maybe<Scalars['String']>;
+  phoneNumber?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  businessCategory?: Maybe<Scalars['String']>;
+};
+
 export type Capability = {
   __typename?: 'Capability';
   type?: Maybe<CapabilityType>;
@@ -728,6 +752,7 @@ export type Profile = {
   avatarMimeType?: Maybe<Scalars['String']>;
   avatarUrl?: Maybe<Scalars['String']>;
   balances?: Maybe<ProfileBalances>;
+  category?: Maybe<BusinessCategory>;
   circlesAddress?: Maybe<Scalars['String']>;
   circlesSafeOwner?: Maybe<Scalars['String']>;
   circlesTokenAddress?: Maybe<Scalars['String']>;
@@ -843,15 +868,22 @@ export type PublicEvent = {
 export type Query = {
   __typename?: 'Query';
   aggregates: Array<ProfileAggregate>;
+  organisations: Array<Organisation>;
   regions: Array<Organisation>;
+  organisationsByAddress: Array<Organisation>;
+  myInvitations: Array<CreatedInvitation>;
+  commonTrust: Array<CommonTrust>;
   trustRelations: Array<TrustRelation>;
+  myProfile?: Maybe<Profile>;
   profilesById: Array<Profile>;
   recentProfiles: Array<Profile>;
   profilesBySafeAddress: Array<Profile>;
+  findSafesByOwner: Array<SafeInfo>;
   search: Array<Profile>;
   stats: Stats;
   tags: Array<Tag>;
   tagById?: Maybe<Tag>;
+  findInvitationCreator?: Maybe<Profile>;
   allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
   allProfiles: Array<Maybe<ExportProfile>>;
@@ -882,7 +914,26 @@ export type Query = {
   organisations: Array<Organisation>;
   organisationsByAddress: Array<Organisation>;
   paymentPath: TransitivePath;
+  allBusinessCategories: Array<BusinessCategory>;
+  allBusinesses: Array<Businesses>;
 };
+
+
+export type QuerySafeInfoArgs = {
+  safeAddress?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryLastAcknowledgedAtArgs = {
+  safeAddress: Scalars['String'];
+};
+
+
+export type QueryVerificationsArgs = {
+  pagination?: Maybe<PaginationArgs>;
+  filter?: Maybe<VerifiedSafesFilter>;
+};
+
 
 export type QueryEventsArgs = {
   types: Array<EventType>;
@@ -912,6 +963,12 @@ export type QueryAggregatesArgs = {
   types: Array<AggregateType>;
 };
 
+
+export type QueryAllBusinessesArgs = {
+  queryParams?: Maybe<QueryAllBusinessesParameters>;
+};
+
+
 export type QueryAllProfilesArgs = {
   sinceLastChange?: Maybe<Scalars['Date']>;
 };
@@ -932,6 +989,14 @@ export type QueryDirectPathArgs = {
   amount: Scalars['String'];
   from: Scalars['String'];
   to: Scalars['String'];
+};
+
+
+export type QueryEventsArgs = {
+  filter?: Maybe<ProfileEventFilter>;
+  pagination: PaginationArgs;
+  safeAddress: Scalars['String'];
+  types: Array<EventType>;
 };
 
 
@@ -1208,6 +1273,11 @@ export type Stats = {
   leaderboard: Array<LeaderboardEntry>;
   goals: FibonacciGoals;
   myRank: MyInviteRank;
+  goals: FibonacciGoals;
+  leaderboard: Array<LeaderboardEntry>;
+  myRank: MyInviteRank;
+  profilesCount: Scalars['Int'];
+  verificationsCount: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -4395,6 +4465,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     allBusinesses(variables?: AllBusinessesQueryVariables): Promise<AllBusinessesQuery> {
       return withWrapper(() => client.request<AllBusinessesQuery>(print(AllBusinessesDocument), variables));
+    },
+    allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
+      return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
     },
     myFavorites(variables?: MyFavoritesQueryVariables): Promise<MyFavoritesQuery> {
       return withWrapper(() => client.request<MyFavoritesQuery>(print(MyFavoritesDocument), variables));

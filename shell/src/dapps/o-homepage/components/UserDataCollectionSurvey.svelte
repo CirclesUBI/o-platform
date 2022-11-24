@@ -173,7 +173,7 @@ $: {
 </div>
 
 <style>
-:global(.date-time-field input) {
+.date-time-field input {
   --borderRadius: var(--rounded-btn, 0.5rem);
   background-color: red;
   --height: 50px !important;
