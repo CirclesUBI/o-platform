@@ -14,6 +14,8 @@ module.exports = {
     "./public/**/*.html",
     "./../packages/**/*.svelte",
     "./src/**/*.{js,jsx,ts,tsx,vue}",
+    './src/**/*.{html,js}',
+    './node_modules/tw-elements/dist/js/**/*.js',
   ],
 
   daisyui: {
@@ -199,5 +201,5 @@ module.exports = {
   variants: {
     backgroundClip: ["responsive"],
   },
-  plugins: [require("daisyui"), require("@tailwindcss/typography")],
+  plugins: [require("daisyui"), require("@tailwindcss/typography"), require('tw-elements/dist/plugin')],
 };
