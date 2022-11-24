@@ -39,6 +39,7 @@ function onkeydown(e: KeyboardEvent) {
       <div class="relative inline-flex">
         <div
           class="absolute z-10 text-center align-top list-none cursor-pointer top-1 right-2 inline-table "
+          role="presentation"
           on:click="{() => {
             context.dirtyFlags[context.field] = true;
             context.editorDirtyFlags[context.field] = true;

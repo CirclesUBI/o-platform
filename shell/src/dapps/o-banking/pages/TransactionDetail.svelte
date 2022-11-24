@@ -1,9 +1,8 @@
 <script lang="ts">
   import Time from "svelte-time";
   import {push} from "svelte-spa-router";
-  // import CirclesTransferGraph from "../../../shared/pathfinder/CirclesTransferGraph.svelte";
   import {onMount} from "svelte";
-  import UserImage from "src/shared/atoms/UserImage.svelte";
+  import UserImage from "../../../shared/atoms/UserImage.svelte";
   import {me} from "../../../shared/stores/me";
   import {Currency} from "../../../shared/currency";
 
@@ -169,6 +168,7 @@ function openDetail(transfer: ProfileEvent) {
       <UserImage profile="{targetProfile}" size="{36}" gradientRing="{true}" />
       <div
         class="cursor-pointer"
+        role="presentation"
         on:click="{() => {
           openDetail(transfer);
         }}">

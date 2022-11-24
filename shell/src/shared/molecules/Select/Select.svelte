@@ -2,14 +2,10 @@
 import { beforeUpdate, createEventDispatcher, onDestroy, onMount, tick } from "svelte";
 import List from "./List.svelte";
 import ItemComponent from "./Item.svelte";
-import SelectionComponent from "./Selection.svelte";
 import MultiSelectionComponent from "./MultiSelection.svelte";
 import isOutOfViewport from "./utils/isOutOfViewport";
 import debounce from "./utils/debounce";
 import Icons from "../../molecules/Icons.svelte";
-import DefaultClearIcon from "./ClearIcon.svelte";
-import { isMobile } from "src/shared/functions/isMobile";
-import { Observable } from "rxjs";
 
 const dispatch = createEventDispatcher();
 
@@ -88,6 +84,7 @@ export let showIndicator = false;
 export let containerClasses = "";
 export let staticList = false;
 export let indicatorSvg = undefined;
+export let getHighlight = undefined;
 // export let ClearIcon = DefaultClearIcon;
 
 let target;
@@ -163,19 +160,23 @@ $: {
     selectedValue = selectedValue.map((item) => (typeof item === "string" ? { value: item, label: item } : item));
   }
 
-  // This is some Hardcoded shit to display the currently selected Value into the placeholder of the input.
-  // Since we have different types of results, we need to call different keys..
-  if (selectedValue && selectedValue.__typename == "Profile") {
-    displayableSelectedValue = selectedValue.displayName;
-  } else if (selectedValue && selectedValue.__typename == "City") {
-    displayableSelectedValue = selectedValue.name;
-    if (selectedValue.country) {
-      displayableSelectedValue = displayableSelectedValue + ",  " + selectedValue.country;
+  if (selectedValue && getSelectionLabel) {
+    displayableSelectedValue = getSelectionLabel(selectedValue);
+  } else {
+    // This is some Hardcoded shit to display the currently selected Value into the placeholder of the input.
+    // Since we have different types of results, we need to call different keys..
+    if (selectedValue && selectedValue.__typename == "Profile") {
+      displayableSelectedValue = selectedValue.displayName;
+    } else if (selectedValue && selectedValue.__typename == "City") {
+      displayableSelectedValue = selectedValue.name;
+      if (selectedValue.country) {
+        displayableSelectedValue = displayableSelectedValue + ",  " + selectedValue.country;
+      }
+    } else if (selectedValue && selectedValue.__typename == "Tag") {
+      displayableSelectedValue = selectedValue.value;
+    } else if (selectedValue && selectedValue.__typename == "Currency") {
+      displayableSelectedValue = selectedValue.label;
     }
-  } else if (selectedValue && selectedValue.__typename == "Tag") {
-    displayableSelectedValue = selectedValue.value;
-  } else if (selectedValue && selectedValue.__typename == "Currency") {
-    displayableSelectedValue = selectedValue.label;
   }
 }
 
@@ -588,6 +589,7 @@ async function loadList() {
     getGroupHeaderLabel,
     items: filteredItems,
     itemHeight,
+    getHighlight
   };
 
   if (getOptionLabel) {
@@ -693,6 +695,7 @@ onDestroy(() => {
   class:disabled="{isDisabled}"
   class:focused="{isFocused}"
   style="{containerStyles}"
+  role="presentation"
   on:click="{handleClick}"
   bind:this="{container}">
   {#if Icon}
@@ -706,6 +709,7 @@ onDestroy(() => {
       getSelectionLabel="{getSelectionLabel}"
       activeSelectedValue="{activeSelectedValue}"
       isDisabled="{isDisabled}"
+      getHighlight={getHighlight}
       multiFullItemClearable="{multiFullItemClearable}"
       on:multiItemClear="{handleMultiItemClear}" />
   {/if}

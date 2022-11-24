@@ -1,7 +1,4 @@
-#!/bin/bash
-
-export DEPLOY_ENVIRONMENT=$1
-export API_ENDPOINT=$2
+#!/usr/bin/env bash
 
 search='__TIMESTAMP__'
 replace=`date +"%s"`
@@ -52,6 +49,7 @@ cd ../../../../..
 # npx svelte-check || exit 99
 
 echo "Building 'shell' with dapps .."
+
 cd shell || exit
 npm run build
 cd .. || exit

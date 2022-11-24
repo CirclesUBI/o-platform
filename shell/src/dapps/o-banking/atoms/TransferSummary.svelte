@@ -7,7 +7,6 @@ import { Currency } from "../../../shared/currency";
 import { loadProfile } from "../../../shared/functions/loadProfile";
 import Label from "../../../shared/atoms/Label.svelte";
 
-
 export let context: any;
 let _context: any;
 let profile: any;
@@ -18,10 +17,6 @@ $: {
 
 onMount(async () => {
   profile = (await loadProfile(context.data.recipientAddress, $me))?.profile;
-  // console.log(
-  //   "loadProfile2: ",
-  //   (profile = await loadProfile(context.data.recipientAddress, $me))
-  // );
 });
 
 let classes: string;
@@ -46,24 +41,11 @@ let now = new Date();
       </span>
     </div>
     <div class="text-dark-lightest">
-      {_context.data.message && _context.data.message != undefined
+      {_context.data.message
         ? _context.data.message
         : ""}
     </div>
 
-    <!-- {#if _context.data && _context.data.transitivePath}
-      <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="dapps.o-banking.atoms.transferSummary.paymentPath"  />
-        </div>
-        <div class="flex items-center w-full">
-          <CirclesTransferGraph
-            transfers="{_context.data.transitivePath.transfers}"
-            height="70px"
-            onWhiteBackground="{true}" />
-        </div>
-      </div>
-    {/if} -->
     <div class="flex flex-col w-full space-y-1">
       <div class="mb-1 text-left text-2xs text-dark-lightest">
         <Label key="common.date"  />
@@ -75,24 +57,6 @@ let now = new Date();
         </div>
       </div>
     </div>
-
-    <!-- <div class="flex flex-col w-full space-y-1">
-      <div class="mb-1 text-left text-2xs text-dark-lightest"><Label key="dapps.o-banking.atoms.transferSummary.amount"  /></div>
-
-      <div class="flex items-center w-full">
-        <div class="text-left ">
-          {#if _context.data.tokens.currency == "crc"}
-            {convertTimeCirclesToCircles(
-              _context.data.tokens ? _context.data.tokens.amount : "0",
-              null
-            )}
-            Circles
-          {:else}
-            {_context.data.tokens ? _context.data.tokens.amount : "0"} xDai
-          {/if}
-        </div>
-      </div>
-    </div> -->
 
     <div class="flex flex-col w-full space-y-1">
       <div class="mb-1 text-left text-2xs text-dark-lightest">

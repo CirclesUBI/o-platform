@@ -1,9 +1,6 @@
 import {DappManifest} from "./dappManifest";
 import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {Topic} from "@o-platform/o-utils/dist/eventBroker";
-import {StatePropagation} from "./statePropagation";
-import {Signal} from "@o-platform/o-events/dist/signals/signal"
-import {BehaviorSubject} from "rxjs";
 
 export interface RuntimeDapp<TState extends {[x:string]:any}> extends DappManifest<TState>
 {

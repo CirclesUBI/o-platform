@@ -70,12 +70,13 @@ function editProfileField(onlyThesePages: string[]) {
   <div class="flex items-center w-full pt-2 text-white ">
     <span class="inline-block tracking-wide font-heading">
       <div class="self-center block mt-2 text-center">
-        <div class="mb-2 sm:mb-4" on:click="{() => editProfileField(['file', 'avatarUrl'])}">
+        <div class="mb-2 sm:mb-4" role="presentation" on:click="{() => editProfileField(['file', 'avatarUrl'])}">
           <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
         </div>
 
         <div
           class="relative"
+          role="presentation"
           on:click="{() =>
             profile.__typename === 'Organisation'
               ? editProfileField(['name'])
@@ -84,6 +85,23 @@ function editProfileField(onlyThesePages: string[]) {
             {displayName}
           </h2>
         </div>
+        {#if profile}
+          {#if profile.locationName}
+            <div
+              class="relative mt-1 text-sm text-center cursor-pointer"
+              role="presentation"
+              on:click="{() => editProfileField(['location'])}">
+              {profile.locationName ? profile.locationName : ""}
+            </div>
+          {:else}
+            <div
+              class="relative mt-1 text-sm text-center cursor-pointer"
+              role="presentation"
+              on:click="{() => editProfileField(['location'])}">
+              Where do you live?
+            </div>
+          {/if}
+        {/if}
       </div>
     </span>
   </div>

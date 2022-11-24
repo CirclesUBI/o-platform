@@ -31,7 +31,7 @@ $: {
 </script>
 
 {#if profile}
-  <div class="has-tooltip" class:cursor-pointer="{profileLink}" on:click="{(event) => linkToProfile(event)}">
+  <div class="has-tooltip" class:cursor-pointer="{profileLink}" role="presentation" on:click="{(event) => linkToProfile(event)}">
     {#if tooltip}
       <span class="px-2 mt-12 text-sm bg-white rounded shadow-sm tooltip">
         {displayName}

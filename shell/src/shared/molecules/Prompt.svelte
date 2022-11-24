@@ -5,7 +5,6 @@ import { Schema } from "yup";
 import { PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
-import Label from "../atoms/Label.svelte";
 import ModalHeader from "../atoms/ModalHeader.svelte";
 
 export let process: Process;
@@ -75,7 +74,4 @@ const onBlur = () => window.o.publishEvent({ type: "shell.inputBlurred" });
       </slot>
     </div>
   </section>
-{:else}
-  <Label key="shared.molecules.prompt.nothingToDisplay" />
-  <br />
 {/if}
