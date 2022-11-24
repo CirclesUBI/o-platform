@@ -87,9 +87,9 @@ module.exports = {
         inactive: "#bcbcbc",
         borderColor: "#8597C6",
         darkgrey: "#E2E7EB",
-        background: "#F5F8FF",
-        newbackground: "#EFF1F7",
-        pagebackground: "#FFFFFF",
+        background: "#F9F9FB",
+        newbackground: "#F9F9FB",
+        pagebackground: "#F9F9FB",
 
         gradient1: "#1DD6A4",
         gradient2: "#41C7F1",
@@ -159,7 +159,7 @@ module.exports = {
         market: {
           DEFAULT: "#70BD9E",
           light: "#89D4BA",
-        }
+        },
       },
       fontSize: {
         "4rem": "4rem",
