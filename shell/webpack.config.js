@@ -292,15 +292,15 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "public"),
     },
-    client: {
-      overlay: {
-        errors: true,
-        warnings: true,
-      },
-    },
-    port: process.env.DEPLOY_ENVIRONMENT !== "docker" ? 5000 : 8080,
+    port: process.env.DEPLOY_ENVIRONMENT !== "docker" ? 5001 : 8080,
     host: "localhost",
     open: true,
     https: false,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false, // TODO: REMOVE THIS!!!
+      },
+    },
   },
 };
