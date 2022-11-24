@@ -78,7 +78,7 @@ function handleClick(button) {
     </div>
     <div>
       <button
-    class="btn transition-all overflow-hidden transform relative bg-primary px-16 text-cpurple"
+      class="btn btn-primary transition-all overflow-hidden transform relative bg-primary px-16 text-cpurple"
     on:click="{() => handleClick('next')}" disabled={!isValid}>
     {$_('dapps.o-homepage.components.survey.button.next')}</button>
     </div>
