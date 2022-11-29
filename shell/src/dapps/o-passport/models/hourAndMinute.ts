@@ -1,6 +1,7 @@
 export class HourAndMinute {
   hour: number;
   minute: number;
+
   get minutes() : number {
     return this.hour * 60 + this.minute;
   }
