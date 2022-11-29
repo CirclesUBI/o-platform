@@ -139,6 +139,10 @@ export enum ContactDirection {
   Out = 'Out'
 }
 
+export type ContactFilter = {
+  contactSource: Array<Scalars['String']>;
+};
+
 export type ContactPoint = {
   __typename?: 'ContactPoint';
   directions: Array<ContactDirection>;
@@ -155,6 +159,11 @@ export type Contacts = IAggregatePayload & {
 
 export type CrcBalanceAggregateFilter = {
   tokenAddresses: Array<Scalars['String']>;
+};
+
+export type CrcBalanceFilter = {
+  gt?: Maybe<Scalars['String']>;
+  lt?: Maybe<Scalars['String']>;
 };
 
 export type CrcBalances = IAggregatePayload & {
@@ -515,7 +524,6 @@ export type Mutation = {
   updateValue?: Maybe<I18n>;
   upsertOrganisation: CreateOrganisationResult;
   upsertProfile: Profile;
-  upsertRegion: CreateOrganisationResult;
   upsertTag: Tag;
   verifySafe: VerifySafeResult;
   verifySessionChallenge?: Maybe<ExchangeTokenResponse>;
@@ -643,11 +651,6 @@ export type MutationUpsertProfileArgs = {
 };
 
 
-export type MutationUpsertRegionArgs = {
-  organisation: UpsertOrganisationInput;
-};
-
-
 export type MutationUpsertTagArgs = {
   data: UpsertTagInput;
 };
@@ -741,7 +744,6 @@ export type Profile = {
   displayTimeCircles?: Maybe<Scalars['Boolean']>;
   dream?: Maybe<Scalars['String']>;
   emailAddress?: Maybe<Scalars['String']>;
-  favorites?: Maybe<Array<Favorite>>;
   firstName: Scalars['String'];
   gender?: Maybe<Gender>;
   id: Scalars['Int'];
@@ -763,6 +765,16 @@ export type Profile = {
   successorOfCirclesAddress?: Maybe<Scalars['String']>;
   type?: Maybe<ProfileType>;
   verifications?: Maybe<Array<Verification>>;
+};
+
+
+export type ProfileBalancesArgs = {
+  filter?: Maybe<CrcBalanceFilter>;
+};
+
+
+export type ProfileContactsArgs = {
+  filter?: Maybe<ContactFilter>;
 };
 
 export type ProfileAggregate = {
@@ -1268,6 +1280,14 @@ export type UpdateSafeResponse = {
 export type UpsertOrganisationInput = {
   avatarMimeType?: Maybe<Scalars['String']>;
   avatarUrl?: Maybe<Scalars['String']>;
+  businessCategoryId?: Maybe<Scalars['Int']>;
+  businessHoursFriday?: Maybe<Scalars['String']>;
+  businessHoursMonday?: Maybe<Scalars['String']>;
+  businessHoursSaturday?: Maybe<Scalars['String']>;
+  businessHoursSunday?: Maybe<Scalars['String']>;
+  businessHoursThursday?: Maybe<Scalars['String']>;
+  businessHoursTuesday?: Maybe<Scalars['String']>;
+  businessHoursWednesday?: Maybe<Scalars['String']>;
   circlesAddress?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   displayCurrency?: Maybe<DisplayCurrency>;
@@ -1278,6 +1298,7 @@ export type UpsertOrganisationInput = {
   locationName?: Maybe<Scalars['String']>;
   lon?: Maybe<Scalars['Float']>;
   name: Scalars['String'];
+  phoneNumber?: Maybe<Scalars['String']>;
   smallBannerUrl?: Maybe<Scalars['String']>;
 };
 

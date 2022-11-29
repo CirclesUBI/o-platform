@@ -376,7 +376,6 @@ type Mutation {
     updateValue(createdBy: String, key: String, lang: String, value: String): i18n
     upsertOrganisation(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
     upsertProfile(data: UpsertProfileInput!): Profile!
-    upsertRegion(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
     upsertTag(data: UpsertTagInput!): Tag!
     verifySafe(safeAddress: String!): VerifySafeResult!
     verifySessionChallenge(challenge: String!, signature: String!): ExchangeTokenResponse
@@ -433,21 +432,20 @@ type Profile {
     avatarCid: String
     avatarMimeType: String
     avatarUrl: String
-    balances: ProfileBalances
+    balances(filter: CrcBalanceFilter): ProfileBalances
     category: BusinessCategory
     circlesAddress: String
     circlesSafeOwner: String
     circlesTokenAddress: String
     claimedInvitation: ClaimedInvitation
     confirmedLegalAge: Int
-    contacts: [Contact!]
+    contacts(filter: ContactFilter): [Contact!]
     country: String
     displayCurrency: DisplayCurrency
     displayName: String
     displayTimeCircles: Boolean
     dream: String
     emailAddress: String
-    favorites: [Favorite!]
     firstName: String!
     gender: Gender
     id: Int!
@@ -831,8 +829,17 @@ input ContactAggregateFilter {
     addresses: [String!]!
 }
 
+input ContactFilter {
+    contactSource: [String!]!
+}
+
 input CrcBalanceAggregateFilter {
     tokenAddresses: [String!]!
+}
+
+input CrcBalanceFilter {
+    gt: String
+    lt: String
 }
 
 input CreateTagInput {
@@ -912,6 +919,14 @@ input UpdateSafeInput {
 input UpsertOrganisationInput {
     avatarMimeType: String
     avatarUrl: String
+    businessCategoryId: Int
+    businessHoursFriday: String
+    businessHoursMonday: String
+    businessHoursSaturday: String
+    businessHoursSunday: String
+    businessHoursThursday: String
+    businessHoursTuesday: String
+    businessHoursWednesday: String
     circlesAddress: String
     description: String
     displayCurrency: DisplayCurrency
@@ -922,6 +937,7 @@ input UpsertOrganisationInput {
     locationName: String
     lon: Float
     name: String!
+    phoneNumber: String
     smallBannerUrl: String
 }
 
