@@ -23,7 +23,7 @@ if (inviteCode) {
       id="video-overlay"
       class="relative flex items-center content-center justify-center h-screen overflow-hidden"
       style=" background-position: center; background:
-  url('/images/homepage/circles-home.jpg') no-repeat center center fixed;
+  url('/images/homepage/circles-home.jpg') no-repeat top right fixed;
   -webkit-background-size: cover; -moz-background-size: cover;
   -o-background-size: cover; background-size: cover; ">
     </div>
