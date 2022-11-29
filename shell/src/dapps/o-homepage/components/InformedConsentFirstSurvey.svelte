@@ -66,8 +66,9 @@ function handleClick(button) {
         type="checkbox"
         class="mr-2 checkbox checkbox-warning"
         on:change="{(event) => handleToggleCheckbox(event, 'first')}" />
-      <label for="check-1" class="cursor-pointer"
-        ><Label key="dapps.o-homepage.components.survey.informedConsent.firstCheckbox" /></label>
+      <label for="check-1" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.firstCheckbox" />
+      </label>
     </div>
     <div class="mx-10 my-5 uppercase">
       <input
@@ -75,8 +76,9 @@ function handleClick(button) {
         type="checkbox"
         class="mr-2 checkbox checkbox-warning"
         on:change="{(event) => handleToggleCheckbox(event, 'second')}" />
-      <label for="check-2" class="cursor-pointer"
-        ><Label key="dapps.o-homepage.components.survey.informedConsent.secondCheckbox" /></label>
+      <label for="check-2" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.secondCheckbox" />
+      </label>
     </div>
     <div class="mx-10 my-5 uppercase">
       <input
@@ -84,8 +86,9 @@ function handleClick(button) {
         type="checkbox"
         class="mr-2 checkbox checkbox-warning"
         on:change="{(event) => handleToggleCheckbox(event, 'third')}" />
-      <label for="check-3" class="cursor-pointer"
-        ><Label key="dapps.o-homepage.components.survey.informedConsent.thirdCheckbox" /></label>
+      <label for="check-3" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.thirdCheckbox" />
+      </label>
     </div>
     {#if !isValid}
       <div class="mx-10 my-5 text-sm text-info">
