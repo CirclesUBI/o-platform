@@ -9,9 +9,13 @@ import generateRandomUid from "../../../shared/functions/generateRandomUid";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");
 
+let editElementId: string;
+
 function addWindow() {
   openingHoursDay.windows.push({
+    id: Math.random().toString(),
     isEmpty: true,
+    isPersisted: false,
     from: new HourAndMinute(),
     to: new HourAndMinute(),
   });
@@ -33,58 +37,74 @@ function sortWindowsByStartMinute(windows: OpeningHourWindow[]) {
   });
 }
 
-function validateDay(validationEventData: ValidationEventData) {
-  const validationCopy = openingHoursDay.windows.filter(
-    (o) =>
-      !o.isEmpty && validationEventData.fromMinute !== o.from.minutes && validationEventData.toMinute !== o.to.minutes
-  );
+function commitDay(validationEventData: ValidationEventData, onlyValidate?: boolean) {
+  const validationCopy: OpeningHourWindow[] = openingHoursDay.windows.map(o => {
+    return {
+      ...o,
+      from: new HourAndMinute(o.from.hour, o.from.minute),
+      to: new HourAndMinute(o.to.hour, o.to.minute)
+    }
+  });
   sortWindowsByStartMinute(validationCopy);
 
   function commit() {
     validationEventData.resultCallback.commit();
-    sortWindowsByStartMinute(openingHoursDay.windows);
-    openingHoursDay = openingHoursDay;
+    if (!onlyValidate) {
+      sortWindowsByStartMinute(openingHoursDay.windows);
+      openingHoursDay = openingHoursDay;
+    }
   }
 
   if (validationCopy.length == 0) {
     // It's the only element
     commit();
-    return;
+    return true;
   }
 
   const firstElement = validationCopy[0];
-  if (validationEventData.toMinute < firstElement.from.minutes) {
+  if (validationEventData.toMinute <= firstElement.from.minutes
+          && validationEventData.toMinute != validationEventData.fromMinute) {
     // Ends before the first element starts
     commit();
-    return;
+    return true;
   }
 
   const lastElement = validationCopy[validationCopy.length - 1];
-  if (validationEventData.fromMinute > lastElement.to.minutes) {
+  if (validationEventData.fromMinute >= lastElement.to.minutes
+          && validationEventData.toMinute != validationEventData.fromMinute) {
     // Starts after the last element ends
     commit();
-    return;
+    return true;
   }
 
   // Check if the new element conflicts with any other element
+  let cancelled: boolean;
   const isValid = validationCopy.reduce((p, c) => {
     // If one condition failed, it stays 'invalid'
-    if (!p) return false;
+    if (!p) {
+      return false;
+    }
+
+    // Elements can not start and end at the same time
+    if (validationEventData.toMinute == validationEventData.fromMinute) {
+      validationEventData.resultCallback.cancel("The total duration of the window is '0' minutes");
+      return false;
+    }
 
     // Elements cannot contain other elements
-    if (validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
-      validationEventData.resultCallback.cancel("Contains another window");
+    if (validationEventData.id != c.id && validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
+      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
       return false;
     }
 
     // Elements cannot intersect with other elements
-    const beginIntersects =
-      validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes;
     const endIntersects =
-      validationEventData.toMinute >= c.from.minutes && validationEventData.toMinute <= c.to.minutes;
+            (validationEventData.id != c.id && validationEventData.toMinute >= c.from.minutes && validationEventData.toMinute <= c.to.minutes);
+    const beginIntersects =
+            (validationEventData.id != c.id && validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes);
 
     if (beginIntersects || endIntersects) {
-      validationEventData.resultCallback.cancel("Intersects with another window");
+      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
       return false;
     }
 
@@ -92,9 +112,10 @@ function validateDay(validationEventData: ValidationEventData) {
   }, true);
 
   if (!isValid) {
-    return;
+    return false;
   } else {
     commit();
+    return true;
   }
 }
 let randomId: string = generateRandomUid();
@@ -125,19 +146,44 @@ let randomId: string = generateRandomUid();
           {#each openingHoursDay.windows as openingHourWindow}
             <OpeningHoursWindowEditor
               openingHourWindow="{openingHourWindow}"
+              on:beginEdit={(e) => {
+                if (editElementId && editElementId !== e.detail.id) {
+                  // Close the currently open editor
+                  console.log(`TODO: Close existing editor first`);
+                }
+                editElementId = e.detail.id;
+              }}
+              on:cancel={e => {
+                if (e.detail.isNew) {
+                  const i = openingHoursDay.windows.indexOf(openingHourWindow);
+                  openingHoursDay.windows.splice(i, 1);
+                  if (openingHoursDay.windows.length === 0) {
+                    openingHoursDay.isOpen = false;
+                  }
+                  openingHoursDay = openingHoursDay;
+                }
+                editElementId = undefined;
+              }}
               on:delete="{() => deleteWindow(openingHourWindow)}"
-              on:ok="{(e) => validateDay(e.detail)}" />
+              on:validate={e => {
+                commitDay(e.detail, true);
+              }}
+              on:ok={(e) => {
+                const isValid = commitDay(e.detail);
+                if (isValid) {
+                  editElementId = undefined;
+                }
+              }} />
           {/each}
         {/if}
       </table>
     </td>
-
-    <td>
-      {#if openingHoursDay.isOpen}
+  </tr>
+  {#if openingHoursDay.isOpen && !editElementId}
+    <tr align="right">
         <span role="presentation" on:click="{() => addWindow()}">
           <Icons customClass="inline w-6 h-6 heroicon smallicon" icon="plus-circle" />
         </span>
-      {/if}
-    </td>
-  </tr>
+    </tr>
+  {/if}
 </table>
