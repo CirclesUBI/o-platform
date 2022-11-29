@@ -22,7 +22,7 @@ if (inviteCode) {
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-<div class="px-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2">
+<div>
   {#if id == "1"}
     <WelcomeSurvey />
   {/if}
