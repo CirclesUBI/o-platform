@@ -24,7 +24,7 @@ export let circlesAddress: string;
     </div>
   </section>
   <section class="justify-left">
-    <div class="p-1 pr-4 -mt-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
+    <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
       <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.information">
         <div slot="standardHeaderBoxContent">
           <div class="flex flex-col space-y-2">
