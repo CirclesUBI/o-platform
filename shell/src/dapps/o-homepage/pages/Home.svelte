@@ -19,6 +19,13 @@ if (inviteCode) {
   <main class="h-screen overflow-hidden">
     <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
 
-    <VideoHeader />
+    <div
+      id="video-overlay"
+      class="relative flex items-center content-center justify-center h-screen overflow-hidden"
+      style=" background-position: center; background:
+  url('/images/homepage/circles-home.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover; -moz-background-size: cover;
+  -o-background-size: cover; background-size: cover; ">
+    </div>
   </main>
 </div>

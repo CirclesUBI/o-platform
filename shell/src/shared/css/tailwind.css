@@ -29,6 +29,13 @@ body {
     @apply normal-case;
   }
 
+  .btn-disabled,
+  .btn-disabled:hover,
+  .btn[disabled],
+  .btn[disabled]:hover {
+    @apply border-opacity-20 bg-opacity-20 text-opacity-80;
+  }
+
   .link-primary {
     @apply text-base;
   }
