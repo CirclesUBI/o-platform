@@ -6,12 +6,9 @@ import { OpeningHourDay } from "../models/openingHourDay";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
 import generateRandomUid from "../../../shared/functions/generateRandomUid";
-import {_} from "svelte-i18n";
-import {createEventDispatcher} from "svelte";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");
 
-const eventDispatcher = createEventDispatcher();
 let editElementId: string;
 
 function addWindow() {
@@ -55,7 +52,6 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
     if (!onlyValidate) {
       sortWindowsByStartMinute(openingHoursDay.windows);
       openingHoursDay = openingHoursDay;
-      eventDispatcher("change", openingHoursDay);
     }
   }
 
@@ -91,13 +87,13 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
 
     // Elements can not start and end at the same time
     if (validationEventData.toMinute == validationEventData.fromMinute) {
-      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.durationIsZero"));
+      validationEventData.resultCallback.cancel("The total duration of the window is '0' minutes");
       return false;
     }
 
     // Elements cannot contain other elements
     if (validationEventData.id != c.id && validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
-      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
+      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
       return false;
     }
 
@@ -108,7 +104,7 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
             (validationEventData.id != c.id && validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes);
 
     if (beginIntersects || endIntersects) {
-      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
+      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
       return false;
     }
 
@@ -132,13 +128,12 @@ let randomId: string = generateRandomUid();
       type="checkbox"
       class="mr-2 checkbox checkbox-warning"
       bind:checked="{openingHoursDay.isOpen}"
-      on:change={() => {
+      on:change="{(event) => {
         if (!openingHoursDay.windows.length) {
           addWindow();
         }
         openingHoursDay = openingHoursDay;
-        eventDispatcher("change", openingHoursDay);
-      }} />
+      }}" />
     <label for="{randomId}"><Label class="pl-2" key="common.{openingHoursDay.day}" /></label>
   </div>
 </div>

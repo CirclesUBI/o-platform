@@ -17,7 +17,6 @@ import Icons from "../../../shared/molecules/Icons.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
-import { _ } from "svelte-i18n";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {
@@ -72,15 +71,15 @@ function validate() {
   const from = parseTime(editFromValue);
   isValid = from != null;
   if (!isValid) {
-    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.fromValueFormatError");
-    return;
+    message = "Your 'from' value is not formatted properly. Expected: hh:mm";
+    return
   }
 
   const to = parseTime(editToValue);
   isValid = to != null;
   if (!isValid) {
-    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.toValueFormatError");
-    return;
+    message = "Your 'to' value is not formatted properly. Expected: hh:mm";
+    return
   }
 
   isValid = to.hour * 60 + to.minute > from.hour * 60 + from.minute;
@@ -91,7 +90,7 @@ function validate() {
 
   isValid = from.minutes != to.minutes;
   if (!isValid) {
-    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.durationIsZero");
+    message = "The total duration of the window is '0";
     return;
   }
 
@@ -100,7 +99,7 @@ function validate() {
     fromMinute: from.hour * 60 + from.minute,
     toMinute: to.hour * 60 + to.minute,
     resultCallback: {
-      commit: () => (isValid = true),
+      commit: () => isValid = true,
       cancel: (msg) => {
         isValid = false;
         message = msg;
@@ -115,7 +114,7 @@ function edit(focusRightInsteadOfLeftField?: boolean) {
     return;
   }
 
-  eventDispatcher("beginEdit", { id: openingHourWindow.id });
+  eventDispatcher("beginEdit", {id: openingHourWindow.id});
 
   editFromValue = `${padZero(openingHourWindow.from.hour)}:${padZero(openingHourWindow.from.minute)}`;
   editToValue = `${padZero(openingHourWindow.to.hour)}:${padZero(openingHourWindow.to.minute)}`;
@@ -135,7 +134,7 @@ function edit(focusRightInsteadOfLeftField?: boolean) {
 function cancel() {
   isEditing = false;
   eventDispatcher("cancel", {
-    isNew: !openingHourWindow.isPersisted,
+    isNew: !openingHourWindow.isPersisted
   });
 }
 
@@ -151,9 +150,8 @@ function ok() {
     toMinute: to.hour * 60 + to.minute,
     resultCallback: {
       commit: commit,
-      cancel: (msg) => {
-        isValid = false;
-        message = msg;
+      cancel: (message) => {
+        console.log(message);
       },
     },
   });
@@ -173,20 +171,19 @@ function commit() {
   <tr>
     <td>
       <input
-        bind:this="{fromEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editFromValue}"
-        on:change="{validate}" />
+              bind:this="{fromEditorInput}"
+              type="time"
+              class="text-xs input input-sm"
+              bind:value="{editFromValue}"
+              on:change="{validate}" />
     </td>
     <td> &nbsp;-&nbsp; </td>
     <td>
-      <input
-        bind:this="{toEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editToValue}"
-        on:change="{validate}" />
+      <input bind:this="{toEditorInput}"
+             type="time"
+             class="text-xs input input-sm"
+             bind:value="{editToValue}"
+             on:change="{validate}" />
     </td>
   </tr>
   {#if !isValid}
@@ -199,16 +196,23 @@ function commit() {
   {/if}
   <tr>
     <td colspan="3" align="right">
-      <input type="button" class="btn btn-primary" class:btn-disabled="{!isValid}" value="Save" on:click="{ok}" />
-      <input type="button" class="btn btn-secondary" value="Cancel" on:click="{cancel}" />
+      <input type="button"
+             class="btn btn-primary"
+             class:btn-disabled={!isValid}
+             value="Save"
+             on:click={ok} />
+      <input type="button"
+             class="btn btn-secondary"
+             value="Cancel"
+             on:click={cancel} />
     </td>
   </tr>
 {:else}
-  <tr class="cursor-pointer">
+  <tr>
     <td role="presentation" on:click="{() => edit(false)}">
       <div>{padZero(openingHourWindow.from.hour)}:{padZero(openingHourWindow.from.minute)}</div>
     </td>
-    <td on:click="{edit}" role="presentation"> &nbsp;-&nbsp; </td>
+    <td on:click="{edit}"> &nbsp;-&nbsp; </td>
     <td role="presentation" on:click="{() => edit(true)}">
       <div>{padZero(openingHourWindow.to.hour)}:{padZero(openingHourWindow.to.minute)}</div>
     </td>
