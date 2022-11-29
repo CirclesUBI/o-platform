@@ -157,6 +157,7 @@ async function onStay() {
       })
     );
   }
+
   previousContext.routable = <Page<any, any>>routable;
   previousContext.params = previous.params;
 
@@ -1152,9 +1153,11 @@ async function hideCenter() {
 }
 </script>
 
+{console.log("ROUTABLE: ", routable)}
 <Layout
   layout="{layout}"
   navigation="{navigation}"
+  pageBackgroundClass="{routable?.pageBackgroundClass ? routable.pageBackgroundClass : null}"
   on:clickedOutside="{() => {
     onRoot();
   }}"

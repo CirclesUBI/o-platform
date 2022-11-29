@@ -1,6 +1,6 @@
 import { Jumplist } from "./jumplist";
 import { Routable } from "../routable";
-import {ProfileType} from "@o-platform/shell/src/shared/api/data/types";
+import { ProfileType } from "@o-platform/shell/src/shared/api/data/types";
 
 /**
  * A regular page to which a user can navigate.
@@ -8,11 +8,9 @@ import {ProfileType} from "@o-platform/shell/src/shared/api/data/types";
  * If the dapp has an associated jumplist as well, then the items of both lists are merged.
  * Page jumplist-items with the same key hide the dapp jumplist items.
  */
-export interface Page<
-  TParams extends { [x: string]: any },
-  TDappState extends { [x: string]: any }
-> extends Routable {
+export interface Page<TParams extends { [x: string]: any }, TDappState extends { [x: string]: any }> extends Routable {
   type: "page";
+  pageBackgroundClass?: string;
   audience?: ProfileType;
   position?: "main" | "modal";
   /**
@@ -24,5 +22,4 @@ export interface Page<
   jumplist?: Jumplist<TParams, TDappState>;
   isFullWidth?: boolean;
   hideFooter?: boolean;
-
 }
