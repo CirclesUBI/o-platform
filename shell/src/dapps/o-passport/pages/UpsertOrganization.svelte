@@ -29,46 +29,38 @@ export let circlesAddress: string;
         <div slot="standardHeaderBoxContent">
           <div class="flex flex-col space-y-2">
             <div class="text-left">
-              <Label key="dapps.o-homepage.components.survey.userDataCollection.subtitle" />
+              <Label key="dapps.o-passport.pages.upsertOrganization.name" />
             </div>
 
             <div class="flex flex-col">
-              <div>
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.name" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered md:w-auto" type="text" />
-                  </div>
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.name" />
+                <div class="flex mt-2">
+                  <input class="w-full input input-bordered md:w-auto" type="text" />
                 </div>
               </div>
             </div>
             <div class="flex flex-col">
-              <div>
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.description" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered md:w-auto" type="text" />
-                  </div>
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.description" />
+                <div class="flex mt-2">
+                  <input class="w-full input input-bordered md:w-auto" type="text" />
                 </div>
               </div>
             </div>
             <div class="flex flex-col">
-              <div>
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.category" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered md:w-auto" type="text" />
-                  </div>
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.category" />
+                <div class="flex mt-2">
+                  <input class="w-full input input-bordered md:w-auto" type="text" />
                 </div>
               </div>
             </div>
             <div class="flex flex-col">
-              <div>
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.location" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered md:w-auto" type="text" />
-                  </div>
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.location" />
+                <div class="flex mt-2">
+                  <input class="w-full input input-bordered md:w-auto" type="text" />
                 </div>
               </div>
             </div>
