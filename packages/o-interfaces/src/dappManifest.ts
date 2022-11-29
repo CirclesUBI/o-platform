@@ -9,8 +9,7 @@ export type FeaturedActionSpec = {
   action: () => void;
 };
 
-export interface DappManifest<TState extends { [x: string]: any }>
-  extends Routable {
+export interface DappManifest<TState extends { [x: string]: any }> extends Routable {
   type: "dapp";
   /**
    * A unique identifier for this auth manifest.

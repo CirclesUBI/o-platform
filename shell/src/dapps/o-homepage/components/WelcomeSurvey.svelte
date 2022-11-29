@@ -28,14 +28,13 @@
     <div class="flex flex-row justify-around text-center mt-10 mb-5">
     <div>
       <button
-    class="btn transition-all overflow-hidden transform relative bg-cpurple px-8 border-warning text-warning"
+    class="btn btn-light transition-all overflow-hidden transform relative bg-cpurple px-8 border-warning text-warning svelte-12kbnbk"
     on:click="{() => handleClick()}">
     {$_('dapps.o-homepage.components.survey.button.goBack')}</button>
-  
     </div>
     <div>
       <button
-    class="btn transition-all overflow-hidden transform relative bg-primary px-16 text-cpurple"
+    class="btn btn-primary transition-all overflow-hidden transform relative bg-primary px-16 text-cpurple"
     on:click="{() => handleClick()}">
     {$_('dapps.o-homepage.components.survey.button.next')}</button>
     </div>
