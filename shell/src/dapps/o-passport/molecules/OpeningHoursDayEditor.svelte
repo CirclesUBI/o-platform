@@ -6,6 +6,7 @@ import { OpeningHourDay } from "../models/openingHourDay";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
 import generateRandomUid from "../../../shared/functions/generateRandomUid";
+import {_} from "svelte-i18n";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");
 
@@ -87,13 +88,13 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
 
     // Elements can not start and end at the same time
     if (validationEventData.toMinute == validationEventData.fromMinute) {
-      validationEventData.resultCallback.cancel("The total duration of the window is '0' minutes");
+      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.durationIsZero"));
       return false;
     }
 
     // Elements cannot contain other elements
     if (validationEventData.id != c.id && validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
-      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
+      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
       return false;
     }
 
@@ -104,7 +105,7 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
             (validationEventData.id != c.id && validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes);
 
     if (beginIntersects || endIntersects) {
-      validationEventData.resultCallback.cancel("The window conflicts with an existing window");
+      validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
       return false;
     }
 
