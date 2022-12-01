@@ -3,8 +3,6 @@ import { OpeningHourWeek } from "../models/openingHourWeek";
 import OpeningHoursDayEditor from "./OpeningHoursDayEditor.svelte";
 
 export let week: OpeningHourWeek = new OpeningHourWeek();
-let editElementId: string;
-function validate() {}
 </script>
 
 <div class="flex flex-col">
