@@ -9,6 +9,11 @@ import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let circlesAddress: string;
+
+async function upsertOrganization() {
+
+}
+
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
@@ -25,13 +30,12 @@ export let circlesAddress: string;
   </section>
   <section class="justify-left">
     <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
-      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.information">
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
         <div slot="standardHeaderBoxContent">
           <div class="flex flex-col space-y-2">
             <div class="text-left">
               <Label key="dapps.o-passport.pages.upsertOrganization.name" />
             </div>
-
             <div class="flex flex-col">
               <div class="flex flex-col mb-5 text-sm">
                 <Label key="dapps.o-passport.pages.upsertOrganization.name" />
@@ -48,13 +52,14 @@ export let circlesAddress: string;
                 </div>
               </div>
             </div>
-            <div class="flex flex-col">
-              <div class="flex flex-col mb-5 text-sm">
-                <Label key="dapps.o-passport.pages.upsertOrganization.category" />
-                <div class="flex mt-2">
-                  <input class="w-full input input-bordered md:w-auto" type="text" />
-                </div>
-              </div>
+          </div>
+        </div>
+      </StandardHeaderBox>
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.contactInformation">
+        <div slot="standardHeaderBoxContent">
+          <div class="flex flex-col space-y-2">
+            <div class="text-left">
+              <Label key="dapps.o-passport.pages.upsertOrganization.name" />
             </div>
             <div class="flex flex-col">
               <div class="flex flex-col mb-5 text-sm">
@@ -64,13 +69,37 @@ export let circlesAddress: string;
                 </div>
               </div>
             </div>
+            <div class="flex flex-col">
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.phone" />
+                <div class="flex mt-2">
+                  <input class="w-full input input-bordered md:w-auto" type="text" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </StandardHeaderBox>
 
-      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.openingHours">
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.business">
         <div slot="standardHeaderBoxContent">
-          <OpeningHours />
+          <div class="flex flex-col">
+            <div class="text-left">
+              <Label key="dapps.o-passport.pages.upsertOrganization.name" />
+            </div>
+            <div class="flex flex-col mb-5 text-sm">
+              <Label key="dapps.o-passport.pages.upsertOrganization.category" />
+              <div class="flex mt-2">
+                <input class="w-full input input-bordered md:w-auto" type="text" />
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col mb-5 text-sm">
+            <Label key="dapps.o-passport.pages.upsertOrganization.businessHours" />
+            <div class="flex mt-2">
+              <OpeningHours />
+            </div>
+          </div>
         </div>
       </StandardHeaderBox>
     </div>
