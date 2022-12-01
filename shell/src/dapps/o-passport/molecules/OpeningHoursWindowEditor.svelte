@@ -17,6 +17,7 @@ import Icons from "../../../shared/molecules/Icons.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
+import {_} from "svelte-i18n";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {
@@ -71,14 +72,14 @@ function validate() {
   const from = parseTime(editFromValue);
   isValid = from != null;
   if (!isValid) {
-    message = "Your 'from' value is not formatted properly. Expected: hh:mm";
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.fromValueFormatError");
     return
   }
 
   const to = parseTime(editToValue);
   isValid = to != null;
   if (!isValid) {
-    message = "Your 'to' value is not formatted properly. Expected: hh:mm";
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.toValueFormatError");
     return
   }
 
@@ -90,7 +91,7 @@ function validate() {
 
   isValid = from.minutes != to.minutes;
   if (!isValid) {
-    message = "The total duration of the window is '0";
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.durationIsZero");
     return;
   }
 
@@ -150,8 +151,9 @@ function ok() {
     toMinute: to.hour * 60 + to.minute,
     resultCallback: {
       commit: commit,
-      cancel: (message) => {
-        console.log(message);
+      cancel: (msg) => {
+        isValid = false;
+        message = msg;
       },
     },
   });
