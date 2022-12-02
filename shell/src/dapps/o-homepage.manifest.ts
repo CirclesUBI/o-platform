@@ -34,7 +34,7 @@ const index: Page<any, DappState> = {
   isSystem: true,
   routeParts: [],
   component: Home,
-  title: "Circles Land",
+  title: "CIRCLESUBI.ID",
   icon: "home",
   type: "page",
 };
@@ -44,7 +44,7 @@ const invite: Page<{ inviteCode: string }, DappState> = {
   anonymous: true,
   routeParts: ["=invite", ":inviteCode"],
   component: Home,
-  title: "Circles Land",
+  title: "CIRCLESUBI.ID",
   type: "page",
 };
 
@@ -90,7 +90,7 @@ export const homepage: DappManifest<DappState> = {
   isHidden: true,
   icon: "home",
   anonymous: true,
-  title: "Circles Land",
+  title: "CIRCLESUBI.ID",
   routeParts: [],
   tag: Promise.resolve("alpha"),
   isEnabled: true,

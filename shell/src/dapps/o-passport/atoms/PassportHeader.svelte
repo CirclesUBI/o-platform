@@ -63,7 +63,7 @@ function editProfileField(onlyThesePages: string[]) {
 
 <PageHeader heightClass=" relative h-60 sm:h-80" color="bg-passport" largeHeader="{true}">
   <div
-    class="absolute w-4/5 h-full overflow-hidden -top-6 -right-8 blob bg-passport-light"
+    class="absolute w-4/5 h-full overflow-hidden -top-6 -right-8 blob bg-passport"
     style="border-radius:60% 40% 56% 38% / 99% 50% 90% 57%">
     <div class="pt-2 text-white"></div>
   </div>
@@ -71,7 +71,7 @@ function editProfileField(onlyThesePages: string[]) {
     <span class="inline-block tracking-wide font-heading">
       <div class="self-center block mt-2 text-center">
         <div class="mb-2 sm:mb-4" role="presentation" on:click="{() => editProfileField(['file', 'avatarUrl'])}">
-          <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
+          <UserImage profile="{profile}" size="{28}" profileLink="{false}" />
         </div>
 
         <div

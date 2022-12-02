@@ -31,7 +31,11 @@ $: {
 </script>
 
 {#if profile}
-  <div class="has-tooltip" class:cursor-pointer="{profileLink}" role="presentation" on:click="{(event) => linkToProfile(event)}">
+  <div
+    class="has-tooltip"
+    class:cursor-pointer="{profileLink}"
+    role="presentation"
+    on:click="{(event) => linkToProfile(event)}">
     {#if tooltip}
       <span class="px-2 mt-12 text-sm bg-white rounded shadow-sm tooltip">
         {displayName}
@@ -39,7 +43,7 @@ $: {
     {/if}
 
     <div
-      class="self-center text-center rounded-full justify-self-center"
+      class="self-center text-center rounded-full justify-self-center w-{size}"
       class:rounded-corners-gradient-borders="{gradientRing}"
       class:rounded-corners-white-borders="{whiteRing}"
       style="padding: {size >= 20 ? `4px` : `1px`}">
