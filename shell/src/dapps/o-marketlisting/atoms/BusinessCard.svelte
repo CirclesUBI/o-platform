@@ -3,7 +3,7 @@ import { createEventDispatcher } from "svelte";
 import { push } from "svelte-spa-router";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { Businesses } from "../../../shared/api/data/types";
-import {marketFavoritesStore} from "../stores/marketFavoritesStore";
+import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 
 export let business: Businesses & { isFavorite: boolean };
 
@@ -37,6 +37,6 @@ function loadDetailPage(circlesAddress) {
       {/if}
     </div>
   </div>
-  <div class="font-bold">{business.name}</div>
+  <div class="pt-2 text-2xl font-bold font-heading">{business.name}</div>
   <div class="flex-wrap">{business.description}</div>
 </section>
