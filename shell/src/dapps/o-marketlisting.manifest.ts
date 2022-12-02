@@ -4,13 +4,23 @@ import { ContactsDappState } from "./o-contacts.manifest";
 import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
 import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
 import Favorites from "./o-marketlisting/pages/Favorites.svelte";
+import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 
 const listing: Page<any, ContactsDappState> = {
   routeParts: ["=listing"],
   component: Marketlisting,
   title: "Market",
   type: "page",
-  position: "main"
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "marketlisting",
+        backgroundColorClass: "market",
+      },
+    },
+  },
+  position: "main",
 };
 
 const favorites: Page<any, ContactsDappState> = {
@@ -18,18 +28,26 @@ const favorites: Page<any, ContactsDappState> = {
   component: Favorites,
   title: "Favorites",
   type: "page",
-  position: "main"
+  position: "main",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "marketlisting",
+        backgroundColorClass: "market",
+      },
+    },
+  },
 };
 
 const detailPage: Page<any, ContactsDappState> = {
-  routeParts: ["=detail",":circlesAddress"],
+  routeParts: ["=detail", ":circlesAddress"],
   component: MarketlistingDetail,
   title: "detail",
   isSystem: true,
   type: "page",
-  position: "modal"
+  position: "modal",
 };
-
 
 export interface DappState {
   // put state here
@@ -45,6 +63,15 @@ export const marketlisting: DappManifest<DappState> = {
   routeParts: ["market"],
   defaultRoute: ["listing"],
   tag: Promise.resolve("alpha"),
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "marketlisting",
+        backgroundColorClass: "market",
+      },
+    },
+  },
   isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
