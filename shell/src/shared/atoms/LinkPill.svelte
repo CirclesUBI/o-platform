@@ -13,12 +13,9 @@ export let props: {
   isSmall: boolean;
 };
 // console.log("PROPS", props);
-let iconsize: number = 4;
+let iconsize: number = 6;
 if ($media.small) {
   iconsize = 6;
-  if (props.isActive) {
-    iconsize = 8;
-  }
 }
 </script>
 
@@ -34,14 +31,9 @@ if ($media.small) {
   }}">
   <div
     class="flex flex-row items-center mt-2 rounded-full"
-    class:btn="{props.isActive}"
-    class:btn-outline="{props.isActive}"
-    class:btn-sm="{props.isActive}"
-    class:btn-base="{props.isActive}"
-    class:text-base="{props.isActive}"
+    class:text-primary="{props.isActive}"
     class:text-lg="{$media.small && !props.isSmall}"
-    class:text-2xs="{props.isSmall && !$media.small}"
-    class:text-sm="{props.isSmall && $media.small}">
+    class:text-sm="{props.isSmall}">
     {#if props.icon}
       <span class="pl-1">
         <Icons icon="{props.icon}" size="{iconsize}" />

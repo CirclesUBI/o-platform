@@ -48,7 +48,7 @@ export const home: DappManifest<DappState> = {
   isSingleton: true,
   isHidden: true,
   icon: "dashboard",
-  title: "Circlesland",
+  title: "CIRCLESUBI.ID",
   routeParts: ["home"],
   defaultRoute: [""],
   tag: Promise.resolve("alpha"),
