@@ -936,6 +936,18 @@ async function handleUrlChanged() {
       baseParams = currentParams;
       showMainPage(runtimeDapp, page, findRouteResult.params);
     }
+
+    /* Re-Setting Navigation to show the correct Icon and color in left nav */
+    const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+
+    setNav({
+      leftSlotOverride: leftSlotOverride,
+      centerContainsProcess: false,
+      centerIsOpen: false,
+      rightIsOpen: false,
+      leftIsOpen: false,
+      notificationCount: 0, // $inbox ? $inbox.length : 0,
+    });
   }
 
   window.o.publishEvent({
