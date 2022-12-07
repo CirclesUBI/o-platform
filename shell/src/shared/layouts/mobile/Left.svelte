@@ -47,7 +47,7 @@ let x = -500;
 }
 .mobileSideBarLeft .mobileSidebarInner {
   top: 0;
-  --tw-shadow: 0 25px 50px 82px rgba(13, 43, 102, 0.45);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #95b7ca), var(--tw-ring-shadow, 0 0 #95b7ca), var(--tw-shadow);
+  --tw-shadow: 0 25px 50px 82px rgba(255, 255, 255, 0.45);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #ffffff), var(--tw-ring-shadow, 0 0 #ffffff), var(--tw-shadow);
 }
 </style>

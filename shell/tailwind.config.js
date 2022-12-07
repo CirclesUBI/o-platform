@@ -119,7 +119,7 @@ module.exports = {
           light: "#F75F9E",
         },
         banking: {
-          DEFAULT: "#F26240",
+          DEFAULT: "#FF5530",
           light: "#FF8874",
         },
         contacts: {
