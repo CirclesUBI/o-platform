@@ -6,7 +6,7 @@ export let largeHeader: boolean = false;
 
 <header
   class="grid place-content-center text-white bg-cover {heightClass}
-  overflow-hidden {color}"
-  class:largeHeader>
+  w-full {color}"
+  style="border-radius: 0px 0px 115% 118% / 70% 16% 36% 20%">
   <slot />
 </header>
