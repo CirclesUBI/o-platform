@@ -8,7 +8,7 @@ export let routable: RuntimeDapp<any>;
 
 <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
 
-<div class="pb-20 mx-auto mt-20 md:w-2/3 xl:w-1/2">
+<div class="px-4 pb-20 mx-auto mt-20 md:w-2/3 xl:w-1/2">
   <h1 class="text-4xl">Terms of Service</h1>
   <h2 class="text-stone-500">Last updated: August 2022</h2>
   <p class="mt-6">

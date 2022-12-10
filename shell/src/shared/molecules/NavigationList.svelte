@@ -30,7 +30,22 @@ $: {
 
 <div class="z-10 flex flex-col flex-1">
   <nav class="flex flex-col flex-1 w-auto p-4 mt-4"></nav>
-  <div class="relative flex-shrink-0 w-auto pt-4 pb-12 space-y-2">
+  <div class="relative flex-shrink-0 w-auto pt-4 space-y-2">
+    {#if navigation}
+      {#each navigation as navItem}
+        <LinkPill
+          props="{{
+            icon: navItem.icon,
+            text: $_(`${navItem.title}`),
+            i18nKey: navItem.title,
+            link: navItem.url,
+            extern: navItem.extern,
+            isActive: navItem.isActive,
+          }}" />
+      {/each}
+    {/if}
+  </div>
+  <div class="relative flex-shrink-0 w-auto pt-2 pb-12">
     <LinkPill
       props="{{
         text: $_('common.privacyPolicy'),
@@ -47,20 +62,6 @@ $: {
         extern: false,
         isSmall: true,
       }}" />
-
-    {#if navigation}
-      {#each navigation as navItem}
-        <LinkPill
-          props="{{
-            icon: navItem.icon,
-            text: $_(`${navItem.title}`),
-            i18nKey: navItem.title,
-            link: navItem.url,
-            extern: navItem.extern,
-            isActive: navItem.isActive,
-          }}" />
-      {/each}
-    {/if}
   </div>
 </div>
 

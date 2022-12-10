@@ -25,7 +25,7 @@ $: {
 
 <PageHeader heightClass=" relative h-60 sm:h-80" color="bg-banking" largeHeader="{true}">
   <div
-    class="absolute w-4/5 h-full overflow-hidden -top-6 -right-8 blob bg-banking-light"
+    class="absolute w-4/5 h-full overflow-hidden -top-6 blob bg-banking"
     style="border-radius:137% 1% 119% 38% / 99% 60% 86% 73%">
     <div class="pt-2 text-white"></div>
   </div>
@@ -34,7 +34,7 @@ $: {
       <div class="self-center block mt-2 text-center">
         <div class="relative pt-2 text-center text-white">
           <span class="inline-block tracking-wide font-heading">
-            <section class="m-4 -mb-4 text-center">
+            <section class="m-4 -mb-4 -mr-4 text-center">
               <h1 class="text-5xl sm:text-7xl">
                 {balanceTime}<Icons icon="timeCircle" size="{8}" customClass="inline inline-icon" />
               </h1>
