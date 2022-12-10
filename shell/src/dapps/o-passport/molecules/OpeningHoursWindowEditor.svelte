@@ -210,7 +210,7 @@ function commit() {
     </td>
   </tr>
 {:else}
-  <tr>
+  <tr class="cursor-pointer">
     <td role="presentation" on:click="{() => edit(false)}">
       <div>{padZero(openingHourWindow.from.hour)}:{padZero(openingHourWindow.from.minute)}</div>
     </td>
