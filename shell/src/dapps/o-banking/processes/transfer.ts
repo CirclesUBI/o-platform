@@ -228,7 +228,7 @@ const processDefinition = (processId: string) =>
             const flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
               from: context.data.safeAddress,
               to: context.data.recipientAddress,
-              amount: "9999999999999999999999999999999999",
+              amount: "0",
             });
 
             if (!context.data.maxFlows) {

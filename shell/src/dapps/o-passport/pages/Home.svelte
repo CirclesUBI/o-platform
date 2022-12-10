@@ -28,7 +28,6 @@ $: name = profile?.circlesAddress ? profile.circlesAddress : "";
 onMount(() => {
   if ($me) {
     profile = $me;
-    console.log(profile.shippingAddresses);
   } else {
     profile = undefined;
   }
