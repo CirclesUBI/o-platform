@@ -34,7 +34,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
         : 'bg-cpurple'} navbarHomeElement">
       <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
       <span class="ml-2 text-2xl text-white uppercase xs:text-4xl font-heading">
-        {runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
+        {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
       </span>
     </div>
 

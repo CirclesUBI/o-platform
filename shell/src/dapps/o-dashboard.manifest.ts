@@ -27,7 +27,7 @@ const externalChat: Link<any, DappState> = {
   icon: "chat",
   routeParts: [],
   openInNewTab: true,
-  url: () => window.o.i18n("common.supportUrl"),
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
 const externalForum: Link<any, DappState> = {
   type: "link",
@@ -48,7 +48,7 @@ export const home: DappManifest<DappState> = {
   isSingleton: true,
   isHidden: true,
   icon: "dashboard",
-  title: "Circlesland",
+  title: "CIRCLES<span class='text-3xl'>UBI.ID</span>",
   routeParts: ["home"],
   defaultRoute: [""],
   tag: Promise.resolve("alpha"),
