@@ -7,9 +7,11 @@ import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
 import generateRandomUid from "../../../shared/functions/generateRandomUid";
 import {_} from "svelte-i18n";
+import {createEventDispatcher} from "svelte";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");
 
+const eventDispatcher = createEventDispatcher();
 let editElementId: string;
 
 function addWindow() {
@@ -53,6 +55,7 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
     if (!onlyValidate) {
       sortWindowsByStartMinute(openingHoursDay.windows);
       openingHoursDay = openingHoursDay;
+      eventDispatcher("change", openingHoursDay);
     }
   }
 
@@ -129,12 +132,13 @@ let randomId: string = generateRandomUid();
       type="checkbox"
       class="mr-2 checkbox checkbox-warning"
       bind:checked="{openingHoursDay.isOpen}"
-      on:change="{(event) => {
+      on:change={() => {
         if (!openingHoursDay.windows.length) {
           addWindow();
         }
         openingHoursDay = openingHoursDay;
-      }}" />
+        eventDispatcher("change", openingHoursDay);
+      }} />
     <label for="{randomId}"><Label class="pl-2" key="common.{openingHoursDay.day}" /></label>
   </div>
 </div>

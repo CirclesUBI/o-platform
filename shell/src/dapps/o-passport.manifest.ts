@@ -12,7 +12,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
-import UpsertOrganization from "./o-passport/pages/UpsertOrganization.svelte";
+import UpsertOrganization from "./o-passport/pages/UpsertBusiness.svelte";
 
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
@@ -81,7 +81,7 @@ const newOrganization: Page<any, DappState> = {
 
 const editOrganization: Page<any, DappState> = {
   isSystem: false,
-  routeParts: ["=edit-organization", ":cirlcesAddress"],
+  routeParts: ["=edit-organization", ":circlesAddress"],
   component: UpsertOrganization,
   title: "Orga 1",
 
