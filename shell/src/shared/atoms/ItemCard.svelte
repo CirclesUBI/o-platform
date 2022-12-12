@@ -6,6 +6,7 @@ export let params = {
   imageUrl: null,
   imageAlt: null,
   title: null,
+  titleBold: null,
   subTitle: null,
   noTruncate: null,
   edgeless: null,
@@ -66,11 +67,19 @@ function cardAction() {
         <div class="flex flex-row items-center justify-between text-left" class:px-3="{params.imageUrl}">
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
-              {params.title
-                ? params.title.length >= textCutoff
-                  ? params.title.substr(0, textCutoff) + "..."
-                  : params.title
-                : ""}
+              {#if params.titleBold}
+                <b>{params.title
+                        ? params.title.length >= textCutoff
+                                ? params.title.substr(0, textCutoff) + "..."
+                                : params.title
+                        : ""}</b>
+              {:else}
+                {params.title
+                        ? params.title.length >= textCutoff
+                                ? params.title.substr(0, textCutoff) + "..."
+                                : params.title
+                        : ""}
+              {/if}
             </h2>
           </div>
           <div

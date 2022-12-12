@@ -821,6 +821,7 @@ export type ProfileEvent = {
   transaction_hash?: Maybe<Scalars['String']>;
   transaction_index?: Maybe<Scalars['Int']>;
   type: Scalars['String'];
+  unread: Scalars['Boolean'];
   value?: Maybe<Scalars['String']>;
 };
 
@@ -2191,7 +2192,7 @@ export type StreamQuery = (
   { __typename?: 'Query' }
   & { events: Array<(
     { __typename?: 'ProfileEvent' }
-    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type'>
+    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type' | 'unread'>
     & { contact_address_profile?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'type' | 'successorOfCirclesAddress' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'provenUniqueness'>
@@ -3582,6 +3583,7 @@ export const StreamDocument = gql`
     }
     direction
     type
+    unread
     payload {
       ... on CrcHubTransfer {
         transaction_hash
