@@ -28,7 +28,7 @@
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}"/>
 <section class="justify-center align-middle">
     <div class="flex justify-around p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2">
-        <CategoryDropDown placeholder="Filter"
+        <CategoryDropDown2 placeholder="Filter"
                            on:change={filterCategoriesChange}
                            allowMultiselect={true} />
         <div class="w-36 dropdown dropdown-end">
