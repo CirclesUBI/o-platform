@@ -16,6 +16,7 @@ import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor
 import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import {cityByHereId} from "../../../shared/api/promptCity";
 import DropDownCity from "@o-platform/o-editors/src/dropdownItems/DropDownCity.svelte";
+import {PromptField} from "@o-platform/o-process/dist/states/prompt";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -23,14 +24,23 @@ export let circlesAddress: string;
 
 export let business: Businesses;
 
+let field: PromptField<any> = {
+  name: "location",
+  get:(context) => context.data["location"],
+  set: (val) => locationDropDownContext.data["location"] = val
+};
+
 
 let locationDropDownContext = {
   field: "location",
-  data: {},
+  data: {
+    location: ""
+  },
   messages: {},
   editorDirtyFlags: {},
   params:  <DropdownSelectorParams<any, any, string>>{
     showNavigation: false,
+    submitOnBlur: true,
     view: {
       title: "",
       description: "",
@@ -98,7 +108,8 @@ onMount(async () => {
 })
 
 async function save() {
-
+  const loc = locationDropDownContext.data[locationDropDownContext.field];
+  console.log("loc", loc);
 }
 
 async function validate() {
@@ -181,7 +192,7 @@ async function createOrga() {
               <div class="flex flex-col mb-5 text-sm">
                 <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                 <div class="flex mt-2">
-                  <DropdownSelectEditor context={locationDropDownContext}></DropdownSelectEditor>
+                  <DropdownSelectEditor field={field} context={locationDropDownContext}></DropdownSelectEditor>
                 </div>
               </div>
             </div>
