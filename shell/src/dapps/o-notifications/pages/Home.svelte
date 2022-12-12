@@ -12,25 +12,13 @@
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
 
-  let unreadInbox = new MyInbox(SortOrder.Desc, 250, [
+  let inbox = new MyInbox(SortOrder.Desc, 30, [
     EventType.CrcHubTransfer,
     EventType.CrcMinting,
     EventType.CrcTrust,
     EventType.InvitationRedeemed,
     EventType.Erc20Transfer
-  ], {
-    unreadOnly: true
-  });
-
-  let readInbox = new MyInbox(SortOrder.Desc, 20, [
-    EventType.CrcHubTransfer,
-    EventType.CrcMinting,
-    EventType.CrcTrust,
-    EventType.InvitationRedeemed,
-    EventType.Erc20Transfer
-  ], {
-    readOnly: true
-  });
+  ]);
 
   const views = {
     [EventType.CrcHubTransfer]: { component: TransactionCard },
@@ -46,9 +34,6 @@
 <div class="bg-notifications" style="visibility: hidden"></div>
 <div class="px-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2">
   <EventList
-          store="{unreadInbox}"
-          views="{views}" />
-  <EventList
-          store="{readInbox}"
+          store="{inbox}"
           views="{views}" />
 </div>
