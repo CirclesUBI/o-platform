@@ -15,23 +15,22 @@ function clickHandler() {
       }
     );
   } else {*/
-    if (props && props.left) {
-      props.left.props.action();
-    }
+  if (props && props.left) {
+    props.left.props.action();
+  }
   //}
 }
-
 </script>
 
 <div class="h-12 col-start-2 place-self-center">
   <div class="flex flex-row">
     <div
-      class="flex justify-center flex-shrink-0 -mr-4 text-white rounded-l-full cursor-pointer w-14 h-11"
+      class="flex justify-center flex-shrink-0 w-16 -mr-5 rounded-l-full cursor-pointer text-primary h-11"
       class:bg-cpurple="{props && props.left}"
       role="presentation"
       on:click="{clickHandler}">
       {#if props && props.left}
-       <!-- {#if $inbox.length && $inbox.length && props.center.props.icon !== "close"}
+        <!-- {#if $inbox.length && $inbox.length && props.center.props.icon !== "close"}
           <div class="relative self-center mr-2 text-primary" on:click="{clickHandler}">
             <Icons icon="notificationbubble" />
             <div class="absolute top-0 w-full text-base text-center font-heading">
@@ -39,9 +38,9 @@ function clickHandler() {
             </div>
           </div>
         {:else}-->
-          <div class="flex flex-col self-center justify-center h-full">
-            <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
-          </div>
+        <div class="flex flex-col self-center justify-center h-full mr-1">
+          <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
+        </div>
         <!--{/if}-->
       {/if}
     </div>
@@ -58,7 +57,7 @@ function clickHandler() {
       role="presentation"
       on:click="{props.right ? props.right.props.action : null}">
       {#if props && props.right}
-        <div class="flex flex-col self-center justify-center h-full ml-1 text-white">
+        <div class="flex flex-col self-center justify-center h-full ml-1 text-primary">
           <svelte:component this="{props.right.component}" {...props.right.props} />
         </div>
       {/if}

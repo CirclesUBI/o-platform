@@ -18,7 +18,7 @@ const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
   title: "common.profile",
-  icon: "myprofile",
+  icon: "passport",
   type: "page",
   navigation: {
     leftSlot: {
@@ -52,7 +52,7 @@ const profile: Page<any, DappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -71,7 +71,7 @@ const newOrganization: Page<any, DappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -90,7 +90,7 @@ const editOrganization: Page<any, DappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -176,7 +176,7 @@ export const passport: DappManifest<DappState> = {
   isSingleton: true,
   isHidden: false,
   title: "Passport",
-  icon: "myprofile",
+  icon: "passport",
   routeParts: ["=passport"],
   defaultRoute: ["passport"],
   tag: Promise.resolve("alpha"),
