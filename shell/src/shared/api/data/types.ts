@@ -818,6 +818,7 @@ export type ProfileEventFilter = {
   from?: Maybe<Scalars['String']>;
   to?: Maybe<Scalars['String']>;
   transactionHash?: Maybe<Scalars['String']>;
+  unreadOnly?: Maybe<Scalars['Boolean']>;
   with?: Maybe<Scalars['String']>;
 };
 
