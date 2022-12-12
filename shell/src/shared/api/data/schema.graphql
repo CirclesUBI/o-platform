@@ -499,6 +499,7 @@ type ProfileEvent {
     transaction_hash: String
     transaction_index: Int
     type: String!
+    unread: Boolean!
     value: String
 }
 

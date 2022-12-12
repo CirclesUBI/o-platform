@@ -14,6 +14,7 @@ import {
   ProfileEvent,
 } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {onMount} from "svelte";
 
 export let event: ProfileEvent;
 
@@ -26,6 +27,10 @@ let messageString: string = "";
 let targetProfile: Profile = <any>{};
 let amount: string | number = "";
 let amountTime: string | number = "";
+
+onMount(() => {
+  console.log(event);
+})
 
 $: {
   if (event && event.payload?.__typename == "CrcMinting") {
@@ -139,8 +144,8 @@ function loadDetailPage(path) {
       imageProfile: targetProfile,
       profileLink: `#/contacts/profile/${targetProfile.circlesAddress}`,
       imageAlt: event.direction === 'in' ? fromProfile.circlesAddress : toProfile.circlesAddress,
-
       title: targetProfile.displayName,
+      titleBold: event.unread,
       subTitle: messageString ? messageString : '',
       truncateMain: true,
       endTextBig: amountTime,
