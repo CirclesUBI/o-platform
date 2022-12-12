@@ -5,7 +5,11 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
-import {Businesses} from "../../../shared/api/data/types";
+import {
+  Businesses, UpsertOrganisationDocument,
+  UpsertOrganisationMutation,
+  UpsertOrganisationMutationVariables
+} from "../../../shared/api/data/types";
 import {onMount} from "svelte";
 import {Environment} from "../../../shared/environment";
 import CategoryDropDown from "../molecules/CategoryDropDown.svelte";
@@ -16,20 +20,16 @@ import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor
 import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import {cityByHereId} from "../../../shared/api/promptCity";
 import DropDownCity from "@o-platform/o-editors/src/dropdownItems/DropDownCity.svelte";
-import {PromptField} from "@o-platform/o-process/dist/states/prompt";
+import {GnosisSafeProxyFactory} from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import {CirclesHub} from "@o-platform/o-circles/dist/circles/circlesHub";
+import {ApiClient} from "../../../shared/apiConnection";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let circlesAddress: string;
 
 export let business: Businesses;
-
-let field: PromptField<any> = {
-  name: "location",
-  get:(context) => context.data["location"],
-  set: (val) => locationDropDownContext.data["location"] = val
-};
-
 
 let locationDropDownContext = {
   field: "location",
@@ -87,6 +87,7 @@ onMount(async () => {
       }
     });
     business = businesses.allBusinesses[0];
+    locationDropDownContext.data.location = business.location;
     week = OpeningHourWeek.parseOpeningHours(business);
   } else {
     business = {
@@ -109,7 +110,58 @@ onMount(async () => {
 
 async function save() {
   const loc = locationDropDownContext.data[locationDropDownContext.field];
-  console.log("loc", loc);
+
+  if (!business.circlesAddress) {
+    const privateKey = sessionStorage.getItem("circlesKey");
+    const proxyFactory = new GnosisSafeProxyFactory(
+            RpcGateway.get(),
+            Environment.safeProxyFactoryAddress,
+            Environment.masterSafeAddress
+    );
+    const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
+
+    business.circlesAddress = organisationSafeProxy.address;
+
+    const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
+    const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
+
+    console.log(receipt);
+  }
+
+  if (loc) {
+    const city = await cityByHereId(loc);
+    business.lat = city.position.lat;
+    business.lon = city.position.lng;
+    business.locationName = city.title;
+  }
+
+  const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
+      UpsertOrganisationDocument,
+      {
+        organisation: {
+          id: business.id <= 0 ? 0 : business.id,
+          circlesAddress: business.circlesAddress,
+          name: business.name,
+          locationName: business.locationName,
+          lat: business.lat,
+          lon: business.lon,
+          avatarUrl: business.picture,
+          businessHoursMonday: business.businessHoursMonday,
+          businessHoursTuesday: business.businessHoursTuesday,
+          businessHoursWednesday: business.businessHoursWednesday,
+          businessHoursThursday: business.businessHoursThursday,
+          businessHoursFriday: business.businessHoursFriday,
+          businessHoursSaturday: business.businessHoursSaturday,
+          businessHoursSunday: business.businessHoursSunday,
+          description: business.description,
+          location: loc,
+          phoneNumber: business.phoneNumber,
+          businessCategoryId: business.businessCategoryId
+        }
+      }
+  );
+
+  console.log("result:", result);
 }
 
 async function validate() {
@@ -192,7 +244,7 @@ async function createOrga() {
               <div class="flex flex-col mb-5 text-sm">
                 <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                 <div class="flex mt-2">
-                  <DropdownSelectEditor field={field} context={locationDropDownContext}></DropdownSelectEditor>
+                  <DropdownSelectEditor context={locationDropDownContext}></DropdownSelectEditor>
                 </div>
               </div>
             </div>
