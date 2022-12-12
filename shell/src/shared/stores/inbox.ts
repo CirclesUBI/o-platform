@@ -13,8 +13,8 @@ import {me} from "./me";
 import {ApiClient} from "../apiConnection";
 
 export class MyInbox extends PagedEventQuery {
-  constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[]) {
-    super(eventTypes, sortOrder, pageSize);
+  constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[], filter?: ProfileEventFilter) {
+    super(eventTypes, sortOrder, pageSize, filter);
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
@@ -48,7 +48,7 @@ export class MyInbox extends PagedEventQuery {
         continueAt: new Date().toJSON(),
       },
       filter: <ProfileEventFilter>{
-        transactionHash: primaryKey,
+        transactionHash: primaryKey
       },
     });
 

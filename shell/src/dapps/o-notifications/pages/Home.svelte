@@ -18,7 +18,9 @@
     EventType.CrcTrust,
     EventType.InvitationRedeemed,
     EventType.Erc20Transfer
-  ]);
+  ], {
+    unreadOnly: true
+  });
 
 </script>
 
