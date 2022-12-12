@@ -120,7 +120,7 @@ function toggleInputView() {
           placeholder="Search..."
           listAutoWidth="{false}"
           getHighlight={context.params.getHighlight}
-          inlineSubmit="{true}"
+          inlineSubmit="{context.params.showNavigation === undefined ? true : context.params.showNavigation}"
           isCreatable="{false}"
           listPlacement="top"
           scrollContainer="{document.getElementById('modalScrollable')}"
