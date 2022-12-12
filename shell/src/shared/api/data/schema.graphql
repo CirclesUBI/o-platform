@@ -291,6 +291,10 @@ type LogoutResponse {
     success: Boolean!
 }
 
+type MarkAsReadResult {
+    count: Int!
+}
+
 type MemberAdded implements IEventPayload {
     createdBy: String!
     createdBy_profile: Profile
@@ -360,6 +364,7 @@ type Mutation {
     createTestInvitation: CreateInvitationResult!
     importOrganisationsOfAccount: [Organisation!]!
     logout: LogoutResponse!
+    markAsRead(entries: [Int!]!): MarkAsReadResult!
     proofUniqueness(humanodeToken: String!): ProofUniquenessResult!
     redeemClaimedInvitation: RedeemClaimedInvitationResult!
     rejectMembership(membershipId: Int!): RejectMembershipResult
@@ -867,6 +872,7 @@ input ProfileAggregateFilter {
 input ProfileEventFilter {
     direction: Direction
     from: String
+    readOnly: Boolean
     to: String
     transactionHash: String
     unreadOnly: Boolean

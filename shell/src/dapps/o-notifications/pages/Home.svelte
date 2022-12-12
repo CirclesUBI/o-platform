@@ -12,7 +12,7 @@
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
 
-  let inbox = new MyInbox(SortOrder.Desc, 20, [
+  let unreadInbox = new MyInbox(SortOrder.Desc, 250, [
     EventType.CrcHubTransfer,
     EventType.CrcMinting,
     EventType.CrcTrust,
@@ -22,18 +22,33 @@
     unreadOnly: true
   });
 
+  let readInbox = new MyInbox(SortOrder.Desc, 20, [
+    EventType.CrcHubTransfer,
+    EventType.CrcMinting,
+    EventType.CrcTrust,
+    EventType.InvitationRedeemed,
+    EventType.Erc20Transfer
+  ], {
+    readOnly: true
+  });
+
+  const views = {
+    [EventType.CrcHubTransfer]: { component: TransactionCard },
+    [EventType.CrcMinting]: { component: TransactionCard },
+    [EventType.CrcTrust]: { component: GenericEventCard },
+    [EventType.InvitationRedeemed]: {component: RedeemedInvitationCard},
+    [EventType.Erc20Transfer]: { component: TransactionCard }
+  };
+
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="bg-notifications" style="visibility: hidden"></div>
 <div class="px-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2">
   <EventList
-  store="{inbox}"
-  views="{{
-    [EventType.CrcHubTransfer]: { component: TransactionCard },
-    [EventType.CrcMinting]: { component: TransactionCard },
-    [EventType.CrcTrust]: { component: GenericEventCard },
-    [EventType.InvitationRedeemed]: {component: RedeemedInvitationCard},
-    [EventType.Erc20Transfer]: { component: TransactionCard }
-  }}" />
+          store="{unreadInbox}"
+          views="{views}" />
+  <EventList
+          store="{readInbox}"
+          views="{views}" />
 </div>
