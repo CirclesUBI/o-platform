@@ -51,11 +51,17 @@ onMount(async () => {
 function handleSelect(event) {
   selected = event.detail;
   context.editorDirtyFlags[field.name] = true;
+  if (context.params.submitOnBlur) {
+    onBlur(event);
+  }
 }
 
 export function handleClear() {
   selected = undefined;
   context.editorDirtyFlags[field.name] = true;
+  if (context.params.submitOnBlur) {
+    onBlur(event);
+  }
 }
 
 function submitHandler() {
@@ -64,13 +70,13 @@ function submitHandler() {
   event.data = {};
   event.data[field.name] = context.params.getKey(selected);
   context.data[field.name] = context.params.getKey(selected);
-  context.process.sendAnswer(event);
+  context.process?.sendAnswer(event);
 }
 
 const submitSafeAddressInput = () => {
   const answer = new Continue();
   answer.data = context.data;
-  context.process.sendAnswer(answer);
+  context.process?.sendAnswer(answer);
 };
 
 function onkeydown(e: KeyboardEvent) {
@@ -78,6 +84,14 @@ function onkeydown(e: KeyboardEvent) {
     submitHandler();
   }
 }
+
+function onBlur(e) {
+  if (context.params.submitOnBlur) {
+    console.log("onBlur")
+    submitHandler();
+  }
+}
+
 function toggleInputView() {
   showSafeAddressInput = !showSafeAddressInput;
 }
@@ -131,6 +145,7 @@ function toggleInputView() {
           getOptionLabel="{context.params.getLabel}"
           Item="{context.params.itemTemplate ? context.params.itemTemplate : Item}"
           on:select="{handleSelect}"
+          on:blur={onBlur}
           bind:this="{selectComponent}"
           bind:filterText
           on:buttonClick="{submitHandler}" />
