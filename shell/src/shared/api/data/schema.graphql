@@ -869,6 +869,7 @@ input ProfileEventFilter {
     from: String
     to: String
     transactionHash: String
+    unreadOnly: Boolean
     with: String
 }
 
