@@ -431,6 +431,11 @@ export type LogoutResponse = {
   success: Scalars['Boolean'];
 };
 
+export type MarkAsReadResult = {
+  __typename?: 'MarkAsReadResult';
+  count: Scalars['Int'];
+};
+
 export type MemberAdded = IEventPayload & {
   __typename?: 'MemberAdded';
   createdBy: Scalars['String'];
@@ -508,6 +513,7 @@ export type Mutation = {
   createTestInvitation: CreateInvitationResult;
   importOrganisationsOfAccount: Array<Organisation>;
   logout: LogoutResponse;
+  markAsRead: MarkAsReadResult;
   proofUniqueness: ProofUniquenessResult;
   redeemClaimedInvitation: RedeemClaimedInvitationResult;
   rejectMembership?: Maybe<RejectMembershipResult>;
@@ -564,6 +570,11 @@ export type MutationCreateNewStringAndKeyArgs = {
   lang?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
   version?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationMarkAsReadArgs = {
+  entries: Array<Scalars['Int']>;
 };
 
 
@@ -816,6 +827,7 @@ export type ProfileEvent = {
 export type ProfileEventFilter = {
   direction?: Maybe<Direction>;
   from?: Maybe<Scalars['String']>;
+  readOnly?: Maybe<Scalars['Boolean']>;
   to?: Maybe<Scalars['String']>;
   transactionHash?: Maybe<Scalars['String']>;
   unreadOnly?: Maybe<Scalars['Boolean']>;
