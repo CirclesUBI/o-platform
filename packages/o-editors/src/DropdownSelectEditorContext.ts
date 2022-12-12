@@ -15,6 +15,7 @@ export type DropdownSelectorParams<
   getHighlight?: (option: TOption) => {start: number, end: number};
   itemTemplate?: any;
   showResultsOnLoad?: boolean;
+  showNavigation?: boolean;
   choices: {
     byKey: (key: TKey, context: TContext) => Promise<TOption | undefined>;
     find: (filter: string | undefined, context: TContext) => Observable<TOption[]>|Promise<TOption[]>;

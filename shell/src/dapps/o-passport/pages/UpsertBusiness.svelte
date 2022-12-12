@@ -3,7 +3,7 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
-import OpeningHours, {week} from "../molecules/OpeningHoursEditor.svelte";
+import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 import {Businesses} from "../../../shared/api/data/types";
 import {onMount} from "svelte";
@@ -12,12 +12,58 @@ import CategoryDropDown from "../molecules/CategoryDropDown.svelte";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import {OpeningHourWeek} from "../models/openingHourWeek";
+import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
+import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
+import {cityByHereId} from "../../../shared/api/promptCity";
+import DropDownCity from "@o-platform/o-editors/src/dropdownItems/DropDownCity.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let circlesAddress: string;
 
 export let business: Businesses;
+
+
+let locationDropDownContext = {
+  field: "location",
+  data: {},
+  messages: {},
+  editorDirtyFlags: {},
+  params:  <DropdownSelectorParams<any, any, string>>{
+    showNavigation: false,
+    view: {
+      title: "",
+      description: "",
+      submitButtonText: "",
+      placeholder: ""
+    },
+    itemTemplate: DropDownCity,
+    getKey: (o) => o.id,
+    getLabel: (o) => `${o?.title ?? ""}`,
+    getHighlight: (o) => {
+      if (o.highlights?.title?.length > 0) {
+        return {
+          start: o.highlights.title[0].start,
+          end: o.highlights.title[0].end,
+        };
+      }
+    },
+    keyProperty: "id",
+    choices: {
+      byKey: async (key: string) => {
+        return await cityByHereId(key);
+      },
+      find: async (filter: string) => {
+        // https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics-api/code-autocomplete-result-type-filter.html
+        const url = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&apiKey=${Environment.hereApiKey}`;
+
+        const response = await fetch(url);
+        const json = await response.json();
+        return json.items.reverse().length ? json.items : [];
+      },
+    },
+  }
+};
 
 let week: OpeningHourWeek;
 
@@ -39,8 +85,29 @@ onMount(async () => {
       name: "",
       description: ""
     };
+    week = OpeningHourWeek.parseOpeningHours({
+      businessHoursMonday: "",
+      businessHoursTuesday: "",
+      businessHoursWednesday: "",
+      businessHoursThursday: "",
+      businessHoursFriday: "",
+      businessHoursSaturday: "",
+      businessHoursSunday: ""
+    })
   }
 })
+
+async function save() {
+
+}
+
+async function validate() {
+
+}
+
+async function createOrga() {
+
+}
 
 </script>
 
@@ -114,7 +181,7 @@ onMount(async () => {
               <div class="flex flex-col mb-5 text-sm">
                 <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                 <div class="flex mt-2">
-                  <input class="w-full input input-bordered md:w-auto" readonly bind:value={business.locationName} type="text" />
+                  <DropdownSelectEditor context={locationDropDownContext}></DropdownSelectEditor>
                 </div>
               </div>
             </div>
@@ -157,13 +224,14 @@ onMount(async () => {
                             on:change={() => {
                               business = {
                                 ...business,
-                                ...week.serializeWeek()
+                                ...(week?.serializeWeek() ?? {})
                               }
                             }} />
             </div>
           </div>
         </div>
       </StandardHeaderBox>
+      <button class="btn btn-primary" on:click={() => save()}>Save</button>
     </div>
   </section>
 </div>

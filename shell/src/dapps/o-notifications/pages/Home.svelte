@@ -12,7 +12,7 @@
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
 
-  let inbox = new MyInbox(SortOrder.Desc, 250, [
+  let inbox = new MyInbox(SortOrder.Desc, 30, [
     EventType.CrcHubTransfer,
     EventType.CrcMinting,
     EventType.CrcTrust,
