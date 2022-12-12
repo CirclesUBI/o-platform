@@ -28,6 +28,10 @@ let targetProfile: Profile = <any>{};
 let amount: string | number = "";
 let amountTime: string | number = "";
 
+onMount(() => {
+  console.log(event);
+})
+
 $: {
   if (event && event.payload?.__typename == "CrcMinting") {
     const minting = event.payload as CrcMinting;
