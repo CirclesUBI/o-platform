@@ -26,7 +26,7 @@ const login: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=login"],
   component: Home,
-  title: "Circles Land",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -34,7 +34,7 @@ const index: Page<any, DappState> = {
   isSystem: true,
   routeParts: [],
   component: Home,
-  title: "CIRCLES<span class='text-3xl'>UBI.ID</span>",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   icon: "home",
   type: "page",
 };
@@ -44,7 +44,7 @@ const invite: Page<{ inviteCode: string }, DappState> = {
   anonymous: true,
   routeParts: ["=invite", ":inviteCode"],
   component: Home,
-  title: "CIRCLES<span class='text-3xl'>UBI.ID</span>",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -90,7 +90,7 @@ export const homepage: DappManifest<DappState> = {
   isHidden: true,
   icon: "home",
   anonymous: true,
-  title: "CIRCLES<span class='text-3xl'>UBI.ID</span>",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   routeParts: [],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
