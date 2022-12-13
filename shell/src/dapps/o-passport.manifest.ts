@@ -64,7 +64,7 @@ const newOrganization: Page<any, DappState> = {
   isSystem: false,
   routeParts: ["=new-organization"],
   component: UpsertOrganization,
-  title: "Create organization",
+  title: "Create Shop",
 
   type: "page",
   navigation: {
@@ -83,7 +83,7 @@ const editOrganization: Page<any, DappState> = {
   isSystem: false,
   routeParts: ["=edit-organization", ":circlesAddress"],
   component: UpsertOrganization,
-  title: "Orga 1",
+  title: "Shop 1",
 
   type: "page",
   navigation: {
