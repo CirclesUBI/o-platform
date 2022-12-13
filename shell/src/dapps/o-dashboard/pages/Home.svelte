@@ -34,9 +34,9 @@ onMount(init);
     <!--<LangSwitcher />-->
     <!-- bg-passport-light bg-passport bg-banking bg-banking-light bg-marketplace bg-marketplace-light bg-contacts bg-contacts-light -->
 
-    <!-- {#if $me && $me.__typename === "Profile"}
+    {#if $me && $me.__typename === "Profile" && $me.canInvite}
       <DashboardInvitesWidget />
-    {/if} -->
+    {/if}
     <div class="flex flex-col space-y-4">
       <DashboardColorCard
         color="passport"
