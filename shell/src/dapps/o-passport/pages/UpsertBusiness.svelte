@@ -169,8 +169,6 @@ async function save() {
       },
     }
   );
-
-  console.log("result:", result);
 }
 
 async function validate() {}
@@ -197,9 +195,6 @@ async function createOrga() {}
         {/if}
       </div>
     </section>
-    <pre>
-    {JSON.stringify(business, null, 2)}
-  </pre>
     <section class="justify-left">
       <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
         <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
