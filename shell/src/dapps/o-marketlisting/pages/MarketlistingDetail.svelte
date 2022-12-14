@@ -9,6 +9,8 @@ import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/a
 import { myLocation } from "../../../shared/stores/myLocation";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { marketStore } from "../stores/marketStore";
+import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
+import Icons from "../../../shared/molecules/Icons.svelte";
 
 export let circlesAddress: string;
 
@@ -18,10 +20,13 @@ let visible: boolean = false;
 let currentDayOpenHours = "";
 let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
+let link: string;
+let showShareOptions: boolean = false;
 
 let mapHeight = "16em";
 
 onMount(async () => {
+  shareLink();
   return marketStore.subscribe((data) => {
     if (!data || data.businesses.length == 0) {
       return;
@@ -50,11 +55,10 @@ onMount(async () => {
 });
 
 async function shareLink() {
-  const link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
+  link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
     targetType: LinkTargetType.Business,
     targetKey: circlesAddress,
   });
-  alert(link);
 }
 </script>
 
@@ -82,10 +86,60 @@ async function shareLink() {
 
     <div class="flex flex-row w-full mt-3">
       <p class="flex-grow text-gray-400">{business.businessCategory}</p>
-      <button class="self-end -mt-1 btn btn-outline btn-sm" on:click="{shareLink}">
+      <button
+        class="self-end -mt-1 btn btn-outline btn-sm"
+        on:click="{() => {
+          showShareOptions = !showShareOptions;
+        }}">
+        {#if !showShareOptions}
         <span><Icon name="share" class="w-6 h-6" /></span>Share
-      </button>
+        {:else}
+        <span>X
+        </span>
+        {/if}
+      </button>     
     </div>
+
+    {#if showShareOptions}
+      <div class="flex flex-row w-full mt-6 justify-between pr-6 pl-4">
+        <div class="w-12 h-12 text-center cursor-pointer copylink">
+          <span class="w-12 h-12 align-middle rounded-full bg-light-light">
+            <CopyClipboard text="{link}" let:copy>
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <div on:click="{copy}">
+                <Icon name="link" class="inline w-6 h-6 heroicon smallicon" />
+              </div>
+            </CopyClipboard>
+          </span>
+        </div>
+        <div class="w-12 h-12 text-center cursor-pointer copylink">
+          <span class="w-12 h-12 align-middle rounded-full bg-light-light">
+            <a
+              href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
+              target="_blank"
+              rel="noreferrer">
+              <Icon name="mail" class="inline w-6 h-6 heroicon smallicon" />
+            </a>
+          </span>
+        </div>
+        <div class="-mt-1 text-center cursor-pointer whatsapp">
+          <a
+            href="https://api.whatsapp.com/send?text=Hey, i'd like to show you this cool market. Check it out: {link}"
+            target="_blank"
+            rel="noreferrer">
+            <Icons icon="whatsapp" customClass="inline" size="{8}" />
+          </a>
+        </div>
+        <div class="text-center cursor-pointer telegram">
+          <a
+            href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}"
+            target="_blank"
+            rel="noreferrer">
+            <Icons icon="telegram" customClass="inline" size="{6}" />
+          </a>
+        </div>
+      </div>
+    {/if}
 
     <div class="flex pt-4 mt-4 border-t-2">
       <Icon name="clock" class="w-6 h-6" />
