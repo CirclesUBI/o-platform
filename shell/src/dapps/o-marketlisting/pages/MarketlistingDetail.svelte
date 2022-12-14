@@ -85,19 +85,18 @@ async function shareLink() {
     <p>{business.description ? business.description : ""}</p>
 
     <div class="flex flex-row w-full mt-3">
-      <p class="flex-grow text-gray-400">{business.businessCategory}</p>
+      <p class="flex-grow text-gray-400">{business.businessCategory ? business.businessCategory : ""}</p>
       <button
         class="self-end -mt-1 btn btn-outline btn-sm"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
         {#if !showShareOptions}
-        <span><Icon name="share" class="w-6 h-6" /></span>Share
+          <span><Icon name="share" class="w-6 h-6" /></span>Share
         {:else}
-        <span>X
-        </span>
+          <span>X </span>
         {/if}
-      </button>     
+      </button>
     </div>
 
     {#if showShareOptions}
@@ -141,38 +140,43 @@ async function shareLink() {
       </div>
     {/if}
 
-    <div class="flex pt-4 mt-4 border-t-2">
-      <Icon name="clock" class="w-6 h-6" />
-      <p class="pl-4 pr-4">Opening Hours</p>
-      <div>
-        {#if visible}
-          {#each everythingBeforeTheCurrentDay as day}
-            <p transition:fade>{day}</p>
-          {/each}
-        {/if}
+    {#if business.businessHoursSunday}
+      <div class="flex pt-4 mt-4 border-t-2">
+        <Icon name="clock" class="w-6 h-6" />
+        <p class="pl-4 pr-4">Opening Hours</p>
+        <div>
+          {#if visible}
+            {#each everythingBeforeTheCurrentDay as day}
+              <p transition:fade>{day}</p>
+            {/each}
+          {/if}
 
-        <p>{currentDayOpenHours}</p>
-        {#if visible}
-          {#each everythingAfterTheCurrentDay as after}
-            <p transition:fade>{after}</p>
-          {/each}
+          <p>{currentDayOpenHours}</p>
+          {#if visible}
+            {#each everythingAfterTheCurrentDay as after}
+              <p transition:fade>{after}</p>
+            {/each}
+          {/if}
+        </div>
+        {#if !visible}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div
+            on:click="{() => {
+              visible = !visible;
+              console.log(visible);
+            }}">
+            <Icon name="chevron-down" class="w-6 h-6" />
+          </div>
         {/if}
       </div>
-      {#if !visible}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div
-          on:click="{() => {
-            visible = !visible;
-            console.log(visible);
-          }}">
-          <Icon name="chevron-down" class="w-6 h-6" />
-        </div>
-      {/if}
-    </div>
-    <div class="flex pt-4 mt-4 border-t-2">
-      <Icon name="phone" class="w-6 h-6" />
-      <p class="pl-4">{business.phoneNumber}</p>
-    </div>
+    {/if}
+
+    {#if business.phoneNumber}
+      <div class="flex pt-4 mt-4 border-t-2">
+        <Icon name="phone" class="w-6 h-6" />
+        <p class="pl-4">{business.phoneNumber}</p>
+      </div>
+    {/if}
 
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
       {#if business.lat && business.lon}
