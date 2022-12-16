@@ -4,7 +4,7 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import TextEditor from "@o-platform/o-editors/src/TextEditor.svelte";
-import EmailAddressEditor from "@o-platform/o-editors/src/EmailAddressEditor.svelte";
+// import EmailAddressEditor from "@o-platform/o-editors/src/EmailAddressEditor.svelte";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import * as yup from "yup";
@@ -64,14 +64,14 @@ const editorContent: { [x: string]: EditorViewContext } = {
       "dapps.o-passport.processes.upsertIdentity.editorContent.lastName.submitButtonText"
     ),
   },
-  emailAddress: {
-    title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
-    description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"),
-    placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"),
-    submitButtonText: window.o.i18n(
-      "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
-    ),
-  },
+  // emailAddress: {
+  //   title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
+  //   description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"),
+  //   placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"),
+  //   submitButtonText: window.o.i18n(
+  //     "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
+  //   ),
+  // },
   imageView: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.title"),
     description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.description"),
@@ -91,7 +91,7 @@ const editorContent: { [x: string]: EditorViewContext } = {
 const processDefinition = (processId: string) =>
   createMachine<UpsertIdentityContext, any>({
     id: `${processId}:upsertIdentity`,
-    initial: "emailAddress",
+    initial: "firstName",
 
     states: {
       // Include a default 'error' state that propagates the error by re-throwing it in an action.
@@ -117,80 +117,80 @@ const processDefinition = (processId: string) =>
 
  */
 
-      emailAddress: prompt<UpsertIdentityContext, any>({
-        id: "emailAddress",
-        field: "emailAddress",
-        component: EmailAddressEditor,
-        params: {
-          view: (editorContent.emailAddress = {
-            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
-            description: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"
-            ),
-            placeholder: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"
-            ),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
-            ),
-          }),
-        },
-        navigation: {
-          canSkip: () => true,
-          canGoBack: () => false,
-          skip: "#firstName",
-          next: [
-            {
-              cond: (context) => !!context.data.emailAddress && context.data.emailAddress.trim() != "",
-              target: "#newsletter",
-            },
-            {
-              target: "#firstName",
-            },
-          ],
-        },
-      }),
+      // emailAddress: prompt<UpsertIdentityContext, any>({
+      //   id: "emailAddress",
+      //   field: "emailAddress",
+      //   component: EmailAddressEditor,
+      //   params: {
+      //     view: (editorContent.emailAddress = {
+      //       title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
+      //       description: window.o.i18n(
+      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"
+      //       ),
+      //       placeholder: window.o.i18n(
+      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"
+      //       ),
+      //       submitButtonText: window.o.i18n(
+      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
+      //       ),
+      //     }),
+      //   },
+      //   navigation: {
+      //     canSkip: () => true,
+      //     canGoBack: () => false,
+      //     skip: "#firstName",
+      //     next: [
+      //       {
+      //         cond: (context) => !!context.data.emailAddress && context.data.emailAddress.trim() != "",
+      //         target: "#newsletter",
+      //       },
+      //       {
+      //         target: "#firstName",
+      //       },
+      //     ],
+      //   },
+      // }),
 
-      newsletter: promptChoice<UpsertRegistrationContext, any>({
-        id: "newsletter",
-        component: ChoiceSelector,
-        params: {
-          view: (editorContent.newsletter = {
-            title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.title"),
-            description: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.description"
-            ),
-            placeholder: "",
-            submitButtonText: "",
-          }),
-        },
-        options: [
-          {
-            key: "dontSubscribe",
-            label: "No thanks",
-            target: "#firstName",
-            class: "btn btn-outline",
-            action: (context) => {
-              context.data.newsletter = false;
-            },
-          },
-          {
-            key: "subscribe",
-            label: "Yes please",
-            target: "#firstName",
-            class: "btn btn-outline",
-            action: (context) => {
-              context.data.newsletter = true;
-            },
-          },
-        ],
-        navigation: {
-          canGoBack: () => true,
-          previous: "#emailAddress",
-          canSkip: () => false,
-          skip: "#firstName",
-        },
-      }),
+      // newsletter: promptChoice<UpsertRegistrationContext, any>({
+      //   id: "newsletter",
+      //   component: ChoiceSelector,
+      //   params: {
+      //     view: (editorContent.newsletter = {
+      //       title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.title"),
+      //       description: window.o.i18n(
+      //         "dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.description"
+      //       ),
+      //       placeholder: "",
+      //       submitButtonText: "",
+      //     }),
+      //   },
+      //   options: [
+      //     {
+      //       key: "dontSubscribe",
+      //       label: "No thanks",
+      //       target: "#firstName",
+      //       class: "btn btn-outline",
+      //       action: (context) => {
+      //         context.data.newsletter = false;
+      //       },
+      //     },
+      //     {
+      //       key: "subscribe",
+      //       label: "Yes please",
+      //       target: "#firstName",
+      //       class: "btn btn-outline",
+      //       action: (context) => {
+      //         context.data.newsletter = true;
+      //       },
+      //     },
+      //   ],
+      //   navigation: {
+      //     canGoBack: () => true,
+      //     previous: "#emailAddress",
+      //     canSkip: () => false,
+      //     skip: "#firstName",
+      //   },
+      // }),
 
       firstName: prompt<UpsertIdentityContext, any>({
         field: "firstName",
@@ -208,7 +208,7 @@ const processDefinition = (processId: string) =>
         dataSchema: yup.string().required(window.o.i18n("dapps.o-passport.processes.upsertIdentity.requiredName")),
         navigation: {
           canGoBack: () => true,
-          previous: "#newsletter",
+          // previous: "#newsletter",
           next: "#lastName",
         },
       }),
@@ -309,7 +309,7 @@ const processDefinition = (processId: string) =>
                 emailAddress: context.data.emailAddress,
                 askedForEmailAddress: true,
                 // dream: context.data.dream,
-                newsletter: context.data.newsletter,
+                // newsletter: context.data.newsletter,
                 displayTimeCircles: context.data.displayTimeCircles ?? true,
                 country: context.data.country,
                 avatarUrl: context.data.avatarUrl,
@@ -322,7 +322,7 @@ const processDefinition = (processId: string) =>
                 locationName: context.data.locationName,
               },
             });
-            sessionStorage.setItem("askedForEmailAddress", "true");
+            // sessionStorage.setItem("askedForEmailAddress", "true");
             return result.data.upsertProfile;
           },
           onDone: "#success",

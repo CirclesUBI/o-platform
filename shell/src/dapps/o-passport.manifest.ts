@@ -2,7 +2,7 @@ import Home from "./o-passport/pages/Home.svelte";
 import Account from "./o-passport/pages/Account.svelte";
 import VerifyEmail from "./o-passport/pages/VerifyEmail.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
-import Settings from "./o-passport/pages/Settings.svelte";
+// import Settings from "./o-passport/pages/Settings.svelte";
 import { logout } from "./o-passport/processes/logout";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
@@ -116,23 +116,23 @@ const account: Page<any, DappState> = {
   },
 };
 
-const settings: Page<any, DappState> = {
-  routeParts: ["=settings"],
-  component: Settings,
-  title: "common.settings",
-  icon: "settings",
-  type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "accounts",
-        backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
-      },
-    },
-  },
-};
+// const settings: Page<any, DappState> = {
+//   routeParts: ["=settings"],
+//   component: Settings,
+//   title: "common.settings",
+//   icon: "settings",
+//   type: "page",
+//   navigation: {
+//     leftSlot: {
+//       component: ListComponent,
+//       props: {
+//         icon: "accounts",
+//         backgroundColorClass: "passport",
+//         // action: () => processNavigation.back(),
+//       },
+//     },
+//   },
+// };
 
 const logmeout: Trigger<{}, DappState> = {
   isSystem: true,
@@ -257,5 +257,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, settings, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
+  routables: [index, profile, account, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
 };
