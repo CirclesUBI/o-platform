@@ -33,8 +33,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        DEFAULT: "#0A2262",
-        base: "#0A2262",
+        heading: "#5B1E63",
+        DEFAULT: "#666666",
+        base: "#666666",
         dark: {
           DEFAULT: "#0A2262",
           light: "#153587",
@@ -95,8 +96,7 @@ module.exports = {
         gradient2: "#41C7F1",
         gradient3: "#000428",
         gradient4: "#004e92",
-        // gradient1: "#003399",
-        // gradient2: "#1ED6A4",
+
         orgagradient1: "#4D0894",
         orgagradient2: "#A22F76",
         orgagradient3: "#D94F60",

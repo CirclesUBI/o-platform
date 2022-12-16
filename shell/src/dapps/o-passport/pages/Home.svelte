@@ -14,6 +14,7 @@ import { onMount } from "svelte";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import QrCode from "../../../shared/molecules/QrCode/QrCode.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
+import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 
 let name;
 let profile: Profile;
@@ -49,7 +50,7 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
     <div class="flex flex-col w-full p-4 space-y-4 bg-white border rounded-xl border-bordergray">
       <section class="justify-center">
         <div class="flex flex-col w-full space-y-2">
-          <div class="text-left text-dark-lightest">
+          <div class="text-left text-heading">
             <Label key="dapps.o-passport.pages.home.qrcode" />
           </div>
           <div class="container p-1 pt-2 xs:p-4">
@@ -66,7 +67,7 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
       {#if profile.circlesAddress}
         <section class="justify-center">
           <div class="flex flex-col w-full space-y-1">
-            <div class="text-left text-2xs text-dark-lightest">
+            <div class="text-left text-2xs text-heading">
               <Label key="dapps.o-passport.pages.home.address" />
             </div>
 
