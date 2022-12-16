@@ -103,5 +103,5 @@ export const homepage: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, invite, login, terms, privacy, externalChat, externalForum, survey],
+  routables: [index, invite, login, terms, privacy, externalChat, survey],
 };
