@@ -197,6 +197,96 @@ async function createOrga() {}
     </section>
     <section class="justify-left">
       <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
+        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.members">
+          <div slot="standardHeaderBoxContent">
+            <div class="flex flex-col">
+              <div class="m-auto text-center w-36">Owners</div>
+              <div class="flex flex-row w-full pt-2">
+                <!-- 1 PERsON START -->
+                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
+                  <div class="w-12 h-12 m-auto bg-white rounded-full">
+                    <UserImage
+                      profile="{{
+                        circlesAddress: business.circlesAddress,
+                        avatarUrl: business.picture,
+                      }}"
+                      size="{12}"
+                      profileLink="{false}" />
+                  </div>
+
+                  <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm "> Owner 1 </span>
+                </div>
+                <!-- 1 PERsON STOP -->
+                <!-- 1 PERsON START -->
+                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
+                  <div class="w-12 h-12 m-auto bg-white rounded-full">
+                    <UserImage
+                      profile="{{
+                        circlesAddress: business.circlesAddress,
+                        avatarUrl: business.picture,
+                      }}"
+                      size="{12}"
+                      profileLink="{false}" />
+                  </div>
+
+                  <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm "> Owner 2 </span>
+                </div>
+                <!-- 1 PERsON STOP -->
+              </div>
+            </div>
+            <div class="flex flex-col mt-6">
+              <div class="m-auto text-center w-36">Members</div>
+              <div class="flex flex-row w-full pt-2">
+                <!-- 1 PERsON START -->
+                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
+                  <div class="w-12 h-12 m-auto bg-white rounded-full">
+                    <UserImage
+                      profile="{{
+                        circlesAddress: business.circlesAddress,
+                        avatarUrl: business.picture,
+                      }}"
+                      size="{12}"
+                      profileLink="{false}" />
+                  </div>
+
+                  <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm "> Member 1 </span>
+                </div>
+                <!-- 1 PERsON STOP -->
+                <!-- 1 PERsON START -->
+                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
+                  <div class="w-12 h-12 m-auto bg-white rounded-full">
+                    <UserImage
+                      profile="{{
+                        circlesAddress: business.circlesAddress,
+                        avatarUrl: business.picture,
+                      }}"
+                      size="{12}"
+                      profileLink="{false}" />
+                  </div>
+
+                  <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm "> Member 2 </span>
+                </div>
+                <!-- 1 PERsON STOP -->
+                <!-- 1 PERsON START -->
+                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
+                  <div class="w-12 h-12 m-auto bg-white rounded-full">
+                    <UserImage
+                      profile="{{
+                        circlesAddress: business.circlesAddress,
+                        avatarUrl: business.picture,
+                      }}"
+                      size="{12}"
+                      profileLink="{false}" />
+                  </div>
+
+                  <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm "> Member 3 </span>
+                </div>
+                <!-- 1 PERsON STOP -->
+              </div>
+            </div>
+          </div>
+        </StandardHeaderBox>
+
         <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
           <div slot="standardHeaderBoxContent">
             <div class="flex flex-col space-y-2">
