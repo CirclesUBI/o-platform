@@ -44,7 +44,6 @@ $: {
 
     <div
       class="self-center text-center rounded-full justify-self-center w-{size}"
-      class:rounded-corners-gradient-borders="{gradientRing}"
       class:rounded-corners-white-borders="{whiteRing}"
       style="padding: {size >= 20 ? `4px` : `1px`}">
       <div class="relative w-{size} h-{size} m-auto rounded-full" class:bg-white="{!transparent}">

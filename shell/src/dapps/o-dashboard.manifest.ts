@@ -29,14 +29,6 @@ const externalChat: Link<any, DappState> = {
   openInNewTab: true,
   url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
-const externalForum: Link<any, DappState> = {
-  type: "link",
-  title: "common.forum",
-  icon: "forum",
-  routeParts: [],
-  openInNewTab: true,
-  url: () => "https://aboutcircles.com/c/earth-circle-dao/13",
-};
 
 export interface DappState {
   // put state here
@@ -61,5 +53,5 @@ export const home: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, sharePersonalInvite, externalChat, externalForum],
+  routables: [index, sharePersonalInvite, externalChat],
 };
