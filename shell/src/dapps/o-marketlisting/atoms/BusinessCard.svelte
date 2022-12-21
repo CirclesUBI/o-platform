@@ -37,6 +37,10 @@ function loadDetailPage(circlesAddress) {
       {/if}
     </div>
   </div>
-  <div class="pt-2 text-2xl font-bold font-heading">{business.name}</div>
-  <div class="flex-wrap">{business.description}</div>
+  {#if business.name}
+    <div class="pt-2 text-2xl font-bold font-heading">{business.name}</div>
+  {/if}
+  {#if business.description}
+    <div class="flex-wrap">{business.description}</div>
+  {/if}
 </section>
