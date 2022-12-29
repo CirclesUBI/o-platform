@@ -8,7 +8,7 @@ import { getRouteList } from "../functions/getRouteList";
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: RuntimeDapp<any>;
 
-let textColor: string = ""
+let textColor: string = "";
 
 let navigation = [];
 
@@ -19,11 +19,11 @@ onMount(() => {
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
   });
-  console.log("pimmel", runtimeDapp.dappId)
+  console.log("pimmel", runtimeDapp.dappId);
 
   if (runtimeDapp.dappId == "homepage:1") {
-    textColor = "lg:text-white"
-  } 
+    textColor = "lg:text-white";
+  }
 });
 
 $: {
@@ -33,6 +33,17 @@ $: {
     navigation = [];
   }
 }
+
+function locationHasChanged() {
+  if (runtimeDapp.dappId == "homepage:1") {
+    textColor = "lg:text-white";
+  } else {
+    textColor = "lg:text-gray"
+  }
+}
+
+window.onhashchange = locationHasChanged;
+
 
 </script>
 
