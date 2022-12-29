@@ -101,25 +101,21 @@ async function shareLink() {
 
     {#if showShareOptions}
       <div class="flex flex-row w-full mt-6 justify-between pr-6 pl-4">
-        <div class="w-12 h-12 text-center cursor-pointer copylink">
-          <span class="w-12 h-12 align-middle rounded-full bg-light-light">
-            <CopyClipboard text="{link}" let:copy>
-              <!-- svelte-ignore a11y-click-events-have-key-events -->
-              <div on:click="{copy}">
-                <Icon name="link" class="inline w-6 h-6 heroicon smallicon" />
-              </div>
-            </CopyClipboard>
-          </span>
+        <div class="w-7 h-7 text-center cursor-pointer copylink rounded-full bg-light-light">
+          <CopyClipboard text="{link}" let:copy>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div on:click="{copy}">
+              <Icon name="link" class="inline self-center w-6 h-6 heroicon smallicon" />
+            </div>
+          </CopyClipboard>
         </div>
-        <div class="w-12 h-12 text-center cursor-pointer copylink">
-          <span class="w-12 h-12 align-middle rounded-full bg-light-light">
-            <a
-              href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
-              target="_blank"
-              rel="noreferrer">
-              <Icon name="mail" class="inline w-6 h-6 heroicon smallicon" />
-            </a>
-          </span>
+        <div class="w-7 h-7 text-center cursor-pointer copylink rounded-full bg-light-light">
+          <a
+            href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
+            target="_blank"
+            rel="noreferrer">
+            <Icon name="mail" class="inline w-6 h-6 heroicon smallicon" />
+          </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
           <a
