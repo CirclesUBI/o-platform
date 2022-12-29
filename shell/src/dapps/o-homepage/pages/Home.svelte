@@ -4,6 +4,7 @@ import TopNav from "../../../shared/atoms/TopNav.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import VideoHeader from "../components/VideoHeader.svelte";
+import WelcomeHeader from "../components/WelcomeHeader.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -18,6 +19,8 @@ if (inviteCode) {
 <div class="flex flex-col overflow-hidden ">
   <main class="h-screen overflow-hidden">
     <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
+
+    <WelcomeHeader />
 
     <div
       id="video-overlay"
