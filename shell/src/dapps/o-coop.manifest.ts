@@ -13,6 +13,16 @@ import {me} from "../shared/stores/me";
 import {getSessionInfo} from "./o-passport/processes/identify/services/getSessionInfo";
 import {addOwner} from "./o-coop/processes/addOwner";
 import {push} from "svelte-spa-router";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => window.o.i18n("common.supportUrl"),
+};
 
 const index: Page<any, ContactsDappState> = {
   routeParts: ["=organisations"],
@@ -141,5 +151,5 @@ export const coop: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile],
+  routables: [index, profile, externalChat],
 };
