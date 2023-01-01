@@ -18,7 +18,17 @@ import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { loadProfileByProfileId } from "../shared/api/loadProfileByProfileId";
 import { Profile } from "../shared/api/data/types";
 import { push } from "svelte-spa-router";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 // import {getUbi, getUbiInfo} from "../shared/ubiTimer2";
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => window.o.i18n("common.supportUrl"),
+};
 
 const transactions: Page<any, BankingDappState> = {
   routeParts: ["=transactions"],
@@ -243,5 +253,5 @@ export const banking: DappManifest<BankingDappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [transactions, transactionDetail, assets, crcDetail, xdaiDetail, transferTrigger, transferTriggerRedirect],
+  routables: [transactions, transactionDetail, assets, crcDetail, xdaiDetail, transferTrigger, transferTriggerRedirect, externalChat],
 };

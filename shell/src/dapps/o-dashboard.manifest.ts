@@ -10,6 +10,7 @@ const index: Page<any, DappState> = {
   component: Home,
   title: "common.home",
   type: "page",
+  icon: "homeSidemenu"
 };
 
 const sharePersonalInvite: Page<any, DappState> = {
@@ -24,7 +25,7 @@ const sharePersonalInvite: Page<any, DappState> = {
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "chat",
+  icon: "support",
   routeParts: [],
   openInNewTab: true,
   url: () => "https://api.whatsapp.com/send?phone=6281381556669",

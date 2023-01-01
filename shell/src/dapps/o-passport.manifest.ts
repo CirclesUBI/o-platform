@@ -13,12 +13,22 @@ import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
 import UpsertOrganization from "./o-passport/pages/UpsertBusiness.svelte";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => window.o.i18n("common.supportUrl"),
+};
 
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
   title: "common.profile",
-  icon: "passport",
+  icon: "myProfile",
   type: "page",
   navigation: {
     leftSlot: {
@@ -257,5 +267,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
+  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
 };
