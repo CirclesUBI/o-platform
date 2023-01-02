@@ -16,7 +16,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => window.o.i18n("common.supportUrl"),
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
 
 export const index: Page<any, NotificationDappState> = {
@@ -24,6 +24,7 @@ export const index: Page<any, NotificationDappState> = {
   position: "main",
   routeParts: ["=all"],
   title: "All",
+  icon: "allnotificationbubble",
   component: Home,
 };
 export const trusts: Page<any, NotificationDappState> = {
@@ -38,6 +39,7 @@ export const transactions: Page<any, NotificationDappState> = {
   position: "main",
   routeParts: ["=transactions"],
   title: "Transactions",
+  icon: "transactions",
   component: Transactions,
 };
 export const redeemedInvitations: Page<any, NotificationDappState> = {

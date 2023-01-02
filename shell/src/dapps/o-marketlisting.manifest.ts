@@ -13,7 +13,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => window.o.i18n("common.supportUrl"),
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
 
 const listing: Page<any, ContactsDappState> = {
