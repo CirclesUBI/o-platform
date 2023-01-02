@@ -5,7 +5,7 @@
   import {_} from "svelte-i18n";
   import {createEventDispatcher, onMount} from "svelte";
 
-  export let width: number = 36;
+  export let width: number = 40;
   export let allowMultiselect: boolean = false;
   export let placeholder: string = $_("common.selectAValue");
   export let clearSelectionLabel: string = allowMultiselect ? $_("common.all") : $_("common.none");

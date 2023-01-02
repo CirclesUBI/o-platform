@@ -14,7 +14,7 @@ function loadDetailPage(circlesAddress) {
 }
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-2">
+<section class="flex-row w-[50%] h-[50%] p-1">
   <div class="relative">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
