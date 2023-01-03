@@ -92,5 +92,5 @@ export const marketlisting: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [listing, detailPage, externalChat, favorites],
+  routables: [listing, detailPage, favorites, externalChat],
 };
