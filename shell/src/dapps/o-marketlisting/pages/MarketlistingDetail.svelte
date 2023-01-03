@@ -87,7 +87,7 @@ async function shareLink() {
     <div class="flex flex-row w-full mt-3">
       <p class="flex-grow text-gray-400">{business.businessCategory ? business.businessCategory : ""}</p>
       <button
-        class="self-end -mt-1 btn btn-outline btn-sm"
+        class="self-end -mt-1 btn btn-outline btn-sm border-gray-500 text-gray-500"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
