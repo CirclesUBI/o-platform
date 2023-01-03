@@ -92,7 +92,7 @@ async function shareLink() {
           showShareOptions = !showShareOptions;
         }}">
         {#if !showShareOptions}
-          <span><Icon name="share" class="w-6 h-6" /></span>Share
+          <span><Icons icon="share" customClass="w-6 h-6" /></span><p class="pl-1">Share</p>
         {:else}
           <span>X </span>
         {/if}
