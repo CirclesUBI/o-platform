@@ -46,6 +46,5 @@ export let width: string = "w-full";
 <style>
 #nextnav {
   --tw-text-opacity: 1;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
 }
 </style>

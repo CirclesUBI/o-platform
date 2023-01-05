@@ -10,6 +10,7 @@ const index: Page<any, DappState> = {
   component: Home,
   title: "common.home",
   type: "page",
+  icon: "homeSidemenu"
 };
 
 const sharePersonalInvite: Page<any, DappState> = {
@@ -24,18 +25,10 @@ const sharePersonalInvite: Page<any, DappState> = {
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "chat",
+  icon: "support",
   routeParts: [],
   openInNewTab: true,
   url: () => "https://api.whatsapp.com/send?phone=6281381556669",
-};
-const externalForum: Link<any, DappState> = {
-  type: "link",
-  title: "common.forum",
-  icon: "forum",
-  routeParts: [],
-  openInNewTab: true,
-  url: () => "https://aboutcircles.com/c/earth-circle-dao/13",
 };
 
 export interface DappState {
@@ -61,5 +54,5 @@ export const home: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, sharePersonalInvite, externalChat, externalForum],
+  routables: [index, sharePersonalInvite, externalChat],
 };

@@ -9,10 +9,10 @@ import Survey from "./o-homepage/pages/Survey.svelte";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "chat",
+  icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => window.o.i18n("common.supportUrl"),
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
 const externalForum: Link<any, DappState> = {
   type: "link",
@@ -35,7 +35,7 @@ const index: Page<any, DappState> = {
   routeParts: [],
   component: Home,
   title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
-  icon: "home",
+  icon: "homeSidemenu",
   type: "page",
 };
 
@@ -103,5 +103,5 @@ export const homepage: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, invite, login, terms, privacy, externalChat, externalForum, survey],
+  routables: [index, invite, login, terms, privacy, externalChat, survey],
 };

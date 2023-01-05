@@ -35,7 +35,7 @@ $: {
 </script>
 
 {#if actions}
-  <div class="flex flex-row flex-wrap items-stretch justify-around mt-2 -mr-2 text-dark">
+  <div class="flex flex-row flex-wrap items-stretch justify-around mt-2 -mr-2 text-heading">
     <!-- <ul class="inline-block space-x-8 align-top list-none"> -->
     {#each actions as action}
       <ActionListItem

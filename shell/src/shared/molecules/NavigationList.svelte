@@ -8,6 +8,8 @@ import { getRouteList } from "../functions/getRouteList";
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: RuntimeDapp<any>;
 
+let textColor: string = "";
+
 let navigation = [];
 
 onMount(() => {
@@ -17,6 +19,11 @@ onMount(() => {
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
   });
+  console.log("pimmel", runtimeDapp.dappId);
+
+  if (runtimeDapp.dappId == "homepage:1") {
+    textColor = "lg:text-white";
+  }
 });
 
 $: {
@@ -26,11 +33,23 @@ $: {
     navigation = [];
   }
 }
+
+function locationHasChanged() {
+  if (runtimeDapp.dappId == "homepage:1") {
+    textColor = "lg:text-white";
+  } else {
+    textColor = "lg:text-gray"
+  }
+}
+
+window.onhashchange = locationHasChanged;
+
+
 </script>
 
 <div class="z-10 flex flex-col flex-1">
   <nav class="flex flex-col flex-1 w-auto p-4 mt-4"></nav>
-  <div class="flex-shrink-0 w-auto pt-4 mb-10 space-y-2 ">
+  <div class="flex-shrink-0 w-auto pt-4 mb-10 space-y-2 {textColor}">
     {#if navigation}
       {#each navigation as navItem}
         <LinkPill

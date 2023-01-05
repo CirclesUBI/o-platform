@@ -87,7 +87,7 @@ const onClose = () => window.o.publishEvent({ type: "shell.closeModal" });
   role="dialog"
   class="z-40 pt-2 text-base overlay"
   class:blur_aside="{blur}">
-  <div id="modalAsideContentContainer" class="w-full p-2 pb-0 mt-1 modalAsideContentContainer">
+  <div id="modalAsideContentContainer" class="w-full p-2 pb-0 mt-1 overflow-hidden modalAsideContentContainer">
     <div
       class="w-full mt-2 bg-white rounded-xl modalAsideContent md:w-2/3 xl:w-1/2"
       use:clickOutside
@@ -97,7 +97,7 @@ const onClose = () => window.o.publishEvent({ type: "shell.closeModal" });
         })}">
       <div id="modalScrollable" class="modalAsideScrollableContent rounded-xl">
         <SvelteSimplebar init="{initBar}">
-          <div class="w-full m-auto">
+          <div class="w-full m-auto overflow-hidden">
             <slot />
           </div>
         </SvelteSimplebar>

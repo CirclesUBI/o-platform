@@ -8,10 +8,8 @@ export let headerTextStringKey: string = "";
     <div class="w-full h-10 px-4 py-2 text-center text-white bg-cpurple rounded-t-xl border-bordergray">
       <Label key="{headerTextStringKey}" />
     </div>
-    <div class="flex items-center p-4 space-x-2">
-      <div class="flex mt-2">
-        <slot name="standardHeaderBoxContent" />
-      </div>
+    <div class="p-4">
+      <slot name="standardHeaderBoxContent" />
     </div>
   </div>
 </section>
