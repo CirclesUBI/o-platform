@@ -59,9 +59,6 @@ const eventDispatcher = createEventDispatcher();
   </div>
 </header> -->
 
-<header>
-  <div class="h-1 m-auto mt-2 rounded-full w-14 bg-slate-500"></div>
-</header>
 <div class="z-10 flex flex-col flex-1" use:clickOutside on:click_outside="{() => eventDispatcher('clickedOutside')}">
   {#if showSwitcher}
     <div class="w-full p-6">
@@ -74,17 +71,18 @@ const eventDispatcher = createEventDispatcher();
 
     <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
       <div class="">
-        <ProfileSwitcherBar
-          actions="{profiles}" />
+        <ProfileSwitcherBar actions="{profiles}" />
       </div>
     </div>
     <div class="w-full text-center">
       <h1 class="pt-4 text-3xl uppercase font-heading">Quick Actions</h1>
     </div>
     <div class="py-6">
-      <DetailActionBar actions="{actions}" on:siwtchEvent={() => {
-        showSwitcher = !showSwitcher;
-      }} />
+      <DetailActionBar
+        actions="{actions}"
+        on:siwtchEvent="{() => {
+          showSwitcher = !showSwitcher;
+        }}" />
     </div>
   {/if}
 </div>
