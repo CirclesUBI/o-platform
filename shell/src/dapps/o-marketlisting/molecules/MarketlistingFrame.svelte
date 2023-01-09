@@ -26,7 +26,7 @@ function filterCategoriesChange(event: any & { detail: BusinessCategory[] }) {
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <section class="justify-center align-middle">
   <div class="flex justify-around p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2">
-    <CategoryDropDown2 placeholder="Filter" on:change="{filterCategoriesChange}" allowMultiselect="{true}" />
+    <!--<CategoryDropDown2 placeholder="Filter" on:change="{filterCategoriesChange}" allowMultiselect="{true}" />-->
     <div class="w-40 dropdown dropdown-end">
       <button class="text-black bg-white btn w-40 border-1"
         ><span><Icon name="chevron-down" class="w-6 h-6" /></span>{$marketStore.orderBy}</button>
