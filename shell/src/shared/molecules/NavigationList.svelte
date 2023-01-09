@@ -19,7 +19,6 @@ onMount(() => {
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
   });
-  console.log("pimmel", runtimeDapp.dappId);
 
   if (runtimeDapp.dappId == "homepage:1") {
     textColor = "lg:text-white";
