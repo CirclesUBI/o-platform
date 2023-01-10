@@ -9,9 +9,13 @@ import { BusinessCategory } from "../../../shared/api/data/types";
 import { marketStore } from "../stores/marketStore";
 import { marketFilterStore } from "../stores/marketFilterStore";
 import CategoryDropDown2 from "../../o-passport/molecules/CategoryDropDown.svelte";
+import MarketDropdown from "./MarketDropdown.svelte";
+import MarketlistingDetail from "../pages/MarketlistingDetail.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
+
+let dropdownItems: string[] = ["Sort by most popular", "Sort by nearest", "Sort by newest", "Sort by oldest", "Sort by name"]
 
 type SortedByTypes = "Most popular" | "Nearest" | "Newest" | "Oldest" | "Alphabetical";
 let sortedBy: SortedByTypes = "Most popular";
@@ -27,7 +31,8 @@ function filterCategoriesChange(event: any & { detail: BusinessCategory[] }) {
 <section class="justify-center align-middle">
   <div class="flex justify-around p-4 pt-0 mx-auto -mt-6 md:w-2/3 xl:w-1/2">
     <!--<CategoryDropDown2 placeholder="Filter" on:change="{filterCategoriesChange}" allowMultiselect="{true}" />-->
-    <div class="w-40 dropdown dropdown-end">
+    <MarketDropdown dropdownItems="{dropdownItems}"/>
+    <!--<div class="w-40 dropdown dropdown-end">
       <button class="text-black bg-white btn w-40 border-1"
         ><span><Icon name="chevron-down" class="w-6 h-6" /></span>{$marketStore.orderBy}</button>
       <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
@@ -82,7 +87,7 @@ function filterCategoriesChange(event: any & { detail: BusinessCategory[] }) {
           </button>
         </li>
       </ul>
-    </div>
+    </div>-->
   </div>
 
   <div class="flex flex-wrap content-center p-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2 justify-evenly">
