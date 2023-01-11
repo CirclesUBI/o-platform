@@ -13,6 +13,8 @@ if (inviteCode) {
   localStorage.setItem("circlesInvite", inviteCode);
   window.runInitMachine();
 }
+
+console.log(runtimeDapp)
 </script>
 
 <div class="flex flex-col overflow-hidden ">

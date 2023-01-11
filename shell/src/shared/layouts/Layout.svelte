@@ -19,8 +19,13 @@ const eventDispatcher = createEventDispatcher();
 export let layout: RuntimeLayout;
 export let navigation: NavigationManifest;
 export let pageBackgroundClass: string = null;
+export let isSurveyPage: boolean;
 
 $: {
+  const url = window.location.href;
+  if (url.indexOf('homepage/survey') > -1) {
+    isSurveyPage = true;
+  }
   // console.log("LayoutChanged:", layout);
   if (
     (layout?.dialogs.center && layout?.dialogs.center.isOpen) ||
@@ -155,7 +160,7 @@ function onkeydown(e: KeyboardEvent) {
       {/if}
     {/await}
   {/if}
-  {#if navigation}
+  {#if navigation && !isSurveyPage}
     <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" />
   {/if}
 
