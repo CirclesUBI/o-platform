@@ -91,11 +91,11 @@ function handleClick(button) {
       </label>
     </div>
     {#if !isValid}
-      <div class="mx-10 my-5 text-sm text-info">
+      <div class="mx-10 my-5 text-sm text-info text-center">
         <Label key="dapps.o-homepage.components.survey.informedConsent.info" />
       </div>
     {/if}
-    <div class="flex flex-row justify-around mt-10 mb-5 text-center">
+    <div class="buttons-container flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -112,3 +112,9 @@ function handleClick(button) {
     </div>
   </div>
 </div>
+
+<style>
+  :global(.buttons-container) {
+    margin-top: 200px;
+  }
+  </style>
