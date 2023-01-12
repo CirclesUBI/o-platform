@@ -26,7 +26,7 @@ const login: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=login"],
   component: Home,
-  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
+  title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -34,7 +34,7 @@ const index: Page<any, DappState> = {
   isSystem: true,
   routeParts: [],
   component: Home,
-  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
+  title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   icon: "homeSidemenu",
   type: "page",
 };
@@ -44,7 +44,7 @@ const invite: Page<{ inviteCode: string }, DappState> = {
   anonymous: true,
   routeParts: ["=invite", ":inviteCode"],
   component: Home,
-  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
+  title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -91,7 +91,7 @@ export const homepage: DappManifest<DappState> = {
   isHidden: true,
   icon: "home",
   anonymous: true,
-  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
+  title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   routeParts: [],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
