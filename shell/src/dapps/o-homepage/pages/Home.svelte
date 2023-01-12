@@ -4,6 +4,7 @@ import TopNav from "../../../shared/atoms/TopNav.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import VideoHeader from "../components/VideoHeader.svelte";
+import WelcomeHeader from "../components/WelcomeHeader.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -21,11 +22,13 @@ console.log(runtimeDapp)
   <main class="h-screen overflow-hidden">
     <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
 
+    <WelcomeHeader />
+
     <div
       id="video-overlay"
       class="relative flex items-center content-center justify-center h-screen overflow-hidden"
       style=" background-position: center; background:
-  url('/images/homepage/circles-home.jpg') no-repeat top right fixed;
+  url('/images/homepage/circles-home.jpg') no-repeat top center fixed;
   -webkit-background-size: cover; -moz-background-size: cover;
   -o-background-size: cover; background-size: cover; ">
     </div>

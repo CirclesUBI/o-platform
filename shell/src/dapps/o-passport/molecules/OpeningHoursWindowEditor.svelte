@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
 export interface ValidationEventData {
+  id: string;
   fromMinute: number;
   toMinute: number;
   resultCallback: ValidationResultCallback;
@@ -16,19 +17,25 @@ import Icons from "../../../shared/molecules/Icons.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
+import { _ } from "svelte-i18n";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {
+  id: Math.random().toString(),
   isEmpty: true,
+  isPersisted: false,
   from: new HourAndMinute(),
   to: new HourAndMinute(),
 };
 
 let isEditing: boolean = false;
 let fromEditorInput: HTMLInputElement;
+let toEditorInput: HTMLInputElement;
 
 let editFromValue: string = "00:00";
 let editToValue: string = "23:59";
+
+let message: string;
 
 const eventDispatcher = createEventDispatcher();
 
@@ -64,31 +71,72 @@ function parseTime(timeString: string): HourAndMinute | null {
 function validate() {
   const from = parseTime(editFromValue);
   isValid = from != null;
-  if (!isValid) return;
+  if (!isValid) {
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.fromValueFormatError");
+    return;
+  }
 
   const to = parseTime(editToValue);
   isValid = to != null;
-  if (!isValid) return;
+  if (!isValid) {
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.toValueFormatError");
+    return;
+  }
 
   isValid = to.hour * 60 + to.minute > from.hour * 60 + from.minute;
-  if (!isValid) return;
+  if (!isValid) {
+    message = "The time-window ends before it starts";
+    return;
+  }
+
+  isValid = from.minutes != to.minutes;
+  if (!isValid) {
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.durationIsZero");
+    return;
+  }
+
+  eventDispatcher("validate", <ValidationEventData>{
+    id: openingHourWindow.id,
+    fromMinute: from.hour * 60 + from.minute,
+    toMinute: to.hour * 60 + to.minute,
+    resultCallback: {
+      commit: () => (isValid = true),
+      cancel: (msg) => {
+        isValid = false;
+        message = msg;
+        console.log("invalid:", msg);
+      },
+    },
+  });
 }
 
-function edit() {
+function edit(focusRightInsteadOfLeftField?: boolean) {
   if (isEditing) {
     return;
   }
+
+  eventDispatcher("beginEdit", { id: openingHourWindow.id });
 
   editFromValue = `${padZero(openingHourWindow.from.hour)}:${padZero(openingHourWindow.from.minute)}`;
   editToValue = `${padZero(openingHourWindow.to.hour)}:${padZero(openingHourWindow.to.minute)}`;
 
   isEditing = true;
 
-  setTimeout(() => fromEditorInput?.focus());
+  setTimeout(() => {
+    console.log("focusRightInsteadOfLeftField", focusRightInsteadOfLeftField);
+    if (focusRightInsteadOfLeftField) {
+      toEditorInput?.focus();
+    } else {
+      fromEditorInput?.focus();
+    }
+  });
 }
 
 function cancel() {
   isEditing = false;
+  eventDispatcher("cancel", {
+    isNew: !openingHourWindow.isPersisted,
+  });
 }
 
 function ok() {
@@ -98,12 +146,14 @@ function ok() {
   const to = parseTime(editToValue);
 
   eventDispatcher("ok", <ValidationEventData>{
+    id: openingHourWindow.id,
     fromMinute: from.hour * 60 + from.minute,
     toMinute: to.hour * 60 + to.minute,
     resultCallback: {
       commit: commit,
-      cancel: (message) => {
-        console.log(message);
+      cancel: (msg) => {
+        isValid = false;
+        message = msg;
       },
     },
   });
@@ -112,14 +162,15 @@ function ok() {
 function commit() {
   isEditing = false;
 
+  openingHourWindow.isPersisted = true;
   openingHourWindow.from = parseTime(editFromValue);
   openingHourWindow.to = parseTime(editToValue);
   openingHourWindow.isEmpty = false;
 }
 </script>
 
-<tr>
-  {#if isEditing}
+{#if isEditing}
+  <tr>
     <td>
       <input
         bind:this="{fromEditorInput}"
@@ -130,32 +181,36 @@ function commit() {
     </td>
     <td> &nbsp;-&nbsp; </td>
     <td>
-      <input type="time" class="text-xs input input-sm" bind:value="{editToValue}" on:change="{validate}" />
+      <input
+        bind:this="{toEditorInput}"
+        type="time"
+        class="text-xs input input-sm"
+        bind:value="{editToValue}"
+        on:change="{validate}" />
     </td>
-  {:else}
-    <td role="presentation" on:click="{edit}">
+  </tr>
+  {#if !isValid}
+    <tr>
+      <td colspan="3" class="ml-2 text-error">
+        <Icons customClass="inline text-red-300 w-6 h-6 heroicon smallicon" icon="exclamation-circle" />
+        {message}
+      </td>
+    </tr>
+  {/if}
+  <tr>
+    <td colspan="3" align="right">
+      <input type="button" class="btn btn-primary" class:btn-disabled="{!isValid}" value="Save" on:click="{ok}" />
+      <input type="button" class="btn btn-secondary" value="Cancel" on:click="{cancel}" />
+    </td>
+  </tr>
+{:else}
+  <tr class="cursor-pointer">
+    <td role="presentation" on:click="{() => edit(false)}">
       <div>{padZero(openingHourWindow.from.hour)}:{padZero(openingHourWindow.from.minute)}</div>
     </td>
-    <td> &nbsp;-&nbsp; </td>
-    <td role="presentation" on:click="{edit}">
+    <td on:click="{edit}" role="presentation"> &nbsp;-&nbsp; </td>
+    <td role="presentation" on:click="{() => edit(true)}">
       <div>{padZero(openingHourWindow.to.hour)}:{padZero(openingHourWindow.to.minute)}</div>
     </td>
-  {/if}
-  <td>
-    {#if isEditing}
-      <span role="presentation" on:click="{() => cancel()}"
-        ><Icons customClass="inline w-6 h-6 heroicon smallicon" icon="cancel" /></span>
-      {#if isValid}
-        <span role="presentation" on:click="{() => ok()}"
-          ><Icons customClass="inline text-green-500 w-6 h-6 heroicon smallicon" icon="check" /></span>
-      {:else}
-        <span><Icons customClass="inline text-red-300 w-6 h-6 heroicon smallicon" icon="exclamation-circle" /></span>
-      {/if}
-    {:else}
-      <span role="presentation" on:click="{() => edit()}"
-        ><Icons customClass="inline w-6 h-6 heroicon smallicon" icon="pencil" /></span>
-      <span role="presentation" on:click="{() => eventDispatcher('delete')}"
-        ><Icons customClass="inline w-6 h-6 heroicon smallicon" icon="trash" /></span>
-    {/if}
-  </td>
-</tr>
+  </tr>
+{/if}

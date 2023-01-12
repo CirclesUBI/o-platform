@@ -14,6 +14,7 @@ import {
   ProfileEvent,
 } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {onMount} from "svelte";
 
 export let event: ProfileEvent;
 
@@ -139,8 +140,8 @@ function loadDetailPage(path) {
       imageProfile: targetProfile,
       profileLink: `#/contacts/profile/${targetProfile.circlesAddress}`,
       imageAlt: event.direction === 'in' ? fromProfile.circlesAddress : toProfile.circlesAddress,
-
       title: targetProfile.displayName,
+      titleBold: event.unread,
       subTitle: messageString ? messageString : '',
       truncateMain: true,
       endTextBig: amountTime,

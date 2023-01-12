@@ -10,6 +10,7 @@ export let runtimeDapp: RuntimeDapp<any>;
 let profile: Profile;
 let showSwitcher = true;
 let cleanRoute = "";
+let dappHomeLink = "/#/home";
 
 $: name = profile?.circlesAddress ? profile.circlesAddress : "";
 $: {
@@ -22,6 +23,10 @@ $: {
 
 if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
   cleanRoute = runtimeDapp.routeParts[0].replace("=", "");
+
+  if (runtimeDapp.defaultRoute[0] && runtimeDapp.routables[0].routeParts[0]) {
+    dappHomeLink = `/#/${cleanRoute}/${runtimeDapp.routables[0].routeParts[0].replace("=", "")}`;
+  }
 }
 </script>
 
@@ -33,6 +38,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
         ? 'bg-' + cleanRoute
         : 'bg-cpurple'} navbarHomeElement">
       <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
+
       <div class="ml-2 text-white uppercasefont-heading flex items-end">
         {#if runtimeDapp}
         <div class="text-2xl">{runtimeDapp.title.substr(0,7)}</div>
@@ -41,6 +47,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
         No dapp
         {/if}
       </div>
+
     </div>
 
     <div class="self-center pr-1 ">
