@@ -40,7 +40,7 @@ console.log("DADADA", runtimeDapp);
         : 'bg-cpurple'} navbarHomeElement">
       <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
 
-      <span class="ml-2 text-white uppercase font-heading">
+      <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading ">
         <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
           {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
         </a>
