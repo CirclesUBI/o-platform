@@ -37,6 +37,6 @@ if (inviteCode) {
     <UserDataCollectionSurvey />
   {/if}
   {#if id == "5"}
-  <SignUpInvitation />
-{/if}
+    <SignUpInvitation />
+  {/if}
 </div>
