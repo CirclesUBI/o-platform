@@ -721,6 +721,7 @@ onDestroy(() => {
       on:blur="{handleBlur}"
       bind:value="{filterText}"
       placeholder="{placeholderText}"
+      on:blur
       style="{inputStyles}"
       class="order-1"
       disabled />
@@ -734,6 +735,7 @@ onDestroy(() => {
       <div class="flex-grow">
         <input
           type="text"
+          on:blur
           name="searchTerm"
           style="{inputStyles}
           {staticList ? 'padding-left: 35px' : ''}"

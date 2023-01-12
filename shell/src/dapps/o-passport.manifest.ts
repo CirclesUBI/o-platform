@@ -2,7 +2,7 @@ import Home from "./o-passport/pages/Home.svelte";
 import Account from "./o-passport/pages/Account.svelte";
 import VerifyEmail from "./o-passport/pages/VerifyEmail.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
-import Settings from "./o-passport/pages/Settings.svelte";
+// import Settings from "./o-passport/pages/Settings.svelte";
 import { logout } from "./o-passport/processes/logout";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
@@ -12,13 +12,23 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
-import UpsertOrganization from "./o-passport/pages/UpsertOrganization.svelte";
+import UpsertOrganization from "./o-passport/pages/UpsertBusiness.svelte";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
+};
 
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
   title: "common.profile",
-  icon: "myprofile",
+  icon: "myProfile",
   type: "page",
   navigation: {
     leftSlot: {
@@ -52,7 +62,7 @@ const profile: Page<any, DappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -64,14 +74,14 @@ const newOrganization: Page<any, DappState> = {
   isSystem: false,
   routeParts: ["=new-organization"],
   component: UpsertOrganization,
-  title: "Create organization",
+  title: "Create Shop",
 
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -81,16 +91,16 @@ const newOrganization: Page<any, DappState> = {
 
 const editOrganization: Page<any, DappState> = {
   isSystem: false,
-  routeParts: ["=edit-organization", ":cirlcesAddress"],
+  routeParts: ["=edit-organization", ":circlesAddress"],
   component: UpsertOrganization,
-  title: "Orga 1",
+  title: "Shop 1",
 
   type: "page",
   navigation: {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "myprofile",
+        icon: "passport",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
       },
@@ -116,23 +126,23 @@ const account: Page<any, DappState> = {
   },
 };
 
-const settings: Page<any, DappState> = {
-  routeParts: ["=settings"],
-  component: Settings,
-  title: "common.settings",
-  icon: "settings",
-  type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "accounts",
-        backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
-      },
-    },
-  },
-};
+// const settings: Page<any, DappState> = {
+//   routeParts: ["=settings"],
+//   component: Settings,
+//   title: "common.settings",
+//   icon: "settings",
+//   type: "page",
+//   navigation: {
+//     leftSlot: {
+//       component: ListComponent,
+//       props: {
+//         icon: "accounts",
+//         backgroundColorClass: "passport",
+//         // action: () => processNavigation.back(),
+//       },
+//     },
+//   },
+// };
 
 const logmeout: Trigger<{}, DappState> = {
   isSystem: true,
@@ -176,7 +186,7 @@ export const passport: DappManifest<DappState> = {
   isSingleton: true,
   isHidden: false,
   title: "Passport",
-  icon: "myprofile",
+  icon: "passport",
   routeParts: ["=passport"],
   defaultRoute: ["passport"],
   tag: Promise.resolve("alpha"),
@@ -257,5 +267,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, settings, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
+  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
 };

@@ -1,11 +1,9 @@
 import {HourAndMinute} from "./hourAndMinute";
 
-export class OpeningHourWindow {
+export interface OpeningHourWindow {
   isEmpty: boolean;
+  isPersisted: boolean;
+  id:string;
   from: HourAndMinute;
   to: HourAndMinute;
-
-  constructor() {
-    this.isEmpty = true;
-  }
 }

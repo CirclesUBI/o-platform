@@ -95,7 +95,7 @@ const submitHandler = () => {
           on:click="{() =>
             window.o.runProcess(logout, {
               successAction: () => {
-
+                location.reload();
               },
             })}">Forgot your Pin?</span>
       </div>

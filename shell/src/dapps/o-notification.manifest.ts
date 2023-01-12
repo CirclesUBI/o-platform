@@ -4,15 +4,27 @@ import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import Trusts from "./o-notifications/pages/Trusts.svelte";
 import Transactions from "./o-notifications/pages/Transactions.svelte";
 import RedeemedInvitations from "./o-notifications/pages/RedeemedInvitations.svelte";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+import { DappState } from "./o-passport.manifest";
 
 export class NotificationDappState {
 }
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
+};
 
 export const index: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=all"],
   title: "All",
+  icon: "allnotificationbubble",
   component: Home,
 };
 export const trusts: Page<any, NotificationDappState> = {
@@ -27,6 +39,7 @@ export const transactions: Page<any, NotificationDappState> = {
   position: "main",
   routeParts: ["=transactions"],
   title: "Transactions",
+  icon: "transactions",
   component: Transactions,
 };
 export const redeemedInvitations: Page<any, NotificationDappState> = {
@@ -48,5 +61,5 @@ export const notifications: DappManifest<NotificationDappState> = {
   tag: Promise.resolve("alpha"),
   isEnabled: true,
   hideFooter: true,
-  routables: [index, transactions, trusts, redeemedInvitations],
+  routables: [index, transactions, trusts, redeemedInvitations, externalChat],
 };

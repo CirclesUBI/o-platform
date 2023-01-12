@@ -92,8 +92,6 @@ export class ApiClient {
             return input
         }
 
-
-
         const selection = definition.selectionSet.selections[0];
         const dataProp: string = selection.name.value;
         if (!dataProp) {

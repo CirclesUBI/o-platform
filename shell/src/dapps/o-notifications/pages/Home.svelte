@@ -12,7 +12,7 @@
   export let runtimeDapp: RuntimeDapp<any>;
   export let routable: Routable;
 
-  let inbox = new MyInbox(SortOrder.Desc, 20, [
+  let inbox = new MyInbox(SortOrder.Desc, 30, [
     EventType.CrcHubTransfer,
     EventType.CrcMinting,
     EventType.CrcTrust,
@@ -20,18 +20,20 @@
     EventType.Erc20Transfer
   ]);
 
+  const views = {
+    [EventType.CrcHubTransfer]: { component: TransactionCard },
+    [EventType.CrcMinting]: { component: TransactionCard },
+    [EventType.CrcTrust]: { component: GenericEventCard },
+    [EventType.InvitationRedeemed]: {component: RedeemedInvitationCard},
+    [EventType.Erc20Transfer]: { component: TransactionCard }
+  };
+
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="bg-notifications" style="visibility: hidden"></div>
 <div class="px-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2">
   <EventList
-  store="{inbox}"
-  views="{{
-    [EventType.CrcHubTransfer]: { component: TransactionCard },
-    [EventType.CrcMinting]: { component: TransactionCard },
-    [EventType.CrcTrust]: { component: GenericEventCard },
-    [EventType.InvitationRedeemed]: {component: RedeemedInvitationCard},
-    [EventType.Erc20Transfer]: { component: TransactionCard }
-  }}" />
+          store="{inbox}"
+          views="{views}" />
 </div>

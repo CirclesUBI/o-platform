@@ -9,10 +9,10 @@ import Survey from "./o-homepage/pages/Survey.svelte";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "chat",
+  icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => window.o.i18n("common.supportUrl"),
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
 };
 const externalForum: Link<any, DappState> = {
   type: "link",
@@ -26,7 +26,7 @@ const login: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=login"],
   component: Home,
-  title: "Circles Land",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -34,8 +34,8 @@ const index: Page<any, DappState> = {
   isSystem: true,
   routeParts: [],
   component: Home,
-  title: "CIRCLESUBI.ID",
-  icon: "home",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
+  icon: "homeSidemenu",
   type: "page",
 };
 
@@ -44,7 +44,7 @@ const invite: Page<{ inviteCode: string }, DappState> = {
   anonymous: true,
   routeParts: ["=invite", ":inviteCode"],
   component: Home,
-  title: "CIRCLESUBI.ID",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   type: "page",
 };
 
@@ -91,7 +91,7 @@ export const homepage: DappManifest<DappState> = {
   isHidden: true,
   icon: "home",
   anonymous: true,
-  title: "CIRCLESUBI.ID",
+  title: "<span class='text-3xl'>CIRCLES</span><span class='text-2xl'>UBI.ID</span>",
   routeParts: [],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
@@ -104,5 +104,5 @@ export const homepage: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, invite, login, terms, privacy, externalChat, externalForum, survey],
+  routables: [index, invite, login, terms, privacy, externalChat, survey],
 };

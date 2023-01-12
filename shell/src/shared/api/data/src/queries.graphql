@@ -58,6 +58,7 @@ query init {
           name
         }
       }
+      canInvite
       # init.invitation
       claimedInvitation {
         claimedAt
@@ -186,6 +187,7 @@ query myProfile {
     avatarMimeType
     newsletter
     displayTimeCircles
+    canInvite
     displayCurrency
     provenUniqueness
     memberships {
@@ -503,6 +505,7 @@ query profileBySafeAddress($safeAddress: String!) {
     avatarCid
     avatarMimeType
     newsletter
+    canInvite
     displayTimeCircles
     displayCurrency
     provenUniqueness
@@ -679,6 +682,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
     }
     direction
     type
+    unread
     payload {
       ... on CrcHubTransfer {
         transaction_hash

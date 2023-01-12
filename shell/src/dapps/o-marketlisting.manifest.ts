@@ -5,11 +5,22 @@ import Marketlisting from "./o-marketlisting/pages/Marketlisting.svelte";
 import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.svelte";
 import Favorites from "./o-marketlisting/pages/Favorites.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
+import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+
+const externalChat: Link<any, DappState> = {
+  type: "link",
+  title: "common.support",
+  icon: "support",
+  routeParts: ["=chat"],
+  openInNewTab: true,
+  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
+};
 
 const listing: Page<any, ContactsDappState> = {
   routeParts: ["=listing"],
   component: Marketlisting,
   title: "Market",
+  icon: "marketlisting",
   type: "page",
   navigation: {
     leftSlot: {
@@ -29,6 +40,7 @@ const favorites: Page<any, ContactsDappState> = {
   title: "Favorites",
   type: "page",
   position: "main",
+  icon: "favorite",
   navigation: {
     leftSlot: {
       component: ListComponent,
@@ -80,5 +92,5 @@ export const marketlisting: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [listing, detailPage, favorites],
+  routables: [listing, detailPage, favorites, externalChat],
 };
