@@ -38,7 +38,7 @@ function handleClick(button) {
     push("#/homepage/survey/3");
   } else {
     if (isValid) {
-      push("#/home");
+      push("#/homepage/survey/5");
     }
   }
 }
@@ -50,13 +50,13 @@ function handleOnChange(event) {
   if (event.detail.target === "gender") {
     genderOfUser = event.detail.value;
   }
-  if (event.detail.target === "businessOffers") {
-    businessOffers = event.detail.value;
-  }
+  // if (event.detail.target === "businessOffers") {
+  //   businessOffers = event.detail.value;
+  // }
 }
 
 $: {
-  isValid = typeOfUser && genderOfUser && businessOffers && isDateValid && dateOfBirthday;
+  isValid = typeOfUser && genderOfUser && isDateValid && dateOfBirthday;
 }
 </script>
 
@@ -133,31 +133,11 @@ $: {
           {/if}
         </div>
       </div>
-      <div class="flex flex-col mb-5 text-sm">
-        <Label key="dapps.o-homepage.components.survey.userDataCollection.myBusinessOffers" />
-        <div class="flex">
-          <DropDown
-            selected="Select what your business offers"
-            items="{businessOffersData}"
-            id="businessOffers"
-            key="id"
-            value="name"
-            on:dropDownChange="{handleOnChange}" />
-          {#if businessOffers}
-            <span class="text-6xl font-enso"
-              ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-          {/if}
-          {#if !businessOffers}
-            <span class="text-6xl font-enso"
-              ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
-          {/if}
-        </div>
-      </div>
     </div>
     {#if !isValid}
-      <div class="text-sm text-info"><Label key="dapps.o-homepage.components.survey.userDataCollection.info" /></div>
+      <div class="text-sm text-info text-center"><Label key="dapps.o-homepage.components.survey.userDataCollection.info" /></div>
     {/if}
-    <div class="flex flex-row justify-around w-full mt-10 mb-5 text-center">
+    <div class="buttons-container flex flex-row justify-around w-full mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -180,5 +160,8 @@ $: {
   height: 45px !important;
   width: 320px !important;
   border-radius: var(--rounded-btn, 0.5rem) !important;
+}
+:global(.buttons-container) {
+  margin-top: 80px;
 }
 </style>

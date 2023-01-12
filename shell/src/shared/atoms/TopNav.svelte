@@ -38,11 +38,16 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
         ? 'bg-' + cleanRoute
         : 'bg-cpurple'} navbarHomeElement">
       <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
-      <span class="ml-2 text-2xl text-white uppercase xs:text-4xl font-heading">
-        <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
-          {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
-        </a>
-      </span>
+
+      <div class="ml-2 text-white uppercasefont-heading flex items-end">
+        {#if runtimeDapp}
+        <div class="text-2xl">{runtimeDapp.title.substr(0,7)}</div>
+        <div class="ml-0.5">{runtimeDapp.title.substr(7,13)}</div>
+        {:else}
+        No dapp
+        {/if}
+      </div>
+
     </div>
 
     <div class="self-center pr-1 ">
