@@ -32,7 +32,7 @@ $: {
       <span class="pt-3 break-all"
         ><h4><strong><Label key="shared.atoms.error.processEncounteredAnError" ></Label></strong></h4>
         <br />
-        <span>{error.message}</span>
+        <span>{error?.message}</span>
       </span>
       <br />
     </div>

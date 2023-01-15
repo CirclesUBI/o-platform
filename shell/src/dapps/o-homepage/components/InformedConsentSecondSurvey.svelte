@@ -51,9 +51,6 @@ function handleClick(button) {
     <div class="whitespace-pre-line">
       <Label key="dapps.o-homepage.components.survey.informedConsent.title.bottom" />
     </div>
-    <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />
-    <Label key="dapps.o-homepage.components.survey.informedConsent.title.middle" />
-    <Label key="dapps.o-homepage.components.survey.informedConsent.title.bottom" />
   </div>
   <div class="mx-auto mb-20 md:w-2/3 xl:w-1/2">
     <div class="mx-10 my-5 uppercase">
@@ -77,11 +74,11 @@ function handleClick(button) {
       </label>
     </div>
     {#if !isValid}
-      <div class="mx-10 my-5 text-sm text-info">
+      <div class="mx-10 my-5 text-sm text-info text-center">
         <Label key="dapps.o-homepage.components.survey.informedConsent.info" />
       </div>
     {/if}
-    <div class="flex flex-row justify-around mt-10 mb-5 text-center">
+    <div class="buttons-container flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -98,3 +95,9 @@ function handleClick(button) {
     </div>
   </div>
 </div>
+
+<style>
+  :global(.buttons-container) {
+    margin-top: 10px;
+  }
+  </style>

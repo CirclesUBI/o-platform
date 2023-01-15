@@ -9,6 +9,7 @@ import WelcomeSurvey from "../components/WelcomeSurvey.svelte";
 import InformedConsentFirst from "../components/InformedConsentFirstSurvey.svelte";
 import InformedConsentSecond from "../components/InformedConsentSecondSurvey.svelte";
 import UserDataCollectionSurvey from "../components/UserDataCollectionSurvey.svelte";
+import SignUpInvitation from "../components/SignUpInvitation.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -34,5 +35,8 @@ if (inviteCode) {
   {/if}
   {#if id == "4"}
     <UserDataCollectionSurvey />
+  {/if}
+  {#if id == "5"}
+    <SignUpInvitation />
   {/if}
 </div>

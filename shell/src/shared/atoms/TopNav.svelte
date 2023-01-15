@@ -28,17 +28,19 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
     dappHomeLink = `/#/${cleanRoute}/${runtimeDapp.routables[0].routeParts[0].replace("=", "")}`;
   }
 }
+console.log("DADADA", runtimeDapp);
 </script>
 
 <!-- bg-home bg-cpurple bg-marketplace bg-contact bg-passport -->
 <div class="fixed top-0 left-0 z-50 w-full">
   <div class="flex flex-row justify-between w-full text-white navbar">
     <div
-      class="p-1 xs:p-3 pr-4 xs:pr-12 -mt-6 xs:-mt-2 whitespace-nowrap {cleanRoute
+      class="p-1 xs:p-3 pr-6 xs:pr-12 -mt-8 xs:-mt-2 whitespace-nowrap {cleanRoute
         ? 'bg-' + cleanRoute
         : 'bg-cpurple'} navbarHomeElement">
       <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
-      <span class="ml-2 text-2xl text-white uppercase xs:text-4xl font-heading">
+
+      <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading ">
         <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
           {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
         </a>
