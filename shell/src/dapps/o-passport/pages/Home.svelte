@@ -51,7 +51,7 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
       <div slot="standardHeaderBoxContent">
         <section class="justify-center">
           <div class="flex flex-col w-full space-y-2">
-            <div class="text-left text-heading">
+            <div class="text-left ">
               <Label key="dapps.o-passport.pages.home.qrcode" />
             </div>
             <div class="container p-1 pt-2 xs:p-4">

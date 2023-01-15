@@ -1,0 +1,31 @@
+<script lang="ts">
+import { _ } from "svelte-i18n";
+import { push } from "svelte-spa-router";
+import { NavigationManifest } from "@o-platform/o-interfaces/src/navigationManifest";
+import Label from "../../../shared/atoms/Label.svelte";
+
+export let navigation: NavigationManifest;
+</script>
+
+<div class="p-1 pr-4 -mt-6 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
+  <div class="flex flex-col items-center justify-center">
+    <div class="flex items-center justify-center my-5">
+      <img src="/logos/circles.svg" class="w-32 h-32" alt="Circles Land" />
+    </div>
+
+    <div class="ml-2 text-4xl text-white uppercase font-heading">
+      <Label key="dapps.o-homepage.components.survey.title.bottom" />
+    </div>
+  </div>
+  <div class="mt-2 text-xl text-center"><Label key="dapps.o-homepage.components.survey.subtitle" /></div>
+  <div class="mb-8 text-xl text-center uppercase mt-14">
+    <div class="ml-2 text-5xl text-white uppercase font-heading">SUCCESS</div>
+  </div>
+  <div class="text-xl text-center uppercase whitespace-pre-line">LOG IN TODO</div>
+</div>
+
+<style>
+:global(.buttons-container) {
+  margin-top: 180px;
+}
+</style>

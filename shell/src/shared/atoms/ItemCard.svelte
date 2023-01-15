@@ -40,7 +40,11 @@ function cardAction() {
 }
 </script>
 
-<section role="presentation" on:click="{() => cardAction()}" class:mb-3="{!params.inline}" class="{params.class ? params.class : ''}">
+<section
+  role="presentation"
+  on:click="{() => cardAction()}"
+  class:mb-3="{!params.inline}"
+  class="{params.class ? params.class : ''}">
   <div class="flex items-center w-full space-x-2 bg-white border cardborder" class:p-3="{!params.edgeless}">
     <slot name="itemCardStart">
       <div class="">
@@ -68,17 +72,18 @@ function cardAction() {
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
               {#if params.titleBold}
-                <b>{params.title
-                        ? params.title.length >= textCutoff
-                                ? params.title.substr(0, textCutoff) + "..."
-                                : params.title
-                        : ""}</b>
+                <b
+                  >{params.title
+                    ? params.title.length >= textCutoff
+                      ? params.title.substr(0, textCutoff) + "..."
+                      : params.title
+                    : ""}</b>
               {:else}
                 {params.title
-                        ? params.title.length >= textCutoff
-                                ? params.title.substr(0, textCutoff) + "..."
-                                : params.title
-                        : ""}
+                  ? params.title.length >= textCutoff
+                    ? params.title.substr(0, textCutoff) + "..."
+                    : params.title
+                  : ""}
               {/if}
             </h2>
           </div>
@@ -90,7 +95,7 @@ function cardAction() {
         </div>
         <div class="flex flex-row items-center justify-between text-left" class:px-3="{params.imageUrl}">
           <div class="flex-grow leading-none">
-            <span class="inline-block text-xs text-dark-lightest">
+            <span class="inline-block text-xs">
               {params.subTitle
                 ? params.subTitle.length >= textCutoff + 6
                   ? params.subTitle.substr(0, textCutoff + 6) + "..."
@@ -98,7 +103,7 @@ function cardAction() {
                 : ""}
             </span>
           </div>
-          <div class="text-xs text-right text-dark-lightest whitespace-nowrap leading-non">
+          <div class="text-xs text-right whitespace-nowrap leading-non">
             <slot name="itemCardEndSmallElement">
               <span class="inline-block">
                 {params.endTextSmall ? params.endTextSmall : ""}

@@ -1,25 +1,25 @@
 <script lang="ts">
-  import Time from "svelte-time";
-  import {push} from "svelte-spa-router";
-  import {onMount} from "svelte";
-  import UserImage from "../../../shared/atoms/UserImage.svelte";
-  import {me} from "../../../shared/stores/me";
-  import {Currency} from "../../../shared/currency";
+import Time from "svelte-time";
+import { push } from "svelte-spa-router";
+import { onMount } from "svelte";
+import UserImage from "../../../shared/atoms/UserImage.svelte";
+import { me } from "../../../shared/stores/me";
+import { Currency } from "../../../shared/currency";
 
-  import {
-    CrcHubTransfer,
-    CrcMinting,
-    Erc20Transfer,
-    EventType,
-    Profile,
-    ProfileEvent,
-  } from "../../../shared/api/data/types";
+import {
+  CrcHubTransfer,
+  CrcMinting,
+  Erc20Transfer,
+  EventType,
+  Profile,
+  ProfileEvent,
+} from "../../../shared/api/data/types";
 
 import { myTransactions } from "../../../shared/stores/myTransactions";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 
-  export let transactionHash: string;
+export let transactionHash: string;
 
 let transfer: ProfileEvent;
 let classes: string;
@@ -32,21 +32,12 @@ let error: string;
 let displayableName: string = "";
 
 onMount(async () => {
-  transfer = await myTransactions.findByPrimaryKey(
-    EventType.CrcHubTransfer,
-    transactionHash
-  );
+  transfer = await myTransactions.findByPrimaryKey(EventType.CrcHubTransfer, transactionHash);
   if (!transfer) {
-    transfer = await myTransactions.findByPrimaryKey(
-      EventType.CrcMinting,
-      transactionHash
-    );
+    transfer = await myTransactions.findByPrimaryKey(EventType.CrcMinting, transactionHash);
   }
   if (!transfer) {
-    transfer = await myTransactions.findByPrimaryKey(
-      EventType.Erc20Transfer,
-      transactionHash
-    )
+    transfer = await myTransactions.findByPrimaryKey(EventType.Erc20Transfer, transactionHash);
   }
   if (!transfer) {
     transfer = await myTransactions.findSingleItemFallback(
@@ -106,9 +97,7 @@ onMount(async () => {
       if (transfer.payload?.__typename == "CrcMinting") {
         message = window.o.i18n("dapps.o-banking.pages.transactionDetail.ubi");
       } else {
-        message = transfer.payload.tags?.find(
-          (o) => o.typeId === "o-banking:transfer:message:1"
-        )?.value;
+        message = transfer.payload.tags?.find((o) => o.typeId === "o-banking:transfer:message:1")?.value;
       }
     }
 
@@ -127,8 +116,7 @@ function openDetail(transfer: ProfileEvent) {
     {JSON.stringify(transfer, null, 2)}
   </pre>-->
   {#if transfer}
-    <div
-      class="flex flex-col items-center self-center w-full m-auto space-y-4 text-center justify-self-center">
+    <div class="flex flex-col items-center self-center w-full m-auto space-y-4 text-center justify-self-center">
       <div class="w-full text-center">
         <h1 class="text-3xl uppercase font-heading">
           {transfer.direction === "in" ? "received" : "sent"}
@@ -138,32 +126,21 @@ function openDetail(transfer: ProfileEvent) {
         <span class="inline-block text-6xl font-enso {classes}">
           {#if transfer.direction === "in"}
             +{Currency.instance().displayAmount(
-              transfer
-                ? (transfer.payload.value
-                    ? transfer.payload.value
-                    : transfer.payload.flow
-                  ).toString()
-                : "0",
+              transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0",
               transfer.timestamp,
               "TIME_CRC",
               transfer.payload.__typename === "Erc20Transfer" ? "erc20" : ""
             )}
           {:else}
             -{Currency.instance().displayAmount(
-              transfer
-                ? (transfer.payload.value
-                    ? transfer.payload.value
-                    : transfer.payload.flow
-                  ).toString()
-                : "0",
+              transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0",
               transfer.timestamp,
               "TIME_CRC",
               transfer.payload.__typename === "Erc20Transfer" ? "erc20" : ""
             )}
           {/if}
         </span>
-        <span class="text-6xl font-enso {classes}"
-          ><Icons icon="timeCircle" size="{10}" customClass="inline" /></span>
+        <span class="text-6xl font-enso {classes}"><Icons icon="timeCircle" size="{10}" customClass="inline" /></span>
       </div>
       <UserImage profile="{targetProfile}" size="{36}" gradientRing="{true}" />
       <div
@@ -174,17 +151,17 @@ function openDetail(transfer: ProfileEvent) {
         }}">
         {#if transfer.direction === "in"}
           <span class="mt-4 text-xl break-words">
-            <Label key="dapps.o-banking.pages.transactionDetail.from"  />
+            <Label key="dapps.o-banking.pages.transactionDetail.from" />
             {displayableName ? displayableName : ""}
           </span>
         {:else}
           <span class="mt-4 text-xl break-words">
-            <Label key="dapps.o-banking.pages.transactionDetail.to"  />
+            <Label key="dapps.o-banking.pages.transactionDetail.to" />
             {displayableName ? displayableName : ""}
           </span>
         {/if}
       </div>
-      <div class="text-dark-lightest">
+      <div class="font-bold">
         {message && message != undefined ? message : ""}
       </div>
       <!-- {#if path && path.transfers}
@@ -201,30 +178,23 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       {/if} -->
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="common.date"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="common.date" />
         </div>
         <div class="flex items-center w-full">
           <div class="text-left ">
-            <Time
-              timestamp="{new Date(transfer.timestamp)}"
-              format="D. MMMM YYYY HH:mm" />
+            <Time timestamp="{new Date(transfer.timestamp)}" format="D. MMMM YYYY HH:mm" />
           </div>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="dapps.o-banking.pages.transactionDetail.fullAmountCrc"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="dapps.o-banking.pages.transactionDetail.fullAmountCrc" />
         </div>
         <div class="flex items-center w-full">
           <div class="text-left ">
             {Currency.instance().displayAmount(
-              transfer
-                ? (transfer.payload.value
-                    ? transfer.payload.value
-                    : transfer.payload.flow
-                  ).toString()
-                : "0",
+              transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0",
               transfer.timestamp,
               "CRC",
               null,
@@ -234,7 +204,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div>
       <!-- <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
+        <div class="mb-1 font-bold text-left text-2xs ">
           <Label key="dapps.o-banking.pages.transactionDetail.amountCircles"  />
         </div>
         <div class="flex items-center w-full">
@@ -248,32 +218,32 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div> -->
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="common.from"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="common.from" />
         </div>
         <div class="flex items-center w-full">
           <div class="text-left break-all">{fromProfile.circlesAddress}</div>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="common.to"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="common.to" />
         </div>
         <div class="flex items-center w-full">
           <div class="text-left break-all">{toProfile.circlesAddress}</div>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="common.block"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="common.block" />
         </div>
         <div class="flex items-center w-full">
           <div class="text-left break-all">{transfer.block_number}</div>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 text-left text-2xs text-dark-lightest">
-          <Label key="dapps.o-banking.pages.transactionDetail.transactionHash"  />
+        <div class="mb-1 font-bold text-left text-2xs ">
+          <Label key="dapps.o-banking.pages.transactionDetail.transactionHash" />
         </div>
         <div class="flex items-center w-full text-primarydark">
           <div class="text-left break-all">
