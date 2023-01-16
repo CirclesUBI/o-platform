@@ -4,7 +4,7 @@ import PassportHeader from "../atoms/PassportHeader.svelte";
 import { me } from "../../../shared/stores/me";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { Profile } from "../../../shared/api/data/types";
+import {Membership, Profile} from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
 
 import { Environment } from "../../../shared/environment";
@@ -29,6 +29,8 @@ $: name = profile?.circlesAddress ? profile.circlesAddress : "";
 onMount(() => {
   if ($me) {
     profile = $me;
+    var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+    profile.memberships.sort((a:Membership,b:Membership) => collator.compare(a.organisation.displayName, b.organisation.displayName))
   } else {
     profile = undefined;
   }
@@ -71,7 +73,11 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
           <div class="flex flex-col w-full space-y-2">
             <div class="container p-1 pt-2 xs:p-4">
               <ul>
-                <li class="link">Toko Surf</li>
+              {#each profile.memberships as m}
+                <li class="link">
+                  <a href="/#/passport/edit-organization/{m.organisation.circlesAddress}">{m.organisation.displayName}</a>
+                </li>
+              {/each}
               </ul>
             </div>
             <div class="container p-1 pt-2 text-center xs:p-4">
