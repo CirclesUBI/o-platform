@@ -22,6 +22,7 @@ const __SAFE_ADDRESS__ = process.env.SAFE_ADDRESS;
 const __RPC_ENDPOINT__ = process.env.RPC_ENDPOINT;
 const __OPENLOGIN_CLIENT_ID__ = process.env.OPENLOGIN_CLIENT_ID;
 const __HERE_API_KEY__ = process.env.HERE_API_KEY;
+const __PLACES_API_KEY__ = process.env.PLACES_API_KEY;
 
 const __USE_MOCKS__ = process.env.USE_MOCKS ? "true" : "false";
 const __SHOW_LANGUAGE_SWITCHER__ = process.env.SHOW_LANGUAGE_SWITCHER ? "true" : "false";
@@ -46,6 +47,8 @@ console.log("!: OPENLOGIN_CLIENT_ID:", process.env.OPENLOGIN_CLIENT_ID);
 console.log("   - The OpenLogin client-id that's used to generate the user's key.")
 console.log("!: HERE_API_KEY:", process.env.HERE_API_KEY);
 console.log("   - The api key for the here.com geolocation services.")
+console.log("!: PLACES_API_KEY:", process.env.PLACES_API_KEY);
+console.log("   - The api key for the google geolocation services.")
 console.log("?: IS_PRODUCTION:", prod ? "true" : "false");
 console.log("   - Minimizes the bundle when 'true'.")
 console.log("?: USE_MOCKS:", __USE_MOCKS__);
@@ -59,7 +62,8 @@ if (!process.env.API_ENDPOINT ||
     !process.env.SAFE_ADDRESS ||
     !process.env.RPC_ENDPOINT ||
     !process.env.OPENLOGIN_CLIENT_ID ||
-    !process.env.HERE_API_KEY) {
+    !process.env.HERE_API_KEY ||
+    !process.env.PLACES_API_KEY) {
   console.log("");
   console.error("Error: All above mandatory (!) environment variables must be set.")
   console.log("");
@@ -107,6 +111,15 @@ module.exports = {
 
   module: {
     rules: [
+      {
+        test: /\.ts|\.js|\.svelte$/,
+        loader: "string-replace-loader",
+        options: {
+          search: "__PLACES_API_KEY__",
+          replace: __PLACES_API_KEY__,
+          flags: "g",
+        },
+      },
       {
         test: /\.ts|\.js|\.svelte$/,
         loader: "string-replace-loader",
