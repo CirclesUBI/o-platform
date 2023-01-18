@@ -1,0 +1,74 @@
+name: Build application container
+run-name: Generate o-platform ${{ inputs.client_ref }} for api-server ${{ inputs.server_ref }} by @${{ github.actor }}
+
+on:
+  workflow_call:
+    inputs:
+      server_ref:
+        description: "A ref from CirclesUBI/api-server against which we build."
+        required: true
+        type: string
+      client_ref:
+        description: "A ref from this repository, CirclesUBI/o-platform."
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      server_ref:
+        description: "A ref from CirclesUBI/api-server against which we build."
+        required: true
+        type: string
+      client_ref:
+        description: "A ref from this repository, CirclesUBI/o-platform."
+        required: true
+        type: string
+
+env:
+  REGISTRY: registry.digitalocean.com
+  IMAGE_OWNER: circles-land
+  IMAGE_REPOSITORY: o-platform
+
+jobs:
+  build-container-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.client_ref }}
+
+      -
+        name: Docker meta outside of branches
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env. IMAGE_OWNER }}/${{ env.IMAGE_REPOSITORY }}
+          tags: |
+            latest-${{ inputs.server_ref }}
+            {{sha}}-${{ inputs.server_ref }}
+
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      -
+        name: Login to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DIGITALOCEAN_PASSWORD }}
+          password: ${{ secrets.DIGITALOCEAN_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          build-args: |
+            SERVER_REF=${{ inputs.server_ref }}
+          tags: ${{ steps.meta.outputs.tags }}
+          file: Dockerfile.ci
