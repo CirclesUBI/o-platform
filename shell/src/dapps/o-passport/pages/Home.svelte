@@ -14,6 +14,7 @@ import { onMount } from "svelte";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import QrCode from "../../../shared/molecules/QrCode/QrCode.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
+import {loadProfile} from "../../../shared/functions/loadProfile";
 
 let name;
 let profile: Profile;

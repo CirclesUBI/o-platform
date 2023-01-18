@@ -38,7 +38,6 @@ $: {
     classes.push("hover");
   }
   itemClasses = classes.join(" ");
-
   label = getLabel(item.title);
 }
 </script>
@@ -49,9 +48,6 @@ $: {
       <div class="max-w-full -mt-1 leading-8 cursor-pointer truncateThis">
         {@html label}
       </div>
-      <!-- <div class="text-xs text-left text-dark-lightest">
-        {item.country}
-      </div> -->
     </div>
   </div>
 </section>
