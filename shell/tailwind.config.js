@@ -135,8 +135,8 @@ module.exports = {
           light: "#89D4BA",
         },
         notifications: {
-          DEFAULT: "#1cca56",
-          light: "#3cca56",
+          DEFAULT: "#5B1E63",
+          light: "#5B1E63",
         },
         home: {
           DEFAULT: "#5B1E63",
