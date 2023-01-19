@@ -13,8 +13,6 @@ import { DateInput } from "date-picker-svelte";
 import { form, field } from "svelte-forms";
 import { required } from "svelte-forms/validators";
 import { generateLongId } from "../../../shared/functions/generateRandomUid";
-import { faYenSign } from "@fortawesome/free-solid-svg-icons";
-import { noop } from "svelte/internal";
 
 const typeOfUserData = TypeOfUser;
 const genderOfUserData = GenderOfUser;
@@ -30,14 +28,7 @@ const dateOfBirth = field("dateOfBirth", <Date>null, [required()]);
 const invite = field("invite", "", [required()]);
 const myForm = form(userType, gender, dateOfBirth, invite);
 
-let hasInvite = false;
 myForm.validate();
-
-onMount(async () => {
-  // if ($surveyConsents.allConsentsGiven !== true) {
-  //   push("#/homepage/survey/2");
-  // }
-});
 
 $: {
   if ($inviteUrl) {
@@ -159,26 +150,27 @@ function handleOnChange(event) {
           {/if}
         </div>
       </div>
-    </div>
-    <div class="flex flex-col mb-5 text-sm">
-      <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
-      <div class="flex ">
-        <button
-          class="px-8 overflow-hidden transition-all transform btn btn-primary"
-          on:click="{() => handleClick('openQRCode')}"
-          disabled="{$inviteUrl}">
-          <!-- {$_("dapps.o-homepage.components.survey.button.scanInviteNow")} -->
-          Scan Invite Now
-        </button>
-        <input type="hidden" bind:value="{$invite.value}" />
 
-        {#if $inviteUrl}
-          <span class="text-6xl font-enso"
-            ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-        {:else}
-          <span class="text-6xl font-enso"
-            ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
-        {/if}
+      <div class="flex flex-col items-start w-full mb-2 text-sm">
+        <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
+        <div class="flex items-center w-full h-12 pr-8 mb-2">
+          <button
+            class="px-8 overflow-hidden transition-all transform btn btn-primary btn-block"
+            on:click="{() => handleClick('openQRCode')}"
+            disabled="{$inviteUrl}">
+            <!-- {$_("dapps.o-homepage.components.survey.button.scanInviteNow")} -->
+            Scan Invite Now
+          </button>
+          <input type="hidden" bind:value="{$invite.value}" />
+
+          {#if $inviteUrl}
+            <span class="text-6xl font-enso"
+              ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
+          {:else}
+            <span class="text-6xl font-enso"
+              ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
+          {/if}
+        </div>
       </div>
     </div>
     {#if !$myForm.valid}
@@ -186,7 +178,7 @@ function handleOnChange(event) {
         <Label key="dapps.o-homepage.components.survey.userDataCollection.info" />
       </div>
     {/if}
-    <div class="flex flex-row justify-around w-full mt-10 mb-5 text-center buttons-container">
+    <div class="flex flex-row justify-around w-full mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -211,8 +203,5 @@ function handleOnChange(event) {
   height: 45px !important;
   width: 320px !important;
   border-radius: var(--rounded-btn, 0.5rem) !important;
-}
-:global(.buttons-container) {
-  margin-top: 80px;
 }
 </style>

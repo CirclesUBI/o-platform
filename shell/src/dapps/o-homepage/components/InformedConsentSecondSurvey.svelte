@@ -10,7 +10,7 @@ sessionStorage.setItem("surveyConsentPage2", "false");
 function validateCheckBox() {
   return (value: boolean) => ({ valid: value === true, name: "not_set" });
 }
-console.log(surveyConsents);
+
 const exchange = field("exchange", false, [required(), validateCheckBox()]);
 const dataCollect = field("dataCollect", false, [required(), validateCheckBox()]);
 const myForm = form(exchange, dataCollect);
@@ -63,7 +63,7 @@ function handleClick(button) {
         <Label key="dapps.o-homepage.components.survey.informedConsent.info" />
       </div>
     {/if}
-    <div class="flex flex-row justify-around mt-10 mb-5 text-center buttons-container">
+    <div class="flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -82,9 +82,3 @@ function handleClick(button) {
     </div>
   </div>
 </div>
-
-<style>
-:global(.buttons-container) {
-  margin-top: 10px;
-}
-</style>

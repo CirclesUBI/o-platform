@@ -26,6 +26,7 @@ async function setResult(label, result) {
   clearTimeout(label.highlightTimeout);
   label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
   $inviteUrl = result.data;
+  sessionStorage.setItem("inviteUrl", result.data);
 
   // We're done here, closing up... TODO: this is not the most beautiful solution.
   window.o.publishEvent({ type: "shell.back" });
