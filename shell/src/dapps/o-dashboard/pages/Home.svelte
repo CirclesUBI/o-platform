@@ -60,7 +60,7 @@ onMount(init);
         title="dapps.o-dashboard.pages.home.contacts" />
 
       <DashboardColorCard
-        color="market"
+        color="marketplace"
         link="/market/listing"
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
         icon="marketlisting"
