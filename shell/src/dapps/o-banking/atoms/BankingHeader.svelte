@@ -30,15 +30,15 @@ $: {
     <div class="pt-2 text-white"></div>
   </div>
   <div class="flex items-center w-full pt-2 text-white ">
-    <span class="inline-block tracking-wide font-heading">
+    <span class="inline-block tracking-wide ">
       <div class="self-center block mt-2 text-center">
         <div class="relative pt-2 text-center text-white">
-          <span class="inline-block tracking-wide font-heading">
+          <span class="inline-block tracking-wide ">
             <section class="m-4 -mb-4 -mr-4 text-center">
-              <h1 class="text-5xl sm:text-7xl">
-                {balanceTime}<Icons icon="timeCircle" size="{8}" customClass="inline inline-icon" />
+              <h1 class="text-6xl">
+                {balanceTime}<Icons icon="timeCircle" size="{14}" customClass="inline inline-icon -ml-3 -mt-2" />
               </h1>
-              <span class="text-2xl text-right sm:text-3xl"> BALANCE </span>
+              <span class="text-3xl text-right"> BALANCE </span>
             </section>
           </span>
         </div>
