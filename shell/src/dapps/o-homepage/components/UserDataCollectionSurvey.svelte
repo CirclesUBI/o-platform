@@ -1,62 +1,80 @@
 <script lang="ts">
+import { surveyConsents, surveyData, inviteUrl } from "../stores/surveyStore";
 import { onMount } from "svelte";
-import {
-  AllBusinessCategoriesDocument,
-  AllBusinessCategoriesQueryVariables,
-  BusinessCategory,
-} from "../../../shared/api/data/types";
-import { ApiClient } from "../../../shared/apiConnection";
+import { SurveyDataDocument, SurveyData, SurveyDataInput } from "../../../shared/api/data/types";
 import Label from "../../../shared/atoms/Label.svelte";
 import { GenderOfUser } from "../../../shared/models/GenderOfUser.model";
 import { TypeOfUser } from "../../../shared/models/TypeOfUser.model";
-
 import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { DateInput } from "date-picker-svelte";
+import { form, field } from "svelte-forms";
+import { required } from "svelte-forms/validators";
+import { generateLongId } from "../../../shared/functions/generateRandomUid";
 
-let businessOffersData = [];
 const typeOfUserData = TypeOfUser;
 const genderOfUserData = GenderOfUser;
-let typeOfUser;
-let genderOfUser;
-let businessOffers;
-let isValid = false;
-let dateOfBirthday;
-let isDateValid;
 
-onMount(async () => {
-  businessOffersData = await ApiClient.query<BusinessCategory[], AllBusinessCategoriesQueryVariables>(
-    AllBusinessCategoriesDocument,
-    {}
-  );
-});
+const surveySessionId = generateLongId();
 
-function handleClick(button) {
+sessionStorage.setItem("SurveySessionId", surveySessionId);
+sessionStorage.removeItem("SurveyComplete");
+
+const userType = field("userType", "", [required()]);
+const gender = field("gender", "", [required()]);
+const dateOfBirth = field("dateOfBirth", <Date>null, [required()]);
+const invite = field("invite", "", [required()]);
+const myForm = form(userType, gender, dateOfBirth, invite);
+
+myForm.validate();
+
+$: {
+  if ($inviteUrl) {
+    $invite = "true";
+  }
+}
+
+async function handleClick(button) {
   if (button === "back") {
     push("#/homepage/survey/3");
+  } else if (button === "openQRCode") {
+    push("#/homepage/scanInvite/");
   } else {
-    if (isValid) {
-      push("#/homepage/survey/5");
+    $surveyData = $myForm.summary;
+
+    const apiClient = await window.o.apiClient.client.subscribeToResult();
+    const result = await apiClient.mutate({
+      mutation: SurveyDataDocument,
+      variables: {
+        surveyData: {
+          sessionId: surveySessionId,
+          allConsentsGiven: $surveyConsents.allConsentsGiven,
+          userType: $userType.value,
+          gender: $gender.value,
+          dateOfBirth: $dateOfBirth.value,
+        },
+      },
+    });
+
+    if (result.errors) {
+      throw new Error(`Couldn't store Survey data properly: ${JSON.stringify(result.errors)}`);
     }
+    sessionStorage.setItem("SurveyComplete", "true");
+    sessionStorage.removeItem("surveyConsentPage1");
+    sessionStorage.removeItem("surveyConsentPage2");
+    push("#/homepage/survey/5");
   }
 }
 
 function handleOnChange(event) {
   if (event.detail.target === "userType") {
-    typeOfUser = event.detail.value;
+    userType.set(event.detail.value);
   }
   if (event.detail.target === "gender") {
-    genderOfUser = event.detail.value;
+    gender.set(event.detail.value);
   }
-  // if (event.detail.target === "businessOffers") {
-  //   businessOffers = event.detail.value;
-  // }
-}
-
-$: {
-  isValid = typeOfUser && genderOfUser && isDateValid && dateOfBirthday;
 }
 </script>
 
@@ -84,11 +102,11 @@ $: {
             key="id"
             value="name"
             on:dropDownChange="{handleOnChange}" />
-          {#if typeOfUser}
+
+          {#if $userType.value && $userType.value !== "undefined"}
             <span class="text-6xl font-enso"
               ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-          {/if}
-          {#if !typeOfUser}
+          {:else}
             <span class="text-6xl font-enso"
               ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
           {/if}
@@ -104,11 +122,10 @@ $: {
             key="id"
             value="name"
             on:dropDownChange="{handleOnChange}" />
-          {#if genderOfUser}
+          {#if $gender.value && $gender.value !== "undefined"}
             <span class="text-6xl font-enso"
               ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-          {/if}
-          {#if !genderOfUser}
+          {:else}
             <span class="text-6xl font-enso"
               ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
           {/if}
@@ -118,26 +135,50 @@ $: {
         <Label key="dapps.o-homepage.components.survey.userDataCollection.bornOn" />
         <div class="flex items-center h-12 mb-2 date-picker">
           <DateInput
-            bind:value="{dateOfBirthday}"
+            bind:value="{$dateOfBirth.value}"
+            min="{new Date('1920-01-01')}"
             format="MM-dd-yyyy"
             placeholder="Choose a date"
-            closeOnSelection="{true}"
-            bind:valid="{isDateValid}" />
-          {#if isDateValid && dateOfBirthday}
+            closeOnSelection="{true}" />
+
+          {#if $dateOfBirth.value}
             <span class="text-6xl font-enso"
               ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
+          {:else}
+            <span class="text-6xl font-enso"
+              ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
           {/if}
-          {#if (isDateValid && !dateOfBirthday) || (!isDateValid && dateOfBirthday)}
+        </div>
+      </div>
+
+      <div class="flex flex-col items-start w-full mb-2 text-sm">
+        <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
+        <div class="flex items-center w-full h-12 pr-8 mb-2">
+          <button
+            class="px-8 overflow-hidden transition-all transform btn btn-primary btn-block"
+            on:click="{() => handleClick('openQRCode')}"
+            disabled="{$inviteUrl}">
+            <!-- {$_("dapps.o-homepage.components.survey.button.scanInviteNow")} -->
+            Scan Invite Now
+          </button>
+          <input type="hidden" bind:value="{$invite.value}" />
+
+          {#if $inviteUrl}
+            <span class="text-6xl font-enso"
+              ><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
+          {:else}
             <span class="text-6xl font-enso"
               ><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
           {/if}
         </div>
       </div>
     </div>
-    {#if !isValid}
-      <div class="text-sm text-info text-center"><Label key="dapps.o-homepage.components.survey.userDataCollection.info" /></div>
+    {#if !$myForm.valid}
+      <div class="text-sm text-center text-info">
+        <Label key="dapps.o-homepage.components.survey.userDataCollection.info" />
+      </div>
     {/if}
-    <div class="buttons-container flex flex-row justify-around w-full mt-10 mb-5 text-center">
+    <div class="flex flex-row justify-around w-full mt-10 mb-5 text-center">
       <div>
         <button
           class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
@@ -145,11 +186,13 @@ $: {
           {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
       </div>
       <div>
-        <button
-          class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
-          on:click="{() => handleClick('next')}"
-          disabled="{!isValid}">
-          {$_("dapps.o-homepage.components.survey.button.next")}</button>
+        {#if $myForm.dirty}
+          <button
+            class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
+            on:click="{() => handleClick('next')}"
+            disabled="{!$myForm.valid}">
+            {$_("dapps.o-homepage.components.survey.button.next")}</button>
+        {/if}
       </div>
     </div>
   </div>
@@ -160,8 +203,5 @@ $: {
   height: 45px !important;
   width: 320px !important;
   border-radius: var(--rounded-btn, 0.5rem) !important;
-}
-:global(.buttons-container) {
-  margin-top: 80px;
 }
 </style>

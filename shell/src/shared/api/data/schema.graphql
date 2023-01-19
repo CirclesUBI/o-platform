@@ -877,6 +877,7 @@ type Mutation {
   redeemClaimedInvitation: RedeemClaimedInvitationResult!
   tagTransaction(transactionHash: String!, tag: CreateTagInput!): TagTransactionResult!
   sendMessage(fromSafeAddress: String, toSafeAddress: String!, content: String!): SendMessageResult!
+  surveyData(data: SurveyDataInput!): SurveyDataResult!
   requestSessionChallenge(address: String!): String!
   verifySessionChallenge(challenge: String!, signature: String!): ExchangeTokenResponse
   importOrganisationsOfAccount: [Organisation!]!
@@ -890,6 +891,20 @@ type Mutation {
   setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
   shareLink(targetType: LinkTargetType!, targetKey: String!): String!
   markAsRead(entries: [Int!]!): MarkAsReadResult!
+}
+
+input SurveyDataInput {
+  sessionId: String!
+  allConsentsGiven: Boolean!
+  userType: String!
+  gender: String!
+  dateOfBirth: Date!
+}
+
+type SurveyDataResult {
+  success: Boolean!
+  error: String
+  surveyData: SurveyData
 }
 
 enum LinkTargetType {
@@ -1006,4 +1021,13 @@ enum QueryAllBusinessesOrderOptions {
 
 type Subscription {
   events: NotificationEvent!
+}
+
+type SurveyData {
+  id: Int
+  sesssionId: String!
+  allConsentsGiven: Boolean!
+  userType: String!
+  gender: String!
+  dateOfBirth: Date!
 }
