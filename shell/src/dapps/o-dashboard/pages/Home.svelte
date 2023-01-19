@@ -62,7 +62,7 @@ onMount(init);
       <DashboardColorCard
         color="marketplace"
         link="/market/listing"
-        blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
+        blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
         icon="marketlisting"
         title="dapps.o-dashboard.pages.home.marketlisting" />
     </div>
