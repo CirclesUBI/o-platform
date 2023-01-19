@@ -13,7 +13,8 @@ function validateCheckBox() {
 
 const exchange = field("exchange", false, [required(), validateCheckBox()]);
 const dataCollect = field("dataCollect", false, [required(), validateCheckBox()]);
-const myForm = form(exchange, dataCollect);
+const onlyFromFriends = field("onlyFromFriends", false, [required(), validateCheckBox()]);
+const myForm = form(exchange, dataCollect, onlyFromFriends);
 myForm.validate();
 
 function handleClick(button) {
@@ -23,6 +24,7 @@ function handleClick(button) {
     if ($myForm.valid) {
       $surveyConsents.exchangeConsent = $exchange.value;
       $surveyConsents.dataCollectConsent = $dataCollect.value;
+      $surveyConsents.onlyFromFriends = $onlyFromFriends.value;
       $surveyConsents.allConsentsGiven = true;
       sessionStorage.setItem("surveyConsentPage2", "true");
       push("#/homepage/survey/4");
@@ -56,6 +58,16 @@ function handleClick(button) {
       <input id="check-2" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$dataCollect.value}" />
       <label for="check-2" class="cursor-pointer">
         <Label key="dapps.o-homepage.components.survey.informedConsent.fifthCheckbox" />
+      </label>
+    </div>
+    <div class="mx-10 my-5 uppercase">
+      <input
+        id="check-3"
+        type="checkbox"
+        class="mr-2 checkbox checkbox-warning"
+        bind:checked="{$onlyFromFriends.value}" />
+      <label for="check-3" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.sixthCheckbox" />
       </label>
     </div>
     {#if !$myForm.valid}

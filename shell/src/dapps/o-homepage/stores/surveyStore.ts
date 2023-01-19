@@ -6,6 +6,7 @@ export const surveyConsents = writable({
   endingConsent: false,
   exchangeConsent: false,
   dataCollectConsent: false,
+  onlyFromFriends: false,
   allConsentsGiven: false,
 });
 
