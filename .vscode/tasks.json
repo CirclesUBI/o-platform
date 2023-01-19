@@ -1,14 +1,34 @@
 {
-  "version": "2.0.0",
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.1",
   "tasks": [
     {
-      "type": "npm",
-      "script": "build:libs",
-      "path": "shell/",
+      "label": "Run Bali Build",
+      "type": "shell",
+      "command": "./build_bali.sh",
+      "args": ["${env:API_ENDPOINT}"],
+      "windows": {
+        "command": ".\\build_bali.cmd"
+      },
       "group": "build",
-      "problemMatcher": [],
-      "label": "npm: build:libs - shell",
-      "detail": "cd ../ && sh build_libs.sh && cd shell && npm run devs"
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Compile GraphQL",
+      "type": "shell",
+      "command": "./graphql_build.sh",
+      "windows": {
+        "command": ".\\graphql_build.sh"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }
