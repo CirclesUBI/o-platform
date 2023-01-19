@@ -7633,7 +7633,7 @@ is-potential-custom-element-name@^1.0.1:
   resolved "https://registry.npmjs.org/is-potential-custom-element-name/-/is-potential-custom-element-name-1.0.1.tgz"
   integrity sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==
 
-is-promise@4.0.0:
+is-promise@4.0.0, is-promise@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/is-promise/-/is-promise-4.0.0.tgz"
   integrity sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==
@@ -12567,6 +12567,13 @@ svelte-flagpack@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/svelte-flagpack/-/svelte-flagpack-1.0.0.tgz"
   integrity sha512-125+Da/CSptnVfc5a5RxgpFi+Q1t5+Y34tjMm2nUGDUHzOz05gyzCLAFxqmA5vukoVcbkqWMjF8h7I97wSZOpg==
+
+svelte-forms@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/svelte-forms/-/svelte-forms-2.3.1.tgz#be1ddd096700a7dca6e457983086801d23a918f9"
+  integrity sha512-ExX9PM0JgvdOWlHl2ztD7XzLNPOPt9U5hBKV8sUAisMfcYWpPRnyz+6EFmh35BOBGJJmuhTDBGm5/7seLjOTIA==
+  dependencies:
+    is-promise "^4.0.0"
 
 svelte-hmr@^0.10.3:
   version "0.10.3"
