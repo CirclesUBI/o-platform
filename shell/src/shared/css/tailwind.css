@@ -36,6 +36,30 @@ body {
     @apply border-opacity-20 bg-opacity-20 text-opacity-80;
   }
 
+  .btn-primary {
+    @apply text-secondary;
+    @apply bg-primary;
+  }
+
+  .btn-outline {
+    @apply text-secondary;
+    @apply bg-white;
+  }
+
+  .btn-secondary {
+    @apply text-secondary;
+    @apply bg-white;
+    @apply border-primary;
+  }
+
+  .btn-secondary:hover {
+    @apply text-white;
+  }
+
+  .btn-square {
+    @apply rounded-xl;
+  }
+
   .link-primary {
     @apply text-base;
   }
