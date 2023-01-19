@@ -156,6 +156,10 @@ module.exports = {
         dappbackground: {
           DEFAULT: "#F9F9FB",
         },
+        marketplace: {
+          DEFAULT: "#70BD9E",
+          light: "#89D4BA",
+        },
         market: {
           DEFAULT: "#70BD9E",
           light: "#89D4BA",
