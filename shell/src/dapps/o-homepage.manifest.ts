@@ -5,6 +5,7 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import Terms from "./o-homepage/pages/Terms.svelte";
 import Privacy from "./o-homepage/pages/Privacy.svelte";
 import Survey from "./o-homepage/pages/Survey.svelte";
+import ScanInvite from "./o-homepage/molecules/ScanInvite.svelte";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -81,6 +82,16 @@ const survey: Page<any, DappState> = {
   component: Survey,
 };
 
+export const scanInvite: Page<any, DappState> = {
+  type: "page",
+  pageBackgroundClass: "bg-cpurple",
+  isSystem: true,
+  position: "modal",
+  routeParts: ["=scanInvite"],
+  title: "Scan to trust",
+  component: ScanInvite,
+};
+
 export interface DappState {
   // put state here
 }
@@ -105,5 +116,5 @@ export const homepage: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, invite, login, terms, privacy, externalChat, survey],
+  routables: [index, invite, login, terms, privacy, externalChat, survey, scanInvite],
 };

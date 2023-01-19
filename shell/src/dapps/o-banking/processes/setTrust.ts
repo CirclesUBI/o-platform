@@ -14,7 +14,7 @@ import TrustChangeConfirmation from "../molecules/TrustChangeConfirmation.svelte
 import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
 import type { TransactionReceipt } from "web3-core";
 import { Environment } from "../../../shared/environment";
-import { ok, err, Result } from "neverthrow";
+
 import {
   Profile,
   ProfilesByCirclesAddressDocument,
@@ -45,67 +45,37 @@ export type SetTrustContext = ProcessContext<SetTrustContextData>;
 
 const editorContent: { [x: string]: EditorViewContext } = {
   recipient: {
-    title: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.recipient.title"
-    ),
+    title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.recipient.title"),
     description: "",
-    placeholder: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.recipient.placeholder"
-    ),
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.recipient.submitButtonText"
-    ),
+    placeholder: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.recipient.placeholder"),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.recipient.submitButtonText"),
   },
   limit: {
-    title: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.limit.title"
-    ),
+    title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.limit.title"),
     description: "",
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.limit.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.limit.submitButtonText"),
   },
   message: {
-    title: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.message.title"
-    ),
+    title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.message.title"),
     description: "",
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.message.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.message.submitButtonText"),
   },
   confirm: {
-    title: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.confirm.title"
-    ),
+    title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.confirm.title"),
     description: "",
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.confirm.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.confirm.submitButtonText"),
   },
   success: {
-    title: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.success.title"
-    ),
+    title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.success.title"),
     description: "",
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.setTrust.editorContent.success.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.success.submitButtonText"),
   },
 };
 
-export async function fSetTrust(
-  context: ProcessContext<SetTrustContextData>
-): Promise<TransactionReceipt> {
-  const gnosisSafeProxy = new GnosisSafeProxy(
-    RpcGateway.get(),
-    context.data.safeAddress
-  );
+export async function fSetTrust(context: ProcessContext<SetTrustContextData>): Promise<TransactionReceipt> {
+  const gnosisSafeProxy = new GnosisSafeProxy(RpcGateway.get(), context.data.safeAddress);
 
-  return await new CirclesHub(
-    RpcGateway.get(),
-    Environment.circlesHubAddress
-  ).setTrust(
+  return await new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress).setTrust(
     context.data.privateKey,
     gnosisSafeProxy,
     context.data.trustReceiver,
@@ -138,18 +108,14 @@ const processDefinition = (processId: string) =>
         field: "trustReceiver",
         onlyWhenDirty: false,
         params: {
-          view: editorContent.recipient = {
-            title: window.o.i18n(
-              "dapps.o-banking.processes.setTrust.editorContent.recipient.title"
-            ),
+          view: (editorContent.recipient = {
+            title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.recipient.title"),
             description: "",
-            placeholder: window.o.i18n(
-              "dapps.o-banking.processes.setTrust.editorContent.recipient.placeholder"
-            ),
+            placeholder: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.recipient.placeholder"),
             submitButtonText: window.o.i18n(
               "dapps.o-banking.processes.setTrust.editorContent.recipient.submitButtonText"
             ),
-          },
+          }),
           placeholder: editorContent.recipient.placeholder,
           submitButtonText: editorContent.recipient.submitButtonText,
         },
@@ -161,9 +127,7 @@ const processDefinition = (processId: string) =>
         id: "checkTrustLimit",
         always: [
           {
-            cond: (context) =>
-              context.data.trustReceiver.toLowerCase() ==
-              context.data.safeAddress.toLowerCase(),
+            cond: (context) => context.data.trustReceiver.toLowerCase() == context.data.safeAddress.toLowerCase(),
             actions: (context) => {
               context.messages["trustReceiver"] = window.o.i18n(
                 "dapps.o-banking.processes.setTrust.checkTrustLimit.contextMessage"
@@ -172,9 +136,7 @@ const processDefinition = (processId: string) =>
             target: "#trustReceiver",
           },
           {
-            cond: (context) =>
-              context.data.trustLimit !== undefined &&
-              context.data.trustLimit !== null,
+            cond: (context) => context.data.trustLimit !== undefined && context.data.trustLimit !== null,
             target: "#setTrust",
           },
           {
@@ -190,25 +152,21 @@ const processDefinition = (processId: string) =>
         entry: () => {
           window.o.publishEvent(<PlatformEvent>{
             type: "shell.progress",
-            message: window.o.i18n(
-              "dapps.o-banking.processes.setTrust.setTrust.message"
-            ),
+            message: window.o.i18n("dapps.o-banking.processes.setTrust.setTrust.message"),
           });
         },
         invoke: {
           src: async (context) => {
             try {
-              const result = await ApiClient.query<
-                Profile,
-                ProfilesByCirclesAddressQueryVariables
-              >(ProfilesByCirclesAddressDocument, {
-                circlesAddresses: [context.data.trustReceiver],
-              });
+              const result = await ApiClient.query<Profile, ProfilesByCirclesAddressQueryVariables>(
+                ProfilesByCirclesAddressDocument,
+                {
+                  circlesAddresses: [context.data.trustReceiver],
+                }
+              );
               context.data.profile = result;
             } catch (error) {
-              console.info(
-                `Could not load Profile for circlesAddress: ${context.data.trustReceiver}`
-              );
+              console.info(`Could not load Profile for circlesAddress: ${context.data.trustReceiver}`);
             }
 
             return await fSetTrust(context);
@@ -228,15 +186,13 @@ const processDefinition = (processId: string) =>
         component: TrustChangeConfirmation,
         params: (context) => {
           return {
-            view: editorContent.success = {
-              title: window.o.i18n(
-                "dapps.o-banking.processes.setTrust.editorContent.success.title"
-              ),
+            view: (editorContent.success = {
+              title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.success.title"),
               description: "",
               submitButtonText: window.o.i18n(
                 "dapps.o-banking.processes.setTrust.editorContent.success.submitButtonText"
               ),
-            },
+            }),
             profile: context.data.profile,
             trustLimit: context.data.trustLimit,
             submitButtonText: editorContent.success.submitButtonText,
@@ -253,16 +209,14 @@ const processDefinition = (processId: string) =>
         field: "__",
         component: HtmlViewer,
         params: {
-          view: editorContent.message = {
-            title: window.o.i18n(
-              "dapps.o-banking.processes.setTrust.editorContent.message.title"
-            ),
+          view: (editorContent.message = {
+            title: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.message.title"),
             description: "",
             submitButtonText: window.o.i18n(
               "dapps.o-banking.processes.setTrust.editorContent.message.submitButtonText"
-            )},
-          html: () =>
-            "Oopsie, Something went wrong, please close this window and try again. ",
+            ),
+          }),
+          html: () => "Oopsie, Something went wrong, please close this window and try again. ",
           hideNav: false,
         },
       }),
@@ -273,9 +227,7 @@ const processDefinition = (processId: string) =>
           if (context.data.successAction) {
             context.data.successAction(context.data);
           }
-          return window.o.i18n(
-            "dapps.o-banking.proccesses.setTrust.success.return"
-          );
+          return window.o.i18n("dapps.o-banking.proccesses.setTrust.success.return");
         },
       },
     },
