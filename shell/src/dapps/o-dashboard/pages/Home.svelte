@@ -53,18 +53,18 @@ onMount(init);
         title="dapps.o-dashboard.pages.home.banking" />
 
       <DashboardColorCard
-        color="contacts"
-        link="/contacts"
-        blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
-        icon="dashfriends"
-        title="dapps.o-dashboard.pages.home.contacts" />
-
-      <DashboardColorCard
         color="marketplace"
         link="/market/listing"
         blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
         icon="marketlisting"
         title="dapps.o-dashboard.pages.home.marketlisting" />
+
+      <DashboardColorCard
+        color="contacts"
+        link="/contacts"
+        blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
+        icon="dashfriends"
+        title="dapps.o-dashboard.pages.home.contacts" />
     </div>
   </div>
 </div>
