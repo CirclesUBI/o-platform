@@ -3,8 +3,7 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import { NavigationManifest } from "@o-platform/o-interfaces/src/navigationManifest";
 import Label from "../../../shared/atoms/Label.svelte";
-
-export let navigation: NavigationManifest;
+import { surveyConsents, surveyData, inviteUrl } from "../stores/surveyStore";
 </script>
 
 <div class="p-1 pr-4 -mt-6 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
@@ -21,7 +20,7 @@ export let navigation: NavigationManifest;
   <div class="mb-8 text-xl text-center uppercase mt-14">
     <div class="ml-2 text-5xl text-white uppercase font-heading">SUCCESS</div>
   </div>
-  <div class="text-xl text-center uppercase whitespace-pre-line">LOG IN TODO</div>
+  <div class="text-xl text-center uppercase whitespace-pre-line">LOG IN TODO: {$inviteUrl}</div>
 </div>
 
 <style>

@@ -20,6 +20,8 @@ if (inviteCode) {
   localStorage.setItem("circlesInvite", inviteCode);
   window.runInitMachine();
 }
+
+sessionStorage.getItem("circlesKey");
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
