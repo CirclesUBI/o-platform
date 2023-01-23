@@ -321,6 +321,7 @@ function setNav(navArgs: GenerateNavManifestArgs) {
   let args = {
     ...navArgs,
     showLogin: dapp.anonymous && !layout.dialogs.center,
+    hideFooterGradient: dapp.hideFooterGradient
   };
   navigation = generateNavManifest(args, null);
   if (dapp.dappId == "events:1") {

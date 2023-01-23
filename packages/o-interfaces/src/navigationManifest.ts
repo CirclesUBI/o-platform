@@ -21,4 +21,5 @@ export interface NavigationManifest {
     center?: NavigationElement;
   };
   loginPill?: NavigationElement;
+  hideFooterGradient?: boolean;
 }
