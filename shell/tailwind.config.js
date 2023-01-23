@@ -36,6 +36,12 @@ module.exports = {
         heading: "#5B1E63",
         DEFAULT: "#666666",
         base: "#666666",
+        blue: {
+          DEFAULT: "#141F59",
+        },
+        grey: {
+          DEFAULT: "#999999",
+        },
         dark: {
           DEFAULT: "#0A2262",
           light: "#153587",

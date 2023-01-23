@@ -81,18 +81,21 @@ async function shareLink() {
         {/if}
       </div>
     </div>
-    <h1 class="mt-3 font-bold font-heading">{business.name}</h1>
-    <p>{business.description ? business.description : ""}</p>
+    <h1 class="mt-3 font-bold font-heading text-blue">{business.name}</h1>
+    <p class="text-black">{business.description ? business.description : ""}</p>
 
     <div class="flex flex-row w-full mt-3">
-      <p class="flex-grow text-gray-400">{business.businessCategory ? business.businessCategory : ""}</p>
+      <p class="flex-grow text-xl text-grey font-heading">
+        {business.businessCategory ? business.businessCategory : ""}
+      </p>
       <button
-        class="self-end -mt-1 btn btn-outline btn-sm border-gray-500 text-gray-500"
+        class="self-end -mt-1 text-base font-heading btn btn-outline btn-sm"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
         {#if !showShareOptions}
-          <span><Icons icon="share" customClass="w-6 h-6" /></span><p class="pl-1">Share</p>
+          <span><Icons icon="share" customClass="w-6 h-6" /></span>
+          <p class="pl-1">Share</p>
         {:else}
           <span>X </span>
         {/if}
@@ -100,16 +103,16 @@ async function shareLink() {
     </div>
 
     {#if showShareOptions}
-      <div class="flex flex-row w-full mt-6 justify-between pr-6 pl-4">
-        <div class="w-7 h-7 text-center cursor-pointer copylink rounded-full bg-light-light">
+      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-6">
+        <div class="text-center rounded-full cursor-pointer w-7 h-7 copylink bg-light-light">
           <CopyClipboard text="{link}" let:copy>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div on:click="{copy}">
-              <Icon name="link" class="inline self-center w-6 h-6 heroicon smallicon" />
+              <Icon name="link" class="self-center inline w-6 h-6 heroicon smallicon" />
             </div>
           </CopyClipboard>
         </div>
-        <div class="w-7 h-7 text-center cursor-pointer copylink rounded-full bg-light-light">
+        <div class="text-center rounded-full cursor-pointer w-7 h-7 copylink bg-light-light">
           <a
             href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
             target="_blank"
