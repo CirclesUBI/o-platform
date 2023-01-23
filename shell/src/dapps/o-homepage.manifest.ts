@@ -111,5 +111,6 @@ export const homepage: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
+  hideFooterGradient: true,
   routables: [index, invite, login, terms, privacy, externalChat, survey, scanInvite],
 };

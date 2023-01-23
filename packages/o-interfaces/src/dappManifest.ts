@@ -49,6 +49,8 @@ export interface DappManifest<TState extends { [x: string]: any }> extends Routa
   jumplist?: Jumplist<any, TState>;
   navigation?: NavigationManifest;
 
+  hideFooterGradient?: boolean;
+
   /**
    * If the auth needs to initialize things before it can be used,
    * then these steps must be performed in this factory.
