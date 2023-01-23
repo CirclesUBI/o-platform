@@ -1,17 +1,15 @@
 <script lang="ts">
 import NavPill from "./Components/NavPill.svelte";
 import LoginPill from "./Components/LoginPill.svelte";
-import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import Icons from "../Icons.svelte";
-// import { icons as Icon } from "@iconify/icons-heroicons";
-import { push } from "svelte-spa-router";
+import {NavigationManifest} from "@o-platform/o-interfaces/dist/navigationManifest";
 
-export let navigation: any;
+export let navigation: NavigationManifest;
 export let width: string = "w-full";
 </script>
 
 <footer
   id="nextnav"
+  class:nextnav={!navigation.hideFooterGradient}
   class="fixed bottom-0 right-0 z-50 grid justify-center {width} h-20
   grid-cols-3 pb-3 auto-cols-max place-content-center text-dark">
   {#if navigation.leftSlot}
@@ -44,7 +42,8 @@ export let width: string = "w-full";
 </footer>
 
 <style>
-#nextnav {
-  --tw-text-opacity: 1;
-}
+  .nextnav {
+    --tw-text-opacity: 1;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+  }
 </style>
