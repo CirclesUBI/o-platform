@@ -371,7 +371,7 @@ body {
 
   input[type="radio"],
   input[type="checkbox"] {
-    vertical-align: sub;
+    vertical-align: middle;
   }
   .navbar {
     padding: 0;

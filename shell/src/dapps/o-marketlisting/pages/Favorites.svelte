@@ -15,7 +15,7 @@ export let routable: Routable;
 
 <div style="visibility: hidden;" class="bg-market"></div>
 
-<div class="px-4 mx-auto mt-20 text-center md:w-2/3 xl:w-1/2 font-heading text-marketplace">
+<div class="px-4 mx-auto text-center mt-14 md:w-2/3 xl:w-1/2 font-heading text-marketplace">
   <h1 class="text-5xl">
     <Label key="dapps.o-marketplace.pages.favorites.title" />
   </h1>
