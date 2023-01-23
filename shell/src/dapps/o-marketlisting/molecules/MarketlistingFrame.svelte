@@ -3,7 +3,8 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
-import Icon from "@krowten/svelte-heroicons/Icon.svelte";
+
+import Icons from "../../../shared/molecules/Icons.svelte";
 import { QueryAllBusinessesOrderOptions } from "src/shared/api/data/types";
 import { BusinessCategory } from "../../../shared/api/data/types";
 import { marketStore } from "../stores/marketStore";
@@ -29,71 +30,26 @@ let sortedBy: SortedByTypes = "Most popular";
 function filterCategoriesChange(event: any & { detail: BusinessCategory[] }) {
   $marketFilterStore = event.detail.map((o) => o.id);
   marketStore.reload($marketStore.orderBy, $marketFilterStore);
+  console.log("MAR", marketStore);
 }
 </script>
 
 <div style="visibility: hidden;" class="bg-market"></div>
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-<section class="justify-center align-middle">
-  <div class="flex justify-around p-4 pt-0 mx-auto md:w-2/3 xl:w-1/2">
-    <CategoryDropDown2 placeholder="Filter" on:change="{filterCategoriesChange}" allowMultiselect="{true}" />
-    <!--<MarketDropdown dropdownItems="{dropdownItems}"/>-->
-    <div class="w-40 dropdown dropdown-end">
-      <button class="w-40 text-black bg-white btn border-1"
-        ><span><Icon name="chevron-down" class="w-6 h-6" /></span>{$marketStore.orderBy}</button>
-      <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-        <li>
-          <button
-            class="block w-full"
-            on:click="{() => {
-              sortedBy = 'Most popular';
-              marketStore.reload(QueryAllBusinessesOrderOptions.MostPopular, $marketFilterStore);
-            }}"
-            >Sort by most popular
-          </button>
-        </li>
-        <li>
-          <button
-            class="block w-full"
-            on:click="{() => {
-              sortedBy = 'Nearest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $marketFilterStore);
-            }}"
-            >Sort by nearest
-          </button>
-        </li>
-        <li>
-          <button
-            class="block w-full"
-            on:click="{() => {
-              sortedBy = 'Newest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Newest, $marketFilterStore);
-            }}"
-            >Sort by newest
-          </button>
-        </li>
-        <li>
-          <button
-            class="block w-full"
-            on:click="{() => {
-              sortedBy = 'Oldest';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Oldest, $marketFilterStore);
-            }}"
-            >Sort by oldest
-          </button>
-        </li>
-        <li>
-          <button
-            class="block w-full"
-            on:click="{() => {
-              sortedBy = 'Alphabetical';
-              marketStore.reload(QueryAllBusinessesOrderOptions.Alphabetical, $marketFilterStore);
-            }}"
-            >Sort by name
-          </button>
-        </li>
-      </ul>
+<section class="justify-center p-4 pt-0 mx-auto text-base align-middle md:w-2/3 xl:w-1/2">
+  <div class="mb-4">
+    Filter:
+    <div class="mr-2 text-xs badge badge-outline">
+      Farm/Garden <span class="pl-2 text-cpurple"><Icons icon="closex" size="{2}" /></span>
     </div>
+    <div class="mr-2 text-xs badge badge-outline whitespace-nowrap">
+      Health Services <span class="pl-2 text-cpurple"><Icons icon="closex" size="{2}" /></span>
+    </div>
+    <button class="btn btn-xs btn-circle btn-outline">+</button>
+  </div>
+  <div class="text-right whitespace-nowrap">
+    Sort by: <span class="pl-2 text-black">nearest</span>
+    <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span>
   </div>
 
   <div class="flex flex-wrap content-center p-4 mx-auto mb-20 -mt-3 md:w-2/3 xl:w-1/2 justify-evenly">
