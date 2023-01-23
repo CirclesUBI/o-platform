@@ -17,14 +17,11 @@ export interface DappState {
 export const translation: DappManifest<DappState> = {
   type: "dapp",
   dappId: "translation:1",
-  isSingleton: true,
-  isHidden: false,
   icon: "check",
   title: "translation",
   routeParts: ["=translation"],
   defaultRoute: ["translations"],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {

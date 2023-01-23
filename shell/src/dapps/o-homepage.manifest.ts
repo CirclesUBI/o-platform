@@ -99,16 +99,11 @@ export interface DappState {
 export const homepage: DappManifest<DappState> = {
   type: "dapp",
   dappId: "homepage:1",
-  isSingleton: true,
-  isHidden: true,
   icon: "home",
   anonymous: true,
   title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   routeParts: [],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
-  hideFooter: false,
-  isFullWidth: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {

@@ -47,8 +47,6 @@ export interface DappState {
 export const coop: DappManifest<DappState> = {
   type: "dapp",
   dappId: "coops:1",
-  isSingleton: true,
-  isHidden: true,
   icon: "passport",
   title: "Coops",
   routeParts: ["=coops"],
@@ -143,7 +141,6 @@ export const coop: DappManifest<DappState> = {
       return list;
     },
   },
-  isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {
