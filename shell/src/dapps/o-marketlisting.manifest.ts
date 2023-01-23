@@ -68,8 +68,6 @@ export interface DappState {
 export const marketlisting: DappManifest<DappState> = {
   type: "dapp",
   dappId: "market:1",
-  isSingleton: true,
-  isHidden: false,
   icon: "check",
   title: "Market",
   routeParts: ["market"],
@@ -84,7 +82,6 @@ export const marketlisting: DappManifest<DappState> = {
       },
     },
   },
-  isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {

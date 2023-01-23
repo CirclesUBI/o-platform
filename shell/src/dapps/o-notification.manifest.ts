@@ -63,13 +63,10 @@ export const redeemedInvitations: Page<any, NotificationDappState> = {
 export const notifications: DappManifest<NotificationDappState> = {
   type: "dapp",
   dappId: "notifications:1",
-  isSingleton: true,
   icon: "group",
   title: "Notifications",
   routeParts: ["=notifications"],
   defaultRoute: ["all"],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
-  hideFooter: true,
   routables: [index, transactions, trusts, redeemedInvitations, externalChat],
 };
