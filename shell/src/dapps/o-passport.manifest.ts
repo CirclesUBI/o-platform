@@ -37,7 +37,7 @@ const index: Page<any, DappState> = {
         icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
-      },
+      }
     },
   },
 };

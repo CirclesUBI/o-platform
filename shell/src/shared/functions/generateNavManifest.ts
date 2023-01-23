@@ -15,6 +15,7 @@ export type GenerateNavManifestArgs = {
   canGoBack?: boolean;
   canSkip?: boolean;
   showLogin?: boolean;
+  hideFooterGradient?: boolean;
 };
 
 function applyOverrides(leftStatic:any, leftSlotOverride: NavigationElement) {
@@ -217,6 +218,8 @@ export function generateNavManifest(args: GenerateNavManifestArgs, prompt: Promp
       };
     }
   }
+
+  newManifest.hideFooterGradient = args.hideFooterGradient;
 
   return newManifest;
 }
