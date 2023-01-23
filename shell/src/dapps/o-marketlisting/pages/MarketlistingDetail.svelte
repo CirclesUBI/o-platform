@@ -81,7 +81,7 @@ async function shareLink() {
         {/if}
       </div>
     </div>
-    <h1 class="mt-3 font-bold font-heading text-blue">{business.name}</h1>
+    <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
     <p class="text-black">{business.description ? business.description : ""}</p>
 
     <div class="flex flex-row w-full mt-3">
