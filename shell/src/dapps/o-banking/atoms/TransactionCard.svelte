@@ -14,8 +14,9 @@ import {
   ProfileEvent,
 } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import {onMount} from "svelte";
-
+import { onMount } from "svelte";
+import Icons from "../../../shared/molecules/Icons.svelte";
+import { isMobile } from "../../../shared/functions/isMobile";
 export let event: ProfileEvent;
 
 let path: any;
@@ -131,6 +132,7 @@ $: {
 function loadDetailPage(path) {
   push(`#/banking/transactions/${path}`);
 }
+let textCutoff = isMobile() ? 16 : 42;
 </script>
 
 <div role="presentation" on:click="{() => loadDetailPage(event.transaction_hash)}" class="cursor-pointer">
@@ -148,5 +150,48 @@ function loadDetailPage(path) {
       profileLink: true,
       mobileTextCutoff: 19,
       endTextBigClass: amountTime.startsWith('-') ? 'text-negative' : undefined,
-    }}" />
+    }}">
+    <div slot="itemCardBody" class="w-full">
+      <div class="flex-col flex-grow">
+        <div class="flex flex-row items-center justify-between px-3 text-left">
+          <div class="flex-grow min-w-0">
+            <h2 class="overflow-hidden text-xl text-heading font-heading whitespace-nowrap overflow-ellipsis">
+              {#if event.unread}
+                <b
+                  >{targetProfile.displayName
+                    ? targetProfile.displayName.length >= textCutoff
+                      ? targetProfile.displayName.substr(0, textCutoff) + "..."
+                      : targetProfile.displayName
+                    : ""}</b>
+              {:else}
+                {targetProfile.displayName
+                  ? targetProfile.displayName.length >= textCutoff
+                    ? targetProfile.displayName.substr(0, textCutoff) + "..."
+                    : targetProfile.displayName
+                  : ""}
+              {/if}
+            </h2>
+          </div>
+          <div
+            class="self-end text-right pl-2 text-lg {amountTime.startsWith('-')
+              ? 'text-negative'
+              : 'text-positive'} whitespace-nowrap">
+            <span>{amountTime}</span>
+            <Icons icon="timeCircle" size="{4}" customClass="inline inline-icon " />
+          </div>
+        </div>
+        <div class="flex flex-row items-center justify-between px-3 -mt-1 text-left">
+          <div class="flex-grow leading-none">
+            <span class="inline-block text-xs">
+              {messageString
+                ? messageString.length >= textCutoff + 6
+                  ? messageString.substr(0, textCutoff + 6) + "..."
+                  : messageString
+                : ""}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ItemCard>
 </div>

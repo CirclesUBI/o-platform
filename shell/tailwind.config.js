@@ -36,6 +36,12 @@ module.exports = {
         heading: "#5B1E63",
         DEFAULT: "#666666",
         base: "#666666",
+        blue: {
+          DEFAULT: "#141F59",
+        },
+        grey: {
+          DEFAULT: "#999999",
+        },
         dark: {
           DEFAULT: "#0A2262",
           light: "#153587",
@@ -79,7 +85,7 @@ module.exports = {
           dark: "#14C892",
         },
         info: {
-          DEFAULT: "#41C7F1",
+          DEFAULT: "#4EC8ED",
           light: "#FFCA62",
           lighter: "#FFDE88",
           lightest: "#FFF6D7",
@@ -119,16 +125,24 @@ module.exports = {
           light: "#F75F9E",
         },
         banking: {
-          DEFAULT: "#FF5530",
+          DEFAULT: "#F26240",
           light: "#FF8874",
         },
         contacts: {
           DEFAULT: "#3CC1CA",
           light: "#49D7DC",
         },
+        marketplace: {
+          DEFAULT: "#70BD9E",
+          light: "#89D4BA",
+        },
+        market: {
+          DEFAULT: "#70BD9E",
+          light: "#89D4BA",
+        },
         notifications: {
-          DEFAULT: "#1cca56",
-          light: "#3cca56",
+          DEFAULT: "#5B1E63",
+          light: "#5B1E63",
         },
         home: {
           DEFAULT: "#5B1E63",
@@ -155,10 +169,6 @@ module.exports = {
         },
         dappbackground: {
           DEFAULT: "#F9F9FB",
-        },
-        market: {
-          DEFAULT: "#70BD9E",
-          light: "#89D4BA",
         },
       },
       fontSize: {

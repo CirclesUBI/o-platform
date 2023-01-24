@@ -5,9 +5,9 @@ import OpeningHoursWindowEditor, { ValidationEventData } from "./OpeningHoursWin
 import { OpeningHourDay } from "../models/openingHourDay";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
-import generateRandomUid from "../../../shared/functions/generateRandomUid";
-import {_} from "svelte-i18n";
-import {createEventDispatcher} from "svelte";
+import { generateUID } from "../../../shared/functions/generateRandomUid";
+import { _ } from "svelte-i18n";
+import { createEventDispatcher } from "svelte";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");
 
@@ -16,7 +16,7 @@ let editElementId: string;
 
 function addWindow() {
   openingHoursDay.windows.push({
-    id: Math.random().toString(),
+    id: generateUID(),
     isEmpty: true,
     isPersisted: false,
     from: new HourAndMinute(),
@@ -41,12 +41,12 @@ function sortWindowsByStartMinute(windows: OpeningHourWindow[]) {
 }
 
 function commitDay(validationEventData: ValidationEventData, onlyValidate?: boolean) {
-  const validationCopy: OpeningHourWindow[] = openingHoursDay.windows.map(o => {
+  const validationCopy: OpeningHourWindow[] = openingHoursDay.windows.map((o) => {
     return {
       ...o,
       from: new HourAndMinute(o.from.hour, o.from.minute),
-      to: new HourAndMinute(o.to.hour, o.to.minute)
-    }
+      to: new HourAndMinute(o.to.hour, o.to.minute),
+    };
   });
   sortWindowsByStartMinute(validationCopy);
 
@@ -66,16 +66,20 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
   }
 
   const firstElement = validationCopy[0];
-  if (validationEventData.toMinute <= firstElement.from.minutes
-          && validationEventData.toMinute != validationEventData.fromMinute) {
+  if (
+    validationEventData.toMinute <= firstElement.from.minutes &&
+    validationEventData.toMinute != validationEventData.fromMinute
+  ) {
     // Ends before the first element starts
     commit();
     return true;
   }
 
   const lastElement = validationCopy[validationCopy.length - 1];
-  if (validationEventData.fromMinute >= lastElement.to.minutes
-          && validationEventData.toMinute != validationEventData.fromMinute) {
+  if (
+    validationEventData.fromMinute >= lastElement.to.minutes &&
+    validationEventData.toMinute != validationEventData.fromMinute
+  ) {
     // Starts after the last element ends
     commit();
     return true;
@@ -96,16 +100,24 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
     }
 
     // Elements cannot contain other elements
-    if (validationEventData.id != c.id && validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
+    if (
+      validationEventData.id != c.id &&
+      validationEventData.fromMinute < c.from.minutes &&
+      validationEventData.toMinute > c.to.minutes
+    ) {
       validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
       return false;
     }
 
     // Elements cannot intersect with other elements
     const endIntersects =
-            (validationEventData.id != c.id && validationEventData.toMinute >= c.from.minutes && validationEventData.toMinute <= c.to.minutes);
+      validationEventData.id != c.id &&
+      validationEventData.toMinute >= c.from.minutes &&
+      validationEventData.toMinute <= c.to.minutes;
     const beginIntersects =
-            (validationEventData.id != c.id && validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes);
+      validationEventData.id != c.id &&
+      validationEventData.fromMinute >= c.from.minutes &&
+      validationEventData.fromMinute <= c.to.minutes;
 
     if (beginIntersects || endIntersects) {
       validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
@@ -122,7 +134,7 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
     return true;
   }
 }
-let randomId: string = generateRandomUid();
+let randomId: string = generateUID();
 </script>
 
 <div class="flex flex-col">
@@ -132,13 +144,13 @@ let randomId: string = generateRandomUid();
       type="checkbox"
       class="mr-2 checkbox checkbox-warning"
       bind:checked="{openingHoursDay.isOpen}"
-      on:change={() => {
+      on:change="{() => {
         if (!openingHoursDay.windows.length) {
           addWindow();
         }
         openingHoursDay = openingHoursDay;
-        eventDispatcher("change", openingHoursDay);
-      }} />
+        eventDispatcher('change', openingHoursDay);
+      }}" />
     <label for="{randomId}"><Label class="pl-2" key="common.{openingHoursDay.day}" /></label>
   </div>
 </div>
@@ -151,14 +163,14 @@ let randomId: string = generateRandomUid();
           {#each openingHoursDay.windows as openingHourWindow}
             <OpeningHoursWindowEditor
               openingHourWindow="{openingHourWindow}"
-              on:beginEdit={(e) => {
+              on:beginEdit="{(e) => {
                 if (editElementId && editElementId !== e.detail.id) {
                   // Close the currently open editor
                   console.log(`TODO: Close existing editor first`);
                 }
                 editElementId = e.detail.id;
-              }}
-              on:cancel={e => {
+              }}"
+              on:cancel="{(e) => {
                 if (e.detail.isNew) {
                   const i = openingHoursDay.windows.indexOf(openingHourWindow);
                   openingHoursDay.windows.splice(i, 1);
@@ -168,17 +180,17 @@ let randomId: string = generateRandomUid();
                   openingHoursDay = openingHoursDay;
                 }
                 editElementId = undefined;
-              }}
+              }}"
               on:delete="{() => deleteWindow(openingHourWindow)}"
-              on:validate={e => {
+              on:validate="{(e) => {
                 commitDay(e.detail, true);
-              }}
-              on:ok={(e) => {
+              }}"
+              on:ok="{(e) => {
                 const isValid = commitDay(e.detail);
                 if (isValid) {
                   editElementId = undefined;
                 }
-              }} />
+              }}" />
           {/each}
         {/if}
       </table>
@@ -186,9 +198,9 @@ let randomId: string = generateRandomUid();
   </tr>
   {#if openingHoursDay.isOpen && !editElementId}
     <tr align="right">
-        <span role="presentation" on:click="{() => addWindow()}">
-          <Icons customClass="inline w-6 h-6 heroicon smallicon" icon="plus-circle" />
-        </span>
+      <span role="presentation" on:click="{() => addWindow()}">
+        <Icons customClass="inline w-6 h-6 heroicon smallicon" icon="plus-circle" />
+      </span>
     </tr>
   {/if}
 </table>

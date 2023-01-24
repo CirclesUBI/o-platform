@@ -258,3 +258,14 @@ mutation setIsFavorite($circlesAddress: String!, $isFavorite: Boolean!) {
 mutation shareLink($targetType: LinkTargetType!, $targetKey: String!) {
   shareLink(targetType: $targetType, targetKey: $targetKey)
 }
+
+mutation surveyData($surveyData: SurveyDataInput!) {
+  surveyData(data: $surveyData) {
+    success
+    error
+    surveyData {
+      id
+      sesssionId
+    }
+  }
+}

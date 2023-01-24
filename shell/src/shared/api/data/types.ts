@@ -519,6 +519,7 @@ export type Mutation = {
   redeemClaimedInvitation: RedeemClaimedInvitationResult;
   tagTransaction: TagTransactionResult;
   sendMessage: SendMessageResult;
+  surveyData: SurveyDataResult;
   requestSessionChallenge: Scalars['String'];
   verifySessionChallenge?: Maybe<ExchangeTokenResponse>;
   importOrganisationsOfAccount: Array<Organisation>;
@@ -603,6 +604,11 @@ export type MutationSendMessageArgs = {
   fromSafeAddress?: Maybe<Scalars['String']>;
   toSafeAddress: Scalars['String'];
   content: Scalars['String'];
+};
+
+
+export type MutationSurveyDataArgs = {
+  data: SurveyDataInput;
 };
 
 
@@ -1233,6 +1239,31 @@ export type Subscription = {
   events: NotificationEvent;
 };
 
+export type SurveyData = {
+  __typename?: 'SurveyData';
+  id?: Maybe<Scalars['Int']>;
+  sesssionId: Scalars['String'];
+  allConsentsGiven: Scalars['Boolean'];
+  userType: Scalars['String'];
+  gender: Scalars['String'];
+  dateOfBirth: Scalars['Date'];
+};
+
+export type SurveyDataInput = {
+  sessionId: Scalars['String'];
+  allConsentsGiven: Scalars['Boolean'];
+  userType: Scalars['String'];
+  gender: Scalars['String'];
+  dateOfBirth: Scalars['Date'];
+};
+
+export type SurveyDataResult = {
+  __typename?: 'SurveyDataResult';
+  success: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  surveyData?: Maybe<SurveyData>;
+};
+
 export type Tag = {
   __typename?: 'Tag';
   id: Scalars['Int'];
@@ -1709,6 +1740,23 @@ export type ShareLinkMutationVariables = Exact<{
 export type ShareLinkMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'shareLink'>
+);
+
+export type SurveyDataMutationVariables = Exact<{
+  surveyData: SurveyDataInput;
+}>;
+
+
+export type SurveyDataMutation = (
+  { __typename?: 'Mutation' }
+  & { surveyData: (
+    { __typename?: 'SurveyDataResult' }
+    & Pick<SurveyDataResult, 'success' | 'error'>
+    & { surveyData?: Maybe<(
+      { __typename?: 'SurveyData' }
+      & Pick<SurveyData, 'id' | 'sesssionId'>
+    )> }
+  ) }
 );
 
 export type InitQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2878,6 +2926,18 @@ export const SetIsFavoriteDocument = gql`
 export const ShareLinkDocument = gql`
     mutation shareLink($targetType: LinkTargetType!, $targetKey: String!) {
   shareLink(targetType: $targetType, targetKey: $targetKey)
+}
+    `;
+export const SurveyDataDocument = gql`
+    mutation surveyData($surveyData: SurveyDataInput!) {
+  surveyData(data: $surveyData) {
+    success
+    error
+    surveyData {
+      id
+      sesssionId
+    }
+  }
 }
     `;
 export const InitDocument = gql`
@@ -4306,6 +4366,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     shareLink(variables: ShareLinkMutationVariables): Promise<ShareLinkMutation> {
       return withWrapper(() => client.request<ShareLinkMutation>(print(ShareLinkDocument), variables));
+    },
+    surveyData(variables: SurveyDataMutationVariables): Promise<SurveyDataMutation> {
+      return withWrapper(() => client.request<SurveyDataMutation>(print(SurveyDataDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));
