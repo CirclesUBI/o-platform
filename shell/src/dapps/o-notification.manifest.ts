@@ -1,14 +1,14 @@
-import Home from "./o-notifications/pages/Home.svelte"
+import Home from "./o-notifications/pages/Home.svelte";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import Trusts from "./o-notifications/pages/Trusts.svelte";
 import Transactions from "./o-notifications/pages/Transactions.svelte";
 import RedeemedInvitations from "./o-notifications/pages/RedeemedInvitations.svelte";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { DappState } from "./o-passport.manifest";
 
-export class NotificationDappState {
-}
+export class NotificationDappState {}
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -25,6 +25,16 @@ export const index: Page<any, NotificationDappState> = {
   routeParts: ["=all"],
   title: "All",
   icon: "allnotificationbubble",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "chat",
+        backgroundColorClass: "notifications",
+        // action: () => processNavigation.back(),
+      },
+    },
+  },
   component: Home,
 };
 export const trusts: Page<any, NotificationDappState> = {
@@ -53,13 +63,10 @@ export const redeemedInvitations: Page<any, NotificationDappState> = {
 export const notifications: DappManifest<NotificationDappState> = {
   type: "dapp",
   dappId: "notifications:1",
-  isSingleton: true,
   icon: "group",
   title: "Notifications",
   routeParts: ["=notifications"],
   defaultRoute: ["all"],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
-  hideFooter: true,
   routables: [index, transactions, trusts, redeemedInvitations, externalChat],
 };

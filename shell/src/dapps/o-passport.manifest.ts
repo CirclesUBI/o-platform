@@ -37,7 +37,7 @@ const index: Page<any, DappState> = {
         icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
-      },
+      }
     },
   },
 };
@@ -183,8 +183,6 @@ let myProfile: Profile = null;
 export const passport: DappManifest<DappState> = {
   type: "dapp",
   dappId: "passport:1",
-  isSingleton: true,
-  isHidden: false,
   title: "Passport",
   icon: "passport",
   routeParts: ["=passport"],
@@ -259,7 +257,6 @@ export const passport: DappManifest<DappState> = {
       return [...profileItems, ...jumplistitems];
     },
   },
-  isEnabled: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     return {

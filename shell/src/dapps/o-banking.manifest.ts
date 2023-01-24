@@ -225,14 +225,11 @@ export class BankingDappState {
 export const banking: DappManifest<BankingDappState> = {
   dappId: "banking:1",
   type: "dapp",
-  isSingleton: true,
-  isHidden: false,
   icon: "banking",
   title: "Banking",
   routeParts: ["banking"],
   defaultRoute: ["transactions"],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
   jumplist: profileJumplist,
 
   initialize: async (stack, runtimeDapp) => {

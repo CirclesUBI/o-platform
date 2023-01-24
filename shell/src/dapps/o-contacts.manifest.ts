@@ -250,16 +250,12 @@ export const scanToTrust: Page<any, ContactsDappState> = {
 export const contacts: DappManifest<DappState> = {
   type: "dapp",
   dappId: "contacts:1",
-  isSingleton: true,
-
   icon: "group",
   title: "Contacts",
   routeParts: ["contacts"],
   defaultRoute: [],
   tag: Promise.resolve("alpha"),
-  isEnabled: true,
   jumplist: profileJumplist,
-  hideFooter: true,
   initialize: async (stack, runtimeDapp) => {
     // Do init stuff here
     const myProfileResult = await new Promise<Profile>((resolve) => {

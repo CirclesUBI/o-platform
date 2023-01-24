@@ -4,7 +4,7 @@ import { onMount } from "svelte";
 
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { Capability } from "../../../shared/api/data/types";
+import {Capability, CapabilityType} from "../../../shared/api/data/types";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import DashboardInvitesWidget from "../molecules/DashboardInvitesWidget.svelte";
 import DashboardColorCard from "../atoms/DashboardColorCard.svelte";
@@ -34,7 +34,7 @@ onMount(init);
     <!--<LangSwitcher />-->
     <!-- bg-passport-light bg-passport bg-banking bg-banking-light bg-marketplace bg-marketplace-light bg-contacts bg-contacts-light -->
 
-    {#if $me && $me.__typename === "Profile" && $me.canInvite}
+    {#if $me && $me.__typename === "Profile" && capabilities.find(o => o.type === CapabilityType.Invite)}
       <DashboardInvitesWidget />
     {/if}
     <div class="flex flex-col space-y-4">
@@ -53,18 +53,22 @@ onMount(init);
         title="dapps.o-dashboard.pages.home.banking" />
 
       <DashboardColorCard
+        color="marketplace"
+        link="/market/listing"
+        blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
+        icon="marketlisting"
+        title="dapps.o-dashboard.pages.home.marketlisting" />
+
+      <DashboardColorCard
         color="contacts"
         link="/contacts"
         blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
         icon="dashfriends"
         title="dapps.o-dashboard.pages.home.contacts" />
 
-      <DashboardColorCard
-        color="market"
-        link="/market/listing"
-        blobshape="175% 0% 92% 93% / 110% 32% 110% 81%"
-        icon="marketlisting"
-        title="dapps.o-dashboard.pages.home.marketlisting" />
+      <div class="w-full mx-auto">
+        <img src="images/common/broadcast.svg" alt="Marketplace" class="w-full" />
+      </div>
     </div>
   </div>
 </div>
