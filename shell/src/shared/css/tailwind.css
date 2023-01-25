@@ -29,6 +29,10 @@ body {
     @apply normal-case;
   }
 
+  .btn:active {
+    @apply bg-opacity-5;
+  }
+
   .btn-disabled,
   .btn-disabled:hover,
   .btn[disabled],
