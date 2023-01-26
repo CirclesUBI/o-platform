@@ -25,7 +25,7 @@ sessionStorage.getItem("circlesKey");
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-<div>
+<div class="mt-8">
   {#if id == "1"}
     <WelcomeSurvey />
   {/if}
