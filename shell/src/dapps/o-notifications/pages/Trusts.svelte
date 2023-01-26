@@ -5,7 +5,7 @@ import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import {EventType, SortOrder} from "../../../shared/api/data/types";
 import {MyInbox} from "../../../shared/stores/inbox";
 import EventList from "../../../shared/molecules/Lists/EventList.svelte";
-import GenericEventCard from "src/dapps/o-notifications/atoms/GenericEventCard.svelte";
+import ContactCard from "../../o-notifications/atoms/ContactCard.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -23,6 +23,6 @@ let inbox = new MyInbox(SortOrder.Desc, 20, [
   <EventList
   store="{inbox}"
   views="{{
-    [EventType.CrcTrust]: { component: GenericEventCard },
+    [EventType.CrcTrust]: { component: ContactCard },
   }}" />
 </div>

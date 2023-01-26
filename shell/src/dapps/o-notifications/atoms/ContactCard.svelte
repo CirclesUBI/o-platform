@@ -1,22 +1,29 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import {Contact} from "../../../shared/api/data/types";
+import {Contact, ProfileEvent} from "../../../shared/api/data/types";
 import { onMount } from "svelte";
 
 import { _ } from "svelte-i18n";
 import {trustFromContactMetadata} from "../../../shared/functions/trustFromContactMetadata";
+import { contacts as contactStore } from "../../../shared/stores/contacts"
+import Profile from "../../o-contacts/pages/Profile.svelte";
 
-export let contact: Contact;
+export let event: ProfileEvent;
 
 let displayName: string;
 let safeAddress: string;
 let message: string;
+let contact: Contact;
+let profileImage: Profile;
 
-onMount(() => {
-  displayName = contact.contactAddress_Profile.displayName;
-  safeAddress = contact.contactAddress;
+onMount(async () => {
+  displayName = event.contact_address_profile.displayName;
+  safeAddress = event.contact_address;
+  profileImage = event.contact_address_profile;
   message = "";
+
+  contact = await contactStore.findBySafeAddress(event.contact_address);
 
   const {trustIn, trustOut} = trustFromContactMetadata(contact);
 
@@ -40,7 +47,7 @@ function loadDetailPage(path) {
   <ItemCard
     params="{{
       edgeless: false,
-      imageProfile: contact.contactAddress_Profile,
+      imageProfile: profileImage,
       title: displayName,
       subTitle: message,
       truncateMain: true,
