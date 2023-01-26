@@ -3,6 +3,7 @@ import { BusinessCategory } from "../../../shared/api/data/types";
 import { Environment } from "../../../shared/environment";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { _ } from "svelte-i18n";
+import Label from "../../../shared/atoms/Label.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { marketFilterStore } from "../stores/marketFilterStore";
@@ -37,8 +38,8 @@ function handleRemoveFilter(filterId) {
 </script>
 
 {#if allCategories}
-  <div class="flex flex-row flex-wrap items-center mb-4 space-x-2">
-    <div>Filter:</div>
+  <div class="flex flex-row flex-wrap items-center space-x-2">
+    <div class="text-sm"><Label key="dapps.o-marketlisting.molecules.categoryfilter.filter" /></div>
     {#each $marketFilterStore as filterId}
       <div class="text-xs badge badge-outline">
         {allCategoriesLookup[filterId].name}
@@ -55,8 +56,7 @@ function handleRemoveFilter(filterId) {
         isButton="{true}"
         value="name"
         dropDownClass="mt-1"
-        on:dropDownChange="{handleOnChange}"
-        on:dropDownClickedOutside="{() => (showFilterDropdown = !showFilterDropdown)}" />
+        on:dropDownChange="{handleOnChange}" />
     </div>
   </div>
 {/if}
