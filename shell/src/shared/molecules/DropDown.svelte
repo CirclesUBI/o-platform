@@ -26,6 +26,8 @@ function handleOnChange(e) {
 <select
   class="text-base {dropDownClass}"
   class:select="{!isButton && !isShevron}"
+  class:w-full="{!isButton && !isShevron}"
+  class:max-w-xs="{!isButton && !isShevron}"
   class:btn="{isButton || isShevron}"
   class:btn-xs="{isButton || isShevron}"
   class:btn-circle="{isButton || isShevron}"

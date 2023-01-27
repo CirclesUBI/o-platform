@@ -782,6 +782,7 @@ export type Profile = {
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
   category?: Maybe<BusinessCategory>;
+  surveyDataSessionId?: Maybe<Scalars['String']>;
 };
 
 
@@ -1372,6 +1373,7 @@ export type UpsertProfileInput = {
   locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
+  surveyDataSessionId?: Maybe<Scalars['String']>;
 };
 
 export type UpsertTagInput = {
@@ -1627,6 +1629,7 @@ export type UpsertProfileMutationVariables = Exact<{
   locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
+  surveyDataSessionId?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -2808,9 +2811,9 @@ export const TagTransactionDocument = gql`
 }
     `;
 export const UpsertProfileDocument = gql`
-    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String, $locationName: String, $lat: Float, $lon: Float) {
+    mutation upsertProfile($id: Int, $firstName: String!, $lastName: String, $emailAddress: String, $askedForEmailAddress: Boolean!, $dream: String, $country: String, $avatarUrl: String, $avatarCid: String, $avatarMimeType: String, $circlesAddress: String, $circlesSafeOwner: String, $newsletter: Boolean, $displayCurrency: DisplayCurrency, $displayTimeCircles: Boolean, $status: String!, $successorOfCirclesAddress: String, $gender: Gender, $location: String, $locationName: String, $lat: Float, $lon: Float, $surveyDataSessionId: String) {
   upsertProfile(
-    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location, locationName: $locationName, lat: $lat, lon: $lon}
+    data: {id: $id, firstName: $firstName, lastName: $lastName, emailAddress: $emailAddress, askedForEmailAddress: $askedForEmailAddress, dream: $dream, country: $country, avatarUrl: $avatarUrl, avatarCid: $avatarCid, avatarMimeType: $avatarMimeType, circlesAddress: $circlesAddress, circlesSafeOwner: $circlesSafeOwner, newsletter: $newsletter, displayCurrency: $displayCurrency, displayTimeCircles: $displayTimeCircles, status: $status, successorOfCirclesAddress: $successorOfCirclesAddress, gender: $gender, location: $location, locationName: $locationName, lat: $lat, lon: $lon, surveyDataSessionId: $surveyDataSessionId}
   ) {
     id
     circlesAddress
