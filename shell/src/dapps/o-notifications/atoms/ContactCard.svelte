@@ -7,11 +7,7 @@ import { onMount } from "svelte";
 import { _ } from "svelte-i18n";
 import { isMobile } from "../../../shared/functions/isMobile";
 import relativeTimeString from "../../../shared/functions/relativeTimeString";
-import { contacts } from "../../o-contacts.manifest";
 import Icons from "../../../shared/molecules/Icons.svelte";
-
-import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
-
 
 export let event: ProfileEvent;
 
@@ -78,7 +74,6 @@ function loadDetailPage(path: string) {
 
 let textCutoff = isMobile() ? 16 : 42;
 
-console.log("fztsuwidzgtuwefrioqj", event.contact_address_profile.displayName);
 </script>
 
 <div role="presentation" on:click="{() => loadDetailPage(safeAddress)}" class="cursor-pointer">
