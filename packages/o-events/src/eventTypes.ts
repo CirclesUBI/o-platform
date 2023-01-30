@@ -13,6 +13,7 @@ export type PlatformEventTypes =
   | "shell.refresh"
   | "shell.navigateTo"
   | "shell.home"
+  | "shell.survey"
   | "shell.contacts"
   | "shell.authenticated"
   | "shell.loggedOut"
@@ -62,4 +63,3 @@ export type PlatformEventTypes =
   // IPC
   | "process.ipc.bubble" // used with 'sendParent' to bubble events up to the top
   | "process.ipc.sinker"; // used with 'send' to sink down a result for a previously bubbled event
-
