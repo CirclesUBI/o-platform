@@ -321,7 +321,7 @@ function setNav(navArgs: GenerateNavManifestArgs) {
   let args = {
     ...navArgs,
     showLogin: dapp.anonymous && !layout.dialogs.center,
-    hideFooterGradient: dapp.hideFooterGradient
+    hideFooterGradient: dapp.hideFooterGradient,
   };
   navigation = generateNavManifest(args, null);
   if (dapp.dappId == "events:1") {
@@ -510,6 +510,10 @@ function onOpenModal() {
 
 function onHome() {
   push("#/home");
+}
+
+function onSurvey() {
+  push("#/homepage/survey/1");
 }
 
 async function onCloseModal() {
@@ -736,6 +740,9 @@ onMount(async () => {
         break;
       case "shell.home":
         onHome();
+        break;
+      case "shell.survey":
+        onSurvey();
         break;
       case "shell.inputFocused":
         onInputFocused();
