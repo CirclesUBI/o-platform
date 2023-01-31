@@ -65,7 +65,8 @@ async function shareLink() {
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business}
-    <div class="relative">
+  <div class="flex w-full justify-center">
+    <div class="relative xl:w-2/3 xl:h-2/3">
       <!-- svelte-ignore a11y-img-redundant-alt -->
       <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
 
@@ -81,6 +82,7 @@ async function shareLink() {
         {/if}
       </div>
     </div>
+  </div>
     <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
     <p class="text-black">{business.description ? business.description : ""}</p>
 
@@ -92,7 +94,7 @@ async function shareLink() {
 
     {#if !showShareOptions}
       <button
-        class=" -mt-1 text-base font-heading btn btn-outline btn-sm rounded-full"
+        class=" mt-3 text-base font-heading btn btn-outline btn-sm rounded-full"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
@@ -102,7 +104,7 @@ async function shareLink() {
     {/if}
 
     {#if showShareOptions}
-      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-6">
+      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-3">
         <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
           <CopyClipboard text="{link}" let:copy>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
