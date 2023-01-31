@@ -141,7 +141,7 @@ async function setProfile(id: string) {
     <LoadingIndicator />
   </div>
 {:else}
-  <div class="p-5 pb-0">
+  <div class="p-5">
     <header class="grid overflow-hidden bg-white h-72 ">
       <div class="w-full text-center">
         <h1 class="text-3xl uppercase font-heading">
