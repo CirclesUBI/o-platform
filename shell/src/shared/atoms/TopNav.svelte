@@ -28,7 +28,6 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
     dappHomeLink = `/#/${cleanRoute}/${runtimeDapp.routables[0].routeParts[0].replace("=", "")}`;
   }
 }
-console.log("DADADA", runtimeDapp);
 </script>
 
 <!-- bg-home bg-cpurple bg-marketplace bg-contact bg-passport -->
