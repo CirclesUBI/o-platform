@@ -33,6 +33,12 @@ body {
     @apply bg-opacity-5;
   }
 
+  .btn-outline.btn-active,
+  .btn-outline:hover {
+    @apply bg-opacity-100;
+    @apply bg-inherit;
+  }
+
   .btn-disabled,
   .btn-disabled:hover,
   .btn[disabled],
