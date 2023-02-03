@@ -4,9 +4,23 @@
   "version": "2.0.1",
   "tasks": [
     {
-      "label": "Run Bali Build",
+      "label": "Run O-Plaform Build for Bali",
       "type": "shell",
       "command": "./build_bali.sh",
+      "args": ["${env:API_ENDPOINT}"],
+      "windows": {
+        "command": ".\\build_bali.cmd"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Run O-Plaform LIBS Build",
+      "type": "shell",
+      "command": "./build_libs.sh",
       "args": ["${env:API_ENDPOINT}"],
       "windows": {
         "command": ".\\build_bali.cmd"

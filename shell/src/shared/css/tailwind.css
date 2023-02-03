@@ -6,6 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
 body {
   @apply text-base;
 }
@@ -29,11 +34,22 @@ body {
     @apply normal-case;
   }
 
+  .btn:active {
+    @apply bg-opacity-5;
+  }
+
+  .btn-outline.btn-active,
+  .btn-outline:hover {
+    @apply bg-opacity-100;
+    @apply bg-inherit;
+  }
+
   .btn-disabled,
   .btn-disabled:hover,
   .btn[disabled],
   .btn[disabled]:hover {
     @apply border-opacity-20 bg-opacity-20 text-opacity-80;
+    background-color: white;
   }
 
   .btn-primary {
@@ -153,6 +169,9 @@ body {
     box-shadow: none;
   }
 
+  .select {
+    font-weight: normal;
+  }
   .textarea {
     @apply border-dark-lightest;
   }

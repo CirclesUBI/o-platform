@@ -64,7 +64,7 @@ let currentNavArgs: GenerateNavManifestArgs;
 let preModalNavArgs: GenerateNavManifestArgs;
 let _scrollY: number;
 let runningProcess: ProcessStarted;
-
+let navigationOpen: Boolean = false;
 /**
  * A stack of opened modal pages.
  */
@@ -73,6 +73,27 @@ const stack: {
   params: { [x: string]: any };
   scrollY: number;
 }[] = [];
+
+$: {
+  // update the navigation icon and button color based on Dapp.
+  if (routable && navigation) {
+    if (!navigationOpen) {
+      updateNavigationObject();
+    }
+  }
+}
+function updateNavigationObject() {
+  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
+
+  setNav({
+    leftSlotOverride: leftSlotOverride,
+    centerContainsProcess: false,
+    centerIsOpen: false,
+    rightIsOpen: false,
+    leftIsOpen: false,
+    notificationCount: 0, // $inbox ? $inbox.length : 0,
+  });
+}
 
 async function onBack() {
   // log("onBack() - current stack: ", JSON.stringify(stack, null, 2));
@@ -321,7 +342,7 @@ function setNav(navArgs: GenerateNavManifestArgs) {
   let args = {
     ...navArgs,
     showLogin: dapp.anonymous && !layout.dialogs.center,
-    hideFooterGradient: dapp.hideFooterGradient
+    hideFooterGradient: dapp.hideFooterGradient,
   };
   navigation = generateNavManifest(args, null);
   if (dapp.dappId == "events:1") {
@@ -465,6 +486,7 @@ function onOpenNavigation() {
     centerIsOpen: false,
     centerContainsProcess: false,
   });
+  navigationOpen = true;
 }
 
 function onCloseNavigation() {
@@ -482,6 +504,7 @@ function onCloseNavigation() {
     centerIsOpen: false,
     centerContainsProcess: false,
   });
+  navigationOpen = false;
 }
 
 function onOpenNotifications() {
@@ -510,6 +533,10 @@ function onOpenModal() {
 
 function onHome() {
   push("#/home");
+}
+
+function onSurvey() {
+  push("#/homepage/survey/1");
 }
 
 async function onCloseModal() {
@@ -736,6 +763,9 @@ onMount(async () => {
         break;
       case "shell.home":
         onHome();
+        break;
+      case "shell.survey":
+        onSurvey();
         break;
       case "shell.inputFocused":
         onInputFocused();

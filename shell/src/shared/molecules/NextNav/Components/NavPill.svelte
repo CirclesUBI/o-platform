@@ -25,7 +25,7 @@ function clickHandler() {
 <div class="h-12 col-start-2 place-self-center">
   <div class="flex flex-row">
     <div
-      class="flex justify-center flex-shrink-0 w-16 -mr-5 rounded-l-full cursor-pointer text-primary h-11"
+      class="flex justify-center flex-shrink-0 w-20 -mr-8 rounded-l-full cursor-pointer text-primary h-11"
       class:bg-cpurple="{props && props.left}"
       role="presentation"
       on:click="{clickHandler}">
@@ -38,7 +38,7 @@ function clickHandler() {
             </div>
           </div>
         {:else}-->
-        <div class="flex flex-col self-center justify-center h-full mr-1">
+        <div class="flex flex-col self-center justify-center h-full mr-3">
           <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
         </div>
         <!--{/if}-->
@@ -52,12 +52,12 @@ function clickHandler() {
     </div>
 
     <div
-      class="flex justify-center flex-shrink-0 -ml-5 rounded-r-full cursor-pointer w-14 h-11 "
+      class="flex justify-center flex-shrink-0 w-20 -ml-8 rounded-r-full cursor-pointer h-11 "
       class:bg-cpurple="{props && props.right}"
       role="presentation"
       on:click="{props.right ? props.right.props.action : null}">
       {#if props && props.right}
-        <div class="flex flex-col self-center justify-center h-full ml-1 text-primary">
+        <div class="flex flex-col self-center justify-center h-full ml-3 text-primary">
           <svelte:component this="{props.right.component}" {...props.right.props} />
         </div>
       {/if}

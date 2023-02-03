@@ -123,6 +123,7 @@ mutation upsertProfile(
   $locationName: String
   $lat: Float
   $lon: Float
+  $surveyDataSessionId: String
 ) {
   upsertProfile(
     data: {
@@ -148,6 +149,7 @@ mutation upsertProfile(
       locationName: $locationName
       lat: $lat
       lon: $lon
+      surveyDataSessionId: $surveyDataSessionId
     }
   ) {
     id

@@ -3268,7 +3268,7 @@ h2 {
 }
 .text-2xl {
   font-size: 1.5rem;
-  line-height: 2rem;
+  line-height: 1.6rem;
 }
 .text-6xl {
   font-size: 3.75rem;
@@ -3345,7 +3345,7 @@ h2 {
 }
 .text-info {
   --tw-text-opacity: 1;
-  color: #4Ec8ED;
+  color: #4ec8ed;
 }
 .text-white {
   --tw-text-opacity: 1;

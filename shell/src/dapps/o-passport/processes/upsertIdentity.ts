@@ -18,6 +18,7 @@ import { cityByHereId, promptCity } from "../../../shared/api/promptCity";
 
 export type UpsertIdentityContextData = {
   id?: number;
+  surveyDataSessionId?: string;
   newsletter?: boolean;
   displayTimeCircles?: boolean;
   displayCurrency?: DisplayCurrency;

@@ -9,7 +9,8 @@ import { MyInbox } from "../../../shared/stores/inbox";
 import EventList from "../../../shared/molecules/Lists/EventList.svelte";
 import TransactionCard from "../../o-banking/atoms/TransactionCard.svelte";
 import RedeemedInvitationCard from "../atoms/RedeemedInvitationCard.svelte";
-import GenericEventCard from "src/dapps/o-notifications/atoms/GenericEventCard.svelte";
+import GenericEventCard from "../atoms/GenericEventCard.svelte";
+import ContactCard from "../../o-notifications/atoms/ContactCard.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -25,10 +26,11 @@ let inbox = new MyInbox(SortOrder.Desc, 30, [
 const views = {
   [EventType.CrcHubTransfer]: { component: TransactionCard },
   [EventType.CrcMinting]: { component: TransactionCard },
-  [EventType.CrcTrust]: { component: GenericEventCard },
+  [EventType.CrcTrust]: { component: ContactCard },
   [EventType.InvitationRedeemed]: { component: RedeemedInvitationCard },
   [EventType.Erc20Transfer]: { component: TransactionCard },
 };
+
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
