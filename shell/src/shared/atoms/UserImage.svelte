@@ -43,7 +43,7 @@ $: {
       </span>
     {/if}
     {#if editable}
-      <div class="relative z-50 -mt-10 text-center top-10 -right-10">
+      <div class="relative z-50 -mt-10 text-center cursor-pointer top-10 -right-10">
         <div class="relative inline-flex">
           <span>
             <span class="table-cell w-10 h-10 align-middle bg-black rounded-full text-primary bg-opacity-60">
