@@ -19,10 +19,6 @@ onMount(() => {
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
   });
-
-  if (runtimeDapp.dappId == "homepage:1") {
-    textColor = "lg:text-white";
-  }
 });
 
 $: {
@@ -33,22 +29,17 @@ $: {
   }
 }
 
-function locationHasChanged() {
-  if (runtimeDapp.dappId == "homepage:1") {
-    textColor = "lg:text-white";
-  } else {
-    textColor = "lg:text-gray"
-  }
+if (runtimeDapp.dappId == "homepage:1") {
+  textColor = "xl:text-white";
 }
-
-window.onhashchange = locationHasChanged;
-
-
+if (runtimeDapp.dappId !== "homepage:1") {
+  textColor = "";
+}
 </script>
 
-<div class="z-10 flex flex-col flex-1">
+<div class="z-10 flex flex-col flex-1 {textColor}">
   <nav class="flex flex-col flex-1 w-auto p-4 mt-4"></nav>
-  <div class="flex-shrink-0 w-auto pt-4 mb-10 space-y-2 {textColor}">
+  <div class="flex-shrink-0 w-auto pt-4 mb-10 space-y-2">
     {#if navigation}
       {#each navigation as navItem}
         <LinkPill
