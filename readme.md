@@ -51,3 +51,4 @@ Every Dapp has a [DappManifest](https://github.com/circlesland/o-dapp-starter/bl
 Each Dapp has one or more page(s).
 
 ### Processes
+test
