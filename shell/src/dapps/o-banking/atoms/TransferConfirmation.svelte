@@ -48,7 +48,7 @@ function onkeydown(e: KeyboardEvent) {
         <Icons icon="timeCircle" size="{11}" customClass="inline -mt-3" /></span>
     </div>
 
-    <UserImage profile="{profile}" size="{36}" gradientRing="{true}" />
+    <UserImage profile="{profile}" size="{36}" />
 
     <div>
       <span class="mt-4 text-xl">

@@ -1,6 +1,4 @@
 <script lang="ts">
-import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
@@ -9,9 +7,6 @@ import { marketStore } from "../stores/marketStore";
 import { marketFilterStore } from "../stores/marketFilterStore";
 import CategoryFilter from "./CategoryFilter.svelte";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
-
-export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 
 let dropdownItems = [
   {
