@@ -187,6 +187,27 @@ const options = {
 };
 
 let locationName = "";
+
+function editProfileField(onlyThesePages: string[]) {
+  // if (business.__typename == "Organisation") {
+  //   window.o.runProcess(
+  //     upsertOrganisation,
+  //     {
+  //       ...profile,
+  //       successAction: (data) => {
+  //         window.o.publishEvent(<PlatformEvent>{
+  //           type: "shell.authenticated",
+  //           profile: data,
+  //         });
+  //       },
+  //     },
+  //     {},
+  //     onlyThesePages
+  //   );
+  // } else {
+  //   window.o.runProcess(upsertIdentity, profile, {}, onlyThesePages);
+  // }
+}
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
@@ -217,7 +238,10 @@ let locationName = "";
               <div class="flex flex-col">
                 <div class="flex flex-col mb-5 text-sm ">
                   <Label key="dapps.o-passport.pages.upsertOrganization.picture" />
-                  <div class="flex justify-center w-full mt-2">
+                  <div
+                    class="flex justify-center w-full mt-2"
+                    role="presentation"
+                    on:click="{() => editProfileField(['file', 'avatarUrl'])}">
                     <UserImage
                       profile="{{
                         circlesAddress: business.circlesAddress,
