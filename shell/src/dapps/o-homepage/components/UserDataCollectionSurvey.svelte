@@ -101,6 +101,7 @@ function handleOnChange(event) {
             id="userType"
             key="id"
             value="name"
+            dropDownClass="max-w-xs"
             on:dropDownChange="{handleOnChange}" />
 
           {#if $userType.value && $userType.value !== "undefined"}
@@ -121,6 +122,7 @@ function handleOnChange(event) {
             id="gender"
             key="id"
             value="name"
+            dropDownClass="max-w-xs"
             on:dropDownChange="{handleOnChange}" />
           {#if $gender.value && $gender.value !== "undefined"}
             <span class="text-6xl font-enso"

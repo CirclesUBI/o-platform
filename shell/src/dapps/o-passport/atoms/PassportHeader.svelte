@@ -63,7 +63,7 @@ function editProfileField(onlyThesePages: string[]) {
 
 <PageHeader heightClass="  h-60 sm:h-80" color="bg-passport" largeHeader="{true}">
   <div class="m-auto mb-2 w-28 sm:mb-4" role="presentation" on:click="{() => editProfileField(['file', 'avatarUrl'])}">
-    <UserImage profile="{profile}" size="{28}" profileLink="{false}" />
+    <UserImage profile="{profile}" size="{28}" profileLink="{false}" editable="{true}" />
   </div>
 
   <div

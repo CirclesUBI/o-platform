@@ -2,6 +2,7 @@
 import { AvataarGenerator } from "../avataarGenerator";
 import { push } from "svelte-spa-router";
 import { Profile, Organisation } from "../api/data/types";
+import Icons from "../molecules/Icons.svelte";
 
 export let profile: Profile | Organisation;
 export let size: number = 10;
@@ -9,6 +10,7 @@ export let whiteRing: boolean = false;
 export let transparent: boolean = false;
 export let tooltip: boolean = false;
 export let profileLink: boolean = true;
+export let editable: boolean = false;
 let displayName: string = "";
 
 function linkToProfile(event) {
@@ -39,6 +41,17 @@ $: {
       <span class="px-2 mt-12 text-sm bg-white rounded shadow-sm tooltip">
         {displayName}
       </span>
+    {/if}
+    {#if editable}
+      <div class="relative z-50 -mt-10 text-center top-10 -right-10">
+        <div class="relative inline-flex">
+          <span>
+            <span class="table-cell w-10 h-10 align-middle bg-black rounded-full text-primary bg-opacity-60">
+              <Icons icon="camera" customClass="inline w-6 h-6 heroicon smallicon" />
+            </span>
+          </span>
+        </div>
+      </div>
     {/if}
 
     <div
