@@ -153,7 +153,7 @@ async function setProfile(id: string) {
         </h1>
       </div>
       <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center ">
-        <UserImage profile="{profile}" size="{36}" gradientRing="{true}" profileLink="{false}" />
+        <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
           <div
@@ -191,7 +191,7 @@ async function setProfile(id: string) {
                     {#each commonTrusts as commonTrust}
                       {#if commonTrust.profile}
                         <div class="mt-2 mr-2">
-                          <UserImage profile="{commonTrust.profile}" tooltip="{true}" gradientRing="{true}" />
+                          <UserImage profile="{commonTrust.profile}" tooltip="{true}" />
                         </div>
                       {/if}
                     {/each}
@@ -211,7 +211,7 @@ async function setProfile(id: string) {
                     {#each profile.memberships as membership}
                       {#if membership.organisation}
                         <div class="mt-2 mr-2">
-                          <UserImage profile="{membership.organisation}" tooltip="{true}" gradientRing="{true}" />
+                          <UserImage profile="{membership.organisation}" tooltip="{true}" />
                         </div>
                       {/if}
                     {/each}
@@ -228,7 +228,7 @@ async function setProfile(id: string) {
                   <div class="flex flex-row flex-wrap mt-2 ">
                     {#each profile.members as memberProfile}
                       <div class="mt-2 mr-2">
-                        <UserImage profile="{memberProfile}" tooltip="{true}" gradientRing="{true}" />
+                        <UserImage profile="{memberProfile}" tooltip="{true}" />
                       </div>
                     {/each}
                   </div>
