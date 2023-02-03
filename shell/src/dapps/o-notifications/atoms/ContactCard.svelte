@@ -1,53 +1,114 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import {Contact} from "../../../shared/api/data/types";
+import { CrcTrust, ProfileEvent } from "../../../shared/api/data/types";
 import { onMount } from "svelte";
 
 import { _ } from "svelte-i18n";
-import {trustFromContactMetadata} from "../../../shared/functions/trustFromContactMetadata";
+import { isMobile } from "../../../shared/functions/isMobile";
+import relativeTimeString from "../../../shared/functions/relativeTimeString";
+import Icons from "../../../shared/molecules/Icons.svelte";
 
-export let contact: Contact;
+export let event: ProfileEvent;
 
-let displayName: string;
 let safeAddress: string;
-let message: string;
+let timestamp: string;
 
-onMount(() => {
-  displayName = contact.contactAddress_Profile.displayName;
-  safeAddress = contact.contactAddress;
-  message = "";
+let values: {
+  title: string;
+  titleClass: string;
+  icon: string;
+  textColor: string;
+};
 
-  const {trustIn, trustOut} = trustFromContactMetadata(contact);
+values = getValues();
 
-  if (trustIn > 0 && trustOut > 0) {
-    message += `${$_("dapps.o-contacts.atoms.contactCard.mutualTrust")}`;
-  } else if (!trustIn && trustOut > 0) {
-    message += `${$_("dapps.o-contacts.atoms.contactCard.trustedByYou")}`;
-  } else if (trustIn > 0 && !trustOut) {
-    message += `${$_("dapps.o-contacts.atoms.contactCard.isTrustingYou")}`;
-  } else {
-    message += `${$_("dapps.o-contacts.atoms.contactCard.notTrusted")}`;
-  }
+onMount(async () => {
+  timestamp = relativeTimeString(event.timestamp, 7);
+  safeAddress = event.contact_address;
 });
 
-function loadDetailPage(path) {
+function getValues(): {
+  title: string;
+  titleClass: string;
+  icon: string;
+  textColor: string;
+} {
+  let icon = "trust";
+  let title = "";
+  let titleClass = "";
+  let textColor = "";
+
+  const crcTrust = <CrcTrust>event.payload;
+
+  if (event.direction == "in" && crcTrust.limit == 0) {
+    title = `${event.contact_address_profile.firstName} ${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.untrustedYou")}`;
+    titleClass = "text-alert";
+    textColor = "text-negative"
+  } else if (event.direction == "in" && crcTrust.limit > 0) {
+    title = `${event.contact_address_profile.firstName} ${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.trustedYou")}`;
+    titleClass = "text-heading";
+    textColor = "text-positive";
+  } else if (event.direction == "out" && crcTrust.limit == 0) {
+    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youUntrusted")} ${event.contact_address_profile.firstName}`;
+    titleClass = "text-alert";
+    textColor = "text-negative"
+  } else if (event.direction == "out" && crcTrust.limit > 0) {
+    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youTrusted")} ${event.contact_address_profile.firstName}`;
+    titleClass = "text-heading";
+    textColor = "text-positive";
+  }
+
+  return {
+    title,
+    titleClass,
+    icon,
+    textColor,
+  };
+}
+
+
+function loadDetailPage(path: string) {
   push(`#/contacts/profile/${path}`);
 }
+
+let textCutoff = isMobile() ? 16 : 42;
+
 </script>
 
-<div on:click="{() => loadDetailPage(safeAddress)}" class="cursor-pointer">
+<div role="presentation" on:click="{() => loadDetailPage(safeAddress)}" class="cursor-pointer">
   <ItemCard
     params="{{
       edgeless: false,
-      imageProfile: contact.contactAddress_Profile,
-      title: displayName,
-      subTitle: message,
+      imageProfile: event.contact_address_profile,
       truncateMain: true,
-      mobileTextCutoff: 24,
     }}">
-    <div slot="itemCardEnd">
-      <div class="self-end text-lg sm:text-3xl"></div>
+    <div slot="itemCardBody" class="w-full">
+      <div class="flex-col flex-grow">
+        <div class="flex flex-row items-center justify-between px-3 text-left">
+          <div class="flex-grow min-w-0">
+            <h2 class="overflow-hidden text-xl font-heading whitespace-nowrap overflow-ellipsis {values.titleClass}">
+              <b
+                >{values.title
+                  ? values.title.length >= textCutoff
+                    ? values.title.substr(0, textCutoff) + "..."
+                    : values.title
+                  : ""}</b>
+            </h2>
+          </div>
+          <div
+          class="self-end text-right pl-2 text-lg whitespace-nowrap {values.textColor}">
+          <Icons icon="{values.icon}" size="{6}" customClass="inline inline-icon" />
+        </div>
+        </div>
+        <div class="flex flex-row items-center justify-between px-3 -mt-1 text-left">
+          <div class="flex-grow leading-none">
+            <span class="inline-block text-xs">
+              {timestamp}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </ItemCard>
 </div>

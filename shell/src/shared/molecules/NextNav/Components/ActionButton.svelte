@@ -20,7 +20,7 @@ const dispatcher = createEventDispatcher();
     <img src="/logos/circles.png" alt="circlesLand" class="bg-white rounded-full navlogo" />
   {:else if $me}
     <div class="navlogo">
-      <UserImage profile="{$me}" size="{15}" gradientRing="{true}" profileLink="{false}" />
+      <UserImage profile="{$me}" size="{15}" profileLink="{false}" />
 
       <!-- <div class="text-center align-top list-none cursor-pointer inline-table">
         <span>

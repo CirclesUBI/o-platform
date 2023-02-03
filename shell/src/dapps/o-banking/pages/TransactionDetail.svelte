@@ -143,7 +143,7 @@ function openDetail(transfer: ProfileEvent) {
         <span class="text-6xl font-enso {classes}"
           ><Icons icon="timeCircle" size="{12}" customClass="inline -mt-3" /></span>
       </div>
-      <UserImage profile="{targetProfile}" size="{36}" gradientRing="{true}" />
+      <UserImage profile="{targetProfile}" size="{36}" />
       <div
         class="cursor-pointer"
         role="presentation"

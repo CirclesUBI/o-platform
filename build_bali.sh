@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-export API_ENDPOINT="https://staging.api.circlesubi.id/"
-export CIRCLES_SUBGRAPH_ENDPOINT="https://api.thegraph.com/subgraphs/name/circlesubi/circles"
-export PATHFINDER_ENDPOINT="https://rpc.circles.land/pathfinder"
-export CIRCLES_HUB_ADDRESS="0x29b9a7fBb8995b2423a71cC17cf9810798F6C543"
-export SAFE_PROXY_FACTORY_ADDRESS="0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2"
-export SAFE_ADDRESS="0x3E5c63644E683549055b9Be8653de26E0B4CD36E"
-export RPC_ENDPOINT="https://rpc.circles.land"
-export OPENLOGIN_CLIENT_ID="BHqazms23gbTZQ2fYvvUaFzv718Ft8Ox1XwSEqVt81jtZJRQRb-N5cnThtZGSjZF9Dtj9MQxkEQTUo47I_wiihE"
-export HERE_API_KEY="fhiIkoASi1B-z8R7ytKBnfJltOpaUlYBV1kydXyK1sE"
+export API_ENDPOINT=https://dev.api.circlesubi.id
+export CIRCLES_SUBGRAPH_ENDPOINT=https://api.thegraph.com/subgraphs/name/circlesubi/circles
+export PATHFINDER_ENDPOINT=https://rpc.circlesubi.id/pathfinder
+export CIRCLES_HUB_ADDRESS=0x29b9a7fBb8995b2423a71cC17cf9810798F6C543
+export SAFE_PROXY_FACTORY_ADDRESS=0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2
+export SAFE_ADDRESS=0x3E5c63644E683549055b9Be8653de26E0B4CD36E
+export RPC_ENDPOINT=https://rpc.circlesubi.id
+export OPENLOGIN_CLIENT_ID=BHqazms23gbTZQ2fYvvUaFzv718Ft8Ox1XwSEqVt81jtZJRQRb-N5cnThtZGSjZF9Dtj9MQxkEQTUo47I_wiihE
+export HERE_API_KEY=TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA
+export PLACES_API_KEY=AIzaSyDAh2mCO36_qBtbb00QY3IPGKUsunbBj-4
 
 search='__TIMESTAMP__'
 replace=`date +"%s"`

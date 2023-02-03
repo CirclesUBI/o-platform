@@ -65,7 +65,8 @@ async function shareLink() {
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business}
-    <div class="relative">
+  <div class="flex w-full justify-center">
+    <div class="relative xl:w-2/3 xl:h-2/3">
       <!-- svelte-ignore a11y-img-redundant-alt -->
       <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
 
@@ -81,6 +82,7 @@ async function shareLink() {
         {/if}
       </div>
     </div>
+  </div>
     <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
     <p class="text-black">{business.description ? business.description : ""}</p>
 
@@ -88,36 +90,35 @@ async function shareLink() {
       <p class="flex-grow text-xl text-grey font-heading">
         {business.businessCategory ? business.businessCategory : ""}
       </p>
+    </div>
+
+    {#if !showShareOptions}
       <button
-        class="self-end -mt-1 text-base font-heading btn btn-outline btn-sm"
+        class=" mt-3 text-base font-heading btn btn-outline btn-sm rounded-full"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
-        {#if !showShareOptions}
-          <span><Icons icon="share" customClass="w-6 h-6" /></span>
-          <p class="pl-1">Share</p>
-        {:else}
-          <span>X </span>
-        {/if}
+        <span><Icons icon="share" customClass="w-6 h-6" /></span>
+        <p class="pl-1">Share</p>
       </button>
-    </div>
+    {/if}
 
     {#if showShareOptions}
-      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-6">
-        <div class="text-center rounded-full cursor-pointer w-7 h-7 copylink bg-light-light">
+      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-3">
+        <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
           <CopyClipboard text="{link}" let:copy>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div on:click="{copy}">
-              <Icon name="link" class="self-center inline w-6 h-6 heroicon smallicon" />
+              <Icon name="link" class="self-center inline w-10 h-10 heroicon smallicon p-2" />
             </div>
           </CopyClipboard>
         </div>
-        <div class="text-center rounded-full cursor-pointer w-7 h-7 copylink bg-light-light">
+        <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
           <a
             href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
             target="_blank"
             rel="noreferrer">
-            <Icon name="mail" class="inline w-6 h-6 heroicon smallicon" />
+            <Icon name="mail" class="inline w-10 h-10 heroicon smallicon p-2" />
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
@@ -125,7 +126,7 @@ async function shareLink() {
             href="https://api.whatsapp.com/send?text=Hey, i'd like to show you this cool market. Check it out: {link}"
             target="_blank"
             rel="noreferrer">
-            <Icons icon="whatsapp" customClass="inline" size="{8}" />
+            <Icons icon="whatsapp" customClass="inline" size="{12}" />
           </a>
         </div>
         <div class="text-center cursor-pointer telegram">
@@ -133,7 +134,7 @@ async function shareLink() {
             href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}"
             target="_blank"
             rel="noreferrer">
-            <Icons icon="telegram" customClass="inline" size="{6}" />
+            <Icons icon="telegram" customClass="inline" size="{10}" />
           </a>
         </div>
       </div>
