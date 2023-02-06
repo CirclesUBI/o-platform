@@ -310,11 +310,6 @@ module.exports = {
     port: process.env.DEPLOY_ENVIRONMENT !== "docker" ? 5000 : 8080,
     host: "localhost",
     open: true,
-    https: true,
-    https: {
-      key: "./webpack/cert/localhost.key",
-      cert: "./webpack/cert/localhost.crt",
-    },
     client: {
       overlay: {
         errors: true,
