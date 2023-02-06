@@ -74,14 +74,6 @@ const stack: {
   scrollY: number;
 }[] = [];
 
-$: {
-  // update the navigation icon and button color based on Dapp.
-  if (routable && navigation) {
-    if (!navigationOpen) {
-      updateNavigationObject();
-    }
-  }
-}
 function updateNavigationObject() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
 
@@ -1017,6 +1009,7 @@ async function handleUrlChanged() {
     firstUrlChangedCall = false;
     init();
   }
+  updateNavigationObject();
 }
 
 function showModalProcess(processId?: string) {
