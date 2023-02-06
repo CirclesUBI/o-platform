@@ -27,45 +27,47 @@ const __PLACES_API_KEY__ = process.env.PLACES_API_KEY;
 const __USE_MOCKS__ = process.env.USE_MOCKS ? "true" : "false";
 const __SHOW_LANGUAGE_SWITCHER__ = process.env.SHOW_LANGUAGE_SWITCHER ? "true" : "false";
 
-console.log("Config from environment variables:")
-console.log("----------------------------------------")
+console.log("Config from environment variables:");
+console.log("----------------------------------------");
 console.log("!: API_ENDPOINT:", process.env.API_ENDPOINT);
-console.log("   - The url to the application's graphql api.")
+console.log("   - The url to the application's graphql api.");
 console.log("!: CIRCLES_SUBGRAPH_ENDPOINT:", process.env.CIRCLES_SUBGRAPH_ENDPOINT);
-console.log("   - The url to the theGraph's circles subgraph.")
+console.log("   - The url to the theGraph's circles subgraph.");
 console.log("!: PATHFINDER_ENDPOINT:", process.env.PATHFINDER_ENDPOINT);
-console.log("   - The url to the pathfinder2 json-rpc endpoint.")
+console.log("   - The url to the pathfinder2 json-rpc endpoint.");
 console.log("!: CIRCLES_HUB_ADDRESS:", process.env.CIRCLES_HUB_ADDRESS);
-console.log("   - The address of the deployed CirclesHub contract.")
+console.log("   - The address of the deployed CirclesHub contract.");
 console.log("!: SAFE_PROXY_FACTORY_ADDRESS:", process.env.SAFE_PROXY_FACTORY_ADDRESS);
-console.log("   - The address of the deployed SafeProxyFactory contract.")
+console.log("   - The address of the deployed SafeProxyFactory contract.");
 console.log("!: SAFE_ADDRESS:", process.env.SAFE_ADDRESS);
-console.log("   - The address of the deployed master safe contract.")
+console.log("   - The address of the deployed master safe contract.");
 console.log("!: RPC_ENDPOINT:", process.env.RPC_ENDPOINT);
-console.log("   - The address to an EVM chain's json-rpc endpoint.")
+console.log("   - The address to an EVM chain's json-rpc endpoint.");
 console.log("!: OPENLOGIN_CLIENT_ID:", process.env.OPENLOGIN_CLIENT_ID);
-console.log("   - The OpenLogin client-id that's used to generate the user's key.")
+console.log("   - The OpenLogin client-id that's used to generate the user's key.");
 console.log("!: HERE_API_KEY:", process.env.HERE_API_KEY);
-console.log("   - The api key for the here.com geolocation services.")
+console.log("   - The api key for the here.com geolocation services.");
 console.log("!: PLACES_API_KEY:", process.env.PLACES_API_KEY);
-console.log("   - The api key for the google geolocation services.")
+console.log("   - The api key for the google geolocation services.");
 console.log("?: IS_PRODUCTION:", prod ? "true" : "false");
-console.log("   - Minimizes the bundle when 'true'.")
+console.log("   - Minimizes the bundle when 'true'.");
 console.log("?: USE_MOCKS:", __USE_MOCKS__);
 console.log("?: SHOW_LANGUAGE_SWITCHER:", __SHOW_LANGUAGE_SWITCHER__);
 
-if (!process.env.API_ENDPOINT ||
-    !process.env.CIRCLES_SUBGRAPH_ENDPOINT ||
-    !process.env.PATHFINDER_ENDPOINT ||
-    !process.env.CIRCLES_HUB_ADDRESS ||
-    !process.env.SAFE_PROXY_FACTORY_ADDRESS ||
-    !process.env.SAFE_ADDRESS ||
-    !process.env.RPC_ENDPOINT ||
-    !process.env.OPENLOGIN_CLIENT_ID ||
-    !process.env.HERE_API_KEY ||
-    !process.env.PLACES_API_KEY) {
+if (
+  !process.env.API_ENDPOINT ||
+  !process.env.CIRCLES_SUBGRAPH_ENDPOINT ||
+  !process.env.PATHFINDER_ENDPOINT ||
+  !process.env.CIRCLES_HUB_ADDRESS ||
+  !process.env.SAFE_PROXY_FACTORY_ADDRESS ||
+  !process.env.SAFE_ADDRESS ||
+  !process.env.RPC_ENDPOINT ||
+  !process.env.OPENLOGIN_CLIENT_ID ||
+  !process.env.HERE_API_KEY ||
+  !process.env.PLACES_API_KEY
+) {
   console.log("");
-  console.error("Error: All above mandatory (!) environment variables must be set.")
+  console.error("Error: All above mandatory (!) environment variables must be set.");
   console.log("");
   process.exit();
 }
@@ -99,7 +101,7 @@ module.exports = {
     chunkModules: VERBOSE,
     cached: VERBOSE,
     cachedAssets: VERBOSE,
-    warningsFilter: ['../node_modules/']
+    warningsFilter: ["../node_modules/"],
   },
   output: {
     path: __dirname + "/public",
@@ -308,7 +310,11 @@ module.exports = {
     port: process.env.DEPLOY_ENVIRONMENT !== "docker" ? 5000 : 8080,
     host: "localhost",
     open: true,
-    https: false,
+    https: true,
+    https: {
+      key: "./webpack/cert/localhost.key",
+      cert: "./webpack/cert/localhost.crt",
+    },
     client: {
       overlay: {
         errors: true,
