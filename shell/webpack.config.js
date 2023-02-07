@@ -311,6 +311,7 @@ module.exports = {
     host: "localhost",
     open: true,
     client: {
+      webSocketURL: process.env.DEPLOY_ENVIRONMENT !== "docker" ? "wss://o-platform.localhost/ws" : undefined,
       overlay: {
         errors: true,
         warnings: false, // TODO: REMOVE THIS!!!
