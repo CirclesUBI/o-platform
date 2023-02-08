@@ -11,6 +11,9 @@ let camList: HTMLElement;
 let camHasCamera: HTMLElement;
 let statusText: string = "";
 
+// this is needed to disable using the native QR Code detector on Apple silicon devices running Ventura using Chrome 107.x.
+QrScanner["_disableBarcodeDetector"] = true;
+
 $: {
   camQrResult = camQrResult;
 }
@@ -20,6 +23,7 @@ onDestroy(() => {
 });
 
 async function setResult(label, result) {
+  console.log("RES", result);
   label.textContent = result.data;
   label.style.color = "teal";
 
@@ -52,8 +56,9 @@ function startScanner() {
 // ####### Web Cam Scanning #######
 onMount(() => {
   scanner = new QrScanner(video, (result) => setResult(camQrResult, result), {
+    returnDetailedScanResult: true,
     onDecodeError: (error) => {
-      // console.log("CAMQRRESULT", camQrResult); keep this off, it'll drive you crazy!
+      // console.log("CAMQRRESULT", camQrResult); //keep this off, it'll drive you crazy!
     },
     highlightScanRegion: true,
     highlightCodeOutline: true,
