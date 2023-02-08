@@ -51,6 +51,9 @@ cd ../../../../..
 echo "Building 'shell' with dapps .."
 
 cd shell || exit
+
+git describe --always > public/COMMITTISH
+
 npm run build
 cd .. || exit
 
