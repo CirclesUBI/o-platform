@@ -35,9 +35,12 @@ $: {
         <div class="relative pt-2 text-center text-white">
           <span class="inline-block tracking-wide ">
             <section class="m-4 -mb-4 -mr-4 text-center">
-              <h1 class="text-6xl font-enso">
-                {balanceTime}<Icons icon="timeCircle" size="{14}" customClass="inline inline-icon -ml-10 -mt-2" />
-              </h1>
+              <div class="flex">
+                <h1 class="text-6xl font-enso">
+                  {balanceTime}
+                </h1>
+                <Icons icon="timeCircle" size="{14}" customClass="inline ml-2 inline-icon" />
+              </div>
               <span class="text-3xl text-right"> BALANCE </span>
             </section>
           </span>
