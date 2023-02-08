@@ -4,7 +4,7 @@ import PassportHeader from "../atoms/PassportHeader.svelte";
 import { me } from "../../../shared/stores/me";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { Profile } from "../../../shared/api/data/types";
+import { Profile, Businesses } from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
 
 import { Environment } from "../../../shared/environment";
@@ -18,7 +18,7 @@ import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 
 let name;
 let profile: Profile;
-
+let businesses: Businesses[];
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 
@@ -31,6 +31,16 @@ onMount(() => {
     profile = $me;
   } else {
     profile = undefined;
+  }
+  if (profile && profile.memberships) {
+    businesses = profile.memberships.reduce(function (result, option) {
+      if (option.isAdmin === true) {
+        return result.concat(option.organisation);
+      }
+      return result;
+    }, []);
+
+    console.log("BUS", businesses);
   }
 });
 
@@ -69,13 +79,21 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
       <div slot="standardHeaderBoxContent">
         <section class="justify-center">
           <div class="flex flex-col w-full space-y-2">
+            <h2 class="text-alert">
+              Your Newly created shops are only displayed after a log-out and log in. (e.g. through clicking the Action
+              button on the bottom and switching to a different profile and back) <strong>WORK IN PROGRESS</strong>
+            </h2>
             <div class="container p-1 pt-2 xs:p-4">
               <ul>
-                <li class="link">Toko Surf</li>
+                {#if businesses}
+                  {#each businesses as business}
+                    <li>{business.name}</li>
+                  {/each}
+                {/if}
               </ul>
             </div>
             <div class="container p-1 pt-2 text-center xs:p-4">
-              <button class="btn btn-primary btn-sm">Add new Shop</button>
+              <a href="/#/passport/new-organization"><button class="btn btn-primary btn-sm">Add new Shop</button></a>
             </div>
           </div>
         </section>
