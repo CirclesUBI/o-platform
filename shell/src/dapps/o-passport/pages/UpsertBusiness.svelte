@@ -24,6 +24,7 @@ import { ApiClient } from "../../../shared/apiConnection";
 import GooglePlacesAutocomplete from "@silintl/svelte-google-places-autocomplete";
 import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
+import { push } from "svelte-spa-router";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -121,6 +122,7 @@ async function save() {
     const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
 
     console.log(receipt);
+    push("#/passport/profile");
   }
 
   console.log("Saving business", business);
