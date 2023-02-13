@@ -72,7 +72,7 @@ const profile: Page<any, DappState> = {
 
 const newOrganization: Page<any, DappState> = {
   isSystem: false,
-  routeParts: ["=new-organization"],
+  routeParts: ["=new-organization", ":circlesAddress"],
   component: UpsertOrganization,
   title: "Create Shop",
 
