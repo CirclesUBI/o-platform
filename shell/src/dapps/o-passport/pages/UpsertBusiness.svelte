@@ -83,10 +83,13 @@ onMount(async () => {
         },
       },
     });
+    console.log("ASDS", businesses);
     business = businesses.allBusinesses[0];
-    location = <Location>JSON.parse(business.location);
-    week = OpeningHourWeek.parseOpeningHours(business);
-    placeholder = location?.text;
+    if (business) {
+      location = business.location ? <Location>JSON.parse(business.location) : null;
+      week = OpeningHourWeek.parseOpeningHours(business);
+      placeholder = location?.text;
+    }
   } else {
     business = {
       id: -1,
