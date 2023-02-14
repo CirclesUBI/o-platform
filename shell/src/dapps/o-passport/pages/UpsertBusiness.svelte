@@ -13,6 +13,7 @@ import {
   UpsertOrganisationMutationVariables,
 } from "../../../shared/api/data/types";
 import { onMount } from "svelte";
+import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { Environment } from "../../../shared/environment";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
@@ -25,6 +26,7 @@ import GooglePlacesAutocomplete from "@silintl/svelte-google-places-autocomplete
 import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -119,7 +121,7 @@ async function save() {
     );
     const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
 
-    business.circlesAddress = organisationSafeProxy.address;
+    business.circlesAddress = organisationSafeProxy.address.toLowerCase();
 
     const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
     const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
@@ -194,24 +196,20 @@ const options = {
 let locationName = "";
 
 function editProfileField(onlyThesePages: string[]) {
-  // if (business.__typename == "Organisation") {
-  //   window.o.runProcess(
-  //     upsertOrganisation,
-  //     {
-  //       ...profile,
-  //       successAction: (data) => {
-  //         window.o.publishEvent(<PlatformEvent>{
-  //           type: "shell.authenticated",
-  //           profile: data,
-  //         });
-  //       },
-  //     },
-  //     {},
-  //     onlyThesePages
-  //   );
-  // } else {
-  //   window.o.runProcess(upsertIdentity, profile, {}, onlyThesePages);
-  // }
+  window.o.runProcess(
+    upsertOrganisation,
+    {
+      ...business,
+      successAction: (data) => {
+        window.o.publishEvent(<PlatformEvent>{
+          type: "shell.authenticated",
+          profile: data,
+        });
+      },
+    },
+    {},
+    onlyThesePages
+  );
 }
 </script>
 

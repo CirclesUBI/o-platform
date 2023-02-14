@@ -87,7 +87,7 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
               <ul>
                 {#if businesses}
                   {#each businesses as business}
-                    <li>{business.name}</li>
+                    <li><a href="#/passport/organization/{business.circlesAddress}">{business.name}</a></li>
                   {/each}
                 {/if}
               </ul>
