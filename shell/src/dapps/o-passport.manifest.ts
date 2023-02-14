@@ -72,9 +72,28 @@ const profile: Page<any, DappState> = {
 
 const newOrganization: Page<any, DappState> = {
   isSystem: false,
-  routeParts: ["=new-organization", ":circlesAddress"],
+  routeParts: ["=new-organization"],
   component: UpsertOrganization,
   title: "Create Shop",
+
+  type: "page",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "passport",
+        backgroundColorClass: "passport",
+        // action: () => processNavigation.back(),
+      },
+    },
+  },
+};
+
+const editOrganization: Page<any, DappState> = {
+  isSystem: false,
+  routeParts: ["=organization", ":circlesAddress"],
+  component: UpsertOrganization,
+  title: "Edit Organization",
 
   type: "page",
   navigation: {
@@ -245,5 +264,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein, newOrganization],
+  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
 };
