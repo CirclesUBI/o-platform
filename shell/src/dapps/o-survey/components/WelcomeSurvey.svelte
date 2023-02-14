@@ -4,7 +4,7 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 
 function handleClick() {
-  push("#/homepage/survey/2");
+  push("#/survey/2");
 }
 </script>
 
