@@ -33,7 +33,7 @@ function handleClick(button) {
 }
 </script>
 
-<div class="overflow-hidden text-white whitespace-pre-line bg-clip-content">
+<div class="overflow-hidden text-white whitespace-pre-line bg-clip-content font-heading">
   <div class="px-5 py-5 text-center uppercase bg-negative">
     <div class="survey-text">
       <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />
