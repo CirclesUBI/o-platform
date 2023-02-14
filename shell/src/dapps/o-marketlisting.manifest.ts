@@ -6,6 +6,7 @@ import MarketlistingDetail from "./o-marketlisting/pages/MarketlistingDetail.sve
 import Favorites from "./o-marketlisting/pages/Favorites.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
+import MyStore from "./o-marketlisting/pages/MyStore.svelte";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -61,6 +62,25 @@ const detailPage: Page<any, ContactsDappState> = {
   position: "modal",
 };
 
+const myStore: Page<any, DappState> = {
+  isSystem: true,
+  routeParts: ["=mystore", ":circlesAddress"],
+  component: MyStore,
+  title: "My Store",
+
+  type: "page",
+  navigation: {
+    leftSlot: {
+      component: ListComponent,
+      props: {
+        icon: "marketlisting",
+        backgroundColorClass: "market",
+        // action: () => processNavigation.back(),
+      },
+    },
+  },
+};
+
 export interface DappState {
   // put state here
 }
@@ -89,5 +109,5 @@ export const marketlisting: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [listing, detailPage, favorites, externalChat],
+  routables: [listing, detailPage, favorites, externalChat, myStore],
 };

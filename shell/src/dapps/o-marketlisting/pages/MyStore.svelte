@@ -27,6 +27,13 @@ import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { showToast } from "../../../shared/toast";
+import { me } from "../../../shared/stores/me";
+import Center from "../../../shared/layouts/Center.svelte";
+import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelte";
+import { uploadFile } from "../../../shared/api/uploadFile";
+import { useMachine } from "@xstate/svelte";
+import { Readable } from "svelte/store";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -35,8 +42,13 @@ export let circlesAddress: string;
 export let business: Businesses;
 let allCategories: BusinessCategory[];
 let allCategoriesLookup;
+let _state: Readable<any>;
 
 let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInputPlaceholder")}`;
+
+let showModal = false;
+let editImage = false;
+let error = null;
 
 type Location = {
   place: {
@@ -112,56 +124,64 @@ onMount(async () => {
 });
 
 async function save() {
-  if (!business.circlesAddress) {
-    const privateKey = sessionStorage.getItem("circlesKey");
-    const proxyFactory = new GnosisSafeProxyFactory(
-      RpcGateway.get(),
-      Environment.safeProxyFactoryAddress,
-      Environment.masterSafeAddress
+  error = null;
+  if (!business.picture || !business.name) {
+    error = "Please enter at least a Name and upload a Picture";
+  } else {
+    if (!business.circlesAddress) {
+      const privateKey = sessionStorage.getItem("circlesKey");
+      const proxyFactory = new GnosisSafeProxyFactory(
+        RpcGateway.get(),
+        Environment.safeProxyFactoryAddress,
+        Environment.masterSafeAddress
+      );
+      const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
+
+      business.circlesAddress = organisationSafeProxy.address.toLowerCase();
+
+      const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
+      const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
+
+      // console.log(receipt);
+      // push("#/passport/profile");
+    }
+
+    console.log("Saving business", business);
+
+    const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
+      UpsertOrganisationDocument,
+      {
+        organisation: {
+          id: business.id <= 0 ? 0 : business.id,
+          circlesAddress: business.circlesAddress,
+          name: business.name,
+          locationName: business.locationName,
+          lat: business.lat,
+          lon: business.lon,
+          avatarUrl: business.picture,
+          businessHoursMonday: business.businessHoursMonday,
+          businessHoursTuesday: business.businessHoursTuesday,
+          businessHoursWednesday: business.businessHoursWednesday,
+          businessHoursThursday: business.businessHoursThursday,
+          businessHoursFriday: business.businessHoursFriday,
+          businessHoursSaturday: business.businessHoursSaturday,
+          businessHoursSunday: business.businessHoursSunday,
+          description: business.description,
+          location: location ? JSON.stringify(location) : null,
+          phoneNumber: business.phoneNumber,
+          businessCategoryId: business.businessCategoryId,
+        },
+      }
     );
-    const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
 
-    business.circlesAddress = organisationSafeProxy.address.toLowerCase();
+    showToast("success", `${$_("dapps.o-passport.pages.settings.settingsSaved")}`);
 
-    const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
-    const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
-
-    console.log(receipt);
-    push("#/passport/profile");
+    // push(`#/passport/organization/${business.circlesAddress}`);
+    // me.reload();
   }
 
-  console.log("Saving business", business);
-
-  const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
-    UpsertOrganisationDocument,
-    {
-      organisation: {
-        id: business.id <= 0 ? 0 : business.id,
-        circlesAddress: business.circlesAddress,
-        name: business.name,
-        locationName: business.locationName,
-        lat: business.lat,
-        lon: business.lon,
-        avatarUrl: business.picture,
-        businessHoursMonday: business.businessHoursMonday,
-        businessHoursTuesday: business.businessHoursTuesday,
-        businessHoursWednesday: business.businessHoursWednesday,
-        businessHoursThursday: business.businessHoursThursday,
-        businessHoursFriday: business.businessHoursFriday,
-        businessHoursSaturday: business.businessHoursSaturday,
-        businessHoursSunday: business.businessHoursSunday,
-        description: business.description,
-        location: location ? JSON.stringify(location) : null,
-        phoneNumber: business.phoneNumber,
-        businessCategoryId: business.businessCategoryId,
-      },
-    }
-  );
-
-  console.log("result:", result);
+  /// push to edit...
 }
-
-async function validate() {}
 
 function onPlaceChanged(e) {
   console.log("onPlaceChanged", e.detail, locationName);
@@ -195,26 +215,51 @@ const options = {
 
 let locationName = "";
 
-function editProfileField(onlyThesePages: string[]) {
-  window.o.runProcess(
-    upsertOrganisation,
-    {
-      ...business,
-      successAction: (data) => {
-        window.o.publishEvent(<PlatformEvent>{
-          type: "shell.authenticated",
-          profile: data,
-        });
+function imageEditor(type) {
+  showModal = true;
+  editImage = false;
+  if (business.picture) {
+    editImage = true;
+  }
+}
+
+function removeImage() {
+  business.picture = null;
+  showModal = false;
+}
+
+function handleClickOutside(event) {
+  showModal = false;
+}
+
+function handleImageUpload(event) {
+  const machine = (<any>uploadFile).stateMachine("123");
+  const machineOptions = {
+    context: {
+      data: {
+        appId: "wurst",
+        mimeType: "image/jpeg",
+        bytes: event.detail.croppedImage,
       },
     },
-    {},
-    onlyThesePages
-  );
+  };
+  const { service, state, send } = useMachine(machine, machineOptions);
+  service.start();
+  _state = state;
+  showModal = false;
+}
+$: {
+  if (_state) {
+    if ($_state.value == "success") {
+      business.picture = $_state.context.data.url;
+      _state = null;
+    }
+  }
 }
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-<!--<PassportHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />-->
+
 {#if !business}
   <div class="pb-20 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
@@ -222,7 +267,7 @@ function editProfileField(onlyThesePages: string[]) {
     </section>
   </div>
 {:else}
-  <div class="p-4 pb-20 mx-auto md:w-2/3 xl:w-1/2">
+  <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
         {#if !circlesAddress}
@@ -244,7 +289,7 @@ function editProfileField(onlyThesePages: string[]) {
                   <div
                     class="flex justify-center w-full mt-2"
                     role="presentation"
-                    on:click="{() => editProfileField(['file', 'avatarUrl'])}">
+                    on:click="{() => imageEditor(false)}">
                     <UserImage
                       profile="{{
                         circlesAddress: business.circlesAddress,
@@ -320,9 +365,9 @@ function editProfileField(onlyThesePages: string[]) {
                       value="name"
                       dropDownClass="mt-1 select input w-full"
                       on:dropDownChange="{(event) => {
-                        const selectedItems = event.detail[0];
-                        business.businessCategoryId = selectedItems?.id;
-                        business.businessCategory = selectedItems?.name;
+                        const selectedItems = event.detail;
+                        business.businessCategoryId = parseInt(selectedItems?.value);
+                        business.businessCategory = allCategoriesLookup[selectedItems?.value];
                       }}" />
                   {/if}
                 </div>
@@ -343,8 +388,16 @@ function editProfileField(onlyThesePages: string[]) {
             </div>
           </div>
         </StandardHeaderBox>
+        {#if error}
+          <span class="text-sm text-center text-alert">{error}</span>
+        {/if}
         <button class="btn btn-primary" on:click="{() => save()}">Save</button>
       </div>
     </section>
   </div>
+  {#if showModal}
+    <Center blur="{true}" on:clickedOutside="{handleClickOutside}">
+      <ImageUpload on:submit="{handleImageUpload}" maxWidth="{700}" />
+    </Center>
+  {/if}
 {/if}
