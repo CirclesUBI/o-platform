@@ -1,5 +1,5 @@
 <script lang="ts">
-import { surveyConsents } from "../stores/surveyStore";
+import { surveyConsents } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
 import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
@@ -18,14 +18,14 @@ myForm.validate();
 
 function handleClick(button) {
   if (button === "back") {
-    push("#/homepage/survey/1");
+    push("#/survey/1");
   } else {
     if ($myForm.valid) {
       $surveyConsents.researchConsent = $research.value;
       $surveyConsents.participateConsent = $participate.value;
       $surveyConsents.endingConsent = $ending.value;
       sessionStorage.setItem("surveyConsentPage1", "true");
-      push("#/homepage/survey/3");
+      push("#/survey/3");
     } else {
       sessionStorage.setItem("surveyConsentPage1", "false");
     }

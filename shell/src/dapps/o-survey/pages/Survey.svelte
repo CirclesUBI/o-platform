@@ -3,7 +3,6 @@ import "../../../shared/css/tailwind.css";
 import TopNav from "../../../shared/atoms/TopNav.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import VideoHeader from "../components/VideoHeader.svelte";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import WelcomeSurvey from "../components/WelcomeSurvey.svelte";
 import InformedConsentFirst from "../components/InformedConsentFirstSurvey.svelte";
@@ -42,3 +41,4 @@ sessionStorage.getItem("circlesKey");
     <SignUpInvitation />
   {/if}
 </div>
+  
