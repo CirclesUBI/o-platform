@@ -19,7 +19,7 @@ myForm.validate();
 
 function handleClick(button) {
   if (button === "back") {
-    push("#/survey/1");
+    push("#/survey/page/1");
   } else {
     if ($myForm.valid) {
       $surveyConsents.exchangeConsent = $exchange.value;
