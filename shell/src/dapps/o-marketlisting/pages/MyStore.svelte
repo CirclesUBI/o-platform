@@ -5,13 +5,19 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
+import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import {
   BusinessCategory,
   Businesses,
   UpsertOrganisationDocument,
   UpsertOrganisationMutation,
   UpsertOrganisationMutationVariables,
+  ProfilesByCirclesAddressDocument,
+  ProfilesByCirclesAddressQueryVariables,
+  Profile,
 } from "../../../shared/api/data/types";
+
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
@@ -38,12 +44,14 @@ export let business: Businesses;
 let allCategories: BusinessCategory[];
 let allCategoriesLookup;
 let _state: Readable<any>;
+let ownerProfiles: Profile[];
 
 let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInputPlaceholder")}`;
 
 let showModal = false;
 let editImage = false;
 let error = null;
+let owners;
 
 type Location = {
   place: {
@@ -79,42 +87,41 @@ let week: OpeningHourWeek;
 
 onMount(async () => {
   allCategories = (await Environment.api.allBusinessCategories()).allBusinessCategories;
-
   allCategoriesLookup = allCategories.toLookup(
     (o) => o.id,
     (o) => o
   );
-  if (circlesAddress) {
-    const businesses = await Environment.api.allBusinesses({
-      queryParams: {
-        where: {
-          inCirclesAddress: [circlesAddress.toLowerCase()],
-        },
-      },
-    });
 
-    business = businesses.allBusinesses[0];
-    if (business) {
-      location = business.location ? <Location>JSON.parse(business.location) : null;
-      week = OpeningHourWeek.parseOpeningHours(business);
-      placeholder = location?.text;
+  const businesses = await Environment.api.allBusinesses({
+    queryParams: {
+      where: {
+        inCirclesAddress: [circlesAddress.toLowerCase()],
+      },
+    },
+  });
+
+  business = businesses.allBusinesses[0];
+  if (business) {
+    location = business.location ? <Location>JSON.parse(business.location) : null;
+    week = OpeningHourWeek.parseOpeningHours(business);
+    placeholder = location?.text;
+
+    const safeProxy = new GnosisSafeProxy(RpcGateway.get(), business.circlesAddress);
+    owners = await safeProxy.getOwners();
+
+    try {
+      const profiles = await ApiClient.query<Profile[], ProfilesByCirclesAddressQueryVariables>(
+        ProfilesByCirclesAddressDocument,
+        {
+          circlesAddresses: owners,
+        }
+      );
+      ownerProfiles = profiles;
+      console.log("OWNAA", owners);
+      console.log("BUSI", business.circlesAddress);
+    } catch (error) {
+      console.info(`Could not load Members for circlesAddress: ${business.circlesAddress}`);
     }
-  } else {
-    business = {
-      id: -1,
-      circlesAddress: "",
-      name: "",
-      description: "",
-    };
-    week = OpeningHourWeek.parseOpeningHours({
-      businessHoursMonday: "",
-      businessHoursTuesday: "",
-      businessHoursWednesday: "",
-      businessHoursThursday: "",
-      businessHoursFriday: "",
-      businessHoursSaturday: "",
-      businessHoursSunday: "",
-    });
   }
 });
 
@@ -348,6 +355,21 @@ $: {
                       ...(week?.serializeWeek() ?? {}),
                     };
                   }}" />
+              </div>
+            </div>
+          </div>
+        </StandardHeaderBox>
+        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.owners">
+          <div slot="standardHeaderBoxContent">
+            <div class="flex flex-col space-y-2">
+              <div class="flex flex-col">
+                <div class="flex flex-col mb-5 text-sm">
+                  {#if ownerProfiles}
+                    {#each ownerProfiles as ownerProfile}
+                      {ownerProfile.firstName}
+                    {/each}
+                  {/if}
+                </div>
               </div>
             </div>
           </div>
