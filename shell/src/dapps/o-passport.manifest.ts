@@ -12,7 +12,6 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { AvataarGenerator } from "../shared/avataarGenerator";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import { Profile } from "../shared/api/data/types";
-import UpsertOrganization from "./o-passport/pages/UpsertBusiness.svelte";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 
 const externalChat: Link<any, DappState> = {
@@ -37,7 +36,7 @@ const index: Page<any, DappState> = {
         icon: "accounts",
         backgroundColorClass: "passport",
         // action: () => processNavigation.back(),
-      }
+      },
     },
   },
 };
@@ -56,44 +55,6 @@ const profile: Page<any, DappState> = {
   routeParts: ["=profile", ":profileId"],
   component: Home,
   title: "Profile",
-
-  type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "passport",
-        backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
-      },
-    },
-  },
-};
-
-const newOrganization: Page<any, DappState> = {
-  isSystem: false,
-  routeParts: ["=new-organization"],
-  component: UpsertOrganization,
-  title: "Create Shop",
-
-  type: "page",
-  navigation: {
-    leftSlot: {
-      component: ListComponent,
-      props: {
-        icon: "passport",
-        backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
-      },
-    },
-  },
-};
-
-const editOrganization: Page<any, DappState> = {
-  isSystem: false,
-  routeParts: ["=edit-organization", ":circlesAddress"],
-  component: UpsertOrganization,
-  title: "Shop 1",
 
   type: "page",
   navigation: {
@@ -264,5 +225,5 @@ export const passport: DappManifest<DappState> = {
       cancelDependencyLoading: false,
     };
   },
-  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein, newOrganization, editOrganization],
+  routables: [index, profile, account, externalChat, verifyEmail, logmeout, logmein],
 };

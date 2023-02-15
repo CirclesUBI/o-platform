@@ -23,7 +23,7 @@ export let isSurveyPage: boolean;
 
 $: {
   const url = window.location.href;
-  if (url.indexOf('homepage/survey') > -1) {
+  if (url.indexOf("survey") > -1) {
     isSurveyPage = true;
   }
   // console.log("LayoutChanged:", layout);

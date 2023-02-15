@@ -5,6 +5,7 @@ import { me } from "../stores/me";
 import { Profile } from "../api/data/types";
 import { push } from "svelte-spa-router";
 
+import { SvelteToast } from "../molecules/Toast";
 import LangSwitcher from "./LangSwitcher.svelte";
 export let runtimeDapp: RuntimeDapp<any>;
 let profile: Profile;
@@ -32,6 +33,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
 
 <!-- bg-home bg-cpurple bg-marketplace bg-contact bg-passport -->
 <div class="fixed top-0 left-0 z-50 w-full">
+  <SvelteToast />
   <div class="flex flex-row justify-between w-full text-white navbar">
     <div
       class="p-1 xs:p-3 pr-6 xs:pr-12 -mt-8 xs:-mt-2 whitespace-nowrap {cleanRoute
