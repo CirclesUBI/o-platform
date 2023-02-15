@@ -25,17 +25,16 @@ sessionStorage.getItem("circlesKey");
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="mt-8">
-  {#if id == "2"}
+  {#if id == "1"}
     <InformedConsentFirst />
   {/if}
-  {#if id == "3"}
+  {#if id == "2"}
     <InformedConsentSecond />
   {/if}
-  {#if id == "4"}
+  {#if id == "3"}
     <UserDataCollectionSurvey />
   {/if}
-  {#if id == "5"}
+  {#if id == "4"}
     <SignUpInvitation />
   {/if}
 </div>
-  
