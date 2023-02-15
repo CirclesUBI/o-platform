@@ -8,7 +8,7 @@ function handleClick() {
 }
 </script>
 
-<div class="p-1 pr-4 -mt-6 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
+<div class="p-1 pr-4 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
   <div class="flex flex-col items-center justify-center">
     <div class="ml-2 text-4xl text-white uppercase">
       <Label key="dapps.o-homepage.components.survey.title.top" />
@@ -28,7 +28,7 @@ function handleClick() {
   <div class="text-xl text-center uppercase whitespace-pre-line">
     <Label key="dapps.o-homepage.components.survey.eachCircle" />
   </div>
-  <div class="flex flex-row justify-around mt-10 mb-5 text-center buttons-container">
+  <div class="flex flex-row items-start justify-around pt-8 mb-5 text-center align-top">
     <div>
       <button
         class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
