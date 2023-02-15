@@ -25,7 +25,7 @@ function handleClick(button) {
       $surveyConsents.participateConsent = $participate.value;
       $surveyConsents.endingConsent = $ending.value;
       sessionStorage.setItem("surveyConsentPage1", "true");
-      push("#/survey/3");
+      push("#/survey/page/2");
     } else {
       sessionStorage.setItem("surveyConsentPage1", "false");
     }

@@ -19,7 +19,7 @@ myForm.validate();
 
 function handleClick(button) {
   if (button === "back") {
-    push("#/survey/2");
+    push("#/survey/1");
   } else {
     if ($myForm.valid) {
       $surveyConsents.exchangeConsent = $exchange.value;
@@ -27,7 +27,7 @@ function handleClick(button) {
       $surveyConsents.onlyFromFriends = $onlyFromFriends.value;
       $surveyConsents.allConsentsGiven = true;
       sessionStorage.setItem("surveyConsentPage2", "true");
-      push("#/survey/4");
+      push("#/survey/page/3");
     } else {
       sessionStorage.setItem("surveyConsentPage2", "false");
     }
