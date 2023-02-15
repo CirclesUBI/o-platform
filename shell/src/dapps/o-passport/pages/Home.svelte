@@ -45,13 +45,6 @@ onMount(() => {
   }
 });
 
-function editProfile(dirtyFlags: { [x: string]: boolean }) {
-  if (profile.__typename == "Organisation") {
-    window.o.runProcess(upsertOrganisation, profile, {}, Object.keys(dirtyFlags));
-  } else {
-    window.o.runProcess(upsertIdentity, profile, {}, Object.keys(dirtyFlags));
-  }
-}
 function switchAccount(account) {
   window.o.publishEvent(<PlatformEvent>{
     type: "shell.loggedOut",
@@ -127,7 +120,7 @@ function createNewOrga() {
                   <!-- svelte-ignore a11y-click-events-have-key-events -->
                   <div class="flex items-center w-full space-x-2 cursor-pointer" on:click="{switchAccount(business)}">
                     <div class="">
-                      <UserImage profile="{business}" size="{8}" />
+                      <UserImage profile="{business}" size="{8}" profileLink="{false}" />
                     </div>
                     <div>
                       {business.name}
@@ -149,11 +142,10 @@ function createNewOrga() {
           <section class="justify-center">
             <div class="flex flex-col w-full space-y-2">
               <div class="container p-1 pt-2 xs:p-4">
-                <ul>
-                  <li>
-                    <a href="#/market/mystore/{profile.circlesAddress}" class="link link-neutral">Edit Shop</a>
-                  </li>
-                </ul>
+                <center>
+                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"
+                    ><button class="btn btn-primary">Edit Shop</button></a>
+                </center>
               </div>
             </div>
           </section>

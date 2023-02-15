@@ -97,7 +97,7 @@ onMount(async () => {
         },
       },
     });
-    console.log("ASDS", businesses);
+
     business = businesses.allBusinesses[0];
     if (business) {
       location = business.location ? <Location>JSON.parse(business.location) : null;
@@ -128,26 +128,6 @@ async function save() {
   if (!business.picture || !business.name) {
     error = "Please enter at least a Name and upload a Picture";
   } else {
-    if (!business.circlesAddress) {
-      const privateKey = sessionStorage.getItem("circlesKey");
-      const proxyFactory = new GnosisSafeProxyFactory(
-        RpcGateway.get(),
-        Environment.safeProxyFactoryAddress,
-        Environment.masterSafeAddress
-      );
-      const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
-
-      business.circlesAddress = organisationSafeProxy.address.toLowerCase();
-
-      const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
-      const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
-
-      // console.log(receipt);
-      // push("#/passport/profile");
-    }
-
-    console.log("Saving business", business);
-
     const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
       UpsertOrganisationDocument,
       {
@@ -176,15 +156,11 @@ async function save() {
 
     showToast("success", `${$_("dapps.o-passport.pages.settings.settingsSaved")}`);
 
-    // push(`#/passport/organization/${business.circlesAddress}`);
     // me.reload();
   }
-
-  /// push to edit...
 }
 
 function onPlaceChanged(e) {
-  console.log("onPlaceChanged", e.detail, locationName);
   if (e.detail) {
     location = e.detail;
     business.location = JSON.stringify(location);
@@ -221,11 +197,6 @@ function imageEditor(type) {
   if (business.picture) {
     editImage = true;
   }
-}
-
-function removeImage() {
-  business.picture = null;
-  showModal = false;
 }
 
 function handleClickOutside(event) {
