@@ -2,15 +2,29 @@ import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import Survey from "./o-survey/pages/Survey.svelte";
 import ScanInvite from "./o-survey/molecules/ScanInvite.svelte";
+import WelcomeSurvey from './o-survey/components/WelcomeSurvey.svelte';
 import Home from "./o-homepage/pages/Home.svelte";
 
 const index: Page<any, DappState> = {
     isSystem: true,
-    routeParts: [":id"],
+    routeParts: [],
     title: "common.all",
     pageBackgroundClass: "bg-cpurple",
     icon: "forum",
     type: "page",
+    component: WelcomeSurvey,
+  };
+
+  const surveySteps: Page<any, DappState> = {
+    type: "page",
+    isSystem: true,
+    anonymous: true,
+    navigation: {},
+    hideFooter: true,
+    title: "dapps.o-homepage.pages.survey.title",
+    pageBackgroundClass: "bg-cpurple",
+    routeParts: [":id"],
+    icon: "forum",
     component: Survey,
   };
   
@@ -45,5 +59,5 @@ const index: Page<any, DappState> = {
         cancelDependencyLoading: false,
       };
     },
-    routables: [index, scanInvite]
+    routables: [index, surveySteps, scanInvite]
   };

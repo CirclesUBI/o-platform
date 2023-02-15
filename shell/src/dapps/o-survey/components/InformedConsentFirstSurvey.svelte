@@ -18,7 +18,7 @@ myForm.validate();
 
 function handleClick(button) {
   if (button === "back") {
-    push("#/survey/1");
+    push("#/survey");
   } else {
     if ($myForm.valid) {
       $surveyConsents.researchConsent = $research.value;
