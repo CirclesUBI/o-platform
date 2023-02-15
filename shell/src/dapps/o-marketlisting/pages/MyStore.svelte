@@ -13,20 +13,15 @@ import {
   UpsertOrganisationMutationVariables,
 } from "../../../shared/api/data/types";
 import { onMount } from "svelte";
-import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { Environment } from "../../../shared/environment";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
-import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
 import { ApiClient } from "../../../shared/apiConnection";
 import GooglePlacesAutocomplete from "@silintl/svelte-google-places-autocomplete";
 import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { showToast } from "../../../shared/toast";
 import { me } from "../../../shared/stores/me";
 import Center from "../../../shared/layouts/Center.svelte";
@@ -126,7 +121,7 @@ onMount(async () => {
 async function save() {
   error = null;
   if (!business.picture || !business.name) {
-    error = "Please enter at least a Name and upload a Picture";
+    error = $_("dapps.o-marketlisting.pages.mystore.error.no-name-or-picture");
   } else {
     const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
       UpsertOrganisationDocument,
@@ -154,9 +149,9 @@ async function save() {
       }
     );
 
-    showToast("success", `${$_("dapps.o-passport.pages.settings.settingsSaved")}`);
+    showToast("success", `${$_("dapps.o-marketlisting.pages.mystore.settingsSaved")}`);
 
-    // me.reload();
+    me.reload();
   }
 }
 
@@ -179,7 +174,7 @@ function onPlaceChanged(e) {
     }
   }
 }
-
+// Apparently the Google Api _needs_ a callback in order to even load...
 function onReady(e) {
   console.log("onReady", e.detail, locationName);
 }
@@ -241,11 +236,7 @@ $: {
   <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
-        {#if !circlesAddress}
-          <h1 class="text-center">New organization</h1>
-        {:else}
-          <h1 class="text-center">{business.name}</h1>
-        {/if}
+        <h1 class="text-center">{business.name}</h1>
       </div>
     </section>
     <pre></pre>
@@ -329,7 +320,9 @@ $: {
                 <div class="flex mt-2">
                   {#if allCategories}
                     <DropDown
-                      selected="{business.businessCategory ? business.businessCategory : 'Select Category'}"
+                      selected="{business.businessCategory
+                        ? business.businessCategory
+                        : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
                       items="{allCategories}"
                       id="filters"
                       key="id"
@@ -362,7 +355,7 @@ $: {
         {#if error}
           <span class="text-sm text-center text-alert">{error}</span>
         {/if}
-        <button class="btn btn-primary" on:click="{() => save()}">Save</button>
+        <button class="btn btn-primary" on:click="{() => save()}"><Label key="common.save" /></button>
       </div>
     </section>
   </div>
