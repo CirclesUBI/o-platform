@@ -273,7 +273,7 @@ const processDefinition = (processId: string) =>
         navigation: {
           next: "#upsertIdentity",
           previous: "#avatarUrl",
-          canSkip: () => true,
+          canSkip: () => false,
         },
       }),
 

@@ -3,7 +3,6 @@ import "../../../shared/css/tailwind.css";
 import TopNav from "../../../shared/atoms/TopNav.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import VideoHeader from "../components/VideoHeader.svelte";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import WelcomeSurvey from "../components/WelcomeSurvey.svelte";
 import InformedConsentFirst from "../components/InformedConsentFirstSurvey.svelte";
@@ -27,18 +26,15 @@ sessionStorage.getItem("circlesKey");
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="mt-8">
   {#if id == "1"}
-    <WelcomeSurvey />
-  {/if}
-  {#if id == "2"}
     <InformedConsentFirst />
   {/if}
-  {#if id == "3"}
+  {#if id == "2"}
     <InformedConsentSecond />
   {/if}
-  {#if id == "4"}
+  {#if id == "3"}
     <UserDataCollectionSurvey />
   {/if}
-  {#if id == "5"}
+  {#if id == "4"}
     <SignUpInvitation />
   {/if}
 </div>

@@ -4,8 +4,6 @@ import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import Terms from "./o-homepage/pages/Terms.svelte";
 import Privacy from "./o-homepage/pages/Privacy.svelte";
-import Survey from "./o-homepage/pages/Survey.svelte";
-import ScanInvite from "./o-homepage/molecules/ScanInvite.svelte";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -69,29 +67,6 @@ const privacy: Page<any, DappState> = {
   component: Privacy,
 };
 
-const survey: Page<any, DappState> = {
-  type: "page",
-  isSystem: true,
-  anonymous: true,
-  navigation: {},
-  hideFooter: true,
-  title: "dapps.o-homepage.pages.survey.title",
-  pageBackgroundClass: "bg-cpurple",
-  routeParts: ["=survey", ":id"],
-  icon: "forum",
-  component: Survey,
-};
-
-export const scanInvite: Page<any, DappState> = {
-  type: "page",
-  pageBackgroundClass: "bg-cpurple",
-  isSystem: true,
-  position: "modal",
-  routeParts: ["=scanInvite"],
-  title: "Scan to trust",
-  component: ScanInvite,
-};
-
 export interface DappState {
   // put state here
 }
@@ -112,5 +87,5 @@ export const homepage: DappManifest<DappState> = {
     };
   },
   hideFooterGradient: true,
-  routables: [index, invite, login, terms, privacy, externalChat, survey, scanInvite],
+  routables: [index, invite, login, terms, privacy, externalChat],
 };

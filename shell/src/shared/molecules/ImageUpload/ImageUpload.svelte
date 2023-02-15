@@ -7,7 +7,7 @@ import Cropper from "svelte-easy-crop";
 import Resizer from "react-image-file-resizer";
 
 export let cropShape: string = "rect";
-export let aspect: number;
+export let aspect: number = 1 / 1;
 export let maxWidth: number = 500;
 
 const resize = Resizer.imageFileResizer;
@@ -142,7 +142,13 @@ async function submit() {
       </Dropzone>
     {:else}
       <div style="position: relative; width: 100%; height: 300px;">
-        <Cropper image="{image}" bind:crop bind:zoom bind:aspect bind:cropShape on:cropcomplete="{previewCrop}" />
+        <Cropper
+          image="{image}"
+          bind:crop="{crop}"
+          bind:zoom="{zoom}"
+          bind:aspect="{aspect}"
+          bind:cropShape="{cropShape}"
+          on:cropcomplete="{previewCrop}" />
       </div>
 
       <!-- we need this, otherwise the zoom doesnt work. though it needs to stay hidden. -->

@@ -5,26 +5,36 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
+// import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+// import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import {
   BusinessCategory,
   Businesses,
   UpsertOrganisationDocument,
   UpsertOrganisationMutation,
   UpsertOrganisationMutationVariables,
+  // ProfilesByCirclesAddressDocument,
+  // ProfilesByCirclesAddressQueryVariables,
+  Profile,
 } from "../../../shared/api/data/types";
+
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
-import { GnosisSafeProxyFactory } from "@o-platform/o-circles/dist/safe/gnosisSafeProxyFactory";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
 import { ApiClient } from "../../../shared/apiConnection";
 import GooglePlacesAutocomplete from "@silintl/svelte-google-places-autocomplete";
 import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
+import { showToast } from "../../../shared/toast";
+import { me } from "../../../shared/stores/me";
+import Center from "../../../shared/layouts/Center.svelte";
+import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelte";
+import { uploadFile } from "../../../shared/api/uploadFile";
+import { useMachine } from "@xstate/svelte";
+import { Readable } from "svelte/store";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -33,8 +43,15 @@ export let circlesAddress: string;
 export let business: Businesses;
 let allCategories: BusinessCategory[];
 let allCategoriesLookup;
+let _state: Readable<any>;
+let ownerProfiles: Profile[];
 
 let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInputPlaceholder")}`;
+
+let showModal = false;
+let editImage = false;
+let error = null;
+// let owners;
 
 type Location = {
   place: {
@@ -70,96 +87,82 @@ let week: OpeningHourWeek;
 
 onMount(async () => {
   allCategories = (await Environment.api.allBusinessCategories()).allBusinessCategories;
-
   allCategoriesLookup = allCategories.toLookup(
     (o) => o.id,
     (o) => o
   );
-  if (circlesAddress) {
-    const businesses = await Environment.api.allBusinesses({
-      queryParams: {
-        where: {
-          inCirclesAddress: [circlesAddress.toLowerCase()],
-        },
+
+  const businesses = await Environment.api.allBusinesses({
+    queryParams: {
+      where: {
+        inCirclesAddress: [circlesAddress.toLowerCase()],
       },
-    });
-    business = businesses.allBusinesses[0];
-    location = <Location>JSON.parse(business.location);
+    },
+  });
+
+  business = businesses.allBusinesses[0];
+  if (business) {
+    location = business.location ? <Location>JSON.parse(business.location) : null;
     week = OpeningHourWeek.parseOpeningHours(business);
     placeholder = location?.text;
-  } else {
-    business = {
-      id: -1,
-      circlesAddress: "",
-      name: "",
-      description: "",
-    };
-    week = OpeningHourWeek.parseOpeningHours({
-      businessHoursMonday: "",
-      businessHoursTuesday: "",
-      businessHoursWednesday: "",
-      businessHoursThursday: "",
-      businessHoursFriday: "",
-      businessHoursSaturday: "",
-      businessHoursSunday: "",
-    });
+
+    // const safeProxy = new GnosisSafeProxy(RpcGateway.get(), business.circlesAddress);
+    // owners = await safeProxy.getOwners();
+
+    // try {
+    //   const profiles = await ApiClient.query<Profile[], ProfilesByCirclesAddressQueryVariables>(
+    //     ProfilesByCirclesAddressDocument,
+    //     {
+    //       circlesAddresses: owners,
+    //     }
+    //   );
+    //   ownerProfiles = profiles;
+    //   console.log("OWNAA", owners);
+    //   console.log("BUSI", business.circlesAddress);
+    // } catch (error) {
+    //   console.info(`Could not load Members for circlesAddress: ${business.circlesAddress}`);
+    // }
   }
 });
 
 async function save() {
-  if (!business.circlesAddress) {
-    const privateKey = sessionStorage.getItem("circlesKey");
-    const proxyFactory = new GnosisSafeProxyFactory(
-      RpcGateway.get(),
-      Environment.safeProxyFactoryAddress,
-      Environment.masterSafeAddress
+  error = null;
+  if (!business.picture || !business.name) {
+    error = $_("dapps.o-marketlisting.pages.mystore.error.no-name-or-picture");
+  } else {
+    const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
+      UpsertOrganisationDocument,
+      {
+        organisation: {
+          id: business.id <= 0 ? 0 : business.id,
+          circlesAddress: business.circlesAddress,
+          name: business.name,
+          locationName: business.locationName,
+          lat: business.lat,
+          lon: business.lon,
+          avatarUrl: business.picture,
+          businessHoursMonday: business.businessHoursMonday,
+          businessHoursTuesday: business.businessHoursTuesday,
+          businessHoursWednesday: business.businessHoursWednesday,
+          businessHoursThursday: business.businessHoursThursday,
+          businessHoursFriday: business.businessHoursFriday,
+          businessHoursSaturday: business.businessHoursSaturday,
+          businessHoursSunday: business.businessHoursSunday,
+          description: business.description,
+          location: location ? JSON.stringify(location) : null,
+          phoneNumber: business.phoneNumber,
+          businessCategoryId: business.businessCategoryId,
+        },
+      }
     );
-    const organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
 
-    business.circlesAddress = organisationSafeProxy.address;
+    showToast("success", `${$_("dapps.o-marketlisting.pages.mystore.settingsSaved")}`);
 
-    const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
-    const receipt = await hub.signupOrganisation(privateKey, organisationSafeProxy);
-
-    console.log(receipt);
-    push("#/passport/profile");
+    me.reload();
   }
-
-  console.log("Saving business", business);
-
-  const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
-    UpsertOrganisationDocument,
-    {
-      organisation: {
-        id: business.id <= 0 ? 0 : business.id,
-        circlesAddress: business.circlesAddress,
-        name: business.name,
-        locationName: business.locationName,
-        lat: business.lat,
-        lon: business.lon,
-        avatarUrl: business.picture,
-        businessHoursMonday: business.businessHoursMonday,
-        businessHoursTuesday: business.businessHoursTuesday,
-        businessHoursWednesday: business.businessHoursWednesday,
-        businessHoursThursday: business.businessHoursThursday,
-        businessHoursFriday: business.businessHoursFriday,
-        businessHoursSaturday: business.businessHoursSaturday,
-        businessHoursSunday: business.businessHoursSunday,
-        description: business.description,
-        location: location ? JSON.stringify(location) : null,
-        phoneNumber: business.phoneNumber,
-        businessCategoryId: business.businessCategoryId,
-      },
-    }
-  );
-
-  console.log("result:", result);
 }
 
-async function validate() {}
-
 function onPlaceChanged(e) {
-  console.log("onPlaceChanged", e.detail, locationName);
   if (e.detail) {
     location = e.detail;
     business.location = JSON.stringify(location);
@@ -178,7 +181,7 @@ function onPlaceChanged(e) {
     }
   }
 }
-
+// Apparently the Google Api _needs_ a callback in order to even load...
 function onReady(e) {
   console.log("onReady", e.detail, locationName);
 }
@@ -190,30 +193,46 @@ const options = {
 
 let locationName = "";
 
-function editProfileField(onlyThesePages: string[]) {
-  // if (business.__typename == "Organisation") {
-  //   window.o.runProcess(
-  //     upsertOrganisation,
-  //     {
-  //       ...profile,
-  //       successAction: (data) => {
-  //         window.o.publishEvent(<PlatformEvent>{
-  //           type: "shell.authenticated",
-  //           profile: data,
-  //         });
-  //       },
-  //     },
-  //     {},
-  //     onlyThesePages
-  //   );
-  // } else {
-  //   window.o.runProcess(upsertIdentity, profile, {}, onlyThesePages);
-  // }
+function imageEditor(type) {
+  showModal = true;
+  editImage = false;
+  if (business.picture) {
+    editImage = true;
+  }
+}
+
+function handleClickOutside(event) {
+  showModal = false;
+}
+
+function handleImageUpload(event) {
+  const machine = (<any>uploadFile).stateMachine("123");
+  const machineOptions = {
+    context: {
+      data: {
+        appId: "wurst",
+        mimeType: "image/jpeg",
+        bytes: event.detail.croppedImage,
+      },
+    },
+  };
+  const { service, state, send } = useMachine(machine, machineOptions);
+  service.start();
+  _state = state;
+  showModal = false;
+}
+$: {
+  if (_state) {
+    if ($_state.value == "success") {
+      business.picture = $_state.context.data.url;
+      _state = null;
+    }
+  }
 }
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-<!--<PassportHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />-->
+
 {#if !business}
   <div class="pb-20 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
@@ -221,14 +240,10 @@ function editProfileField(onlyThesePages: string[]) {
     </section>
   </div>
 {:else}
-  <div class="p-4 pb-20 mx-auto md:w-2/3 xl:w-1/2">
+  <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
-        {#if !circlesAddress}
-          <h1 class="text-center">New organization</h1>
-        {:else}
-          <h1 class="text-center">{business.name}</h1>
-        {/if}
+        <h1 class="text-center">{business.name}</h1>
       </div>
     </section>
     <pre></pre>
@@ -243,7 +258,7 @@ function editProfileField(onlyThesePages: string[]) {
                   <div
                     class="flex justify-center w-full mt-2"
                     role="presentation"
-                    on:click="{() => editProfileField(['file', 'avatarUrl'])}">
+                    on:click="{() => imageEditor(false)}">
                     <UserImage
                       profile="{{
                         circlesAddress: business.circlesAddress,
@@ -312,16 +327,18 @@ function editProfileField(onlyThesePages: string[]) {
                 <div class="flex mt-2">
                   {#if allCategories}
                     <DropDown
-                      selected="{business.businessCategory ? business.businessCategory : 'Select Category'}"
+                      selected="{business.businessCategory
+                        ? business.businessCategory
+                        : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
                       items="{allCategories}"
                       id="filters"
                       key="id"
                       value="name"
                       dropDownClass="mt-1 select input w-full"
                       on:dropDownChange="{(event) => {
-                        const selectedItems = event.detail[0];
-                        business.businessCategoryId = selectedItems?.id;
-                        business.businessCategory = selectedItems?.name;
+                        const selectedItems = event.detail;
+                        business.businessCategoryId = parseInt(selectedItems?.value);
+                        business.businessCategory = allCategoriesLookup[selectedItems?.value];
                       }}" />
                   {/if}
                 </div>
@@ -342,8 +359,31 @@ function editProfileField(onlyThesePages: string[]) {
             </div>
           </div>
         </StandardHeaderBox>
-        <button class="btn btn-primary" on:click="{() => save()}">Save</button>
+        <!-- <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.owners">
+          <div slot="standardHeaderBoxContent">
+            <div class="flex flex-col space-y-2">
+              <div class="flex flex-col">
+                <div class="flex flex-col mb-5 text-sm">
+                  {#if ownerProfiles}
+                    {#each ownerProfiles as ownerProfile}
+                      {ownerProfile.firstName}
+                    {/each}
+                  {/if}
+                </div>
+              </div>
+            </div>
+          </div>
+        </StandardHeaderBox> -->
+        {#if error}
+          <span class="text-sm text-center text-alert">{error}</span>
+        {/if}
+        <button class="btn btn-primary" on:click="{() => save()}"><Label key="common.save" /></button>
       </div>
     </section>
   </div>
+  {#if showModal}
+    <Center blur="{true}" on:clickedOutside="{handleClickOutside}">
+      <ImageUpload on:submit="{handleImageUpload}" maxWidth="{700}" />
+    </Center>
+  {/if}
 {/if}
