@@ -31,12 +31,6 @@ function handleClick() {
   <div class="flex flex-row justify-around mt-10 mb-5 text-center buttons-container">
     <div>
       <button
-        class="relative px-8 overflow-hidden transition-all transform btn btn-light bg-cpurple border-warning text-warning svelte-12kbnbk"
-        on:click="{() => handleClick()}">
-        {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
-    </div>
-    <div>
-      <button
         class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
         on:click="{() => handleClick()}">
         {$_("dapps.o-homepage.components.survey.button.next")}</button>
