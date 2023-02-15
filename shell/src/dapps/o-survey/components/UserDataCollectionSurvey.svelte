@@ -38,9 +38,9 @@ $: {
 
 async function handleClick(button) {
   if (button === "back") {
-    push("#/homepage/survey/3");
+    push("#/survey/3");
   } else if (button === "openQRCode") {
-    push("#/homepage/scanInvite/");
+    push("#/scanInvite/");
   } else {
     $surveyData = $myForm.summary;
 
@@ -64,7 +64,7 @@ async function handleClick(button) {
     sessionStorage.setItem("SurveyComplete", "true");
     sessionStorage.removeItem("surveyConsentPage1");
     sessionStorage.removeItem("surveyConsentPage2");
-    push("#/homepage/survey/5");
+    push("#/survey/5");
   }
 }
 

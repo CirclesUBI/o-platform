@@ -37,7 +37,7 @@ function submit(selected: { key: string; label: string }) {
     {#each context.params.choices as choice, i}
       {#if i == 0}
         <div>
-          <button on:click="{() => submit(choice)}" class="h-auto btn-block btn btn-primary btn-outline">
+          <button on:click="{() => submit(choice)}" class="h-auto btn btn-secondary">
             {choice.label}
           </button>
         </div>
