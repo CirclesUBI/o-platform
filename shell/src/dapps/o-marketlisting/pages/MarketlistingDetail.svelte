@@ -23,6 +23,8 @@ let everythingAfterTheCurrentDay = [];
 let link: string;
 let showShareOptions: boolean = false;
 
+let hasOpeningHours: boolean = false;
+
 let mapHeight = "16em";
 
 onMount(async () => {
@@ -51,8 +53,21 @@ onMount(async () => {
     if (currentDateIndex < businessHours.length) {
       everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
     }
+
+    hasOpeningHours = checkIfOpeningHoursExists(businessHours);
   });
 });
+
+function checkIfOpeningHoursExists(businessHours: string[]) {
+  for (let i = 0; i < businessHours.length; i++) {
+    let day = businessHours[i];
+    for (let y = 0; y < businessHours[i].length; y++) {
+      if (day[y].match(/[0-9]/g)) {
+        return true;
+      }
+    }
+  }
+}
 
 async function shareLink() {
   link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
@@ -65,24 +80,24 @@ async function shareLink() {
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business}
-  <div class="flex w-full justify-center">
-    <div class="relative xl:w-2/3 xl:h-2/3">
-      <!-- svelte-ignore a11y-img-redundant-alt -->
-      <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
+    <div class="flex w-full justify-center">
+      <div class="relative xl:w-2/3 xl:h-2/3">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
 
-      <div
-        role="presentation"
-        on:click="{() => {
-          marketFavoritesStore.toggleFavorite(business.circlesAddress);
-        }}">
-        {#if $marketFavoritesStore[business.circlesAddress]}
-          <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
-        {:else}
-          <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
-        {/if}
+        <div
+          role="presentation"
+          on:click="{() => {
+            marketFavoritesStore.toggleFavorite(business.circlesAddress);
+          }}">
+          {#if $marketFavoritesStore[business.circlesAddress]}
+            <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" solid />
+          {:else}
+            <Icon name="heart" class="w-10 h-10 absolute top-[10%] right-[10%] text-yellow" outline />
+          {/if}
+        </div>
       </div>
     </div>
-  </div>
     <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
     <p class="text-black">{business.description ? business.description : ""}</p>
 
@@ -140,8 +155,8 @@ async function shareLink() {
       </div>
     {/if}
 
-    {#if business.businessHoursSunday}
-      <div class="flex pt-4 mt-4 border-t-2">
+    {#if hasOpeningHours}
+      <div class="flex pt-4 mt-4 border-t-2 text-black">
         <Icon name="clock" class="w-6 h-6" />
         <p class="pl-4 pr-4">Opening Hours</p>
         <div>
@@ -172,7 +187,7 @@ async function shareLink() {
     {/if}
 
     {#if business.phoneNumber}
-      <div class="flex pt-4 mt-4 border-t-2">
+      <div class="flex pt-4 mt-4 border-t-2 text-black">
         <Icon name="phone" class="w-6 h-6" />
         <p class="pl-4">{business.phoneNumber}</p>
       </div>
