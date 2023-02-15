@@ -261,7 +261,7 @@ async function onRoot() {
   onCloseModal();
 
   const dc = previousRuntimeDapp.dappId.indexOf(":");
-  const dappIdForRoute = previousRuntimeDapp.dappId.substr(0, dc > -1 ? dc : previousRuntimeDapp.dappId.length);
+  const dappIdForRoute = previousRuntimeDapp.dappId.substring(0, dc > -1 ? dc : previousRuntimeDapp.dappId.length);
   console.log("DappFrame.onRoot() is pushing to:", `#/${dappIdForRoute}/${path}`);
   await push(`#/${dappIdForRoute}/${path}`);
 
