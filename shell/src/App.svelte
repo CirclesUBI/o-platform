@@ -2,7 +2,7 @@
 import "./shared/css/tailwind.css";
 
 import Router from "svelte-spa-router";
-import { SvelteToast } from "./shared/molecules/Toast";
+
 import DappFrame from "src/shared/molecules/DappFrame.svelte";
 import NotFound from "src/shared/pages/NotFound.svelte";
 import { interpret } from "xstate";
@@ -39,8 +39,6 @@ let _routes = {
   "*": NotFound,
 };
 </script>
-
-<SvelteToast />
 
 <Router
   routes="{_routes}"
