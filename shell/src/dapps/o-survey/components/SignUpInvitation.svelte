@@ -7,7 +7,7 @@ let inviteUrl = sessionStorage.getItem("inviteUrl");
 
 async function handleClick(button) {
   if (button === "back") {
-    push("#/homepage/survey/4");
+    push("#/survey/3");
   } else if (button === "submit") {
     push(inviteUrl);
   }

@@ -38,10 +38,10 @@ $: {
 
 async function handleClick(button) {
   if (button === "back") {
-    push("#/homepage/survey/3");
+    push("#/survey/page/2");
   } else if (button === "openQRCode") {
-    push("#/homepage/scanInvite/");
-  } else {
+    push("#/survey/scanInvite");
+  } else if (button === "next") {
     $surveyData = $myForm.summary;
 
     const apiClient = await window.o.apiClient.client.subscribeToResult();
@@ -64,7 +64,7 @@ async function handleClick(button) {
     sessionStorage.setItem("SurveyComplete", "true");
     sessionStorage.removeItem("surveyConsentPage1");
     sessionStorage.removeItem("surveyConsentPage2");
-    push("#/homepage/survey/5");
+    push("#/survey/page/4");
   }
 }
 
@@ -101,7 +101,7 @@ function handleOnChange(event) {
             id="userType"
             key="id"
             value="name"
-            dropDownClass="max-w-xs"
+            dropDownClass="max-w-xs text-base"
             on:dropDownChange="{handleOnChange}" />
 
           {#if $userType.value && $userType.value !== "undefined"}
@@ -122,7 +122,7 @@ function handleOnChange(event) {
             id="gender"
             key="id"
             value="name"
-            dropDownClass="max-w-xs"
+            dropDownClass="max-w-xs text-base"
             on:dropDownChange="{handleOnChange}" />
           {#if $gender.value && $gender.value !== "undefined"}
             <span class="text-6xl font-enso"

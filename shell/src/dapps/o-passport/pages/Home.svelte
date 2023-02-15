@@ -6,15 +6,16 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { Profile, Businesses } from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
-
-import { Environment } from "../../../shared/environment";
-
-import { AvataarGenerator } from "../../../shared/avataarGenerator";
+import { loadProfile } from "../../../shared/functions/loadProfile";
+import { createOrganisation } from "../../o-coop/processes/createOrganisation";
 import { onMount } from "svelte";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import QrCode from "../../../shared/molecules/QrCode/QrCode.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
+import UserImage from "../../../shared/atoms/UserImage.svelte";
+import { push } from "svelte-spa-router";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 
 let name;
 let profile: Profile;
@@ -44,12 +45,46 @@ onMount(() => {
   }
 });
 
-function editProfile(dirtyFlags: { [x: string]: boolean }) {
-  if (profile.__typename == "Organisation") {
-    window.o.runProcess(upsertOrganisation, profile, {}, Object.keys(dirtyFlags));
-  } else {
-    window.o.runProcess(upsertIdentity, profile, {}, Object.keys(dirtyFlags));
-  }
+function switchAccount(account) {
+  window.o.publishEvent(<PlatformEvent>{
+    type: "shell.loggedOut",
+  });
+  window.o.publishEvent(<PlatformEvent>{
+    type: "shell.authenticated",
+    profile: account,
+  });
+  localStorage.removeItem("editShopIndex");
+
+  push("/home");
+}
+
+function createNewOrga() {
+  window.o.runProcess(
+    createOrganisation,
+    {
+      successAction: async (data) => {
+        const createdOrga = await loadProfile(data.circlesAddress, $me);
+        window.o.publishEvent(<PlatformEvent>{
+          type: "shell.loggedOut",
+        });
+        window.o.publishEvent(<PlatformEvent>{
+          type: "shell.authenticated",
+          profile: {
+            ...createdOrga.profile,
+            __typename: "Organisation",
+            type: "Organisation",
+            name: createdOrga.profile.firstName,
+            description: createdOrga.profile.dream,
+            locationName: createdOrga.profile.locationName,
+            location: createdOrga.profile.location,
+          },
+        });
+
+        location.reload();
+      },
+    },
+    {}
+  );
 }
 </script>
 
@@ -75,30 +110,48 @@ function editProfile(dirtyFlags: { [x: string]: boolean }) {
         </section>
       </div>
     </StandardHeaderBox>
-    <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.myshops">
-      <div slot="standardHeaderBoxContent">
-        <section class="justify-center">
-          <div class="flex flex-col w-full space-y-2">
-            <h2 class="text-alert">
-              Your Newly created shops are only displayed after a log-out and log in. (e.g. through clicking the Action
-              button on the bottom and switching to a different profile and back) <strong>WORK IN PROGRESS</strong>
-            </h2>
-            <div class="container p-1 pt-2 xs:p-4">
-              <ul>
-                {#if businesses}
-                  {#each businesses as business}
-                    <li>{business.name}</li>
-                  {/each}
-                {/if}
-              </ul>
+    {#if profile.__typename == "Profile"}
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.myshops">
+        <div slot="standardHeaderBoxContent">
+          <section class="justify-center">
+            <div class="flex flex-col w-full space-y-4">
+              {#if businesses}
+                {#each businesses as business}
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <div class="flex items-center w-full space-x-2 cursor-pointer" on:click="{switchAccount(business)}">
+                    <div class="">
+                      <UserImage profile="{business}" size="{8}" profileLink="{false}" />
+                    </div>
+                    <div>
+                      {business.name}
+                    </div>
+                  </div>
+                {/each}
+              {/if}
+
+              <div class="container p-1 pt-2 text-center xs:p-4">
+                <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">Add new Shop</button>
+              </div>
             </div>
-            <div class="container p-1 pt-2 text-center xs:p-4">
-              <a href="/#/passport/new-organization"><button class="btn btn-primary btn-sm">Add new Shop</button></a>
+          </section>
+        </div>
+      </StandardHeaderBox>
+    {:else}
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.editProfile">
+        <div slot="standardHeaderBoxContent">
+          <section class="justify-center">
+            <div class="flex flex-col w-full space-y-2">
+              <div class="container p-1 pt-2 xs:p-4">
+                <center>
+                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"
+                    ><button class="btn btn-primary">Edit Shop</button></a>
+                </center>
+              </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </StandardHeaderBox>
+          </section>
+        </div>
+      </StandardHeaderBox>
+    {/if}
     {#if profile.circlesAddress}
       <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.address">
         <div slot="standardHeaderBoxContent">

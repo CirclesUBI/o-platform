@@ -17,8 +17,8 @@ import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
-import {cityByHereId, promptCity} from "../../../shared/api/promptCity";
+import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
+import { cityByHereId, promptCity } from "../../../shared/api/promptCity";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -101,7 +101,9 @@ const processDefinition = (processId: string) =>
           .notRequired()
           .max(
             150,
-            window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")
+            window.o.i18n(
+              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars"
+            )
           ),
         navigation: {
           next: "#location",
@@ -126,7 +128,7 @@ const processDefinition = (processId: string) =>
           next: "#avatarUrl",
           previous: "#description",
           canSkip: () => false,
-        }
+        },
       }),
       avatarUrl: promptFile<CreateOrganisationContext, any>({
         field: "avatarUrl",
@@ -259,7 +261,6 @@ const processDefinition = (processId: string) =>
               mutation: UpsertOrganisationDocument,
               variables: {
                 organisation: {
-
                   avatarMimeType: context.data.avatarMimeType,
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),

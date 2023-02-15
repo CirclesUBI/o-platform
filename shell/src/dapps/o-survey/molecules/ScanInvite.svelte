@@ -1,7 +1,7 @@
 <script type="ts">
 import QrScanner from "qr-scanner";
 import { onDestroy, onMount } from "svelte";
-import { inviteUrl } from "../stores/surveyStore";
+import { inviteUrl } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
 
 let video: HTMLVideoElement;

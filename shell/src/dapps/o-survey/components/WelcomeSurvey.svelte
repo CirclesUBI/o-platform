@@ -4,7 +4,7 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 
 function handleClick() {
-  push("#/homepage/survey/2");
+  push("#/survey/page/1");
 }
 </script>
 
@@ -29,12 +29,6 @@ function handleClick() {
     <Label key="dapps.o-homepage.components.survey.eachCircle" />
   </div>
   <div class="flex flex-row justify-around mt-10 mb-5 text-center buttons-container">
-    <div>
-      <button
-        class="relative px-8 overflow-hidden transition-all transform btn btn-light bg-cpurple border-warning text-warning svelte-12kbnbk"
-        on:click="{() => handleClick()}">
-        {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
-    </div>
     <div>
       <button
         class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
