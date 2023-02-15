@@ -26,7 +26,7 @@ $: {
     } else {
       displayName = profile.name ? profile.name : "";
     }
-    displayName = displayName.length >= 22 ? displayName.substr(0, 22) + "..." : displayName;
+    displayName = displayName.length >= 22 ? displayName.substring(0, 22) + "..." : displayName;
   }
 }
 </script>

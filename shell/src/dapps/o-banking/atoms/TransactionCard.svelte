@@ -35,7 +35,7 @@ $: {
 
     toProfile = minting.to_profile ?? {
       id: 0,
-      firstName: minting.to.substr(0, 24) + "...",
+      firstName: minting.to.substring(0, 24) + "...",
       lastName: "",
       circlesAddress: minting.to,
     };
@@ -71,7 +71,7 @@ $: {
 
     toProfile = ercTransfer.to_profile ?? {
       id: 0,
-      firstName: ercTransfer.to.substr(0, 24) + "...",
+      firstName: ercTransfer.to.substring(0, 24) + "...",
       lastName: "",
       circlesAddress: ercTransfer.to,
     };
@@ -84,14 +84,14 @@ $: {
     const hubTransfer = event.payload as CrcHubTransfer;
     fromProfile = hubTransfer.from_profile ?? {
       id: 0,
-      firstName: hubTransfer.from.substr(0, 24) + "...",
+      firstName: hubTransfer.from.substring(0, 24) + "...",
       lastName: "",
       circlesAddress: hubTransfer.from,
     };
 
     toProfile = hubTransfer.to_profile ?? {
       id: 0,
-      firstName: hubTransfer.to.substr(0, 24) + "...",
+      firstName: hubTransfer.to.substring(0, 24) + "...",
       lastName: "",
       circlesAddress: hubTransfer.to,
     };
@@ -160,13 +160,13 @@ let textCutoff = isMobile() ? 16 : 42;
                 <b
                   >{targetProfile.displayName
                     ? targetProfile.displayName.length >= textCutoff
-                      ? targetProfile.displayName.substr(0, textCutoff) + "..."
+                      ? targetProfile.displayName.substring(0, textCutoff) + "..."
                       : targetProfile.displayName
                     : ""}</b>
               {:else}
                 {targetProfile.displayName
                   ? targetProfile.displayName.length >= textCutoff
-                    ? targetProfile.displayName.substr(0, textCutoff) + "..."
+                    ? targetProfile.displayName.substring(0, textCutoff) + "..."
                     : targetProfile.displayName
                   : ""}
               {/if}
@@ -185,7 +185,7 @@ let textCutoff = isMobile() ? 16 : 42;
             <span class="inline-block text-xs">
               {messageString
                 ? messageString.length >= textCutoff + 6
-                  ? messageString.substr(0, textCutoff + 6) + "..."
+                  ? messageString.substring(0, textCutoff + 6) + "..."
                   : messageString
                 : ""}
             </span>
