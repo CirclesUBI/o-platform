@@ -40,7 +40,7 @@ async function handleClick(button) {
   if (button === "back") {
     push("#/survey/3");
   } else if (button === "openQRCode") {
-    push("#/scanInvite/");
+    push("#/survey/scanInvite");
   } else {
     $surveyData = $myForm.summary;
 

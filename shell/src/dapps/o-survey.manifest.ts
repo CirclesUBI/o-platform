@@ -7,25 +7,12 @@ import Home from "./o-homepage/pages/Home.svelte";
 const index: Page<any, DappState> = {
     isSystem: true,
     routeParts: [":id"],
-    component: Survey,
     title: "common.all",
     pageBackgroundClass: "bg-cpurple",
     icon: "forum",
     type: "page",
+    component: Survey,
   };
-
-// export const survey: Page<any, DappState> = {
-//     type: "page",
-//     isSystem: true,
-//     anonymous: true,
-//     navigation: {},
-//     hideFooter: true,
-//     title: "dapps.o-homepage.pages.survey.title",
-//     pageBackgroundClass: "bg-cpurple",
-//     routeParts: ["survey", ":id"],
-//     icon: "forum",
-//     component: Survey,
-//   };
   
   export const scanInvite: Page<any, DappState> = {
     type: "page",
