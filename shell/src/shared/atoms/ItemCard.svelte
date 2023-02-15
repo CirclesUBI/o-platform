@@ -75,13 +75,13 @@ function cardAction() {
                 <b
                   >{params.title
                     ? params.title.length >= textCutoff
-                      ? params.title.substr(0, textCutoff) + "..."
+                      ? params.title.substring(0, textCutoff) + "..."
                       : params.title
                     : ""}</b>
               {:else}
                 {params.title
                   ? params.title.length >= textCutoff
-                    ? params.title.substr(0, textCutoff) + "..."
+                    ? params.title.substring(0, textCutoff) + "..."
                     : params.title
                   : ""}
               {/if}
@@ -98,7 +98,7 @@ function cardAction() {
             <span class="inline-block text-xs">
               {params.subTitle
                 ? params.subTitle.length >= textCutoff + 6
-                  ? params.subTitle.substr(0, textCutoff + 6) + "..."
+                  ? params.subTitle.substring(0, textCutoff + 6) + "..."
                   : params.subTitle
                 : ""}
             </span>
