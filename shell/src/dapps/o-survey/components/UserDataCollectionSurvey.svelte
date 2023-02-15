@@ -41,7 +41,7 @@ async function handleClick(button) {
     push("#/survey/page/2");
   } else if (button === "openQRCode") {
     push("#/survey/scanInvite");
-  } else {
+  } else if (button === "next") {
     $surveyData = $myForm.summary;
 
     const apiClient = await window.o.apiClient.client.subscribeToResult();
@@ -64,7 +64,7 @@ async function handleClick(button) {
     sessionStorage.setItem("SurveyComplete", "true");
     sessionStorage.removeItem("surveyConsentPage1");
     sessionStorage.removeItem("surveyConsentPage2");
-    push("#/survey/page/3");
+    push("#/survey/page/4");
   }
 }
 
