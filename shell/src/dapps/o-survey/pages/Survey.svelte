@@ -25,9 +25,6 @@ sessionStorage.getItem("circlesKey");
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="mt-8">
-  {#if id == "1"}
-    <WelcomeSurvey />
-  {/if}
   {#if id == "2"}
     <InformedConsentFirst />
   {/if}
