@@ -50,7 +50,7 @@ const onFocus = () => window.o.publishEvent({ type: "shell.inputFocused" });
 const onBlur = () => window.o.publishEvent({ type: "shell.inputBlurred" });
 </script>
 
-<ModalHeader heading="{prompt.params.view ? prompt.params.view.title : 'shared.molecules.prompt.nothingToDisplay'}" />
+<ModalHeader heading="{prompt.params?.view?.title}" />
 {#if componentContext}
   <section
     class="flex flex-col items-center justify-center p-6 space-y-4"
