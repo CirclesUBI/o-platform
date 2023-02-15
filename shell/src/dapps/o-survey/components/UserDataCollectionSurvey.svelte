@@ -64,7 +64,7 @@ async function handleClick(button) {
     sessionStorage.setItem("SurveyComplete", "true");
     sessionStorage.removeItem("surveyConsentPage1");
     sessionStorage.removeItem("surveyConsentPage2");
-    push("#/survey/4");
+    push("#/survey/page/3");
   }
 }
 
