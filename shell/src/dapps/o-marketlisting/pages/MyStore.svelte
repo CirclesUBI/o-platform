@@ -5,16 +5,16 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+// import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+// import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import {
   BusinessCategory,
   Businesses,
   UpsertOrganisationDocument,
   UpsertOrganisationMutation,
   UpsertOrganisationMutationVariables,
-  ProfilesByCirclesAddressDocument,
-  ProfilesByCirclesAddressQueryVariables,
+  // ProfilesByCirclesAddressDocument,
+  // ProfilesByCirclesAddressQueryVariables,
   Profile,
 } from "../../../shared/api/data/types";
 
@@ -51,7 +51,7 @@ let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInput
 let showModal = false;
 let editImage = false;
 let error = null;
-let owners;
+// let owners;
 
 type Location = {
   place: {
@@ -106,22 +106,22 @@ onMount(async () => {
     week = OpeningHourWeek.parseOpeningHours(business);
     placeholder = location?.text;
 
-    const safeProxy = new GnosisSafeProxy(RpcGateway.get(), business.circlesAddress);
-    owners = await safeProxy.getOwners();
+    // const safeProxy = new GnosisSafeProxy(RpcGateway.get(), business.circlesAddress);
+    // owners = await safeProxy.getOwners();
 
-    try {
-      const profiles = await ApiClient.query<Profile[], ProfilesByCirclesAddressQueryVariables>(
-        ProfilesByCirclesAddressDocument,
-        {
-          circlesAddresses: owners,
-        }
-      );
-      ownerProfiles = profiles;
-      console.log("OWNAA", owners);
-      console.log("BUSI", business.circlesAddress);
-    } catch (error) {
-      console.info(`Could not load Members for circlesAddress: ${business.circlesAddress}`);
-    }
+    // try {
+    //   const profiles = await ApiClient.query<Profile[], ProfilesByCirclesAddressQueryVariables>(
+    //     ProfilesByCirclesAddressDocument,
+    //     {
+    //       circlesAddresses: owners,
+    //     }
+    //   );
+    //   ownerProfiles = profiles;
+    //   console.log("OWNAA", owners);
+    //   console.log("BUSI", business.circlesAddress);
+    // } catch (error) {
+    //   console.info(`Could not load Members for circlesAddress: ${business.circlesAddress}`);
+    // }
   }
 });
 
@@ -359,7 +359,7 @@ $: {
             </div>
           </div>
         </StandardHeaderBox>
-        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.owners">
+        <!-- <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.owners">
           <div slot="standardHeaderBoxContent">
             <div class="flex flex-col space-y-2">
               <div class="flex flex-col">
@@ -373,7 +373,7 @@ $: {
               </div>
             </div>
           </div>
-        </StandardHeaderBox>
+        </StandardHeaderBox> -->
         {#if error}
           <span class="text-sm text-center text-alert">{error}</span>
         {/if}
