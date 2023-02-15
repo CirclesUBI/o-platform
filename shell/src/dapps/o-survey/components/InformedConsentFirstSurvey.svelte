@@ -18,14 +18,14 @@ myForm.validate();
 
 function handleClick(button) {
   if (button === "back") {
-    push("#/survey/1");
+    push("#/survey");
   } else {
     if ($myForm.valid) {
       $surveyConsents.researchConsent = $research.value;
       $surveyConsents.participateConsent = $participate.value;
       $surveyConsents.endingConsent = $ending.value;
       sessionStorage.setItem("surveyConsentPage1", "true");
-      push("#/survey/3");
+      push("#/survey/page/2");
     } else {
       sessionStorage.setItem("surveyConsentPage1", "false");
     }
