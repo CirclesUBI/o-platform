@@ -18,12 +18,15 @@ export const me = {
   reload: async () => {
     const freshSessionInfo = await ApiClient.query<SessionInfo, InitQueryVariables>(InitDocument, {});
     if (freshSessionInfo.profile) {
-      console.log("HERE WE ARE NOW", freshSessionInfo);
-
-      window.o.publishEvent(<PlatformEvent>{
-        type: "shell.authenticated",
-        profile: freshSessionInfo.profile,
-      });
+      if ((<any>sessionInfo.profile)?.__typename === "Person") {
+        window.o.publishEvent(<PlatformEvent>{
+          type: "shell.authenticated",
+          profile: freshSessionInfo.profile,
+        });
+      } else {
+        // TODO: Need to implement real session change
+        console.log("$me.reload() -> reload organisation");
+      }
     }
 
     return freshSessionInfo.profile;
