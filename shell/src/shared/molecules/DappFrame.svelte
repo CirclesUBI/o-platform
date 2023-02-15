@@ -528,7 +528,7 @@ function onHome() {
 }
 
 function onSurvey() {
-  push("#/survey/1");
+  push("#/survey");
 }
 
 async function onCloseModal() {

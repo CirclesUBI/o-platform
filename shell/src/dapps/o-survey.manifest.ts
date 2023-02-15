@@ -2,61 +2,62 @@ import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import Survey from "./o-survey/pages/Survey.svelte";
 import ScanInvite from "./o-survey/molecules/ScanInvite.svelte";
+import WelcomeSurvey from "./o-survey/components/WelcomeSurvey.svelte";
 import Home from "./o-homepage/pages/Home.svelte";
 
 const index: Page<any, DappState> = {
-    isSystem: true,
-    routeParts: [":id"],
-    component: Survey,
-    title: "common.all",
-    pageBackgroundClass: "bg-cpurple",
-    icon: "forum",
-    type: "page",
-  };
+  isSystem: true,
+  routeParts: [],
+  title: "common.all",
+  pageBackgroundClass: "bg-cpurple",
+  icon: "forum",
+  type: "page",
+  component: WelcomeSurvey,
+};
 
-// export const survey: Page<any, DappState> = {
-//     type: "page",
-//     isSystem: true,
-//     anonymous: true,
-//     navigation: {},
-//     hideFooter: true,
-//     title: "dapps.o-homepage.pages.survey.title",
-//     pageBackgroundClass: "bg-cpurple",
-//     routeParts: ["survey", ":id"],
-//     icon: "forum",
-//     component: Survey,
-//   };
-  
-  export const scanInvite: Page<any, DappState> = {
-    type: "page",
-    pageBackgroundClass: "bg-cpurple",
-    isSystem: true,
-    position: "modal",
-    routeParts: ["=scanInvite"],
-    title: "Scan to trust",
-    component: ScanInvite,
-  };
+const surveySteps: Page<any, DappState> = {
+  type: "page",
+  isSystem: true,
+  anonymous: true,
+  navigation: {},
+  hideFooter: true,
+  title: "dapps.o-homepage.pages.survey.title",
+  pageBackgroundClass: "bg-cpurple",
+  routeParts: ["=page", ":id"],
+  icon: "forum",
+  component: Survey,
+};
 
-  export interface DappState {
-    // put state here
-  }
+export const scanInvite: Page<any, DappState> = {
+  type: "page",
+  pageBackgroundClass: "bg-cpurple",
+  isSystem: true,
+  position: "modal",
+  routeParts: ["=scanInvite"],
+  title: "Scan to trust",
+  component: ScanInvite,
+};
 
-  export const survey: DappManifest<DappState> = {
-    type: "dapp",
-    dappId: "survey:1",
-    icon: "forum",
-    title: "common.all",
-    pageBackgroundClass: "bg-cpurple",
-    routeParts: ["survey"],
-    defaultRoute: [""],
-    tag: Promise.resolve("alpha"),
-    hideFooterGradient: true,
-    initialize: async (stack, runtimeDapp) => {
-      // Do init stuff here
-      return {
-        initialRoutable: index,
-        cancelDependencyLoading: false,
-      };
-    },
-    routables: [index, scanInvite]
-  };
+export interface DappState {
+  // put state here
+}
+
+export const survey: DappManifest<DappState> = {
+  type: "dapp",
+  dappId: "survey:1",
+  icon: "forum",
+  title: "common.all",
+  pageBackgroundClass: "bg-cpurple",
+  routeParts: ["survey"],
+  defaultRoute: [""],
+  tag: Promise.resolve("alpha"),
+  hideFooterGradient: true,
+  initialize: async (stack, runtimeDapp) => {
+    // Do init stuff here
+    return {
+      initialRoutable: index,
+      cancelDependencyLoading: false,
+    };
+  },
+  routables: [index, surveySteps, scanInvite],
+};
