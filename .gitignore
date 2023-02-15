@@ -1,4 +1,4 @@
-
+.DS_Store
 localhost.cert
 localhost.key
 .history
@@ -14,3 +14,5 @@ shell/public/index.html
 shell/public/bundle.js.LICENSE.txt
 shell/public/bundle.1.js
 yarn.lock
+
+shell/public/COMMITTISH
