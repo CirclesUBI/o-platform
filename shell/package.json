@@ -8,7 +8,7 @@
     "clean": "npx shx rm -rf public/bundle.*",
     "local": "webpack serve --env local --config webpack.config.js --mode=development",
     "docker": "webpack serve --env docker --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
-    "override": "API_ENDPOINT='http://localhost:8989' CIRCLES_SUBGRAPH_ENDPOINT='https://api.thegraph.com/subgraphs/name/circlesubi/circles' PATHFINDER_ENDPOINT='http://localhost:8081' CIRCLES_HUB_ADDRESS='0x5528544b97869ce105Be00fcCF250f659e787034' SAFE_PROXY_FACTORY_ADDRESS='0xD5E7d393226A6e9089601080E4b92BcaF536BaDA' SAFE_ADDRESS='0x5E484da6227AB3BA047121742ee766CC6389db4f' RPC_ENDPOINT='http://localhost:8545' OPENLOGIN_CLIENT_ID='BHqazms23gbTZQ2fYvvUaFzv718Ft8Ox1XwSEqVt81jtZJRQRb-N5cnThtZGSjZF9Dtj9MQxkEQTUo47I_wiihE' HERE_API_KEY=\"fhiIkoASi1B-z8R7ytKBnfJltOpaUlYBV1kydXyK1sE\" PLACES_API_KEY='AIzaSyDAh2mCO36_qBtbb00QY3IPGKUsunbBj-4' webpack serve --host localhost --port 8080 --config webpack.config.js --mode=development",
+    "override": "webpack serve --env override --host localhost --port 8080 --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
     "validate": "svelte-check",
     "test": "jest src",
