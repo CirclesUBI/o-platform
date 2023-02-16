@@ -6,9 +6,9 @@
   "scripts": {
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
-    "local": "webpack serve --env local --config webpack.config.js --mode=development",
-    "docker": "webpack serve --env docker --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
-    "override": "webpack serve --env override --host localhost --port 8080 --config webpack.config.js --mode=development",
+    "local": "ENVIRONMENT='local' webpack serve --config webpack.config.js --mode=development",
+    "docker": "ENVIRONMENT='docker' webpack serve --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
+    "override": "ENVIRONMENT='override' webpack serve  --host localhost --port 8080 --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
     "validate": "svelte-check",
     "test": "jest src",
