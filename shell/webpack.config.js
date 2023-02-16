@@ -6,6 +6,7 @@ const sveltePreprocess = require("svelte-preprocess");
 const webpack = require("webpack");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 const mode = process.env.NODE_ENV || "development";
 const prod = !!process.env.IS_PRODUCTION;
@@ -74,7 +75,7 @@ if (
 
 const sveltePath = path.resolve("node_modules", "svelte");
 
-module.exports = {
+module.exports = env => ({
   mode,
   devtool: prod ? false : "inline-cheap-module-source-map",
   entry: {
@@ -288,6 +289,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv({path: `./../.env.${env}`}),
     new NodePolyfillPlugin(),
     new CaseSensitivePathsPlugin(),
     new MiniCssExtractPlugin({
@@ -318,4 +320,4 @@ module.exports = {
       },
     },
   },
-};
+});

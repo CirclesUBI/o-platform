@@ -14,5 +14,8 @@ shell/public/index.html
 shell/public/bundle.js.LICENSE.txt
 shell/public/bundle.1.js
 yarn.lock
+.env
+.env.docker
+.env.local
 
 shell/public/COMMITTISH
