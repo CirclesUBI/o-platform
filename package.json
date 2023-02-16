@@ -28,6 +28,7 @@
   "dependencies": {
     "@prisma/client": "^2.18.0",
     "core-util-is": "^1.0.2",
+    "dotenv-webpack": "^8.0.1",
     "npm": "^8.0.0",
     "prettier": "^2.5.1",
     "rxjs": "^6.6.3",
