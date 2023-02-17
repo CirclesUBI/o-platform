@@ -120,7 +120,7 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.0",
     "workbox-webpack-plugin": "^6.0.2",
-    "simple-svelte-autocomplete": "^2.4.0"
+    "simple-svelte-autocomplete": "^2.5.2"
   },
   "browserslist": [
     "defaults"
