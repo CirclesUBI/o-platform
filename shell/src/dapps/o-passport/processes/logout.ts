@@ -45,6 +45,9 @@ const processDefinition = (processId: string) =>
             const openLogin = await getOpenLogin();
 
             sessionStorage.removeItem("circlesKey");
+            sessionStorage.removeItem("SurveySessionId");
+            sessionStorage.removeItem("inviteUrl");
+            sessionStorage.removeItem("SurveyComplete");
             sessionStorage.removeItem("keyCache");
             localStorage.removeItem("circlesKeys");
 
