@@ -1,18 +1,18 @@
 import Organisations from "./o-coop/pages/Organisations.svelte";
-import {Page} from "@o-platform/o-interfaces/dist/routables/page";
-import {DappManifest} from "@o-platform/o-interfaces/dist/dappManifest";
-import {createOrganisation} from "./o-coop/processes/createOrganisation";
-import {ContactsDappState} from "./o-contacts.manifest";
+import { Page } from "@o-platform/o-interfaces/dist/routables/page";
+import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
+import { createOrganisation } from "./o-coop/processes/createOrganisation";
+import { ContactsDappState } from "./o-contacts.manifest";
 import OrganisationDetail from "./o-coop/pages/OrganisationDetail.svelte";
-import {addMember} from "./o-coop/processes/addMember";
-import {JumplistItem} from "@o-platform/o-interfaces/dist/routables/jumplist";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {loadProfile} from "../shared/functions/loadProfile";
-import {CapabilityType, Organisation, Profile} from "../shared/api/data/types";
-import {me} from "../shared/stores/me";
-import {getSessionInfo} from "./o-passport/processes/identify/services/getSessionInfo";
-import {addOwner} from "./o-coop/processes/addOwner";
-import {push} from "svelte-spa-router";
+import { addMember } from "./o-coop/processes/addMember";
+import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { loadProfile } from "../shared/functions/loadProfile";
+import { CapabilityType, Organisation, Profile } from "../shared/api/data/types";
+import { me } from "../shared/stores/me";
+import { getSessionInfo } from "./o-passport/processes/identify/services/getSessionInfo";
+import { addOwner } from "./o-coop/processes/addOwner";
+import { push } from "svelte-spa-router";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 
 const externalChat: Link<any, DappState> = {
@@ -87,10 +87,10 @@ export const coop: DappManifest<DappState> = {
                     name: createdOrga.profile.firstName,
                     description: createdOrga.profile.dream,
                     locationName: createdOrga.profile.locationName,
-                    location: createdOrga.profile.location
+                    location: createdOrga.profile.location,
                   },
                 });
-                push("#/passport/profile");
+                push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
                 // location.reload();
               },
             },
@@ -111,8 +111,7 @@ export const coop: DappManifest<DappState> = {
               addMember,
               {
                 groupId: $me.circlesAddress,
-                successAction: (data: any) => {
-                },
+                successAction: (data: any) => {},
               },
               {}
             );
@@ -129,8 +128,7 @@ export const coop: DappManifest<DappState> = {
               addOwner,
               {
                 groupId: $me.circlesAddress,
-                successAction: (data: any) => {
-                },
+                successAction: (data: any) => {},
               },
               {}
             );
