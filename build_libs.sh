@@ -10,7 +10,6 @@ sed -i.bak "$search_replace" ./shell/public/index.html
 rm -f ./shell/public/index.html.bak
 
 echo "Installing build dependencies .."
-npm i
 npx --no-install yarn || exit
 
 echo "Building 'o-utils' .."
