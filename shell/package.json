@@ -40,7 +40,6 @@
     "daisyui": "^2.31.0",
     "dayjs": "^1.11.3",
     "ethereumjs-util": "^7.0.10",
-    "@silintl/svelte-google-places-autocomplete": "^1.1.6",
     "ethers-multisend": "^2.1.1",
     "graphql": "^15.5.0",
     "npm": "^8.0.0",
