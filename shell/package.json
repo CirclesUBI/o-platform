@@ -51,8 +51,6 @@
     "svelte-i18n": "3.3.13",
     "svelte-spa-router": "^3.0.5",
     "svelte-time": "^0.7.1",
-    "vis-data": "^7.1.4",
-    "vis-network": "^9.1.2",
     "xstate": "^4.31.0",
     "yup": "^0.32.11"
   },
