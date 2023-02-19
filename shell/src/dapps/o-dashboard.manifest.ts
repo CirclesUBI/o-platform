@@ -28,7 +28,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: [],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281381556669",
+  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
 };
 
 export interface DappState {
