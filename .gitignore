@@ -14,5 +14,6 @@ shell/public/index.html
 shell/public/bundle.js.LICENSE.txt
 shell/public/bundle.1.js
 yarn.lock
+.env.*
 
 shell/public/COMMITTISH

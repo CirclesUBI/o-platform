@@ -10,6 +10,11 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const mode = process.env.NODE_ENV || "development";
 const prod = !!process.env.IS_PRODUCTION;
 const dev = !prod;
+
+const __ENVIRONMENT__ = process.env.ENVIRONMENT;
+
+require("dotenv").config({ path: `./../.env.${__ENVIRONMENT__}` });
+
 const DEBUG = !process.argv.includes("--release");
 const VERBOSE = process.argv.includes("--verbose");
 

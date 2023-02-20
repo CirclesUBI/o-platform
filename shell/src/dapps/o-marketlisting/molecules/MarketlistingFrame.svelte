@@ -53,7 +53,7 @@ function SortChange(event) {
 
 <section class="justify-center p-2 pt-0 mx-auto text-base align-middle">
   <CategoryFilter on:change="{filterCategoriesChange}" />
-  <div class="text-sm text-right whitespace-nowrap">
+  <div class="text-sm text-left whitespace-nowrap">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
     <span class="pl-2 text-black">{currentSort}</span>
     <DropDown
