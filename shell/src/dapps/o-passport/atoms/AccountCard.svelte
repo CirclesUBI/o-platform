@@ -12,7 +12,7 @@ const toggle = () => (isOpen = !isOpen);
 let seedphrase =
   sessionStorage.getItem("circlesKey") && sessionStorage.getItem("circlesKey") != "0x123"
     ? bip39.entropyToMnemonic(
-        sessionStorage.getItem("circlesKey").substring(2, sessionStorage.getItem("circlesKey").length - 2)
+        sessionStorage.getItem("circlesKey").substring(2, sessionStorage.getItem("circlesKey").length)
       )
     : "<no private key>";
 </script>
