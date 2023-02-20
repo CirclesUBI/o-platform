@@ -93,7 +93,6 @@ export const coop: DappManifest<DappState> = {
                 });
 
                 push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
-                // location.reload();
               },
             },
             {}
@@ -101,42 +100,42 @@ export const coop: DappManifest<DappState> = {
         },
       });
 
-      if (<string>$me.__typename === "Organisation") {
-        list.push(<JumplistItem>{
-          category: $me.displayName,
-          key: "addMember",
-          type: "action",
-          icon: "plus",
-          title: window.o.i18n("dapps.common.quickactions.addMember"),
-          action: async () => {
-            window.o.runProcess(
-              addMember,
-              {
-                groupId: $me.circlesAddress,
-                successAction: (data: any) => {},
-              },
-              {}
-            );
-          },
-        });
-        list.push(<JumplistItem>{
-          category: $me.displayName,
-          key: "addOwner",
-          type: "action",
-          icon: "plus",
-          title: window.o.i18n("dapps.common.quickactions.addOwner"),
-          action: async () => {
-            window.o.runProcess(
-              addOwner,
-              {
-                groupId: $me.circlesAddress,
-                successAction: (data: any) => {},
-              },
-              {}
-            );
-          },
-        });
-      }
+      // if (<string>$me.__typename === "Organisation") {
+      //   list.push(<JumplistItem>{
+      //     category: $me.displayName,
+      //     key: "addMember",
+      //     type: "action",
+      //     icon: "plus",
+      //     title: window.o.i18n("dapps.common.quickactions.addMember"),
+      //     action: async () => {
+      //       window.o.runProcess(
+      //         addMember,
+      //         {
+      //           groupId: $me.circlesAddress,
+      //           successAction: (data: any) => {},
+      //         },
+      //         {}
+      //       );
+      //     },
+      //   });
+      //   list.push(<JumplistItem>{
+      //     category: $me.displayName,
+      //     key: "addOwner",
+      //     type: "action",
+      //     icon: "plus",
+      //     title: window.o.i18n("dapps.common.quickactions.addOwner"),
+      //     action: async () => {
+      //       window.o.runProcess(
+      //         addOwner,
+      //         {
+      //           groupId: $me.circlesAddress,
+      //           successAction: (data: any) => {},
+      //         },
+      //         {}
+      //       );
+      //     },
+      //   });
+      // }
 
       return list;
     },
