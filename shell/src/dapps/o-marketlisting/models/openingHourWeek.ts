@@ -86,8 +86,13 @@ export class OpeningHourWeek {
       if (day.windows.length == 0 || !day.isOpen) {
         return "";
       }
-      return day.windows.map(w => `${w.from.hour}:${w.from.minute}-${w.to.hour}:${w.to.minute}`).join(";");
+      return day.windows.map(w => `${addLeadingZero(w.from.hour)}:${addLeadingZero(w.from.minute)}-${addLeadingZero(w.to.hour)}:${addLeadingZero(w.to.minute)}`).join(";");
     }
+
+    function addLeadingZero(number) {
+      return number.toString().padStart(2, '0');
+    }
+
     return {
       businessHoursMonday: serializeDay(this.monday),
       businessHoursTuesday: serializeDay(this.tuesday),
