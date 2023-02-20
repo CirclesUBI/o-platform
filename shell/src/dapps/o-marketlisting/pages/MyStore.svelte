@@ -117,7 +117,7 @@ async function save() {
 }
 
 function onPlaceChanged(e) {
-  getGeo(e.id);
+  getGeoDataFromHereId(e.id);
   if (e.detail) {
     location = e.detail;
     business.location = JSON.stringify(location);
@@ -161,7 +161,7 @@ $: {
   }
 }
 
-async function getGeo(locationId) {
+async function getGeoDataFromHereId(locationId) {
   if (locationId) {
     const url = "https://lookup.search.hereapi.com/v1/lookup?id=" + locationId + "&apiKey=" + Environment.hereApiKey;
 
