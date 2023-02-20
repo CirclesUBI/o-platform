@@ -6,6 +6,11 @@ import { Subject } from "rxjs";
 import { ApiConnection } from "./shared/apiConnection";
 
 export interface IShell {
+  bip39: {
+    mnemonicToSeed: any,
+    mnemonicToEntropy: any,
+    entropyToMnemonic: any
+  },
   depositedEvent?: PlatformEvent; // TODO: Hack. This field should be checked by a freshly initializing dapp. The value must be cleared whenever a dapp was loaded (success or error).
   contactUsername?: string;
   authorization?: string;

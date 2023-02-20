@@ -90,7 +90,14 @@ const runningProcesses: {
   [id: string]: Process;
 } = {};
 
+import * as bip39 from "bip39";
+
 window.o = {
+  bip39: {
+    mnemonicToSeed: (mnemonic: string) => bip39.mnemonicToSeed(mnemonic),
+    mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
+    entropyToMnemonic: (entropy: string) => bip39.entropyToMnemonic(entropy),
+  },
   i18n: (key: string, options?: any) => I18nDictionary.instance.getString(key, options),
   stateMachines: {
     findById(processId: string) {
