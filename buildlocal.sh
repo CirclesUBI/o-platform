@@ -1,9 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-export DEPLOY_ENVIRONMENT=$1
+search='__TIMESTAMP__'
+replace=`date +"%s"`
+search_replace="s/$search/$replace/g"
+cp -f ./shell/public/index.template.html ./shell/public/index.html
+sed -i.bak "$search_replace" ./shell/public/index.html
+rm -f ./shell/public/index.html.bak
 
 echo "Installing build dependencies .."
-npm i
+# npm i WE HAVE TO INSTALL YARN ON THE SERVER THE RIGHT WAY - otherwise it screws everything up ;)
+# use sudo npm install -g yarn instead.
+# then yarn set version latest
 npx --no-install yarn || exit
 
 echo "Building 'o-utils' .."
@@ -35,22 +42,4 @@ cd ../.. || exit
 echo "Generating graphql types for shared/api/data"
 echo "* api"
 cd shell/src/shared/api/data
-npx --no-install  graphql-codegen
-echo "* api"
-npx --no-install  graphql-codegen
-
-cd ../../../../..
-
-echo "Building 'shell' with dapps .."
-cd shell || exit
-npx devcert-cli generate localhost
-cd .. || exit
-
-search='__TIMESTAMP__'
-replace=`date +"%s"`
-search_replace="s/$search/$replace/g"
-cp -f ./shell/public/index.template.html ./shell/public/index.html
-sed -i.bak "$search_replace" ./shell/public/index.html
-rm -f ./shell/public/index.html.bak
-
-cd shell || exit
+npx --no-install  graphql-codegen --config ./src/shared/api/data/codegen.yml

@@ -24,7 +24,7 @@ import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
 import { ApiClient } from "../../../shared/apiConnection";
-import GooglePlacesAutocomplete from "@silintl/svelte-google-places-autocomplete";
+
 import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
@@ -36,6 +36,8 @@ import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
 
+import AutoComplete from "simple-svelte-autocomplete";
+
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 export let circlesAddress: string;
@@ -44,42 +46,12 @@ export let business: Businesses;
 let allCategories: BusinessCategory[];
 let allCategoriesLookup;
 let _state: Readable<any>;
-let ownerProfiles: Profile[];
 
 let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInputPlaceholder")}`;
 
 let showModal = false;
 let editImage = false;
 let error = null;
-// let owners;
-
-type Location = {
-  place: {
-    html_attributions: any[];
-    geometry: {
-      viewport: {
-        Ia: {
-          hi: number;
-          lo: number;
-        };
-        Wa: {
-          hi: number;
-          lo: number;
-        };
-      };
-      location: {
-        lat?: number | (() => number);
-        lng?: number | (() => number);
-      };
-    };
-    address_components: {
-      types: string[];
-      short_name: string;
-      long_name: string;
-    }[];
-  };
-  text: string;
-};
 
 export let location: Location | null = null;
 
@@ -102,26 +74,8 @@ onMount(async () => {
 
   business = businesses.allBusinesses[0];
   if (business) {
-    location = business.location ? <Location>JSON.parse(business.location) : null;
+    location = business.location ? JSON.parse(business.location) : null;
     week = OpeningHourWeek.parseOpeningHours(business);
-    placeholder = location?.text;
-
-    // const safeProxy = new GnosisSafeProxy(RpcGateway.get(), business.circlesAddress);
-    // owners = await safeProxy.getOwners();
-
-    // try {
-    //   const profiles = await ApiClient.query<Profile[], ProfilesByCirclesAddressQueryVariables>(
-    //     ProfilesByCirclesAddressDocument,
-    //     {
-    //       circlesAddresses: owners,
-    //     }
-    //   );
-    //   ownerProfiles = profiles;
-    //   console.log("OWNAA", owners);
-    //   console.log("BUSI", business.circlesAddress);
-    // } catch (error) {
-    //   console.info(`Could not load Members for circlesAddress: ${business.circlesAddress}`);
-    // }
   }
 });
 
@@ -163,35 +117,12 @@ async function save() {
 }
 
 function onPlaceChanged(e) {
+  getGeo(e.id);
   if (e.detail) {
     location = e.detail;
     business.location = JSON.stringify(location);
-    if (
-      typeof location.place?.geometry?.location?.lat === "function" &&
-      typeof location.place?.geometry?.location?.lng === "function"
-    ) {
-      business.lat = location.place.geometry.location.lat();
-      business.lon = location.place.geometry.location.lng();
-    } else if (
-      typeof location.place?.geometry?.location?.lat === "number" &&
-      typeof location.place?.geometry?.location?.lng === "number"
-    ) {
-      business.lat = location.place?.geometry?.location?.lat;
-      business.lon = location.place?.geometry?.location?.lng;
-    }
   }
 }
-// Apparently the Google Api _needs_ a callback in order to even load...
-function onReady(e) {
-  console.log("onReady", e.detail, locationName);
-}
-
-const options = {
-  fields: ["address_components", "geometry"],
-  types: ["address"],
-};
-
-let locationName = "";
 
 function imageEditor(type) {
   showModal = true;
@@ -227,6 +158,37 @@ $: {
       business.picture = $_state.context.data.url;
       _state = null;
     }
+  }
+}
+
+async function getGeo(locationId) {
+  if (locationId) {
+    const url = "https://lookup.search.hereapi.com/v1/lookup?id=" + locationId + "&apiKey=" + Environment.hereApiKey;
+
+    const response = await fetch(url);
+
+    const json = await response.json();
+    const lat = json.position.lat;
+    const lng = json.position.lng;
+
+    business.locationName = json.title;
+    business.location = json.title;
+    business.lat = lat;
+    business.lon = lng;
+  }
+}
+
+async function getItems(keyword) {
+  if (keyword) {
+    const url =
+      "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" +
+      encodeURIComponent(keyword) +
+      "&apiKey=" +
+      Environment.hereApiKey;
+
+    const response = await fetch(url);
+    const json = await response.json();
+    return json.items;
   }
 }
 </script>
@@ -296,14 +258,37 @@ $: {
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                   <div class="flex mt-2">
-                    <GooglePlacesAutocomplete
-                      class="w-full form-control input input-bordered"
-                      apiKey="{Environment.placesApiKey}"
-                      on:place_changed="{onPlaceChanged}"
-                      options="{options}"
-                      on:ready="{onReady}"
-                      placeholder="{placeholder}"
-                      value="{locationName}" />
+                    <AutoComplete
+                      inputClassName="select input w-full"
+                      selectName="text-primary"
+                      searchFunction="{getItems}"
+                      delay="200"
+                      localFiltering="{false}"
+                      labelFieldName="title"
+                      valueFieldName="id"
+                      hideArrow="{true}"
+                      onChange="{onPlaceChanged}"
+                      bind:selectedItem="{location}">
+                      <div
+                        slot="item"
+                        let:item
+                        let:label
+                        class="text-sm text-base bg-transparent selection:bg-transparent">
+                        <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
+                          <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
+                            <div class="relative flex-grow p-3 text-left ">
+                              <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
+                                {@html label}
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+
+                      <div slot="no-results" let:noResultsText>
+                        <strong>NO RESULTS - {noResultsText}</strong>
+                      </div>
+                    </AutoComplete>
                   </div>
                 </div>
               </div>
@@ -387,3 +372,37 @@ $: {
     </Center>
   {/if}
 {/if}
+
+<style>
+:global(.autocomplete) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+:global(.autocomplete input) {
+  padding-right: 2rem !important;
+}
+:global(.autocomplete-list-item) {
+  padding: 0.5rem !important;
+  width: 100%;
+  height: auto;
+}
+:global(.autocomplete-list-item.selected) {
+  background-color: #fff !important;
+  color: #ffcc33;
+}
+:global(.hide-arrow) {
+  display: none;
+}
+.customItem {
+  display: flex;
+  align-items: center;
+  cursor: default;
+  padding: 0;
+  overflow: hidden;
+  @apply bg-white;
+  @apply border-light;
+}
+:global(.autocomplete-list-item.selected .customItem) {
+  @apply border-primary;
+}
+</style>
