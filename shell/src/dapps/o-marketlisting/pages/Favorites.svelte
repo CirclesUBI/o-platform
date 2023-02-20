@@ -8,6 +8,7 @@ import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { marketStore } from "../stores/marketStore";
 import MarketlistingFrame from "../molecules/MarketlistingFrame.svelte";
 import { marketFilterStore } from "../stores/marketFilterStore";
+import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -15,6 +16,7 @@ export let routable: Routable;
 
 <div style="visibility: hidden;" class="bg-market"></div>
 
+<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="px-4 mx-auto text-center mt-14 md:w-2/3 xl:w-1/2 font-heading text-marketplace">
   <h1 class="text-5xl">
     <Label key="dapps.o-marketplace.pages.favorites.title" />
