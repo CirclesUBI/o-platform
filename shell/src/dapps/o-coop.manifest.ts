@@ -75,6 +75,7 @@ export const coop: DappManifest<DappState> = {
             {
               successAction: async (data) => {
                 const createdOrga = await loadProfile(data.circlesAddress, $me);
+
                 window.o.publishEvent(<PlatformEvent>{
                   type: "shell.loggedOut",
                 });
@@ -90,6 +91,7 @@ export const coop: DappManifest<DappState> = {
                     location: createdOrga.profile.location,
                   },
                 });
+
                 push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
                 // location.reload();
               },
