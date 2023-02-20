@@ -5,17 +5,13 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
-// import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-// import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+
 import {
   BusinessCategory,
   Businesses,
   UpsertOrganisationDocument,
   UpsertOrganisationMutation,
   UpsertOrganisationMutationVariables,
-  // ProfilesByCirclesAddressDocument,
-  // ProfilesByCirclesAddressQueryVariables,
-  Profile,
 } from "../../../shared/api/data/types";
 
 import { onMount } from "svelte";
@@ -35,7 +31,7 @@ import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelt
 import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
-
+import { getGeoDataFromHereId } from "../../../shared/functions/locationHandler";
 import AutoComplete from "simple-svelte-autocomplete";
 
 export let runtimeDapp: RuntimeDapp<any>;
@@ -74,7 +70,10 @@ onMount(async () => {
 
   business = businesses.allBusinesses[0];
   if (business) {
-    location = business.location ? JSON.parse(business.location) : null;
+    if (business.location) {
+      location = await getGeoDataFromHereId(business.location);
+    }
+
     week = OpeningHourWeek.parseOpeningHours(business);
   }
 });
@@ -103,7 +102,7 @@ async function save() {
           businessHoursSaturday: business.businessHoursSaturday,
           businessHoursSunday: business.businessHoursSunday,
           description: business.description,
-          location: location ? JSON.stringify(location) : null,
+          location: business.location,
           phoneNumber: business.phoneNumber,
           businessCategoryId: business.businessCategoryId,
         },
@@ -113,14 +112,27 @@ async function save() {
     showToast("success", `${$_("dapps.o-marketlisting.pages.mystore.settingsSaved")}`);
 
     me.reload();
+    push("#/passport/profile");
+  }
+}
+
+async function attachGeoData(locationId) {
+  if (locationId) {
+    const geoData = await getGeoDataFromHereId(locationId);
+    business.locationName = geoData.title;
+    business.location = geoData.id;
+    business.lat = geoData.position.lat;
+    business.lon = geoData.position.lng;
   }
 }
 
 function onPlaceChanged(e) {
-  getGeoDataFromHereId(e.id);
-  if (e.detail) {
-    location = e.detail;
-    business.location = JSON.stringify(location);
+  if (e && e.id) {
+    attachGeoData(e.id);
+    if (e.detail) {
+      location = e.detail;
+      business.location = JSON.stringify(location);
+    }
   }
 }
 
@@ -158,23 +170,6 @@ $: {
       business.picture = $_state.context.data.url;
       _state = null;
     }
-  }
-}
-
-async function getGeoDataFromHereId(locationId) {
-  if (locationId) {
-    const url = "https://lookup.search.hereapi.com/v1/lookup?id=" + locationId + "&apiKey=" + Environment.hereApiKey;
-
-    const response = await fetch(url);
-
-    const json = await response.json();
-    const lat = json.position.lat;
-    const lng = json.position.lng;
-
-    business.locationName = json.title;
-    business.location = json.title;
-    business.lat = lat;
-    business.lon = lng;
   }
 }
 

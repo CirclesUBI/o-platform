@@ -40,8 +40,6 @@ onMount(() => {
       }
       return result;
     }, []);
-
-    console.log("BUS", businesses);
   }
 });
 
@@ -55,7 +53,7 @@ function switchAccount(account) {
   });
   localStorage.removeItem("editShopIndex");
 
-  push("/home");
+  location.reload();
 }
 
 function createNewOrga() {
@@ -80,7 +78,7 @@ function createNewOrga() {
           },
         });
 
-        location.reload();
+        push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
       },
     },
     {}
