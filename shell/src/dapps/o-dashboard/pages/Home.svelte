@@ -52,22 +52,12 @@ onMount(init);
         icon="banking"
         title="dapps.o-dashboard.pages.home.banking" />
 
-      {#if $me && $me.__typename === "Profile"}
-        <DashboardColorCard
-          color="marketplace"
-          link="/market/listing"
-          blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
-          icon="marketlisting"
-          title="dapps.o-dashboard.pages.home.marketlisting" />
-      {/if}
-      {#if $me && $me.__typename === "Organisation"}
-        <DashboardColorCard
-          color="marketplace"
-          link="/market/mystore/{$me.circlesAddress}"
-          blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
-          icon="marketlisting"
-          title="{$me.displayName}" />
-      {/if}
+      <DashboardColorCard
+        color="marketplace"
+        link="/market/listing"
+        blobshape="75% 0% 92% 93% / 110% 32% 110% 81%"
+        icon="marketlisting"
+        title="dapps.o-dashboard.pages.home.marketlisting" />
 
       <DashboardColorCard
         color="contacts"
