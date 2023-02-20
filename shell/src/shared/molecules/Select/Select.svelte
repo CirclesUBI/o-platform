@@ -589,7 +589,7 @@ async function loadList() {
     getGroupHeaderLabel,
     items: filteredItems,
     itemHeight,
-    getHighlight
+    getHighlight,
   };
 
   if (getOptionLabel) {
@@ -690,7 +690,7 @@ onDestroy(() => {
 
 <div
   class="selectContainer {containerClasses} flex-col"
-  class:hasError
+  class:hasError="{hasError}"
   class:multiSelect="{isMulti}"
   class:disabled="{isDisabled}"
   class:focused="{isFocused}"
@@ -709,7 +709,7 @@ onDestroy(() => {
       getSelectionLabel="{getSelectionLabel}"
       activeSelectedValue="{activeSelectedValue}"
       isDisabled="{isDisabled}"
-      getHighlight={getHighlight}
+      getHighlight="{getHighlight}"
       multiFullItemClearable="{multiFullItemClearable}"
       on:multiItemClear="{handleMultiItemClear}" />
   {/if}
