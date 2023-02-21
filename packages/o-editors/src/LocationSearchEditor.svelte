@@ -7,7 +7,7 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import AutoComplete from "simple-svelte-autocomplete";
-
+import { findLocation, getGeoDataFromHereId } from "../../../shell/src/shared/functions/locationHandler";
 /*
  * allow arbitrary values in dropdownselecteditor
  * allow to add new tags in dropdownselecteditor
@@ -31,17 +31,12 @@ onMount(async () => {
   console.log("SELECTED: ", context.data);
 });
 
-async function getItems(keyword) {
-  const url =
-    "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" +
-    encodeURIComponent(keyword) +
-    "&apiKey=fhiIkoASi1B-z8R7ytKBnfJltOpaUlYBV1kydXyK1sE";
-
-  const response = await fetch(url);
-  const json = await response.json();
-
-  console.log("RESULTS: ", json);
-  return json.items;
+function onPlaceChanged(e) {
+  // getGeoDataFromHereId(e.id);
+  // if (e.detail) {
+  //   // location = e.detail;
+  //   // business.location = JSON.stringify(location);
+  // }
 }
 
 function submitHandler() {
@@ -55,24 +50,23 @@ function submitHandler() {
 
 <div class="flex flex-col items-end w-full m-auto form-control justify-self-center sm:w-3/4">
   <AutoComplete
-    inputClassName="input input-lg input-bordered"
+    inputClassName="select input w-full"
     selectName="text-primary"
-    searchFunction="{getItems}"
+    searchFunction="{findLocation}"
     delay="200"
     localFiltering="{false}"
     labelFieldName="title"
     valueFieldName="id"
+    hideArrow="{true}"
+    onChange="{onPlaceChanged}"
     bind:selectedItem="{_context.data[context.field]}">
-    <div slot="item" let:item let:label class="bg-transparent selection:bg-transparent">
-      <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg shadow-sm customItem ">
+    <div slot="item" let:item let:label class="text-sm text-base bg-transparent selection:bg-transparent">
+      <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
         <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
-          <div class="relative flex-grow p-3 text-left truncate">
-            <div class="max-w-full -mt-1 leading-8 cursor-pointer truncateThis">
+          <div class="relative flex-grow p-3 text-left ">
+            <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
               {@html label}
             </div>
-            <!-- <div class="text-xs text-left text-dark-lightest">
-        {item.country}
-      </div> -->
           </div>
         </div>
       </section>

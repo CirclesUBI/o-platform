@@ -53,13 +53,6 @@ let loginOptions = [
     class: "btn btn-outline",
     icon: "apple",
   },
-  {
-    key: "github",
-    label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
-    target: "#github",
-    class: "btn btn-outline",
-    icon: "github",
-  },
 ];
 
 const processDefinition = (processId: string) =>
@@ -188,13 +181,6 @@ const processDefinition = (processId: string) =>
               target: "#facebook",
               class: "btn btn-outline",
               icon: "facebook",
-            },
-            {
-              key: "github",
-              label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.github.label"),
-              target: "#github",
-              class: "btn btn-outline",
-              icon: "github",
             },
           ]),
         }),
@@ -355,37 +341,6 @@ const processDefinition = (processId: string) =>
               const openLogin = await getOpenLogin();
               const privateKey = await openLogin.login({
                 loginProvider: "facebook",
-              });
-              return {
-                privateKey: privateKey.privKey,
-                userInfo: await openLogin.getUserInfo(),
-              };
-            },
-            onDone: {
-              actions: "assignPrivateKeyAndUserInfoToContext",
-              target: "#enterEncryptionPin",
-            },
-            onError: [
-              {
-                // user closed popup
-                cond: (context, event) => event.data.message == "user closed popup",
-                target: "#chooseFlow",
-              },
-              {
-                cond: (context, event) => (window.o.lastError = event.data),
-                actions: setWindowLastError,
-                target: "#showError",
-              },
-            ],
-          },
-        },
-        github: {
-          id: "github",
-          invoke: {
-            src: async (context) => {
-              const openLogin = await getOpenLogin();
-              const privateKey = await openLogin.login({
-                loginProvider: "github",
               });
               return {
                 privateKey: privateKey.privKey,
