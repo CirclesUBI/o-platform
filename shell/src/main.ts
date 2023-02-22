@@ -24,6 +24,39 @@ import { me } from "./shared/stores/me";
 import { Environment } from "./shared/environment";
 import { IShell } from "./iShell";
 
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: "https://42e2eed7fcd94a3f86fa2ca4ffa7bd70@o4504719125905408.ingest.sentry.io/4504719127740416",
+  integrations: [new BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+
+/*
+function monkeyPatchConsole () {
+   // Wrap 'log', 'warning' and 'error' methods
+    ['log', 'warn', 'error'].forEach(function (method) {
+        var original = console[method];
+        console[method] = function () {
+            var stack = (new Error()).stack.split(" at ").slice(3);
+            // Chrome includes a single " at " string on the stack, FF doesn't.
+            if (stack[0] === "") {
+                stack = stack.slice(1);
+            }
+            var args = [].slice.call(arguments).concat([stack]);
+            return original.apply(console, args);
+        };
+    });
+}
+
+monkeyPatchConsole();
+*/
+
 
 dayjs.extend(relativeTime);
 RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
@@ -244,9 +277,6 @@ declare global {
     runInitMachine: () => void;
   }
 }
-
-
-
 
 
 async function load() {
