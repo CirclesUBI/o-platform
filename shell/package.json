@@ -7,7 +7,7 @@
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
     "local": "ENVIRONMENT='local' webpack serve --hot --config webpack.config.js --mode=development",
-    "docker": "ENVIRONMENT='docker' HERE_API_KEY='TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA' USE_MOCKS='true' webpack serve --hot --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
+    "docker": "DEPLOY_ENVIRONMENT='docker' ENVIRONMENT='docker' HERE_API_KEY='TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA' USE_MOCKS='true' webpack serve --hot --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
     "override": "ENVIRONMENT='override' webpack serve --hot --host localhost --port 8080 --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
     "validate": "svelte-check",
@@ -50,7 +50,9 @@
     "svelte-spa-router": "^3.0.5",
     "svelte-time": "^0.7.1",
     "xstate": "^4.31.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@sentry/browser": "^7.38.0",
+    "@sentry/tracing": "^7.38.0"
   },
   "devDependencies": {
     "daisyui": "^2.31.0",
