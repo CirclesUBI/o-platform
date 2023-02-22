@@ -30,7 +30,7 @@ onMount(init);
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="mx-auto md:w-2/3 xl:w-1/2">
-  <div class="m-4 mb-40 ">
+  <div class="m-4 mt-10 mb-40">
     <!--<LangSwitcher />-->
     <!-- bg-passport-light bg-passport bg-banking bg-banking-light bg-marketplace bg-marketplace-light bg-contacts bg-contacts-light -->
 
