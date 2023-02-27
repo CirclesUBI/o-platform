@@ -1,23 +1,32 @@
-<script>
-
-  export let item = undefined;
+<script type="ts">
+export let item = undefined;
 // export let isActive = false;
 export let isFirst = false;
 export let isHover = false;
-  export let getHighlight = undefined;
+export let getHighlight = undefined;
 
-  const getLabel = (value) => {
-    let label = value
-    console.log(getHighlight)
-    if (getHighlight) {
-      const highlight = getHighlight(item);
-      const beforeHighlight = label.substring(0, highlight.start);
-      const highlightContent = label.substring(highlight.start, highlight.end);
-      const afterHighlight = label.substring(highlight.end, label.length);
-      label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`
-    }
-    return label;
-  };
+function buildAddressString(address) {
+  let addr: string[] = [address.street, address.houseNumber, address.city, address.district, address.countryCode];
+  addr = addr.filter(function (element) {
+    return element !== undefined;
+  });
+
+  return addr.join(", ");
+}
+const getLabel = (value) => {
+  let label = value;
+  console.log(getHighlight);
+  if (getHighlight) {
+    const highlight = getHighlight(item);
+    const beforeHighlight = label.substring(0, highlight.start);
+    const highlightContent = label.substring(highlight.start, highlight.end);
+    const afterHighlight = label.substring(highlight.end, label.length);
+    label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`;
+  }
+  return buildAddressString(item.address);
+  console.log("ITEM", item);
+  return label;
+};
 
 let label = "";
 let itemClasses = "";
