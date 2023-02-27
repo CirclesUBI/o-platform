@@ -6,7 +6,13 @@ import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 
-import { BusinessCategory, Businesses, UpsertOrganisationDocument, UpsertOrganisationMutation, UpsertOrganisationMutationVariables } from "../../../shared/api/data/types";
+import {
+  BusinessCategory,
+  Businesses,
+  UpsertOrganisationDocument,
+  UpsertOrganisationMutation,
+  UpsertOrganisationMutationVariables,
+} from "../../../shared/api/data/types";
 
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
@@ -77,53 +83,36 @@ async function save() {
   if (!business.picture || !business.name) {
     error = $_("dapps.o-marketlisting.pages.mystore.error.no-name-or-picture");
   } else {
-    const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(UpsertOrganisationDocument, {
-      organisation: {
-        id: business.id <= 0 ? 0 : business.id,
-        circlesAddress: business.circlesAddress,
-        name: business.name,
-        locationName: business.locationName,
-        lat: business.lat,
-        lon: business.lon,
-        avatarUrl: business.picture,
-        businessHoursMonday: business.businessHoursMonday,
-        businessHoursTuesday: business.businessHoursTuesday,
-        businessHoursWednesday: business.businessHoursWednesday,
-        businessHoursThursday: business.businessHoursThursday,
-        businessHoursFriday: business.businessHoursFriday,
-        businessHoursSaturday: business.businessHoursSaturday,
-        businessHoursSunday: business.businessHoursSunday,
-        description: business.description,
-        location: business.location,
-        phoneNumber: business.phoneNumber,
-        businessCategoryId: business.businessCategoryId,
-      },
-    });
+    const result = await ApiClient.mutate<UpsertOrganisationMutation, UpsertOrganisationMutationVariables>(
+      UpsertOrganisationDocument,
+      {
+        organisation: {
+          id: business.id <= 0 ? 0 : business.id,
+          circlesAddress: business.circlesAddress,
+          name: business.name,
+          locationName: business.locationName,
+          lat: business.lat,
+          lon: business.lon,
+          avatarUrl: business.picture,
+          businessHoursMonday: business.businessHoursMonday,
+          businessHoursTuesday: business.businessHoursTuesday,
+          businessHoursWednesday: business.businessHoursWednesday,
+          businessHoursThursday: business.businessHoursThursday,
+          businessHoursFriday: business.businessHoursFriday,
+          businessHoursSaturday: business.businessHoursSaturday,
+          businessHoursSunday: business.businessHoursSunday,
+          description: business.description,
+          location: business.location,
+          phoneNumber: business.phoneNumber,
+          businessCategoryId: business.businessCategoryId,
+        },
+      }
+    );
 
     showToast("success", `${$_("dapps.o-marketlisting.pages.mystore.settingsSaved")}`);
 
     me.reload();
     push("#/passport/profile");
-  }
-}
-
-async function attachGeoData(locationId) {
-  if (locationId) {
-    const geoData = await getGeoDataFromHereId(locationId);
-    business.locationName = buildAddressString(geoData.address);
-    business.location = geoData.id;
-    business.lat = geoData.position.lat;
-    business.lon = geoData.position.lng;
-  }
-}
-
-function onPlaceChanged(e) {
-  if (e && e.id) {
-    attachGeoData(e.id);
-    if (e.detail) {
-      location = e.detail;
-      business.location = buildAddressString(e.address);
-    }
   }
 }
 
@@ -164,12 +153,22 @@ $: {
   }
 }
 
+/* Filter out non street-level results */
+function isViableResult(item) {
+  return item.resultType == "street" || item.resultType == "houseNumber";
+}
+
 async function getItems(keyword) {
   if (keyword) {
-    const url = "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" + encodeURIComponent(keyword) + "&apiKey=" + Environment.hereApiKey;
+    const url =
+      "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" +
+      encodeURIComponent(keyword) +
+      "&apiKey=" +
+      Environment.hereApiKey;
     const response = await fetch(url);
     const json = await response.json();
-    return json.items;
+
+    return json.items.filter(isViableResult);
   }
 }
 function buildAddressString(address) {
@@ -179,6 +178,26 @@ function buildAddressString(address) {
   });
 
   return addr.join(", ");
+}
+
+async function attachGeoData(locationId) {
+  if (locationId) {
+    const geoData = await getGeoDataFromHereId(locationId);
+    business.locationName = buildAddressString(geoData.address);
+    business.location = geoData.id;
+    business.lat = geoData.position.lat;
+    business.lon = geoData.position.lng;
+  }
+}
+
+function onPlaceChanged(e) {
+  if (e && e.id) {
+    attachGeoData(e.id);
+
+    // We have to manipulate this a little bit in order to display the just Selected Value in the dropdown correctly
+    // When just selecting a new value, for some reason the title has the city/street etc.. in reverse order, but the address.label is correct.
+    e.title = e.address.label;
+  }
 }
 </script>
 
@@ -206,7 +225,10 @@ function buildAddressString(address) {
               <div class="flex flex-col">
                 <div class="flex flex-col mb-5 text-sm ">
                   <Label key="dapps.o-passport.pages.upsertOrganization.picture" />
-                  <div class="flex justify-center w-full mt-2" role="presentation" on:click="{() => imageEditor(false)}">
+                  <div
+                    class="flex justify-center w-full mt-2"
+                    role="presentation"
+                    on:click="{() => imageEditor(false)}">
                     <UserImage
                       profile="{{
                         circlesAddress: business.circlesAddress,
@@ -255,7 +277,14 @@ function buildAddressString(address) {
                       hideArrow="{true}"
                       onChange="{onPlaceChanged}"
                       bind:selectedItem="{location}">
-                      <div slot="item" let:item let:city let:street let:district let:houseNumber class="text-sm text-base bg-transparent selection:bg-transparent">
+                      <div
+                        slot="item"
+                        let:item
+                        let:city
+                        let:street
+                        let:district
+                        let:houseNumber
+                        class="text-sm text-base bg-transparent selection:bg-transparent">
                         <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
                           <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
                             <div class="relative flex-grow p-3 text-left ">
@@ -294,7 +323,9 @@ function buildAddressString(address) {
                 <div class="flex mt-2">
                   {#if allCategories}
                     <DropDown
-                      selected="{business.businessCategory ? business.businessCategory : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
+                      selected="{business.businessCategory
+                        ? business.businessCategory
+                        : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
                       items="{allCategories}"
                       id="filters"
                       key="id"
