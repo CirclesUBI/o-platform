@@ -243,7 +243,7 @@ async function setProfile(id: string) {
                 <div class="mb-1 font-bold text-left text-2xs">
                   {$_("dapps.o-contacts.pages.profile.address")}
                 </div>
-                <div class="flex items-center w-full text-2xs">
+                <div class="flex items-center w-full text-sm">
                   {profile.circlesAddress}
                 </div>
               </div>
