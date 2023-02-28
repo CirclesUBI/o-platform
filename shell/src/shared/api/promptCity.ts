@@ -28,9 +28,7 @@ type Address = {
 };
 
 export async function cityByHereId(key: string) {
-  const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${
-    Environment.hereApiKey
-  }`;
+  const url = `https://lookup.search.hereapi.com/v1/lookup?id=${encodeURIComponent(key)}&apiKey=${Environment.hereApiKey}`;
   const response = await fetch(url);
   return await response.json();
 }
@@ -79,9 +77,7 @@ export function promptCity<TContext extends ProcessContext<any>, TEvent extends 
         },
         find: async (filter: string) => {
           // https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics-api/code-autocomplete-result-type-filter.html
-          const url = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&apiKey=${
-            Environment.hereApiKey
-          }`;
+          const url = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(filter)}&apiKey=${Environment.hereApiKey}`;
 
           const response = await fetch(url);
           const json = await response.json();

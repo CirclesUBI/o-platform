@@ -10,14 +10,19 @@ export async function getGeoDataFromHereId(locationId) {
 
 export async function findLocation(keyword) {
   if (keyword) {
-    const url =
-      "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" +
-      encodeURIComponent(keyword) +
-      "&apiKey=" +
-      Environment.hereApiKey;
+    const url = "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" + encodeURIComponent(keyword) + "&apiKey=" + Environment.hereApiKey;
 
     const response = await fetch(url);
     const json = await response.json();
     return json.items;
   }
+}
+
+export function buildAddressString(address) {
+  let addr: string[] = [address.street, address.houseNumber, address.city, address.district, address.countryCode];
+  addr = addr.filter(function (element) {
+    return element !== undefined;
+  });
+
+  return addr.join(", ");
 }
