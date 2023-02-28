@@ -60,14 +60,14 @@ onMount(async () => {
 });
 
 function parseTimeString(timeString, type) {
-  const [timeRange, weekdays] = timeString.split(' ');
-  const hoursArray = timeRange.split(';');
+  const [timeRange, weekdays] = timeString.split(" ");
+  const hoursArray = timeRange.split(";");
 
-  if (type === 'weekday') {
+  if (type === "weekday") {
     return weekdays;
   }
-  if (type === 'hours'){
-    return hoursArray[0] !== '' ? hoursArray : false;
+  if (type === "hours") {
+    return hoursArray[0] !== "" ? hoursArray : false;
   }
 }
 
@@ -174,52 +174,54 @@ async function shareLink() {
         <p class="pl-4 pr-4">Opening Hours</p>
         <div>
           <table>
-            <thead>
-            </thead>
+            <thead> </thead>
             <tbody>
+              {#if visible}
+                {#each everythingBeforeTheCurrentDay as day}
+                  <tr>
+                    {#if parseTimeString(day, "weekday")}<td class="weekday-element"
+                        >{parseTimeString(day, "weekday")}</td
+                      >{/if}
+                    {#if parseTimeString(day, "hours")}
+                      {#each parseTimeString(day, "hours") as hours}
+                        <td class="hours-element">{hours}</td>
+                      {/each}
+                    {/if}
+                  </tr>
+                {/each}
+              {/if}
+
+              {#if currentDayOpenHours}
+                <tr>
+                  {#if parseTimeString(currentDayOpenHours, "weekday")}<td class="weekday-element"
+                      >{parseTimeString(currentDayOpenHours, "weekday")}</td
+                    >{/if}
+                  {#if parseTimeString(currentDayOpenHours, "hours")}
+                    {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                      <td class="hours-element">{hours}</td>
+                    {/each}
+                  {/if}
+                </tr>
+              {/if}
 
               {#if visible}
-              {#each everythingBeforeTheCurrentDay as day}
-              <tr>
-                {#if parseTimeString(day, 'weekday')}<td class="weekday-element">{parseTimeString(day, 'weekday')}</td>{/if}
-                {#if parseTimeString(day, 'hours')}
-                {#each parseTimeString(day, 'hours') as hours}
-                  <td class="hours-element">{hours}</td>
+                {#each everythingAfterTheCurrentDay as after}
+                  <tr>
+                    {#if parseTimeString(after, "weekday")}<td class="weekday-element"
+                        >{parseTimeString(after, "weekday")}</td
+                      >{/if}
+                    {#if parseTimeString(after, "hours")}
+                      {#each parseTimeString(after, "hours") as hours}
+                        {#if hours}
+                          <td class="hours-element">{hours}</td>
+                        {/if}
+                      {/each}
+                    {/if}
+                  </tr>
                 {/each}
-                {/if}
-              </tr>
-              {/each}
-            {/if}
-  
-            {#if currentDayOpenHours}
-            <tr>
-              {#if parseTimeString(currentDayOpenHours, 'weekday')}<td class="weekday-element">{parseTimeString(currentDayOpenHours, 'weekday')}</td>{/if}
-              {#if parseTimeString(currentDayOpenHours, 'hours')}
-              {#each parseTimeString(currentDayOpenHours, 'hours') as hours}
-                <td class="hours-element">{hours}</td>
-              {/each}
               {/if}
-            </tr>
-            {/if}
-  
-            {#if visible}
-              {#each everythingAfterTheCurrentDay as after}
-              <tr>
-              {#if parseTimeString(after, 'weekday')}<td class="weekday-element">{parseTimeString(after, 'weekday')}</td>{/if}
-              {#if parseTimeString(after, 'hours')}
-              {#each parseTimeString(after, 'hours') as hours}
-              {#if hours}
-                <td class="hours-element">{hours}</td>
-              {/if}
-              {/each}
-              {/if}
-              </tr>
-              {/each}
-            {/if}
-
             </tbody>
           </table>
-          
         </div>
         {#if !visible}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -262,21 +264,21 @@ async function shareLink() {
 </section>
 
 <style>
-  :global(.hours-element) {
-    border-right: solid 2px black;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-  }
+:global(.hours-element) {
+  border-right: solid 2px black;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+}
 
-  :global(.weekday-element) {
-   width: 100px;
-  }
+:global(.weekday-element) {
+  width: 100px;
+}
 
-  :global(tr){
-    display: flex;
-    flex-direction: row;
-    margin-top: 7px;
-    margin-bottom: 7px;
-  }
-  </style>
+:global(tr) {
+  display: flex;
+  flex-direction: row;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+</style>
