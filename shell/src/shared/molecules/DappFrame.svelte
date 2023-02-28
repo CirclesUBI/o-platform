@@ -958,6 +958,7 @@ async function handleUrlChanged() {
       navArgs.centerIsOpen = false;
       baseParams = currentParams;
       showMainPage(runtimeDapp, page, findRouteResult.params);
+      updateNavigationObject();
     }
   }
 
@@ -1009,7 +1010,6 @@ async function handleUrlChanged() {
     firstUrlChangedCall = false;
     init();
   }
-  updateNavigationObject();
 }
 
 function showModalProcess(processId?: string) {
@@ -1051,6 +1051,7 @@ function showModalPage(
   //   `showModalPage(pushToStack: ${pushToStack}) - current stack:`,
   //   JSON.stringify(stack, null, 2)
   // );
+
   if (stack.length > 0) {
     const last = stack[stack.length - 1];
     pushToStack = !(last.dappId == runtimeDapp.dappId && JSON.stringify(currentParams) == JSON.stringify(last.params));
@@ -1177,7 +1178,6 @@ async function hideCenter() {
 }
 </script>
 
-{console.log("ROUTABLE: ", routable)}
 <Layout
   layout="{layout}"
   navigation="{navigation}"
