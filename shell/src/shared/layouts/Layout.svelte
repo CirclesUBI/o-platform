@@ -25,6 +25,8 @@ $: {
   const url = window.location.href;
   if (url.indexOf("survey") > -1) {
     isSurveyPage = true;
+  } else {
+    isSurveyPage = false;
   }
   // console.log("LayoutChanged:", layout);
   if (
