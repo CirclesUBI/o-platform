@@ -33,6 +33,7 @@ import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
 import { getGeoDataFromHereId } from "../../../shared/functions/locationHandler";
 import AutoComplete from "simple-svelte-autocomplete";
+import { buildAddressString } from "../../../shared/functions/locationHandler";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -170,14 +171,6 @@ async function getItems(keyword) {
 
     return json.items.filter(isViableResult);
   }
-}
-function buildAddressString(address) {
-  let addr: string[] = [address.street, address.houseNumber, address.city, address.district, address.countryCode];
-  addr = addr.filter(function (element) {
-    return element !== undefined;
-  });
-
-  return addr.join(", ");
 }
 
 async function attachGeoData(locationId) {
