@@ -11,6 +11,7 @@ import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { marketStore } from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import { log } from "xstate/lib/actions";
 
 export let circlesAddress: string;
 
@@ -57,6 +58,18 @@ onMount(async () => {
     hasOpeningHours = checkIfOpeningHoursExists(businessHours);
   });
 });
+
+function parseTimeString(timeString, type) {
+  const [timeRange, weekdays] = timeString.split(' ');
+  const hoursArray = timeRange.split(';');
+
+  if (type === 'weekday') {
+    return weekdays;
+  }
+  if (type === 'hours'){
+    return hoursArray[0] !== '' ? hoursArray : false;
+  }
+}
 
 function checkIfOpeningHoursExists(businessHours: string[]) {
   for (let i = 0; i < businessHours.length; i++) {
@@ -160,18 +173,53 @@ async function shareLink() {
         <Icon name="clock" class="w-6 h-6" />
         <p class="pl-4 pr-4">Opening Hours</p>
         <div>
-          {#if visible}
-            {#each everythingBeforeTheCurrentDay as day}
-              <p transition:fade>{day}</p>
-            {/each}
-          {/if}
+          <table>
+            <thead>
+            </thead>
+            <tbody>
 
-          <p>{currentDayOpenHours}</p>
-          {#if visible}
-            {#each everythingAfterTheCurrentDay as after}
-              <p transition:fade>{after}</p>
-            {/each}
-          {/if}
+              {#if visible}
+              {#each everythingBeforeTheCurrentDay as day}
+              <tr>
+                {#if parseTimeString(day, 'weekday')}<td class="weekday-element">{parseTimeString(day, 'weekday')}</td>{/if}
+                {#if parseTimeString(day, 'hours')}
+                {#each parseTimeString(day, 'hours') as hours}
+                  <td class="hours-element">{hours}</td>
+                {/each}
+                {/if}
+              </tr>
+              {/each}
+            {/if}
+  
+            {#if currentDayOpenHours}
+            <tr>
+              {#if parseTimeString(currentDayOpenHours, 'weekday')}<td class="weekday-element">{parseTimeString(currentDayOpenHours, 'weekday')}</td>{/if}
+              {#if parseTimeString(currentDayOpenHours, 'hours')}
+              {#each parseTimeString(currentDayOpenHours, 'hours') as hours}
+                <td class="hours-element">{hours}</td>
+              {/each}
+              {/if}
+            </tr>
+            {/if}
+  
+            {#if visible}
+              {#each everythingAfterTheCurrentDay as after}
+              <tr>
+              {#if parseTimeString(after, 'weekday')}<td class="weekday-element">{parseTimeString(after, 'weekday')}</td>{/if}
+              {#if parseTimeString(after, 'hours')}
+              {#each parseTimeString(after, 'hours') as hours}
+              {#if hours}
+                <td class="hours-element">{hours}</td>
+              {/if}
+              {/each}
+              {/if}
+              </tr>
+              {/each}
+            {/if}
+
+            </tbody>
+          </table>
+          
         </div>
         {#if !visible}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -212,3 +260,23 @@ async function shareLink() {
     <p>loading details...</p>
   {/if}
 </section>
+
+<style>
+  :global(.hours-element) {
+    border-right: solid 2px black;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+  }
+
+  :global(.weekday-element) {
+   width: 100px;
+  }
+
+  :global(tr){
+    display: flex;
+    flex-direction: row;
+    margin-top: 7px;
+    margin-bottom: 7px;
+  }
+  </style>
