@@ -13,8 +13,8 @@ const dev = !prod;
 
 const __ENVIRONMENT__ = process.env.ENVIRONMENT;
 
-if (!process.env.NODE_ENV === "production") {
-  require("dotenv").config({path: `./../.env.${__ENVIRONMENT__}`});
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: `./../.env.${__ENVIRONMENT__}` });
 }
 
 console.log("Environment:", __ENVIRONMENT__);
