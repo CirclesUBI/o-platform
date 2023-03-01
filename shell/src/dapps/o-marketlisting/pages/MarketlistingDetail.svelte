@@ -175,9 +175,9 @@ async function shareLink() {
             <Icon name="clock" class="w-6 h-6" />
             <div class="pl-4 pr-4">Opening Hours</div>
             <div
+              role="presentation"
               on:click="{() => {
                 visible = !visible;
-                console.log(visible);
               }}">
               <Icon name="chevron-down" class="w-6 h-6" />
             </div>
