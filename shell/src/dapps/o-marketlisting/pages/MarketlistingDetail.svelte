@@ -126,7 +126,7 @@ async function shareLink() {
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
-        <span><Icons icon="share" customClass="w-6 h-6" /></span>
+        <span><Icons icon="share" customClass="w-4 h-4" /></span>
         <p class="pl-1">Share</p>
       </button>
     {/if}
@@ -171,7 +171,7 @@ async function shareLink() {
     {#if hasOpeningHours}
       <div class="flex pt-4 mt-4 border-t-2 text-black">
         <div>
-          <div class="flex">
+          <div class="flex mb-5 ml-2">
             <Icon name="clock" class="w-6 h-6" />
             <div class="pl-4 pr-4">Opening Hours</div>
             <div
@@ -185,60 +185,60 @@ async function shareLink() {
           <div class="opening-hours-container">
             {#if visible}
               {#each everythingBeforeTheCurrentDay as day}
-                <div class="flex mt-5 mb-5 flex-col">
+                <div class="flex mb-3 flex-col">
                   {#if parseTimeString(day, "weekday")}
                     <div class="flex table-cell pl-2 font-semibold mb-1">
                       {parseTimeString(day, "weekday")}
                     </div>
                   {/if}
                   {#if parseTimeString(day, "hours")}
-                    <div class="flex ml-2">
+                    <div class="flex ml-2 flex-wrap">
                       {#each parseTimeString(day, "hours") as hours}
-                        <div class="flex badge badge-success badge-outline">{hours}</div>
+                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
                       {/each}
                     </div>
                   {:else}
-                    <div class="pl-2">Closed</div>
+                    <div class="badge badge-error badge-outline ml-2">Closed</div>
                   {/if}
                 </div>
               {/each}
             {/if}
 
             {#if currentDayOpenHours}
-              <div class="flex mt-5 mb-5 flex-col">
+              <div class="flex mb-3 flex-col">
                 {#if parseTimeString(currentDayOpenHours, "weekday")}
                   <div class="flex table-cell pl-2 font-semibold mb-1">
                     {parseTimeString(currentDayOpenHours, "weekday")}
                   </div>
                 {/if}
                 {#if parseTimeString(currentDayOpenHours, "hours")}
-                  <div class="flex ml-2">
+                  <div class="flex ml-2 flex-wrap">
                     {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                      <div class="flex badge badge-success badge-outline">{hours}</div>
+                      <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
                     {/each}
                   </div>
                 {:else}
-                  <div class="pl-2">Closed</div>
+                  <div class="badge badge-error badge-outline ml-2">Closed</div>
                 {/if}
               </div>
             {/if}
 
             {#if visible}
               {#each everythingAfterTheCurrentDay as after}
-                <div class="flex mt-5 mb-5 flex-col">
+                <div class="flex mb-3 flex-col">
                   {#if parseTimeString(after, "weekday")}
                     <div class="flex table-cell pl-2 font-semibold mb-1">
                       {parseTimeString(after, "weekday")}
                     </div>
                   {/if}
                   {#if parseTimeString(after, "hours")}
-                    <div class="flex ml-2">
+                    <div class="flex ml-2 flex-wrap">
                       {#each parseTimeString(after, "hours") as hours}
-                        <div class="flex badge badge-success badge-outline">{hours}</div>
+                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
                       {/each}
                     </div>
                   {:else}
-                    <div class="pl-2">Closed</div>
+                    <div class="badge badge-error badge-outline ml-2">Closed</div>
                   {/if}
                 </div>
               {/each}
@@ -277,8 +277,8 @@ async function shareLink() {
 
 <style>
 :global(.badge) {
-  width: fit-content;
-  block-size: fit-content;
   text-align: center;
+  flex-wrap: wrap;
+  margin-bottom: 7px;
 }
 </style>
