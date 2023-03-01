@@ -941,6 +941,7 @@ async function handleUrlChanged() {
       navArgs.centerIsOpen = false;
       baseParams = currentParams;
       showMainPage(runtimeDapp, page, findRouteResult.params);
+      setNav(navArgs);
     }
   }
 
