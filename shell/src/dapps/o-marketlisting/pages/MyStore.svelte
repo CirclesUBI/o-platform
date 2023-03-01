@@ -33,6 +33,7 @@ import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
 import { getGeoDataFromHereId } from "../../../shared/functions/locationHandler";
 import AutoComplete from "simple-svelte-autocomplete";
+import { buildAddressString } from "../../../shared/functions/locationHandler";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -116,26 +117,6 @@ async function save() {
   }
 }
 
-async function attachGeoData(locationId) {
-  if (locationId) {
-    const geoData = await getGeoDataFromHereId(locationId);
-    business.locationName = geoData.title;
-    business.location = geoData.id;
-    business.lat = geoData.position.lat;
-    business.lon = geoData.position.lng;
-  }
-}
-
-function onPlaceChanged(e) {
-  if (e && e.id) {
-    attachGeoData(e.id);
-    if (e.detail) {
-      location = e.detail;
-      business.location = JSON.stringify(location);
-    }
-  }
-}
-
 function imageEditor(type) {
   showModal = true;
   editImage = false;
@@ -173,6 +154,11 @@ $: {
   }
 }
 
+/* Filter out non street-level results */
+function isViableResult(item) {
+  return item.resultType == "street" || item.resultType == "houseNumber";
+}
+
 async function getItems(keyword) {
   if (keyword) {
     const url =
@@ -180,10 +166,30 @@ async function getItems(keyword) {
       encodeURIComponent(keyword) +
       "&apiKey=" +
       Environment.hereApiKey;
-
     const response = await fetch(url);
     const json = await response.json();
-    return json.items;
+
+    return json.items.filter(isViableResult);
+  }
+}
+
+async function attachGeoData(locationId) {
+  if (locationId) {
+    const geoData = await getGeoDataFromHereId(locationId);
+    business.locationName = buildAddressString(geoData.address);
+    business.location = geoData.id;
+    business.lat = geoData.position.lat;
+    business.lon = geoData.position.lng;
+  }
+}
+
+function onPlaceChanged(e) {
+  if (e && e.id) {
+    attachGeoData(e.id);
+
+    // We have to manipulate this a little bit in order to display the just Selected Value in the dropdown correctly
+    // When just selecting a new value, for some reason the title has the city/street etc.. in reverse order, but the address.label is correct.
+    e.title = e.address.label;
   }
 }
 </script>
@@ -267,13 +273,16 @@ async function getItems(keyword) {
                       <div
                         slot="item"
                         let:item
-                        let:label
+                        let:city
+                        let:street
+                        let:district
+                        let:houseNumber
                         class="text-sm text-base bg-transparent selection:bg-transparent">
                         <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
                           <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
                             <div class="relative flex-grow p-3 text-left ">
                               <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
-                                {@html label}
+                                {buildAddressString(item.address)}
                               </div>
                             </div>
                           </div>

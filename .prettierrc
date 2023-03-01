@@ -11,5 +11,5 @@
   "svelteBracketNewLine": false,
   "svelteAllowShorthand": false,
   "svelteIndentScriptAndStyle": false,
-  "printWidth": 120
+  "printWidth": 190
 }

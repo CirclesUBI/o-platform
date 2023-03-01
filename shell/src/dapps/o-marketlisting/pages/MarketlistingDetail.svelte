@@ -11,6 +11,7 @@ import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { marketStore } from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import { log } from "xstate/lib/actions";
 
 export let circlesAddress: string;
 
@@ -57,6 +58,18 @@ onMount(async () => {
     hasOpeningHours = checkIfOpeningHoursExists(businessHours);
   });
 });
+
+function parseTimeString(timeString, type) {
+  const [timeRange, weekdays] = timeString.split(" ");
+  const hoursArray = timeRange.split(";");
+
+  if (type === "weekday") {
+    return weekdays;
+  }
+  if (type === "hours") {
+    return hoursArray[0] !== "" ? hoursArray : false;
+  }
+}
 
 function checkIfOpeningHoursExists(businessHours: string[]) {
   for (let i = 0; i < businessHours.length; i++) {
@@ -113,7 +126,7 @@ async function shareLink() {
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
-        <span><Icons icon="share" customClass="w-6 h-6" /></span>
+        <span><Icons icon="share" customClass="w-4 h-4" /></span>
         <p class="pl-1">Share</p>
       </button>
     {/if}
@@ -157,32 +170,81 @@ async function shareLink() {
 
     {#if hasOpeningHours}
       <div class="flex pt-4 mt-4 border-t-2 text-black">
-        <Icon name="clock" class="w-6 h-6" />
-        <p class="pl-4 pr-4">Opening Hours</p>
         <div>
-          {#if visible}
-            {#each everythingBeforeTheCurrentDay as day}
-              <p transition:fade>{day}</p>
-            {/each}
-          {/if}
-
-          <p>{currentDayOpenHours}</p>
-          {#if visible}
-            {#each everythingAfterTheCurrentDay as after}
-              <p transition:fade>{after}</p>
-            {/each}
-          {/if}
-        </div>
-        {#if !visible}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
-            on:click="{() => {
-              visible = !visible;
-              console.log(visible);
-            }}">
-            <Icon name="chevron-down" class="w-6 h-6" />
+          <div class="flex mb-5 ml-2">
+            <Icon name="clock" class="w-6 h-6" />
+            <div class="pl-4 pr-4">Opening Hours</div>
+            <div
+              on:click="{() => {
+                visible = !visible;
+                console.log(visible);
+              }}">
+              <Icon name="chevron-down" class="w-6 h-6" />
+            </div>
           </div>
-        {/if}
+          <div class="opening-hours-container">
+            {#if visible}
+              {#each everythingBeforeTheCurrentDay as day}
+                <div class="flex mb-3 flex-col">
+                  {#if parseTimeString(day, "weekday")}
+                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                      {parseTimeString(day, "weekday")}
+                    </div>
+                  {/if}
+                  {#if parseTimeString(day, "hours")}
+                    <div class="flex ml-2 flex-wrap">
+                      {#each parseTimeString(day, "hours") as hours}
+                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                      {/each}
+                    </div>
+                  {:else}
+                    <div class="badge badge-error badge-outline ml-2">Closed</div>
+                  {/if}
+                </div>
+              {/each}
+            {/if}
+
+            {#if currentDayOpenHours}
+              <div class="flex mb-3 flex-col">
+                {#if parseTimeString(currentDayOpenHours, "weekday")}
+                  <div class="flex table-cell pl-2 font-semibold mb-1">
+                    {parseTimeString(currentDayOpenHours, "weekday")}
+                  </div>
+                {/if}
+                {#if parseTimeString(currentDayOpenHours, "hours")}
+                  <div class="flex ml-2 flex-wrap">
+                    {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                      <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                    {/each}
+                  </div>
+                {:else}
+                  <div class="badge badge-error badge-outline ml-2">Closed</div>
+                {/if}
+              </div>
+            {/if}
+
+            {#if visible}
+              {#each everythingAfterTheCurrentDay as after}
+                <div class="flex mb-3 flex-col">
+                  {#if parseTimeString(after, "weekday")}
+                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                      {parseTimeString(after, "weekday")}
+                    </div>
+                  {/if}
+                  {#if parseTimeString(after, "hours")}
+                    <div class="flex ml-2 flex-wrap">
+                      {#each parseTimeString(after, "hours") as hours}
+                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                      {/each}
+                    </div>
+                  {:else}
+                    <div class="badge badge-error badge-outline ml-2">Closed</div>
+                  {/if}
+                </div>
+              {/each}
+            {/if}
+          </div>
+        </div>
       </div>
     {/if}
 
@@ -212,3 +274,11 @@ async function shareLink() {
     <p>loading details...</p>
   {/if}
 </section>
+
+<style>
+:global(.badge) {
+  text-align: center;
+  flex-wrap: wrap;
+  margin-bottom: 7px;
+}
+</style>
