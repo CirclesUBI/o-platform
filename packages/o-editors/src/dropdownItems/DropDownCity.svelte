@@ -1,23 +1,24 @@
-<script>
+<script type="ts">
+import { buildAddressString } from "../../../../shell/src/shared/functions/locationHandler";
 
-  export let item = undefined;
-// export let isActive = false;
+export let item = undefined;
+
 export let isFirst = false;
 export let isHover = false;
-  export let getHighlight = undefined;
+export let getHighlight = undefined;
 
-  const getLabel = (value) => {
-    let label = value
-    console.log(getHighlight)
-    if (getHighlight) {
-      const highlight = getHighlight(item);
-      const beforeHighlight = label.substring(0, highlight.start);
-      const highlightContent = label.substring(highlight.start, highlight.end);
-      const afterHighlight = label.substring(highlight.end, label.length);
-      label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`
-    }
-    return label;
-  };
+const getLabel = (value) => {
+  let label = value;
+  console.log(getHighlight);
+  if (getHighlight) {
+    const highlight = getHighlight(item);
+    const beforeHighlight = label.substring(0, highlight.start);
+    const highlightContent = label.substring(highlight.start, highlight.end);
+    const afterHighlight = label.substring(highlight.end, label.length);
+    label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`;
+  }
+  return buildAddressString(item.address);
+};
 
 let label = "";
 let itemClasses = "";
@@ -25,11 +26,6 @@ let itemClasses = "";
 $: {
   const classes = [];
 
-  // if (isActive) {
-  //   classes.push("active border-primary");
-  // } else {
-  //   classes.push("border-light");
-  // }
   classes.push("border-light");
   if (isFirst) {
     classes.push("first");
@@ -45,13 +41,10 @@ $: {
 
 <section class="flex mb-4 mr-1 items-center justify-center  border rounded-lg shadow-sm customItem  {itemClasses}">
   <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
-    <div class="relative flex-grow p-3 text-left truncate">
-      <div class="max-w-full -mt-1 leading-8 cursor-pointer truncateThis">
+    <div class="relative flex-grow p-3 text-left ">
+      <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
         {@html label}
       </div>
-      <!-- <div class="text-xs text-left text-dark-lightest">
-        {item.country}
-      </div> -->
     </div>
   </div>
 </section>
@@ -65,16 +58,6 @@ $: {
   overflow: hidden;
   @apply bg-white;
 }
-
-/* .customItem.active {
-  @apply border;
-  @apply border-primary;
-}
-
-.customItem.hover:not(.active) {
-  @apply border;
-  @apply border-primary;
-} */
 
 .customItem_title {
   overflow: hidden;
