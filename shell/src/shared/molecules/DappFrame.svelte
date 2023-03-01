@@ -307,19 +307,26 @@ function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { 
 }
 
 function setNav(navArgs: GenerateNavManifestArgs) {
-  // log(`setNav(navArgs: GenerateNavManifestArgs)`, navArgs);
-  console.log("MNARGS", navArgs);
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
+
   if (navArgs.centerIsOpen && !preModalNavArgs) {
     preModalNavArgs = currentNavArgs;
   }
   let args = {
     ...navArgs,
-    leftSlotOverride: leftSlotOverride,
     showLogin: dapp.anonymous && !layout.dialogs.center,
     hideFooterGradient: dapp.hideFooterGradient,
   };
+
+  if (leftSlotOverride) {
+    args = {
+      ...args,
+      leftSlotOverride: leftSlotOverride,
+    };
+  }
+
   navigation = generateNavManifest(args, null);
+
   if (dapp.dappId == "events:1") {
     navigation = null;
   }
