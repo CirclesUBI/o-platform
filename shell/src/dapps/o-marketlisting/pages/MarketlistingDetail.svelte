@@ -170,22 +170,29 @@ async function shareLink() {
 
     {#if hasOpeningHours}
       <div class="flex pt-4 mt-4 border-t-2 text-black">
-        <Icon name="clock" class="w-6 h-6" />
-        <p class="pl-4 pr-4">Opening Hours</p>
         <div>
           <table>
-            <thead> </thead>
+            <thead>
+              <tr>
+                <div class="flex">
+                  <Icon name="clock" class="w-6 h-6" />
+                  <div class="pl-4 pr-4">Opening Hours</div>
+                </div>
+              </tr>
+            </thead>
             <tbody>
               {#if visible}
                 {#each everythingBeforeTheCurrentDay as day}
                   <tr>
-                    {#if parseTimeString(day, "weekday")}<td class="weekday-element"
+                    {#if parseTimeString(day, "weekday")}<td class="weekday-element table-cell pl-2 font-semibold"
                         >{parseTimeString(day, "weekday")}</td
                       >{/if}
                     {#if parseTimeString(day, "hours")}
-                      {#each parseTimeString(day, "hours") as hours}
-                        <td class="hours-element">{hours}</td>
-                      {/each}
+                      <td class="hours-row">
+                        {#each parseTimeString(day, "hours") as hours}
+                          <div class="hours-item pr-2 pl-2">{hours}</div>
+                        {/each}
+                      </td>
                     {/if}
                   </tr>
                 {/each}
@@ -193,13 +200,16 @@ async function shareLink() {
 
               {#if currentDayOpenHours}
                 <tr>
-                  {#if parseTimeString(currentDayOpenHours, "weekday")}<td class="weekday-element"
+                  {#if parseTimeString(currentDayOpenHours, "weekday")}<td
+                      class="weekday-element table-cell pl-2 font-semibold"
                       >{parseTimeString(currentDayOpenHours, "weekday")}</td
                     >{/if}
                   {#if parseTimeString(currentDayOpenHours, "hours")}
-                    {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                      <td class="hours-element">{hours}</td>
-                    {/each}
+                    <td class="hours-row">
+                      {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                        <div class="hours-item pr-2 pl-2">{hours}</div>
+                      {/each}
+                    </td>
                   {/if}
                 </tr>
               {/if}
@@ -207,15 +217,15 @@ async function shareLink() {
               {#if visible}
                 {#each everythingAfterTheCurrentDay as after}
                   <tr>
-                    {#if parseTimeString(after, "weekday")}<td class="weekday-element"
+                    {#if parseTimeString(after, "weekday")}<td class="weekday-element table-cell pl-2 font-semibold"
                         >{parseTimeString(after, "weekday")}</td
                       >{/if}
                     {#if parseTimeString(after, "hours")}
-                      {#each parseTimeString(after, "hours") as hours}
-                        {#if hours}
-                          <td class="hours-element">{hours}</td>
-                        {/if}
-                      {/each}
+                      <td class="hours-row">
+                        {#each parseTimeString(after, "hours") as hours}
+                          <div class="hours-item pr-2 pl-2">{hours}</div>
+                        {/each}
+                      </td>
                     {/if}
                   </tr>
                 {/each}
@@ -264,11 +274,12 @@ async function shareLink() {
 </section>
 
 <style>
-:global(.hours-element) {
-  border-right: solid 2px black;
-  width: 100px;
+:global(.hours-row) {
   display: flex;
-  justify-content: center;
+}
+
+:global(.hours-item) {
+  border-right: solid 1px black;
 }
 
 :global(.weekday-element) {
@@ -277,7 +288,7 @@ async function shareLink() {
 
 :global(tr) {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: 7px;
   margin-bottom: 7px;
 }
