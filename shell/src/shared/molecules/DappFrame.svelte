@@ -74,19 +74,6 @@ const stack: {
   scrollY: number;
 }[] = [];
 
-function updateNavigationObject() {
-  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
-
-  setNav({
-    leftSlotOverride: leftSlotOverride,
-    centerContainsProcess: false,
-    centerIsOpen: false,
-    rightIsOpen: false,
-    leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
-  });
-}
-
 async function onBack() {
   // log("onBack() - current stack: ", JSON.stringify(stack, null, 2));
   if (stack.length < 2) {
@@ -271,14 +258,8 @@ async function onRoot() {
 function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { [p: string]: any }; scrollY: number }) {
   let nextRoute: Routable | null = null;
 
-  const findRouteResult = findRoutableByParams(
-    previousRuntimeDapp,
-    root.params /*stack[stack.length > 1 ? 1 : 0].params*/
-  );
-  const basePage =
-    findRouteResult.found && findRouteResult.routable.type == "page"
-      ? (<Page<any, any>>findRouteResult.routable).basePage
-      : null;
+  const findRouteResult = findRoutableByParams(previousRuntimeDapp, root.params /*stack[stack.length > 1 ? 1 : 0].params*/);
+  const basePage = findRouteResult.found && findRouteResult.routable.type == "page" ? (<Page<any, any>>findRouteResult.routable).basePage : null;
 
   if (basePage) {
     const basePageParams = {
@@ -327,12 +308,14 @@ function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { 
 
 function setNav(navArgs: GenerateNavManifestArgs) {
   // log(`setNav(navArgs: GenerateNavManifestArgs)`, navArgs);
-
+  console.log("MNARGS", navArgs);
+  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
   if (navArgs.centerIsOpen && !preModalNavArgs) {
     preModalNavArgs = currentNavArgs;
   }
   let args = {
     ...navArgs,
+    leftSlotOverride: leftSlotOverride,
     showLogin: dapp.anonymous && !layout.dialogs.center,
     hideFooterGradient: dapp.hideFooterGradient,
   };
@@ -363,15 +346,8 @@ function initSession(session: SessionInfo) {
         .subscribe(async (next) => {
           const event: NotificationEvent = next.data.events;
           // let playBlblblbl = false;
-          if (
-            event.type == EventType.CrcHubTransfer ||
-            event.type == EventType.CrcMinting ||
-            event.type == EventType.Erc20Transfer
-          ) {
-            const transaction = await myTransactions.findSingleItemFallback(
-              myTransactions.eventTypes,
-              event.transaction_hash
-            );
+          if (event.type == EventType.CrcHubTransfer || event.type == EventType.CrcMinting || event.type == EventType.Erc20Transfer) {
+            const transaction = await myTransactions.findSingleItemFallback(myTransactions.eventTypes, event.transaction_hash);
 
             myTransactions.refresh(true);
             assetBalances.update();
@@ -859,7 +835,7 @@ function _findDefaultRoute(runtimeDapp: RuntimeDapp<any>) {
         ...defaultRoutable.params,
       },
     };
-    // log(
+    // console.log(
     //   `findDefaultRoute(runtimeDapp: ${runtimeDapp.dappId}) - found: `,
     //   result
     // );
@@ -958,7 +934,6 @@ async function handleUrlChanged() {
       navArgs.centerIsOpen = false;
       baseParams = currentParams;
       showMainPage(runtimeDapp, page, findRouteResult.params);
-      updateNavigationObject();
     }
   }
 
@@ -1041,12 +1016,7 @@ let lastModalPage: {
   params: { [x: string]: any };
 };
 
-function showModalPage(
-  pushToStack: boolean,
-  runtimeDapp: RuntimeDapp<any>,
-  routable: Page<any, any>,
-  params: { [x: string]: any }
-) {
+function showModalPage(pushToStack: boolean, runtimeDapp: RuntimeDapp<any>, routable: Page<any, any>, params: { [x: string]: any }) {
   // log(
   //   `showModalPage(pushToStack: ${pushToStack}) - current stack:`,
   //   JSON.stringify(stack, null, 2)
