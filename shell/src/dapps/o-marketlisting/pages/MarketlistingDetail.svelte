@@ -171,80 +171,79 @@ async function shareLink() {
     {#if hasOpeningHours}
       <div class="flex pt-4 mt-4 border-t-2 text-black">
         <div>
-          <table>
-            <thead>
-              <tr>
-                <div class="flex">
-                  <Icon name="clock" class="w-6 h-6" />
-                  <div class="pl-4 pr-4">Opening Hours</div>
-                  <div
-                    on:click="{() => {
-                      visible = !visible;
-                      console.log(visible);
-                    }}">
-                    <Icon name="chevron-down" class="w-6 h-6" />
-                  </div>
-                </div>
-              </tr>
-            </thead>
-            <tbody>
-              {#if visible}
-                {#each everythingBeforeTheCurrentDay as day}
-                  <tr>
-                    {#if parseTimeString(day, "weekday")}<td class="weekday-element table-cell pl-2 font-semibold"
-                        >{parseTimeString(day, "weekday")}</td
-                      >{/if}
-                    {#if parseTimeString(day, "hours")}
-                      <td class="hours-row">
-                        {#each parseTimeString(day, "hours") as hours}
-                          <div class="hours-item pr-2 pl-2">{hours}</div>
-                        {/each}
-                      </td>
-                    {:else}
-                      <div class="pl-2">Closed</div>
-                    {/if}
-                  </tr>
-                {/each}
-              {/if}
-
-              {#if currentDayOpenHours}
-                <tr>
-                  {#if parseTimeString(currentDayOpenHours, "weekday")}<td
-                      class="weekday-element table-cell pl-2 font-semibold"
-                      >{parseTimeString(currentDayOpenHours, "weekday")}</td
-                    >{/if}
-                  {#if parseTimeString(currentDayOpenHours, "hours")}
-                    <td class="hours-row">
-                      {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                        <div class="hours-item pr-2 pl-2">{hours}</div>
+          <div class="flex">
+            <Icon name="clock" class="w-6 h-6" />
+            <div class="pl-4 pr-4">Opening Hours</div>
+            <div
+              on:click="{() => {
+                visible = !visible;
+                console.log(visible);
+              }}">
+              <Icon name="chevron-down" class="w-6 h-6" />
+            </div>
+          </div>
+          <div class="opening-hours-container">
+            {#if visible}
+              {#each everythingBeforeTheCurrentDay as day}
+                <div class="flex mt-5 mb-5 flex-col">
+                  {#if parseTimeString(day, "weekday")}
+                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                      {parseTimeString(day, "weekday")}
+                    </div>
+                  {/if}
+                  {#if parseTimeString(day, "hours")}
+                    <div class="flex ml-2">
+                      {#each parseTimeString(day, "hours") as hours}
+                        <div class="flex badge badge-success badge-outline">{hours}</div>
                       {/each}
-                    </td>
+                    </div>
                   {:else}
                     <div class="pl-2">Closed</div>
                   {/if}
-                </tr>
-              {/if}
+                </div>
+              {/each}
+            {/if}
 
-              {#if visible}
-                {#each everythingAfterTheCurrentDay as after}
-                  <tr>
-                    {#if parseTimeString(after, "weekday")}<td class="weekday-element table-cell pl-2 font-semibold"
-                        >{parseTimeString(after, "weekday")}</td
-                      >{/if}
-                    {#if parseTimeString(after, "hours")}
-                      <td class="hours-row">
-                        {#each parseTimeString(after, "hours") as hours}
-                          <div class="hours-item pr-2 pl-2">{hours}</div>
-                        {/each}
-                      </td>
-                    {:else}
-                      <div class="pl-2">Closed</div>
-                    {/if}
-                  </tr>
-                {/each}
-              {/if}
-            </tbody>
-          </table>
+            {#if currentDayOpenHours}
+              <div class="flex mt-5 mb-5 flex-col">
+                {#if parseTimeString(currentDayOpenHours, "weekday")}
+                  <div class="flex table-cell pl-2 font-semibold mb-1">
+                    {parseTimeString(currentDayOpenHours, "weekday")}
+                  </div>
+                {/if}
+                {#if parseTimeString(currentDayOpenHours, "hours")}
+                  <div class="flex ml-2">
+                    {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                      <div class="flex badge badge-success badge-outline">{hours}</div>
+                    {/each}
+                  </div>
+                {:else}
+                  <div class="pl-2">Closed</div>
+                {/if}
+              </div>
+            {/if}
+
+            {#if visible}
+              {#each everythingAfterTheCurrentDay as after}
+                <div class="flex mt-5 mb-5 flex-col">
+                  {#if parseTimeString(after, "weekday")}
+                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                      {parseTimeString(after, "weekday")}
+                    </div>
+                  {/if}
+                  {#if parseTimeString(after, "hours")}
+                    <div class="flex ml-2">
+                      {#each parseTimeString(after, "hours") as hours}
+                        <div class="flex badge badge-success badge-outline">{hours}</div>
+                      {/each}
+                    </div>
+                  {:else}
+                    <div class="pl-2">Closed</div>
+                  {/if}
+                </div>
+              {/each}
+            {/if}
+          </div>
         </div>
       </div>
     {/if}
@@ -277,22 +276,9 @@ async function shareLink() {
 </section>
 
 <style>
-:global(.hours-row) {
-  display: flex;
-}
-
-:global(.hours-item:not(:last-child)) {
-  border-right: solid 1px black;
-}
-
-:global(.weekday-element) {
-  width: 100px;
-}
-
-:global(tr) {
-  display: flex;
-  flex-direction: column;
-  margin-top: 7px;
-  margin-bottom: 7px;
+:global(.badge) {
+  width: fit-content;
+  block-size: fit-content;
+  text-align: center;
 }
 </style>
