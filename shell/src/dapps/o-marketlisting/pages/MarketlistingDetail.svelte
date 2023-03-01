@@ -177,6 +177,13 @@ async function shareLink() {
                 <div class="flex">
                   <Icon name="clock" class="w-6 h-6" />
                   <div class="pl-4 pr-4">Opening Hours</div>
+                  <div
+                    on:click="{() => {
+                      visible = !visible;
+                      console.log(visible);
+                    }}">
+                    <Icon name="chevron-down" class="w-6 h-6" />
+                  </div>
                 </div>
               </tr>
             </thead>
@@ -193,6 +200,8 @@ async function shareLink() {
                           <div class="hours-item pr-2 pl-2">{hours}</div>
                         {/each}
                       </td>
+                    {:else}
+                      <div class="pl-2">Closed</div>
                     {/if}
                   </tr>
                 {/each}
@@ -210,6 +219,8 @@ async function shareLink() {
                         <div class="hours-item pr-2 pl-2">{hours}</div>
                       {/each}
                     </td>
+                  {:else}
+                    <div class="pl-2">Closed</div>
                   {/if}
                 </tr>
               {/if}
@@ -226,6 +237,8 @@ async function shareLink() {
                           <div class="hours-item pr-2 pl-2">{hours}</div>
                         {/each}
                       </td>
+                    {:else}
+                      <div class="pl-2">Closed</div>
                     {/if}
                   </tr>
                 {/each}
@@ -233,16 +246,6 @@ async function shareLink() {
             </tbody>
           </table>
         </div>
-        {#if !visible}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
-            on:click="{() => {
-              visible = !visible;
-              console.log(visible);
-            }}">
-            <Icon name="chevron-down" class="w-6 h-6" />
-          </div>
-        {/if}
       </div>
     {/if}
 
@@ -278,7 +281,7 @@ async function shareLink() {
   display: flex;
 }
 
-:global(.hours-item) {
+:global(.hours-item:not(:last-child)) {
   border-right: solid 1px black;
 }
 
