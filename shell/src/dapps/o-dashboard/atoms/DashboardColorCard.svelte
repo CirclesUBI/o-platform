@@ -22,7 +22,7 @@ function loadLink(alink, external = false) {
 
 let titleString = $_(title);
 if (titleString.length > textCutoff) {
-  titleString = titleString.substring(0, textCutoff) + "...";
+  titleString = titleString.slice(0, textCutoff) + "...";
 }
 </script>
 
