@@ -55,6 +55,7 @@
     "@sentry/tracing": "^7.38.0"
   },
   "devDependencies": {
+    "@silintl/svelte-google-places-autocomplete": "^1.1.6",
     "daisyui": "^2.31.0",
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
