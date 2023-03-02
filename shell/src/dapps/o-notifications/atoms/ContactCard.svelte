@@ -42,27 +42,19 @@ function getValues(): {
   const crcTrust = <CrcTrust>event.payload;
 
   if (event.direction == "in" && crcTrust.limit == 0) {
-    title = `${event.contact_address_profile.firstName} ${$_(
-      "dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.untrustedYou"
-    )}`;
+    title = `${event.contact_address_profile.firstName} ${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.untrustedYou")}`;
     titleClass = "text-alert";
     textColor = "text-negative";
   } else if (event.direction == "in" && crcTrust.limit > 0) {
-    title = `${event.contact_address_profile.firstName} ${$_(
-      "dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.trustedYou"
-    )}`;
+    title = `${event.contact_address_profile.firstName} ${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.trustedYou")}`;
     titleClass = "text-heading";
     textColor = "text-positive";
   } else if (event.direction == "out" && crcTrust.limit == 0) {
-    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youUntrusted")} ${
-      event.contact_address_profile.firstName
-    }`;
+    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youUntrusted")} ${event.contact_address_profile.firstName}`;
     titleClass = "text-alert";
     textColor = "text-negative";
   } else if (event.direction == "out" && crcTrust.limit > 0) {
-    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youTrusted")} ${
-      event.contact_address_profile.firstName
-    }`;
+    title = `${$_("dapps.o-contacts.atoms.chatListItems.crcTrust.getValues.youTrusted")} ${event.contact_address_profile.firstName}`;
     titleClass = "text-heading";
     textColor = "text-positive";
   }
@@ -94,12 +86,7 @@ let textCutoff = isMobile() ? 16 : 42;
         <div class="flex flex-row items-center justify-between px-3 text-left">
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-xl font-heading whitespace-nowrap overflow-ellipsis {values.titleClass}">
-              <b
-                >{values.title
-                  ? values.title.length >= textCutoff
-                    ? values.title.substring(0, textCutoff) + "..."
-                    : values.title
-                  : ""}</b>
+              <b>{values.title ? (values.title.length >= textCutoff ? values.title.slice(0, textCutoff) + "..." : values.title) : ""}</b>
             </h2>
           </div>
           <div class="self-end text-right pl-2 text-lg whitespace-nowrap {values.textColor}">
