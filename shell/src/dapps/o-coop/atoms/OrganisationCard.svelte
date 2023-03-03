@@ -22,7 +22,7 @@ function goToProfile(e, path?: string) {
     params="{{
       edgeless: false,
       imageProfile: param,
-      title: param.name,
+      title: param.firstName,
       subTitle: param.circlesAddress,
       truncateMain: true,
     }}">

@@ -19,8 +19,8 @@ function addWindow() {
     id: generateUID(),
     isEmpty: true,
     isPersisted: false,
-    from: new HourAndMinute(),
-    to: new HourAndMinute(),
+    from: new HourAndMinute(5, 0),
+    to: new HourAndMinute(17, 0),
   });
   openingHoursDay = openingHoursDay;
 }
@@ -66,20 +66,14 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
   }
 
   const firstElement = validationCopy[0];
-  if (
-    validationEventData.toMinute <= firstElement.from.minutes &&
-    validationEventData.toMinute != validationEventData.fromMinute
-  ) {
+  if (validationEventData.toMinute <= firstElement.from.minutes && validationEventData.toMinute != validationEventData.fromMinute) {
     // Ends before the first element starts
     commit();
     return true;
   }
 
   const lastElement = validationCopy[validationCopy.length - 1];
-  if (
-    validationEventData.fromMinute >= lastElement.to.minutes &&
-    validationEventData.toMinute != validationEventData.fromMinute
-  ) {
+  if (validationEventData.fromMinute >= lastElement.to.minutes && validationEventData.toMinute != validationEventData.fromMinute) {
     // Starts after the last element ends
     commit();
     return true;
@@ -100,24 +94,14 @@ function commitDay(validationEventData: ValidationEventData, onlyValidate?: bool
     }
 
     // Elements cannot contain other elements
-    if (
-      validationEventData.id != c.id &&
-      validationEventData.fromMinute < c.from.minutes &&
-      validationEventData.toMinute > c.to.minutes
-    ) {
+    if (validationEventData.id != c.id && validationEventData.fromMinute < c.from.minutes && validationEventData.toMinute > c.to.minutes) {
       validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
       return false;
     }
 
     // Elements cannot intersect with other elements
-    const endIntersects =
-      validationEventData.id != c.id &&
-      validationEventData.toMinute >= c.from.minutes &&
-      validationEventData.toMinute <= c.to.minutes;
-    const beginIntersects =
-      validationEventData.id != c.id &&
-      validationEventData.fromMinute >= c.from.minutes &&
-      validationEventData.fromMinute <= c.to.minutes;
+    const endIntersects = validationEventData.id != c.id && validationEventData.toMinute >= c.from.minutes && validationEventData.toMinute <= c.to.minutes;
+    const beginIntersects = validationEventData.id != c.id && validationEventData.fromMinute >= c.from.minutes && validationEventData.fromMinute <= c.to.minutes;
 
     if (beginIntersects || endIntersects) {
       validationEventData.resultCallback.cancel($_("dapps.o-passport.molecules.openingHoursDayEditor.elementConflict"));
