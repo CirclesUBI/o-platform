@@ -59,11 +59,11 @@ export const coop: DappManifest<DappState> = {
     isSystem: true,
     routeParts: [],
     items: async (params, runtimeDapp) => {
-      let $me: Profile = null;
+      let $me: Profile | Organisation = null;
       me.subscribe((me) => ($me = me))();
 
       const list = [];
-      if (!$me.memberships) {
+      if ($me.__typename !== "Organisation" && !$me.memberships) {
         list.push(<JumplistItem>{
           key: "createOrganisation",
           type: "profile",
