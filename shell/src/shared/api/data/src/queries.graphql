@@ -190,6 +190,8 @@ query myProfile {
     canInvite
     displayCurrency
     provenUniqueness
+    location
+    locationName
     memberships {
       isAdmin
       organisation {
@@ -201,6 +203,8 @@ query myProfile {
         firstName
         description
         avatarUrl
+        location
+        locationName
       }
     }
     verifications {
