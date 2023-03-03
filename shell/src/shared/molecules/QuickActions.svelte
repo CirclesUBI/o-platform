@@ -1,8 +1,8 @@
 <script lang="ts">
-import { clickOutside } from "src/shared/functions/clickOutside.ts";
+import { clickOutside } from "../functions/clickOutside";
 import { createEventDispatcher, onMount } from "svelte";
 
-import { dapps } from "src/loader";
+import { dapps } from "../../loader";
 import DetailActionBar from "./DetailActionBar.svelte";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
@@ -44,7 +44,6 @@ onMount(async () => {
       };
     })
   );
-  console.log("MANIFEST JUMPLIST CATEGORIES", categories);
 
   actions = categories.filter((o) => o.items["action"]).flatMap((o) => o.items["action"]);
   profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);
@@ -52,13 +51,6 @@ onMount(async () => {
 
 const eventDispatcher = createEventDispatcher();
 </script>
-
-<!-- 
-<header class="p-5 pb-6 overflow-hidden text-white bg-cpurple" style="border-radius: 0 0% 85% 69% / 0% 0% 85% 83%; ">
-  <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading">Actions</h1>
-  </div>
-</header> -->
 
 <div class="z-10 flex flex-col flex-1" use:clickOutside on:click_outside="{() => eventDispatcher('clickedOutside')}">
   {#if showSwitcher}
