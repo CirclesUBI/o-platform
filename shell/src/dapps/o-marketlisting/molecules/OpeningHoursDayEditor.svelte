@@ -19,7 +19,7 @@ function addWindow() {
     id: generateUID(),
     isEmpty: true,
     isPersisted: false,
-    from: new HourAndMinute(5, 0),
+    from: new HourAndMinute(9, 0),
     to: new HourAndMinute(17, 0),
   });
   openingHoursDay = openingHoursDay;
