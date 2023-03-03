@@ -34,7 +34,6 @@ $: {
     me.reload();
     profile = $me;
   }
-  console.log("YOUR PROFILE: ", profile);
   displayName = profile.displayName ? profile.displayName : profile.firstName;
 }
 

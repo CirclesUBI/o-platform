@@ -44,6 +44,7 @@ onMount(async () => {
       };
     })
   );
+  console.log("MANIFEST JUMPLIST CATEGORIES", categories);
 
   actions = categories.filter((o) => o.items["action"]).flatMap((o) => o.items["action"]);
   profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);

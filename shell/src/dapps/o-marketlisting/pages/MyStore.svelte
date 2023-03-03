@@ -103,7 +103,6 @@ async function save() {
     });
 
     showToast("success", `${$_("dapps.o-marketlisting.pages.mystore.settingsSaved")}`);
-    console.log("RES", result);
 
     window.o.publishEvent(<PlatformEvent>{
       type: "shell.authenticated",

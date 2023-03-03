@@ -4,7 +4,7 @@ import PassportHeader from "../atoms/PassportHeader.svelte";
 import { me } from "../../../shared/stores/me";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
-import { Profile, Businesses } from "../../../shared/api/data/types";
+import { Profile, Businesses, Organisation } from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
 import { loadProfile } from "../../../shared/functions/loadProfile";
 import { createOrganisation } from "../../o-coop/processes/createOrganisation";
@@ -19,7 +19,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 
 let name;
 let profile: Profile;
-let businesses: Businesses[];
+let businesses: Organisation[];
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 
@@ -71,7 +71,7 @@ function createNewOrga() {
             ...createdOrga.profile,
             __typename: "Organisation",
             type: "Organisation",
-            name: createdOrga.profile.firstName,
+            firstName: createdOrga.profile.firstName,
             description: createdOrga.profile.dream,
             locationName: createdOrga.profile.locationName,
             location: createdOrga.profile.location,
@@ -121,7 +121,7 @@ function createNewOrga() {
                       <UserImage profile="{business}" size="{8}" profileLink="{false}" />
                     </div>
                     <div>
-                      {business.name}
+                      {business.firstName}
                     </div>
                   </div>
                 {/each}
@@ -141,8 +141,7 @@ function createNewOrga() {
             <div class="flex flex-col w-full space-y-2">
               <div class="container p-1 pt-2 xs:p-4">
                 <center>
-                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"
-                    ><button class="btn btn-primary">Edit Shop</button></a>
+                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">Edit Shop</button></a>
                 </center>
               </div>
             </div>
