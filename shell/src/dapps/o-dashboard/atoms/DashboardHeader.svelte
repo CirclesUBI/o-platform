@@ -14,11 +14,7 @@ let name: string = "";
 
 $: {
   if ($me) {
-    if ($me.__typename == "Profile") {
-      name = $me.firstName ? $me.firstName : "";
-    } else if ($me.__typename == "Organisation") {
-      name = $me.name ? $me.name : "";
-    }
+    name = $me.firstName ? $me.firstName : "";
   }
 }
 </script>

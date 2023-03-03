@@ -27,7 +27,7 @@ export type CreateOrganisationContextData = {
   avatarUrl: string;
   circlesAddress: string;
   description: string;
-  name: string;
+  firstName: string;
   displayName: string;
   organisationSafeProxy: GnosisSafeProxy;
   location: string;
@@ -41,15 +41,15 @@ export type CreateOrganisationContext = ProcessContext<CreateOrganisationContext
 const processDefinition = (processId: string) =>
   createMachine<CreateOrganisationContext, any>({
     id: `${processId}:createOrganisation`,
-    initial: "name",
+    initial: "firstName",
     states: {
       // Include a default 'error' state that propagates the error by re-throwing it in an action.
       // TODO: Check if this works as intended
       ...fatalError<CreateOrganisationContext, any>("error"),
 
-      name: prompt<CreateOrganisationContext, any>({
-        id: "name",
-        field: "name",
+      firstName: prompt<CreateOrganisationContext, any>({
+        id: "firstName",
+        field: "firstName",
         component: TextEditor,
         params: {
           view: {
@@ -212,7 +212,7 @@ const processDefinition = (processId: string) =>
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
                   description: context.data.description,
-                  firstName: context.data.name,
+                  firstName: context.data.firstName,
                   location: context.data.location,
                   lat: context.data.lat,
                   lon: context.data.lon,
@@ -220,7 +220,7 @@ const processDefinition = (processId: string) =>
                 },
               },
             });
-            context.data.displayName = context.data.name;
+            context.data.displayName = context.data.firstName;
             context.data = {
               ...context.data,
               ...result.data.upsertOrganisation.organisation,
