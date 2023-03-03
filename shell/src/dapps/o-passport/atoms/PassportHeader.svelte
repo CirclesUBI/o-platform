@@ -31,10 +31,11 @@ $: {
   if (params && params.profileId) {
     execLoadProfile(params ? params.profileId : $me.id.toString());
   } else if ($me) {
+    me.reload();
     profile = $me;
   }
-
-  displayName = profile.displayName;
+  console.log("YOUR PROFILE: ", profile);
+  displayName = profile.displayName ? profile.displayName : profile.firstName;
 }
 
 function editProfileField(onlyThesePages: string[]) {
@@ -66,32 +67,18 @@ function editProfileField(onlyThesePages: string[]) {
     <UserImage profile="{profile}" size="{28}" profileLink="{false}" editable="{true}" />
   </div>
 
-  <div
-    class="text-center"
-    role="presentation"
-    on:click="{() =>
-      profile.__typename === 'Organisation'
-        ? editProfileField(['name'])
-        : editProfileField(['firstName', 'lastName'])}">
+  <div class="text-center" role="presentation" on:click="{() => (profile.__typename === 'Organisation' ? editProfileField(['firstName']) : editProfileField(['firstName', 'lastName']))}">
     <h2 class="text-2xl cursor-pointer sm:text-4xl font-heading">
       {displayName}
     </h2>
   </div>
   {#if profile}
     {#if profile.locationName}
-      <div
-        class="mt-1 text-sm text-center cursor-pointer"
-        role="presentation"
-        on:click="{() => editProfileField(['location'])}">
+      <div class="mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">
         {profile.locationName ? profile.locationName : ""}
       </div>
     {:else}
-      <div
-        class="relative mt-1 text-sm text-center cursor-pointer"
-        role="presentation"
-        on:click="{() => editProfileField(['location'])}">
-        Where do you live?
-      </div>
+      <div class="relative mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">Where do you live?</div>
     {/if}
   {/if}
 </PageHeader>

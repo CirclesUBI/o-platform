@@ -2397,6 +2397,11 @@
     "@sentry/types" "7.38.0"
     tslib "^1.9.3"
 
+"@silintl/svelte-google-places-autocomplete@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@silintl/svelte-google-places-autocomplete/-/svelte-google-places-autocomplete-1.1.6.tgz#1b23ffffdbfba7d179c3d82d1f7a85979083f54e"
+  integrity sha512-wtroZA4XikPFn5HiPY+8p/7PjAmmyn+P0yypJgMdEH+tpbo42DTVxE+YuXHRF7d+7EhEkqjzp09MJmCOwy3Deg==
+
 "@sinclair/typebox@^0.24.1":
   version "0.24.44"
   resolved "https://registry.npmjs.org/@sinclair/typebox/-/typebox-0.24.44.tgz"

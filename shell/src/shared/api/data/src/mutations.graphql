@@ -184,7 +184,7 @@ mutation upsertProfile(
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -198,7 +198,7 @@ mutation upsertProfile(
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
   }
@@ -216,7 +216,7 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       circlesSafeOwner
       createdAt
       description
-      name
+      firstName
       location
       locationName
       lat
@@ -229,7 +229,7 @@ mutation importOrganisations {
   importOrganisationsOfAccount {
     id
     circlesAddress
-    name
+    firstName
     description
     avatarUrl
   }
