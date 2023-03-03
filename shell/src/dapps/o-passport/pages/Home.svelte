@@ -125,11 +125,11 @@ function createNewOrga() {
                     </div>
                   </div>
                 {/each}
+              {:else}
+                <div class="container p-1 pt-2 text-center xs:p-4">
+                  <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">Add new Shop</button>
+                </div>
               {/if}
-
-              <div class="container p-1 pt-2 text-center xs:p-4">
-                <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">Add new Shop</button>
-              </div>
             </div>
           </section>
         </div>
