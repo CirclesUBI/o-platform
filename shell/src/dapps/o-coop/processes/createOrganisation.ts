@@ -54,24 +54,12 @@ const processDefinition = (processId: string) =>
         params: {
           view: {
             title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.title"),
-            description: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.description"
-            ),
-            placeholder: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.placeholder"
-            ),
-            submitButtonText: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.submitButtonText"
-            ),
+            description: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.description"),
+            placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.placeholder"),
+            submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.submitButtonText"),
           },
         },
-        dataSchema: yup
-          .string()
-          .required(
-            window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.enterOrganisationName"
-            )
-          ),
+        dataSchema: yup.string().required(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.enterOrganisationName")),
         navigation: {
           next: "#description",
         },
@@ -81,30 +69,13 @@ const processDefinition = (processId: string) =>
         component: TextareaEditor,
         params: {
           view: {
-            title: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.title"
-            ),
-            description: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.description"
-            ),
-            placeholder: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.placeholder"
-            ),
-            submitButtonText: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.submitButtonText"
-            ),
+            title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.title"),
+            description: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.description"),
+            placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.placeholder"),
+            submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.submitButtonText"),
           },
         },
-        dataSchema: yup
-          .string()
-          .nullable()
-          .notRequired()
-          .max(
-            150,
-            window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars"
-            )
-          ),
+        dataSchema: yup.string().nullable().notRequired().max(150, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")),
         navigation: {
           next: "#location",
           canSkip: () => false,
@@ -119,9 +90,7 @@ const processDefinition = (processId: string) =>
             title: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.title"),
             description: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.description"),
             placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.location.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.location.submitButtonText"),
           },
         },
         navigation: {
@@ -138,15 +107,9 @@ const processDefinition = (processId: string) =>
         params: {
           view: {
             title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.title"),
-            description: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.description"
-            ),
-            placeholder: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.placeholder"
-            ),
-            submitButtonText: window.o.i18n(
-              "dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.submitButtonText"
-            ),
+            description: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.description"),
+            placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.placeholder"),
+            submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.avatar.submitButtonText"),
           },
         },
         navigation: {
@@ -181,11 +144,7 @@ const processDefinition = (processId: string) =>
           src: async (context) => {
             const privateKey = sessionStorage.getItem("circlesKey");
             if (!privateKey) {
-              throw new Error(
-                window.o.i18n(
-                  "dapps.o-coop.processes.createOrganisations.createOrganisationContext.deployOrganisation.notUnlockedKey"
-                )
-              );
+              throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.deployOrganisation.notUnlockedKey"));
             }
 
             let $me: Profile = null;
@@ -195,18 +154,10 @@ const processDefinition = (processId: string) =>
             unsub();
 
             if (!$me?.circlesAddress) {
-              throw new Error(
-                window.o.i18n(
-                  "dapps.o-coop.processes.createOrganisations.createOrganisationContext.deployOrganisation.needFullAccountSetup"
-                )
-              );
+              throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.deployOrganisation.needFullAccountSetup"));
             }
 
-            const proxyFactory = new GnosisSafeProxyFactory(
-              RpcGateway.get(),
-              Environment.safeProxyFactoryAddress,
-              Environment.masterSafeAddress
-            );
+            const proxyFactory = new GnosisSafeProxyFactory(RpcGateway.get(), Environment.safeProxyFactoryAddress, Environment.masterSafeAddress);
 
             context.data.organisationSafeProxy = await proxyFactory.deployNewSafeProxy(privateKey);
             context.data.circlesAddress = context.data.organisationSafeProxy.address;
@@ -227,11 +178,7 @@ const processDefinition = (processId: string) =>
           src: async (context, event) => {
             const privateKey = sessionStorage.getItem("circlesKey");
             if (!privateKey) {
-              throw new Error(
-                window.o.i18n(
-                  "dapps.o-coop.processes.createOrganisations.createOrganisationContext.signupOrganisation.notUnlockedKey"
-                )
-              );
+              throw new Error(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.signupOrganisation.notUnlockedKey"));
             }
 
             const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
@@ -265,7 +212,7 @@ const processDefinition = (processId: string) =>
                   avatarUrl: context.data.avatarUrl,
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
                   description: context.data.description,
-                  name: context.data.name,
+                  firstName: context.data.name,
                   location: context.data.location,
                   lat: context.data.lat,
                   lon: context.data.lon,
