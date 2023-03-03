@@ -25,7 +25,8 @@ export const me = {
         });
       } else {
         // TODO: Need to implement real session change
-        console.log("$me.reload() -> reload organisation");
+        sessionInfo = await getSessionInfo();
+        console.log("$me.reload() -> reload organisation", sessionInfo);
       }
     }
 

@@ -2,7 +2,6 @@ import Home from "./o-passport/pages/Home.svelte";
 import Account from "./o-passport/pages/Account.svelte";
 import VerifyEmail from "./o-passport/pages/VerifyEmail.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
-// import Settings from "./o-passport/pages/Settings.svelte";
 import { logout } from "./o-passport/processes/logout";
 import { Page } from "@o-platform/o-interfaces/dist/routables/page";
 import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
@@ -35,7 +34,6 @@ const index: Page<any, DappState> = {
       props: {
         icon: "accounts",
         backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
       },
     },
   },
@@ -63,7 +61,6 @@ const profile: Page<any, DappState> = {
       props: {
         icon: "passport",
         backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
       },
     },
   },
@@ -81,29 +78,10 @@ const account: Page<any, DappState> = {
       props: {
         icon: "accounts",
         backgroundColorClass: "passport",
-        // action: () => processNavigation.back(),
       },
     },
   },
 };
-
-// const settings: Page<any, DappState> = {
-//   routeParts: ["=settings"],
-//   component: Settings,
-//   title: "common.settings",
-//   icon: "settings",
-//   type: "page",
-//   navigation: {
-//     leftSlot: {
-//       component: ListComponent,
-//       props: {
-//         icon: "accounts",
-//         backgroundColorClass: "passport",
-//         // action: () => processNavigation.back(),
-//       },
-//     },
-//   },
-// };
 
 const logmeout: Trigger<{}, DappState> = {
   isSystem: true,
@@ -156,20 +134,6 @@ export const passport: DappManifest<DappState> = {
     routeParts: ["=actions"],
     items: async () => {
       let jumplistitems = [
-        // <JumplistItem>{
-        //   category: "Passport",
-        //   key: "lock",
-        //   type: "action",
-        //   title: "Lock",
-        //   icon: "logout",
-        //   action: () => {
-        //     sessionStorage.removeItem("circlesKey");
-        //     sessionStorage.removeItem("keyCache");
-        //     push("/").then(() => {
-        //       location.reload();
-        //     });
-        //   },
-        // },
         <JumplistItem>{
           category: "Passport",
           key: "logout",
@@ -182,14 +146,9 @@ export const passport: DappManifest<DappState> = {
         },
       ];
 
-      if (!myProfile) {
-        myProfile = await loadProfile();
-      }
+      myProfile = await loadProfile();
 
-      const myMemberships =
-        myProfile.memberships && myProfile.memberships.length > 0
-          ? myProfile.memberships.map((o) => o.organisation)
-          : [];
+      const myMemberships = myProfile.memberships && myProfile.memberships.length > 0 ? myProfile.memberships.map((o) => o.organisation) : [];
 
       const profileItems = <any>[myProfile, ...myMemberships].map((o) => {
         return <JumplistItem>{
@@ -208,9 +167,6 @@ export const passport: DappManifest<DappState> = {
             });
             localStorage.removeItem("editShopIndex");
             location.reload();
-            /*window.o.publishEvent(<PlatformEvent>{
-              type: "shell.closeModal"
-            });*/
           },
         };
       });

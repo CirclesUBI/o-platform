@@ -24,7 +24,7 @@ $: {
     if (profile.__typename == "Profile") {
       displayName = profile.displayName;
     } else {
-      displayName = profile.name ? profile.name : "";
+      displayName = profile.firstName ? profile.firstName : "";
     }
     displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
   }
