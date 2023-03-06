@@ -3,6 +3,10 @@ import QrScanner from "qr-scanner";
 import { onDestroy, onMount } from "svelte";
 import { inviteUrl } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
+import { showToast } from "../../../shared/toast";
+import { toast } from "../../../shared/molecules/Toast";
+import { error } from "../../../shared/stores/error";
+import { _ } from "svelte-i18n";
 
 let video: HTMLVideoElement;
 let scanner: QrScanner;
@@ -10,6 +14,7 @@ let camQrResult: HTMLElement;
 let camList: HTMLElement;
 let camHasCamera: HTMLElement;
 let statusText: string = "";
+let scannerError: string = null;
 
 // this is needed to disable using the native QR Code detector on Apple silicon devices running Ventura using Chrome 107.x.
 QrScanner["_disableBarcodeDetector"] = true;
@@ -23,17 +28,25 @@ onDestroy(() => {
 });
 
 async function setResult(label, result) {
-  console.log("RES", result);
-  label.textContent = result.data;
-  label.style.color = "teal";
+  const validInviteUrlPartMatch = /\/trigger\?hash\=/g;
+  const isValidInviteLinkFormat = result.data.match(validInviteUrlPartMatch);
 
-  clearTimeout(label.highlightTimeout);
-  label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
-  $inviteUrl = result.data;
-  sessionStorage.setItem("inviteUrl", result.data);
+  if (!isValidInviteLinkFormat) {
+    scannerError = $_("dapps.o-homepage.components.survey.molecules.scanInvite.error.invalidInvite");
 
+    error.set(scannerError);
+    clearTimeout(label.highlightTimeout);
+  } else {
+    label.textContent = result.data;
+    label.style.color = "teal";
+
+    clearTimeout(label.highlightTimeout);
+    label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
+    $inviteUrl = result.data;
+    sessionStorage.setItem("inviteUrl", result.data);
+  }
   // We're done here, closing up... TODO: this is not the most beautiful solution.
-  window.o.publishEvent({ type: "shell.back" });
+  window.o.publishEvent({ type: "shell.requestCloseModal" });
 }
 
 function startScanner() {
@@ -55,6 +68,7 @@ function startScanner() {
 }
 // ####### Web Cam Scanning #######
 onMount(() => {
+  error.set(null);
   scanner = new QrScanner(video, (result) => setResult(camQrResult, result), {
     returnDetailedScanResult: true,
     onDecodeError: (error) => {
@@ -94,16 +108,14 @@ onMount(() => {
 
     <div class="mt-4">
       <select id="cam-list" bind:this="{camList}" class="w-full border select input">
-        <option value="environment" selected
-          ><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
+        <option value="environment" selected><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
         <option value="user"><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
       </select>
     </div>
 
     <div class="mt-4 text-center">
       <b><Label key="dapps.o-marketplace.pages.scanPurchase.detectedQrCode" /></b>
-      <span id="cam-qr-result" bind:this="{camQrResult}"
-        ><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
+      <span id="cam-qr-result" bind:this="{camQrResult}"><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
     </div>
   </div>
 </section>
@@ -113,8 +125,7 @@ onMount(() => {
   line-height: 0;
 }
 
-:global(#video-container.example-style-1 .scan-region-highlight-svg, #video-container.example-style-1
-    .code-outline-highlight) {
+:global(#video-container.example-style-1 .scan-region-highlight-svg, #video-container.example-style-1 .code-outline-highlight) {
   stroke: #64a2f3 !important;
 }
 
