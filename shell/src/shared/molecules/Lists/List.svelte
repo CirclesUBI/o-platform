@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 import { inview } from "svelte-inview/dist/index";
 import {_} from "svelte-i18n";
 import Label from "../../atoms/Label.svelte";
+import {Environment} from "../../environment";
 
 export let listItemComponent;
 export let selector = "timestamp";
@@ -26,7 +27,7 @@ const fetchData = async (paginationArg) => {
     fetchQueryArguments.pagination = {
       order: "DESC",
       limit: dataLimit,
-      continueAt: new Date(),
+      continueAt: Environment.endOfTime.toJSON(),
     };
   }
 

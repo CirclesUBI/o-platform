@@ -41,7 +41,7 @@ query init {
           displayCurrency
           displayName
           circlesSafeOwner
-          name
+          firstName
           description
           avatarUrl
         }
@@ -55,7 +55,7 @@ query init {
           circlesAddress
           displayCurrency
           avatarUrl
-          name
+          firstName
         }
       }
       canInvite
@@ -190,6 +190,8 @@ query myProfile {
     canInvite
     displayCurrency
     provenUniqueness
+    location
+    locationName
     memberships {
       isAdmin
       organisation {
@@ -198,9 +200,11 @@ query myProfile {
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
+        location
+        locationName
       }
     }
     verifications {
@@ -212,7 +216,7 @@ query myProfile {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
   }
@@ -240,7 +244,7 @@ query profiles($id: [Int!]!) {
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -254,7 +258,7 @@ query profiles($id: [Int!]!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -286,7 +290,7 @@ query profilesByName($searchString: String!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -316,7 +320,7 @@ query getRecentProfiles($pagination: PaginationArgs) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -348,7 +352,7 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -362,7 +366,7 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -395,7 +399,7 @@ query profilesByIds($id: [Int!]!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -446,7 +450,7 @@ query trustRelations($safeAddress: String!) {
           circlesAddress
           displayCurrency
           avatarUrl
-          name
+          firstName
         }
       }
     }
@@ -479,7 +483,7 @@ query profileById($id: Int!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -521,7 +525,7 @@ query profileBySafeAddress($safeAddress: String!) {
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -535,7 +539,7 @@ query profileBySafeAddress($safeAddress: String!) {
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
     # init.invitation
@@ -567,7 +571,7 @@ query organisations($pagination: PaginationArgs) {
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
     location
     locationName
@@ -580,7 +584,7 @@ query regions {
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
   }
 }
@@ -591,7 +595,7 @@ query organisationsByAddress($addresses: [String!]!) {
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
     displayName
     location
@@ -602,7 +606,7 @@ query organisationsByAddress($addresses: [String!]!) {
         circlesAddress
         displayCurrency
         createdAt
-        name
+        firstName
         displayName
         avatarUrl
       }
@@ -627,7 +631,7 @@ query organisationsByAddress($addresses: [String!]!) {
             circlesAddress
             displayCurrency
             avatarUrl
-            name
+            firstName
           }
         }
       }
@@ -842,7 +846,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -866,7 +870,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -888,7 +892,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -931,7 +935,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
       ... on OrganisationCreated {
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -946,7 +950,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
         member
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -958,7 +962,7 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
       ... on SafeVerified {
         safe_address
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -1064,7 +1068,7 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 displayCurrency
                 displayName
                 circlesSafeOwner
-                name
+                firstName
                 description
                 avatarUrl
                 locationName
@@ -1090,7 +1094,7 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 circlesAddress
                 displayCurrency
                 avatarUrl
-                name
+                firstName
               }
             }
           }
@@ -1119,7 +1123,7 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
           displayCurrency
           displayName
           circlesSafeOwner
-          name
+          firstName
           description
           avatarUrl
         }
@@ -1225,7 +1229,7 @@ query verifications($pagination: PaginationArgs, $filter: VerifiedSafesFilter) {
       circlesAddress
       displayCurrency
       avatarUrl
-      name
+      firstName
     }
     verifiedSafeAddress
     verifiedProfile {

@@ -23,7 +23,7 @@ import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
 import { me } from "../stores/me";
-import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
+import {Capability, CrcTrust, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo} from "../api/data/types";
 import { contacts } from "../stores/contacts";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
 import { myTransactions } from "../stores/myTransactions";
@@ -33,6 +33,7 @@ import { goToPreviouslyDesiredRouteIfExisting } from "../../dapps/o-onboarding/p
 import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { Environment } from "../environment";
+import {MyInbox} from "../stores/inbox";
 
 export let params: {
   dappId: string;
@@ -248,7 +249,7 @@ async function onRoot() {
   onCloseModal();
 
   const dc = previousRuntimeDapp.dappId.indexOf(":");
-  const dappIdForRoute = previousRuntimeDapp.dappId.substring(0, dc > -1 ? dc : previousRuntimeDapp.dappId.length);
+  const dappIdForRoute = previousRuntimeDapp.dappId.slice(0, dc > -1 ? dc : previousRuntimeDapp.dappId.length);
   console.log("DappFrame.onRoot() is pushing to:", `#/${dappIdForRoute}/${path}`);
   await push(`#/${dappIdForRoute}/${path}`);
 
@@ -333,64 +334,42 @@ function setNav(navArgs: GenerateNavManifestArgs) {
   currentNavArgs = args;
 }
 
+function handleNotificationEvent(event:NotificationEvent) {
+    if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
+        myTransactions.findSingleItemFallback([event.type], event.transaction_hash);
+        myTransactions.refresh(true);
+        assetBalances.update();
+    } else if (event.type == EventType.CrcTrust) {
+        contacts.findBySafeAddress(event.to, true);
+        contacts.findBySafeAddress(event.from, true);
+    } else if (event.type == EventType.MembershipAccepted) {
+        contacts.findBySafeAddress(event.to, true);
+        contacts.findBySafeAddress(event.from, true);
+    }
+    MyInbox.update(event)
+}
+
 /**
  * This function is called only one time after the first route.
  */
-
 let shellEventSubscription: ZenObservable.Subscription;
-// const blblblbl = new Audio("blblblbl.mp3");
 let sessionInfo: SessionInfo;
 function initSession(session: SessionInfo) {
   sessionInfo = session;
-  // console.log(`subscribeToApiEvents(). Session: `, session);
   capabilities = session.capabilities;
+
   if (session.isLoggedOn && session.hasProfile && !shellEventSubscription) {
     window.o.apiClient.client.subscribeToResult().then((apiClient) => {
       shellEventSubscription = apiClient
         .subscribe({
           query: EventsDocument,
         })
-        .subscribe(async (next) => {
-          const event: NotificationEvent = next.data.events;
-          // let playBlblblbl = false;
-          if (event.type == EventType.CrcHubTransfer || event.type == EventType.CrcMinting || event.type == EventType.Erc20Transfer) {
-            const transaction = await myTransactions.findSingleItemFallback(myTransactions.eventTypes, event.transaction_hash);
-
-            myTransactions.refresh(true);
-            assetBalances.update();
-
-            // if (event.type != EventType.CrcMinting) {
-            //   playBlblblbl = true;
-            // }
-          }
-          // else if (event.type == EventType.CrcTrust) {
-          //   if (event.from != $me.circlesAddress) {
-          //     playBlblblbl = true;
-          //   }
-          // }
-          //inbox.refresh();
-
-          return;
-          // if (!playBlblblbl) {
-
-          // } else {
-          //   blblblbl.play();
-          // }
-        });
-    });
-
-    // Load the contacts so that they're ready when the user
-    // enters the dashboard..
-    contacts.subscribe((data) => {
-      // console.log("loaded contacts: ", data);
+        .subscribe(e => handleNotificationEvent(e.data.events));
     });
   }
-
-  //inbox.refresh();
 }
 
 async function init() {
-  // log(`init()`);
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
 
   setNav({

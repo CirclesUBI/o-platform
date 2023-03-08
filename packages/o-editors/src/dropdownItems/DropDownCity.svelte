@@ -12,9 +12,9 @@ const getLabel = (value) => {
   console.log(getHighlight);
   if (getHighlight) {
     const highlight = getHighlight(item);
-    const beforeHighlight = label.substring(0, highlight.start);
-    const highlightContent = label.substring(highlight.start, highlight.end);
-    const afterHighlight = label.substring(highlight.end, label.length);
+    const beforeHighlight = label.substr(0, highlight.start);
+    const highlightContent = label.substr(highlight.start, highlight.end);
+    const afterHighlight = label.substr(highlight.end, label.length);
     label = `${beforeHighlight}<b>${highlightContent}</b>${afterHighlight}`;
   }
   return buildAddressString(item.address);

@@ -59,46 +59,48 @@ export const coop: DappManifest<DappState> = {
     isSystem: true,
     routeParts: [],
     items: async (params, runtimeDapp) => {
-      let $me: Profile = null;
+      let $me: Profile | Organisation = null;
       me.subscribe((me) => ($me = me))();
 
       const list = [];
-      list.push(<JumplistItem>{
-        key: "createOrganisation",
-        type: "profile",
-        icon: "plus",
-        category: "Coops",
-        title: window.o.i18n("dapps.common.quickactions.createOrganization"),
-        action: async () => {
-          window.o.runProcess(
-            createOrganisation,
-            {
-              successAction: async (data) => {
-                const createdOrga = await loadProfile(data.circlesAddress, $me);
+      if ($me.__typename !== "Organisation" && !$me.memberships) {
+        list.push(<JumplistItem>{
+          key: "createOrganisation",
+          type: "profile",
+          icon: "plus",
+          category: "Coops",
+          title: window.o.i18n("dapps.common.quickactions.createOrganization"),
+          action: async () => {
+            window.o.runProcess(
+              createOrganisation,
+              {
+                successAction: async (data) => {
+                  const createdOrga = await loadProfile(data.circlesAddress, $me);
 
-                window.o.publishEvent(<PlatformEvent>{
-                  type: "shell.loggedOut",
-                });
-                window.o.publishEvent(<PlatformEvent>{
-                  type: "shell.authenticated",
-                  profile: {
-                    ...createdOrga.profile,
-                    __typename: "Organisation",
-                    type: "Organisation",
-                    name: createdOrga.profile.firstName,
-                    description: createdOrga.profile.dream,
-                    locationName: createdOrga.profile.locationName,
-                    location: createdOrga.profile.location,
-                  },
-                });
+                  window.o.publishEvent(<PlatformEvent>{
+                    type: "shell.loggedOut",
+                  });
+                  window.o.publishEvent(<PlatformEvent>{
+                    type: "shell.authenticated",
+                    profile: {
+                      ...createdOrga.profile,
+                      __typename: "Organisation",
+                      type: "Organisation",
+                      name: createdOrga.profile.firstName,
+                      description: createdOrga.profile.dream,
+                      locationName: createdOrga.profile.locationName,
+                      location: createdOrga.profile.location,
+                    },
+                  });
 
-                push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
+                  push(`#/market/mystore/${createdOrga.profile.circlesAddress}`);
+                },
               },
-            },
-            {}
-          );
-        },
-      });
+              {}
+            );
+          },
+        });
+      }
 
       // if (<string>$me.__typename === "Organisation") {
       //   list.push(<JumplistItem>{

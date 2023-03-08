@@ -4,9 +4,7 @@ import { EditorContext } from "./../editorContext";
 export let context: EditorContext;
 
 let _context: EditorContext;
-let titleColorClass = context.params.view.titleColor
-  ? context.params.view.titleColor
-  : "";
+let titleColorClass = context.params.view.titleColor ? context.params.view.titleColor : "";
 $: {
   _context = context;
 }
@@ -24,15 +22,12 @@ console.log("Params: ", context);
   </slot>
   <slot name="EditorDescription">
     <div class="w-full text-center">
-      <span class="text-dark-lightest"
-        >{@html context.params.view.description}</span>
+      <span class="text-dark-lightest">{@html context.params.view.description}</span>
     </div>
   </slot>
   <div class="w-full">
     <slot name="EditorMainComponent">
-      <svelte:component
-        this="{context.params.view.mainComponent}"
-        context="{context}" />
+      <svelte:component this="{context.params.view.mainComponent}" context="{context}" />
     </slot>
   </div>
   <!-- <slot name="EditorActionButtons">

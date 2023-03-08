@@ -178,7 +178,7 @@ type Organisation {
   circlesAddress: String
   circlesSafeOwner: String
   displayName: String
-  name: String!
+  firstName: String!
   description: String
   avatarUrl: String
   largeBannerUrl: String
@@ -672,7 +672,7 @@ type CreateOrganisationResult {
 
 input UpsertOrganisationInput {
   id: Int
-  name: String!
+  firstName: String!
   description: String
   circlesAddress: String
   avatarUrl: String
@@ -943,12 +943,7 @@ type Query {
   safeInfo(safeAddress: String): SafeInfo
   lastAcknowledgedAt(safeAddress: String!): Date
   verifications(pagination: PaginationArgs, filter: VerifiedSafesFilter): [Verification!]!
-  events(
-    types: [EventType!]!
-    safeAddress: String!
-    pagination: PaginationArgs!
-    filter: ProfileEventFilter
-  ): [ProfileEvent!]!
+  events(types: [EventType!]!, safeAddress: String!, pagination: PaginationArgs!, filter: ProfileEventFilter): [ProfileEvent!]!
   aggregates(types: [AggregateType!]!, safeAddress: String!, filter: ProfileAggregateFilter): [ProfileAggregate!]!
   organisations(pagination: PaginationArgs): [Organisation!]!
   regions(pagination: PaginationArgs): [Organisation!]!
@@ -973,13 +968,7 @@ type Query {
   getAllStringsByMaxVersionAndLang(lang: String): [i18n]
   getOlderVersionsByKeyAndLang(key: String, lang: String): [i18n]
   getPaginatedStrings(pagination_key: String, key: String, lang: String, value: String): [i18n]
-  getPaginatedStringsToUpdate(
-    pagination_key: String
-    key: String
-    lang: String
-    value: String
-    needsUpdate: Boolean
-  ): [i18n]
+  getPaginatedStringsToUpdate(pagination_key: String, key: String, lang: String, value: String, needsUpdate: Boolean): [i18n]
   getStringsToBeUpdatedAmount(lang: String, key: String): Int
   allProfiles(sinceLastChange: Date): [ExportProfile]!
   allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!

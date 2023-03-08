@@ -55,6 +55,8 @@
     "@sentry/tracing": "^7.38.0"
   },
   "devDependencies": {
+    "@beyonk/async-script-loader": "^2.3.0",
+    "@silintl/svelte-google-places-autocomplete": "^1.1.6",
     "daisyui": "^2.31.0",
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
@@ -67,6 +69,7 @@
     "@testing-library/svelte": "^3.0.3",
     "@toruslabs/openlogin": "^1.5.0",
     "@tsconfig/svelte": "^2.0.1",
+    "@types/google.maps": "^3.52.2",
     "@types/jest": "^27.0.0",
     "@types/pdfkit": "^0.12.3",
     "@types/web3": "^1.2.2",

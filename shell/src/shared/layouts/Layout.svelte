@@ -20,6 +20,7 @@ export let layout: RuntimeLayout;
 export let navigation: NavigationManifest;
 export let pageBackgroundClass: string = null;
 export let isSurveyPage: boolean;
+export let isNotFoundPage: boolean;
 
 $: {
   const url = window.location.href;
@@ -28,11 +29,14 @@ $: {
   } else {
     isSurveyPage = false;
   }
+
+  if (url.indexOf("notfound") > -1) {
+    isNotFoundPage = true;
+  } else {
+    isNotFoundPage = false;
+  }
   // console.log("LayoutChanged:", layout);
-  if (
-    (layout?.dialogs.center && layout?.dialogs.center.isOpen) ||
-    ($media.small && layout?.dialogs.left && layout?.dialogs.left.isOpen)
-  ) {
+  if ((layout?.dialogs.center && layout?.dialogs.center.isOpen) || ($media.small && layout?.dialogs.left && layout?.dialogs.left.isOpen)) {
     menuOpen = true;
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
@@ -67,10 +71,7 @@ function onkeydown(e: KeyboardEvent) {
 
 <svelte:window on:keydown="{onkeydown}" />
 {#if layout}
-  <div
-    class="absolute flex flex-row w-full min-h-screen overflow-auto {pageBackgroundClass
-      ? pageBackgroundClass
-      : 'bg-dappbackground'}">
+  <div class="absolute flex flex-row w-full min-h-screen overflow-auto {pageBackgroundClass ? pageBackgroundClass : 'bg-dappbackground'}">
     <main id="main" class="relative w-full overflow-hidden">
       <div
         class="flex flex-row w-full mainContent"
@@ -150,9 +151,7 @@ function onkeydown(e: KeyboardEvent) {
   {#if layout.main && layout.main.runtimeDapp.featuredAction}
     {#await layout.main.runtimeDapp.featuredAction() then action}
       {#if action}
-        <div
-          class="fixed z-10 flex flex-col items-center justify-end w-32 h-12 -ml-16 left-1/2 bottom-20"
-          class:hidden="{menuOpen}">
+        <div class="fixed z-10 flex flex-col items-center justify-end w-32 h-12 -ml-16 left-1/2 bottom-20" class:hidden="{menuOpen}">
           <section class="mb-4">
             <button class="w-32 rounded-full btn btn-primary" on:click="{action.action}">
               {action.text}
@@ -163,14 +162,12 @@ function onkeydown(e: KeyboardEvent) {
     {/await}
   {/if}
   {#if navigation && !isSurveyPage}
-    <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" />
+    <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" isNotFoundPage="{isNotFoundPage}" />
   {/if}
 
   {#if layout.dialogs.center && layout.dialogs.center.isOpen}
     <Center blur="true" on:clickedOutside="{handleClickOutside}">
-      <svelte:component
-        this="{layout.dialogs.center.component}"
-        {...layout.dialogs.center.params ? layout.dialogs.center.params : {}} />
+      <svelte:component this="{layout.dialogs.center.component}" {...layout.dialogs.center.params ? layout.dialogs.center.params : {}} />
     </Center>
   {/if}
 {/if}

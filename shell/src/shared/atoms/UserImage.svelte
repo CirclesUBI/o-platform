@@ -24,19 +24,15 @@ $: {
     if (profile.__typename == "Profile") {
       displayName = profile.displayName;
     } else {
-      displayName = profile.name ? profile.name : "";
+      displayName = profile.firstName ? profile.firstName : "";
     }
-    displayName = displayName.length >= 22 ? displayName.substring(0, 22) + "..." : displayName;
+    displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
   }
 }
 </script>
 
 {#if profile}
-  <div
-    class="has-tooltip"
-    class:cursor-pointer="{profileLink}"
-    role="presentation"
-    on:click="{(event) => linkToProfile(event)}">
+  <div class="has-tooltip" class:cursor-pointer="{profileLink}" role="presentation" on:click="{(event) => linkToProfile(event)}">
     {#if tooltip}
       <span class="px-2 mt-12 text-sm bg-white rounded shadow-sm tooltip">
         {displayName}
@@ -54,10 +50,7 @@ $: {
       </div>
     {/if}
 
-    <div
-      class="self-center text-center rounded-full justify-self-center w-{size}"
-      class:rounded-corners-white-borders="{whiteRing}"
-      style="padding: {size >= 20 ? `4px` : `1px`}">
+    <div class="self-center text-center rounded-full justify-self-center w-{size}" class:rounded-corners-white-borders="{whiteRing}" style="padding: {size >= 20 ? `4px` : `1px`}">
       <div class="relative w-{size} h-{size} m-auto rounded-full" class:bg-white="{!transparent}">
         {#if profile.provenUniqueness}
           <img
@@ -75,11 +68,7 @@ $: {
         {/if}
         <img
           class="rounded-full w-{size} h-{size}"
-          src="{profile && profile.avatarUrl
-            ? profile.avatarUrl
-            : profile.circlesAddress
-            ? AvataarGenerator.generate(profile.circlesAddress.toLowerCase())
-            : AvataarGenerator.default()}"
+          src="{profile && profile.avatarUrl ? profile.avatarUrl : profile.circlesAddress ? AvataarGenerator.generate(profile.circlesAddress.toLowerCase()) : AvataarGenerator.default()}"
           alt="{displayName}" />
       </div>
     </div>

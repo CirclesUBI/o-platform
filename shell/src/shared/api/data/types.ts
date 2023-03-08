@@ -710,7 +710,7 @@ export type Organisation = {
   circlesAddress?: Maybe<Scalars['String']>;
   circlesSafeOwner?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  firstName: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   avatarUrl?: Maybe<Scalars['String']>;
   largeBannerUrl?: Maybe<Scalars['String']>;
@@ -1325,7 +1325,7 @@ export type UpdateSafeResponse = {
 
 export type UpsertOrganisationInput = {
   id?: Maybe<Scalars['Int']>;
-  name: Scalars['String'];
+  firstName: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   circlesAddress?: Maybe<Scalars['String']>;
   avatarUrl?: Maybe<Scalars['String']>;
@@ -1643,14 +1643,14 @@ export type UpsertProfileMutation = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
       )> }
     )>> }
   ) }
@@ -1668,7 +1668,7 @@ export type UpsertOrganisationMutation = (
     & Pick<CreateOrganisationResult, 'success' | 'error'>
     & { organisation?: Maybe<(
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'name' | 'location' | 'locationName' | 'lat' | 'lon'>
+      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'firstName' | 'location' | 'locationName' | 'lat' | 'lon'>
     )> }
   ) }
 );
@@ -1680,7 +1680,7 @@ export type ImportOrganisationsMutation = (
   { __typename?: 'Mutation' }
   & { importOrganisationsOfAccount: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'name' | 'description' | 'avatarUrl'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'firstName' | 'description' | 'avatarUrl'>
   )> }
 );
 
@@ -1781,14 +1781,14 @@ export type InitQuery = (
         & Pick<Membership, 'isAdmin'>
         & { organisation: (
           { __typename?: 'Organisation' }
-          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
         ) }
       )>>, verifications?: Maybe<Array<(
         { __typename?: 'Verification' }
         & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
         & { verifierProfile?: Maybe<(
           { __typename?: 'Organisation' }
-          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
         )> }
       )>>, claimedInvitation?: Maybe<(
         { __typename?: 'ClaimedInvitation' }
@@ -1913,20 +1913,20 @@ export type MyProfileQuery = (
   { __typename?: 'Query' }
   & { myProfile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness' | 'location' | 'locationName'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'location' | 'locationName'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
       )> }
     )>> }
   )> }
@@ -1947,14 +1947,14 @@ export type ProfilesQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -1975,7 +1975,7 @@ export type ProfilesByNameQuery = (
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -1996,7 +1996,7 @@ export type GetRecentProfilesQuery = (
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -2017,14 +2017,14 @@ export type ProfilesByCirclesAddressQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -2045,7 +2045,7 @@ export type ProfilesByIdsQuery = (
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -2072,7 +2072,7 @@ export type TrustRelationsQuery = (
         & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
         & { verifierProfile?: Maybe<(
           { __typename?: 'Organisation' }
-          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
         )> }
       )>> }
     )> }
@@ -2094,7 +2094,7 @@ export type ProfileByIdQuery = (
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name' | 'displayName'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName' | 'displayName'>
       )> }
     )>> }
   )> }
@@ -2115,14 +2115,14 @@ export type ProfileBySafeAddressQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
       & { verifierProfile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
       )> }
     )>>, claimedInvitation?: Maybe<(
       { __typename?: 'ClaimedInvitation' }
@@ -2157,7 +2157,7 @@ export type OrganisationsQuery = (
   { __typename?: 'Query' }
   & { organisations: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl' | 'location' | 'locationName'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'avatarUrl' | 'location' | 'locationName'>
   )> }
 );
 
@@ -2168,7 +2168,7 @@ export type RegionsQuery = (
   { __typename?: 'Query' }
   & { regions: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'avatarUrl'>
   )> }
 );
 
@@ -2181,7 +2181,7 @@ export type OrganisationsByAddressQuery = (
   { __typename?: 'Query' }
   & { organisationsByAddress: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'avatarUrl' | 'displayName' | 'location' | 'locationName'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'avatarUrl' | 'displayName' | 'location' | 'locationName'>
     & { members?: Maybe<Array<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness'>
@@ -2190,12 +2190,12 @@ export type OrganisationsByAddressQuery = (
         & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
         & { verifierProfile?: Maybe<(
           { __typename?: 'Organisation' }
-          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
         )> }
       )>> }
     ) | (
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'name' | 'displayName' | 'avatarUrl'>
+      & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'displayName' | 'avatarUrl'>
     )>> }
   )> }
 );
@@ -2314,7 +2314,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MembershipAccepted' }
@@ -2324,7 +2324,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MembershipRejected' }
@@ -2334,7 +2334,7 @@ export type StreamQuery = (
         & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
       )>, organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'WelcomeMessage' }
@@ -2358,21 +2358,21 @@ export type StreamQuery = (
       & Pick<OrganisationCreated, 'organisation'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'MemberAdded' }
       & Pick<MemberAdded, 'createdBy' | 'isAdmin' | 'member' | 'organisation'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'SafeVerified' }
       & Pick<SafeVerified, 'safe_address'>
       & { organisation_profile?: Maybe<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'name' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
+        & Pick<Organisation, 'firstName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'locationName' | 'location'>
       )> }
     ) | (
       { __typename?: 'NewUser' }
@@ -2438,7 +2438,7 @@ export type AggregatesQuery = (
             & Pick<Membership, 'isAdmin'>
             & { organisation: (
               { __typename?: 'Organisation' }
-              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl' | 'locationName' | 'location'>
+              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'locationName' | 'location'>
             ) }
           )>>, members?: Maybe<Array<(
             { __typename?: 'Profile' }
@@ -2448,7 +2448,7 @@ export type AggregatesQuery = (
             & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
             & { verifierProfile?: Maybe<(
               { __typename?: 'Organisation' }
-              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+              & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
             )> }
           )>> }
         )> }
@@ -2458,7 +2458,7 @@ export type AggregatesQuery = (
       & Pick<Memberships, 'lastUpdatedAt'>
       & { organisations: Array<(
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'name' | 'description' | 'avatarUrl'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       )> }
     ) | (
       { __typename?: 'Members' }
@@ -2612,7 +2612,7 @@ export type VerificationsQuery = (
     & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress' | 'verifiedSafeAddress'>
     & { verifierProfile?: Maybe<(
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'name'>
+      & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'firstName'>
     )>, verifiedProfile?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'id' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'circlesAddress' | 'displayCurrency' | 'provenUniqueness'>
@@ -2847,7 +2847,7 @@ export const UpsertProfileDocument = gql`
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -2861,7 +2861,7 @@ export const UpsertProfileDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
   }
@@ -2880,7 +2880,7 @@ export const UpsertOrganisationDocument = gql`
       circlesSafeOwner
       createdAt
       description
-      name
+      firstName
       location
       locationName
       lat
@@ -2894,7 +2894,7 @@ export const ImportOrganisationsDocument = gql`
   importOrganisationsOfAccount {
     id
     circlesAddress
-    name
+    firstName
     description
     avatarUrl
   }
@@ -2986,7 +2986,7 @@ export const InitDocument = gql`
           displayCurrency
           displayName
           circlesSafeOwner
-          name
+          firstName
           description
           avatarUrl
         }
@@ -3000,7 +3000,7 @@ export const InitDocument = gql`
           circlesAddress
           displayCurrency
           avatarUrl
-          name
+          firstName
         }
       }
       canInvite
@@ -3140,6 +3140,8 @@ export const MyProfileDocument = gql`
     canInvite
     displayCurrency
     provenUniqueness
+    location
+    locationName
     memberships {
       isAdmin
       organisation {
@@ -3148,9 +3150,11 @@ export const MyProfileDocument = gql`
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
+        location
+        locationName
       }
     }
     verifications {
@@ -3162,7 +3166,7 @@ export const MyProfileDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
   }
@@ -3191,7 +3195,7 @@ export const ProfilesDocument = gql`
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -3205,7 +3209,7 @@ export const ProfilesDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3238,7 +3242,7 @@ export const ProfilesByNameDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3269,7 +3273,7 @@ export const GetRecentProfilesDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3302,7 +3306,7 @@ export const ProfilesByCirclesAddressDocument = gql`
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -3316,7 +3320,7 @@ export const ProfilesByCirclesAddressDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3350,7 +3354,7 @@ export const ProfilesByIdsDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3402,7 +3406,7 @@ export const TrustRelationsDocument = gql`
           circlesAddress
           displayCurrency
           avatarUrl
-          name
+          firstName
         }
       }
     }
@@ -3436,7 +3440,7 @@ export const ProfileByIdDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
         displayName
       }
     }
@@ -3479,7 +3483,7 @@ export const ProfileBySafeAddressDocument = gql`
         displayCurrency
         displayName
         circlesSafeOwner
-        name
+        firstName
         description
         avatarUrl
       }
@@ -3493,7 +3497,7 @@ export const ProfileBySafeAddressDocument = gql`
         circlesAddress
         displayCurrency
         avatarUrl
-        name
+        firstName
       }
     }
     claimedInvitation {
@@ -3524,7 +3528,7 @@ export const OrganisationsDocument = gql`
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
     location
     locationName
@@ -3538,7 +3542,7 @@ export const RegionsDocument = gql`
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
   }
 }
@@ -3550,7 +3554,7 @@ export const OrganisationsByAddressDocument = gql`
     circlesAddress
     displayCurrency
     createdAt
-    name
+    firstName
     avatarUrl
     displayName
     location
@@ -3561,7 +3565,7 @@ export const OrganisationsByAddressDocument = gql`
         circlesAddress
         displayCurrency
         createdAt
-        name
+        firstName
         displayName
         avatarUrl
       }
@@ -3586,7 +3590,7 @@ export const OrganisationsByAddressDocument = gql`
             circlesAddress
             displayCurrency
             avatarUrl
-            name
+            firstName
           }
         }
       }
@@ -3809,7 +3813,7 @@ export const StreamDocument = gql`
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -3833,7 +3837,7 @@ export const StreamDocument = gql`
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -3855,7 +3859,7 @@ export const StreamDocument = gql`
         }
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -3898,7 +3902,7 @@ export const StreamDocument = gql`
       ... on OrganisationCreated {
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -3913,7 +3917,7 @@ export const StreamDocument = gql`
         member
         organisation
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -3925,7 +3929,7 @@ export const StreamDocument = gql`
       ... on SafeVerified {
         safe_address
         organisation_profile {
-          name
+          firstName
           avatarUrl
           circlesAddress
           displayCurrency
@@ -4032,7 +4036,7 @@ export const AggregatesDocument = gql`
                 displayCurrency
                 displayName
                 circlesSafeOwner
-                name
+                firstName
                 description
                 avatarUrl
                 locationName
@@ -4058,7 +4062,7 @@ export const AggregatesDocument = gql`
                 circlesAddress
                 displayCurrency
                 avatarUrl
-                name
+                firstName
               }
             }
           }
@@ -4087,7 +4091,7 @@ export const AggregatesDocument = gql`
           displayCurrency
           displayName
           circlesSafeOwner
-          name
+          firstName
           description
           avatarUrl
         }
@@ -4213,7 +4217,7 @@ export const VerificationsDocument = gql`
       circlesAddress
       displayCurrency
       avatarUrl
-      name
+      firstName
     }
     verifiedSafeAddress
     verifiedProfile {
