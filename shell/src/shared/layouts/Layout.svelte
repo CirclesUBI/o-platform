@@ -20,6 +20,7 @@ export let layout: RuntimeLayout;
 export let navigation: NavigationManifest;
 export let pageBackgroundClass: string = null;
 export let isSurveyPage: boolean;
+export let isNotFoundPage: boolean;
 
 $: {
   const url = window.location.href;
@@ -27,6 +28,12 @@ $: {
     isSurveyPage = true;
   } else {
     isSurveyPage = false;
+  }
+
+  if (url.indexOf("notfound") > -1) {
+    isNotFoundPage = true;
+  } else {
+    isNotFoundPage = false;
   }
   // console.log("LayoutChanged:", layout);
   if (
@@ -162,7 +169,7 @@ function onkeydown(e: KeyboardEvent) {
       {/if}
     {/await}
   {/if}
-  {#if navigation && !isSurveyPage}
+  {#if navigation && !isSurveyPage && !isNotFoundPage}
     <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" />
   {/if}
 
