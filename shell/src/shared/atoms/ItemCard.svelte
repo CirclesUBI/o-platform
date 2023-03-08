@@ -40,11 +40,7 @@ function cardAction() {
 }
 </script>
 
-<section
-  role="presentation"
-  on:click="{() => cardAction()}"
-  class:mb-3="{!params.inline}"
-  class="{params.class ? params.class : ''}">
+<section role="presentation" on:click="{() => cardAction()}" class:mb-3="{!params.inline}" class="{params.class ? params.class : ''}">
   <div class="flex items-center w-full space-x-2 bg-white border cardborder" class:p-3="{!params.edgeless}">
     <slot name="itemCardStart">
       <div class="">
@@ -57,10 +53,7 @@ function cardAction() {
               on:click="{(e) => {
                 if (params.imageAction) params.imageAction(e);
               }}">
-              <img
-                class="rounded-full"
-                src="{params.imageUrl}"
-                alt="{params.imageAlt ? params.imageAlt : params.title}" />
+              <img class="rounded-full" src="{params.imageUrl}" alt="{params.imageAlt ? params.imageAlt : params.title}" />
             </span>
           </div>
         {/if}
@@ -72,35 +65,20 @@ function cardAction() {
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
               {#if params.titleBold}
-                <b
-                  >{params.title
-                    ? params.title.length >= textCutoff
-                      ? params.title.substring(0, textCutoff) + "..."
-                      : params.title
-                    : ""}</b>
+                <b>{params.title ? (params.title.length >= textCutoff ? params.title.slice(0, textCutoff) + "..." : params.title) : ""}</b>
               {:else}
-                {params.title
-                  ? params.title.length >= textCutoff
-                    ? params.title.substring(0, textCutoff) + "..."
-                    : params.title
-                  : ""}
+                {params.title ? (params.title.length >= textCutoff ? params.title.slice(0, textCutoff) + "..." : params.title) : ""}
               {/if}
             </h2>
           </div>
-          <div
-            class="self-end text-right pl-2 {params.endTextBigClass} whitespace-nowrap"
-            class:text-positive="{!params.endTextBigClass}">
+          <div class="self-end text-right pl-2 {params.endTextBigClass} whitespace-nowrap" class:text-positive="{!params.endTextBigClass}">
             <span>{params.endTextBig ? params.endTextBig : ""}</span>
           </div>
         </div>
         <div class="flex flex-row items-center justify-between text-left" class:px-3="{params.imageUrl}">
           <div class="flex-grow leading-none">
             <span class="inline-block text-xs">
-              {params.subTitle
-                ? params.subTitle.length >= textCutoff + 6
-                  ? params.subTitle.substring(0, textCutoff + 6) + "..."
-                  : params.subTitle
-                : ""}
+              {params.subTitle ? (params.subTitle.length >= textCutoff + 6 ? params.subTitle.slice(0, textCutoff + 6) + "..." : params.subTitle) : ""}
             </span>
           </div>
           <div class="text-xs text-right whitespace-nowrap leading-non">

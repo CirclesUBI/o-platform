@@ -11,9 +11,7 @@ const toggle = () => (isOpen = !isOpen);
 /* we're currently ONLY showing the current key from localstorage! */
 let seedphrase =
   sessionStorage.getItem("circlesKey") && sessionStorage.getItem("circlesKey") != "0x123"
-    ? bip39.entropyToMnemonic(
-        sessionStorage.getItem("circlesKey").substring(2, sessionStorage.getItem("circlesKey").length)
-      )
+    ? bip39.entropyToMnemonic(sessionStorage.getItem("circlesKey").slice(2, sessionStorage.getItem("circlesKey").length))
     : "<no private key>";
 </script>
 
@@ -23,20 +21,14 @@ let seedphrase =
       <div class="flex flex-row items-center justify-between text-left">
         <div class="flex-grow min-w-0">
           <h2 class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
-            {key.address.substring(0, 28) + "..."}
+            {key.address.slice(0, 28) + "..."}
           </h2>
         </div>
         <div class="self-end justify-end pl-2 text-right whitespace-nowrap text-primary">
           <span>
             {#if key.encryptedPrivateKey}
               <div role="presentation" on:click="{toggle}">
-                <svg
-                  class="self-end h-6"
-                  fill="none"
-                  class:hidden="{isOpen}"
-                  class:block="{!isOpen}"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewbox="0 0 576 512">
+                <svg class="self-end h-6" fill="none" class:hidden="{isOpen}" class:block="{!isOpen}" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512">
                   <path
                     fill="currentColor"
                     d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48
@@ -46,13 +38,7 @@ let seedphrase =
             95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0
             288 160z"></path>
                 </svg>
-                <svg
-                  class="h-6"
-                  fill="none"
-                  block="{isOpen}"
-                  class:hidden="{!isOpen}"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewbox="0 0 640 512">
+                <svg class="h-6" fill="none" block="{isOpen}" class:hidden="{!isOpen}" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 640 512">
                   <path
                     fill="currentColor"
                     d="M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79

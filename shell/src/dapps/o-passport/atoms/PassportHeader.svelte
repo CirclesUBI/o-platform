@@ -10,6 +10,7 @@ import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { Profile, Organisation } from "../../../shared/api/data/types";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import Icons from "../../../shared/molecules/Icons.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -31,10 +32,10 @@ $: {
   if (params && params.profileId) {
     execLoadProfile(params ? params.profileId : $me.id.toString());
   } else if ($me) {
+    me.reload();
     profile = $me;
   }
-
-  displayName = profile.displayName;
+  displayName = profile.displayName ? profile.displayName : profile.firstName;
 }
 
 function editProfileField(onlyThesePages: string[]) {
@@ -66,32 +67,20 @@ function editProfileField(onlyThesePages: string[]) {
     <UserImage profile="{profile}" size="{28}" profileLink="{false}" editable="{true}" />
   </div>
 
-  <div
-    class="text-center"
-    role="presentation"
-    on:click="{() =>
-      profile.__typename === 'Organisation'
-        ? editProfileField(['name'])
-        : editProfileField(['firstName', 'lastName'])}">
+  <div class="text-center" role="presentation" on:click="{() => (profile.__typename === 'Organisation' ? editProfileField(['firstName']) : editProfileField(['firstName', 'lastName']))}">
     <h2 class="text-2xl cursor-pointer sm:text-4xl font-heading">
       {displayName}
+      <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary" />
     </h2>
   </div>
   {#if profile}
     {#if profile.locationName}
-      <div
-        class="mt-1 text-sm text-center cursor-pointer"
-        role="presentation"
-        on:click="{() => editProfileField(['location'])}">
+      <div class="mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">
         {profile.locationName ? profile.locationName : ""}
+        <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary -mt-1 ml-1" />
       </div>
     {:else}
-      <div
-        class="relative mt-1 text-sm text-center cursor-pointer"
-        role="presentation"
-        on:click="{() => editProfileField(['location'])}">
-        Where do you live?
-      </div>
+      <div class="relative mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">Where do you live?</div>
     {/if}
   {/if}
 </PageHeader>
