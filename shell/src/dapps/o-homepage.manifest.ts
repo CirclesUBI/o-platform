@@ -4,6 +4,7 @@ import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import Terms from "./o-homepage/pages/Terms.svelte";
 import Privacy from "./o-homepage/pages/Privacy.svelte";
+import NotFound from "./o-homepage/pages/NotFound.svelte";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -67,6 +68,16 @@ const privacy: Page<any, DappState> = {
   component: Privacy,
 };
 
+const notFound: Page<any, DappState> = {
+  type: "page",
+  isSystem: true,
+  anonymous: true,
+  title: "notFound",
+  routeParts: ["=notfound"],
+  pageBackgroundClass: 'bg-white',
+  component: NotFound
+};
+
 export interface DappState {
   // put state here
 }
@@ -87,5 +98,5 @@ export const homepage: DappManifest<DappState> = {
     };
   },
   hideFooterGradient: true,
-  routables: [index, invite, login, terms, privacy, externalChat],
+  routables: [index, invite, login, terms, privacy, externalChat, notFound],
 };
