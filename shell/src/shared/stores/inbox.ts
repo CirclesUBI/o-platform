@@ -2,7 +2,7 @@ import {PagedEventQuery, PagedEventQueryIndexEntry} from "./pagedEventQuery";
 import {
   AcknowledgeDocument,
   EventPayload,
-  EventType,
+  EventType, NotificationEvent,
   Profile,
   ProfileEvent,
   ProfileEventFilter,
@@ -11,10 +11,18 @@ import {
 } from "../api/data/types";
 import {me} from "./me";
 import {ApiClient} from "../apiConnection";
+import {Environment} from "../environment";
+
+const inboxes:MyInbox[] = [];
 
 export class MyInbox extends PagedEventQuery {
   constructor(sortOrder: SortOrder, pageSize = 20, eventTypes: EventType[], filter?: ProfileEventFilter) {
-    super(eventTypes, sortOrder, pageSize, filter);
+    super(eventTypes, sortOrder, pageSize, filter, () => {
+      inboxes.splice(inboxes.indexOf(this), 1);
+      console.log("Closed inbox", inboxes.length)
+    });
+    inboxes.push(this);
+    console.log("Opened inbox", inboxes.length)
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
@@ -36,6 +44,8 @@ export class MyInbox extends PagedEventQuery {
     let safeAddress: string;
     me.subscribe(($me) => (safeAddress = $me.circlesAddress))();
 
+    console.log("Looking for event", primaryKey, types)
+
     const foundEvents = await ApiClient.query<
       ProfileEvent[],
       QueryEventsArgs
@@ -45,7 +55,7 @@ export class MyInbox extends PagedEventQuery {
       pagination: {
         order: SortOrder.Desc,
         limit: 1,
-        continueAt: new Date().toJSON(),
+        continueAt: Environment.endOfTime.toJSON(),
       },
       filter: <ProfileEventFilter>{
         transactionHash: primaryKey
@@ -74,5 +84,16 @@ export class MyInbox extends PagedEventQuery {
       },
     });
     this.refresh();
+  }
+
+  static update(event: NotificationEvent) {
+    console.log("Updating inboxes")
+    inboxes.forEach(inbox => {
+      console.log("Updating inbox", inbox)
+      inbox.findSingleItemFallback([event.type], event.transaction_hash).then(o => {
+        console.log("Updated inbox event", o)
+        inbox.refresh(!!o)
+      });
+    })
   }
 }

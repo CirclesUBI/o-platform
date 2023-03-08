@@ -19,6 +19,8 @@ onMount(() => {
   message = "";
 
   const {trustIn, trustOut} = trustFromContactMetadata(contact);
+  console.log("trustIn", trustIn);
+    console.log("trustOut", trustOut);
 
   if (trustIn > 0 && trustOut > 0) {
     message += `${$_("dapps.o-contacts.atoms.contactCard.mutualTrust")}`;

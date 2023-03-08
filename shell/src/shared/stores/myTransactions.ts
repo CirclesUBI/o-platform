@@ -46,6 +46,8 @@ export class MyTransactions extends PagedEventQuery {
       },
     });
 
+    console.log("foundEvents", foundEvents)
+
     if (foundEvents && foundEvents.length > 0) {
       const event = foundEvents[0];
       this.addToCache(event);
