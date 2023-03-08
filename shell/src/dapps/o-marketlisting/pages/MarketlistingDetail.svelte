@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { ApiClient } from "../../../shared/apiConnection";
-import { Businesses, LinkTargetType } from "../../../shared/api/data/types";
+import { Businesses, LinkTargetType, Profile } from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
 import Map from "../../../dapps/o-marketlisting/atoms/Map.svelte";
@@ -12,6 +12,10 @@ import { marketStore } from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { log } from "xstate/lib/actions";
+import { UserActionItem, UserActions } from "../../../shared/userActions";
+import { transfer } from "../../o-banking/processes/transfer";
+import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
+import { me } from "../../../shared/stores/me";
 
 export let circlesAddress: string;
 
@@ -28,7 +32,21 @@ let hasOpeningHours: boolean = false;
 
 let mapHeight = "16em";
 
+let detailActions: UserActionItem[];
+let availableActions = [];
+
 onMount(async () => {
+  detailActions = [];
+
+  let $me: Profile | null = null;
+  let actions: UserActionItem[] = [];
+
+  const unsub = me.subscribe((o) => {
+    $me = o;
+  });
+  unsub();
+  if (!$me) throw new Error(window.o.i18n("shared.userActions.errors.couldNotLoadYourProfile"));
+
   shareLink();
   return marketStore.subscribe((data) => {
     if (!data || data.businesses.length == 0) {
@@ -56,6 +74,19 @@ onMount(async () => {
     }
 
     hasOpeningHours = checkIfOpeningHoursExists(businessHours);
+
+    availableActions.push({
+      key: "transfer",
+      icon: "cash",
+      title: window.o.i18n("shared.userActions.sendMoney"),
+      action: async () => {
+        window.o.runProcess(transfer, {
+          safeAddress: $me.circlesAddress,
+          recipientAddress: business.circlesAddress,
+          privateKey: sessionStorage.getItem("circlesKey"),
+        });
+      },
+    });
   });
 });
 
@@ -111,8 +142,15 @@ async function shareLink() {
         </div>
       </div>
     </div>
-    <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
-    <p class="text-black">{business.description ? business.description : ""}</p>
+    <div class="flex justify-between">
+      <div class="flex flex-col">
+        <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
+        <p class="text-black">{business.description ? business.description : ""}</p>
+      </div>
+      <div class="mr-12">
+        <DetailActionBar actions="{availableActions}" />
+      </div>
+    </div>
 
     <div class="flex flex-row w-full mt-3">
       <p class="flex-grow text-xl text-grey font-heading">
@@ -142,26 +180,17 @@ async function shareLink() {
           </CopyClipboard>
         </div>
         <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
-          <a
-            href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}"
-            target="_blank"
-            rel="noreferrer">
+          <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
             <Icon name="mail" class="inline w-10 h-10 heroicon smallicon p-2" />
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
-          <a
-            href="https://api.whatsapp.com/send?text=Hey, i'd like to show you this cool market. Check it out: {link}"
-            target="_blank"
-            rel="noreferrer">
+          <a href="https://api.whatsapp.com/send?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
             <Icons icon="whatsapp" customClass="inline" size="{12}" />
           </a>
         </div>
         <div class="text-center cursor-pointer telegram">
-          <a
-            href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}"
-            target="_blank"
-            rel="noreferrer">
+          <a href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
             <Icons icon="telegram" customClass="inline" size="{10}" />
           </a>
         </div>
@@ -258,15 +287,9 @@ async function shareLink() {
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
       {#if business.lat && business.lon}
         {#if $myLocation instanceof GeolocationPosition}
-          <Map
-            height="{mapHeight}"
-            position="{{ lat: business.lat, long: business.lon }}"
-            bubbletext="{business.name}" />
+          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" bubbletext="{business.name}" />
         {:else}
-          <Map
-            height="{mapHeight}"
-            position="{{ lat: business.lat, long: business.lon }}"
-            bubbletext="{business.name}" />
+          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" bubbletext="{business.name}" />
         {/if}
       {/if}
     </div>
