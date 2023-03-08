@@ -18,6 +18,17 @@ export async function findLocation(keyword) {
   }
 }
 
+export async function findGoogleLocation(keyword) {
+  if (keyword) {
+    const url = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=" + encodeURIComponent(keyword) + "&key=" + Environment.placesApiKey;
+
+    const response = await fetch(url);
+    const json = await response.json();
+    console.log("JOSN:", json);
+    return json.items;
+  }
+}
+
 export function buildAddressString(address) {
   let addr: string[] = [address.street, address.houseNumber, address.city, address.district, address.countryCode];
   addr = addr.filter(function (element) {

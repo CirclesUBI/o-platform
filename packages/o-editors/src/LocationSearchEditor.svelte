@@ -7,14 +7,14 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import AutoComplete from "simple-svelte-autocomplete";
-import { findLocation, getGeoDataFromHereId } from "../../../shell/src/shared/functions/locationHandler";
+import { findGoogleLocation, getGeoDataFromHereId } from "../../../shell/src/shared/functions/locationHandler";
 /*
  * allow arbitrary values in dropdownselecteditor
  * allow to add new tags in dropdownselecteditor
  * add a "most-recent" list to the dropdownselecteditor
  */
 
-export let context: EditorContext;
+// export let context: EditorContext;
 
 $: selected = {};
 
@@ -23,13 +23,13 @@ let _context: EditorContext;
 let field: PromptField<any>;
 let filterText: string;
 
-$: {
-  _context = context;
-}
+// $: {
+//   _context = context;
+// }
 
-onMount(async () => {
-  console.log("SELECTED: ", context.data);
-});
+// onMount(async () => {
+//   console.log("SELECTED: ", context.data);
+// });
 
 function onPlaceChanged(e) {
   // getGeoDataFromHereId(e.id);
@@ -52,14 +52,14 @@ function submitHandler() {
   <AutoComplete
     inputClassName="select input w-full"
     selectName="text-primary"
-    searchFunction="{findLocation}"
+    searchFunction="{findGoogleLocation}"
     delay="200"
     localFiltering="{false}"
     labelFieldName="title"
     valueFieldName="id"
     hideArrow="{true}"
     onChange="{onPlaceChanged}"
-    bind:selectedItem="{_context.data[context.field]}">
+    bind:selectedItem="{selected}">
     <div slot="item" let:item let:label class="text-sm text-base bg-transparent selection:bg-transparent">
       <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
         <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
@@ -76,14 +76,14 @@ function submitHandler() {
       <strong>NO RESULTS - {noResultsText}</strong>
     </div>
   </AutoComplete>
-
+  <!-- 
   {#if context.messages[context.field]}
     <label class="text-right label" for="form-error">
       <span id="form-error" class="label-text-alt text-error">{context.messages[context.field]}</span>
     </label>
-  {/if}
+  {/if} -->
 
-  <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" />
+  <!-- <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" /> -->
 </div>
 
 <style>
