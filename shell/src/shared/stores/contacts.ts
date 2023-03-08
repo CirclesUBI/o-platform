@@ -106,7 +106,10 @@ export const contacts = {
         return a.lastContactAt > b.lastContactAt ? -1 : a.lastContactAt < b.lastContactAt ? 1 : 0;
       });
 
-      _set(newList);
+      if (_set) {
+        // If _set is not yet set, the store is not yet used, but we still wanted to load the contact
+        _set(newList);
+      }
     }
 
     return contact;

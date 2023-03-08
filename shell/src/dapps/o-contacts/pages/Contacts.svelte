@@ -14,6 +14,8 @@ import Label from "../../../shared/atoms/Label.svelte";
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 
+type DisplayContact = Contact & { trustIn: number; trustOut: number };
+
 let displayContacts: Contact[];
 
 onMount(() => {
@@ -21,11 +23,13 @@ onMount(() => {
     console.log("Contacts changed.");
     displayContacts = (c ?? [])
       .map((o) => {
-        return { ...o };
+        return <DisplayContact>{ ...o };
       })
       .sort(sortAlphabetically)
       .filter((o) => {
         const { trustIn, trustOut } = trustFromContactMetadata(o);
+        o.trustIn = trustIn;
+        o.trustOut = trustOut;
         return trustIn > 0 || (trustOut > 0 && !o.metadata?.find((o) => o.name == "Search"));
       });
   });
@@ -55,7 +59,7 @@ function sortAlphabetically(a, b) {
     </section>
   {:else}
     <!-- TODO: Possible actions: trust, transfer money -->
-    {#each displayContacts as contact (contact.contactAddress)}
+    {#each displayContacts as contact (contact.contactAddress + contact.trustIn + contact.trustOut)}
       <ContactCard contact="{contact}" />
     {/each}
     {#if displayContacts.length === 0}
