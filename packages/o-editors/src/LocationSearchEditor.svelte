@@ -7,7 +7,10 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import AutoComplete from "simple-svelte-autocomplete";
-import { findGoogleLocation, getGeoDataFromHereId } from "../../../shell/src/shared/functions/locationHandler";
+import GoogleMapSearch from "../../../shell/src/shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
+import { Environment } from "../../../shell/src/shared/environment";
+import { error } from "../../../shell/src/shared/stores/error";
+import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 /*
  * allow arbitrary values in dropdownselecteditor
  * allow to add new tags in dropdownselecteditor
@@ -16,96 +19,82 @@ import { findGoogleLocation, getGeoDataFromHereId } from "../../../shell/src/sha
 
 // export let context: EditorContext;
 
-$: selected = {};
+export let context: DropdownSelectorContext<any, any, any>;
 
-let inputField: any;
+type Location = {
+  place_id: string;
+  address: string;
+  lat: string;
+  lng: string;
+};
+
 let _context: EditorContext;
-let field: PromptField<any>;
-let filterText: string;
 
-// $: {
-//   _context = context;
-// }
+const options = {
+  zoomControl: true,
+  mapTypeControl: false,
+  scaleControl: true,
+  streetViewControl: false,
+  rotateControl: false,
+  fullscreenControl: false,
+};
 
-// onMount(async () => {
-//   console.log("SELECTED: ", context.data);
-// });
+let location: Location = null;
+let center = {};
 
-function onPlaceChanged(e) {
-  // getGeoDataFromHereId(e.id);
-  // if (e.detail) {
-  //   // location = e.detail;
-  //   // business.location = JSON.stringify(location);
-  // }
+let validAddress: boolean = false;
+$: {
+  _context = context;
 }
 
-function submitHandler() {
-  // const event = new Continue();
-  // event.data = {};
-  // event.data[field.name] = context.params.getKey(selected);
-  // context.data[field.name] = context.params.getKey(selected);
-  // context.process.sendAnswer(event);
+onMount(async () => {
+  center = { lat: -8.670458, lng: 115.212631 };
+  // TODO ADD $mylocation Navigator geolocation and set center to that. only works in https.
+});
+
+$: if (location && $error !== null) {
+  validAddress = true;
 }
+
+function mapRecenter({ place }) {
+  location = {
+    place_id: place.place_id,
+    address: place.formatted_address,
+    lat: place.geometry.location.lat(),
+    lng: place.geometry.location.lng(),
+  };
+
+  context.editorDirtyFlags[context.field] = true;
+  _context.data[context.field] = location;
+}
+
+const submitHandler = () => {
+  const answer = new Continue();
+  answer.data = context.data;
+  context.process.sendAnswer(answer);
+};
 </script>
 
 <div class="flex flex-col items-end w-full m-auto form-control justify-self-center sm:w-3/4">
-  <AutoComplete
-    inputClassName="select input w-full"
-    selectName="text-primary"
-    searchFunction="{findGoogleLocation}"
-    delay="200"
-    localFiltering="{false}"
-    labelFieldName="title"
-    valueFieldName="id"
-    hideArrow="{true}"
-    onChange="{onPlaceChanged}"
-    bind:selectedItem="{selected}">
-    <div slot="item" let:item let:label class="text-sm text-base bg-transparent selection:bg-transparent">
-      <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
-        <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
-          <div class="relative flex-grow p-3 text-left ">
-            <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
-              {@html label}
-            </div>
-          </div>
-        </div>
-      </section>
+  <div class="w-full mb-8 section-txt h-80" id="map">
+    <div class="map-wrap">
+      <GoogleMapSearch apiKey="{Environment.placesApiKey}" on:recenter="{(e) => mapRecenter(e.detail)}" zoom="{17}" options="{options}" center="{center}" />
     </div>
+  </div>
 
-    <div slot="no-results" let:noResultsText>
-      <strong>NO RESULTS - {noResultsText}</strong>
-    </div>
-  </AutoComplete>
-  <!-- 
+  <!--   
   {#if context.messages[context.field]}
     <label class="text-right label" for="form-error">
       <span id="form-error" class="label-text-alt text-error">{context.messages[context.field]}</span>
     </label>
   {/if} -->
 
-  <!-- <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" /> -->
+  <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" />
 </div>
 
 <style>
-:global(.autocomplete-list-item) {
-  padding: 0.5rem !important;
+.map-wrap {
   width: 100%;
-  height: auto;
-}
-:global(.autocomplete-list-item.selected) {
-  background-color: #fff !important;
-  color: #ffcc33;
-}
-.customItem {
-  display: flex;
-  align-items: center;
-  cursor: default;
-  padding: 0;
-  overflow: hidden;
-  @apply bg-white;
-  @apply border-light;
-}
-:global(.autocomplete-list-item.selected .customItem) {
-  @apply border-primary;
+  height: 300px;
 }
 </style>
