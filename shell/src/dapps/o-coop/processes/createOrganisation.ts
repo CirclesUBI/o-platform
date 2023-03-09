@@ -18,7 +18,7 @@ import ErrorView from "../../../shared/atoms/Error.svelte";
 import { Environment } from "../../../shared/environment";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
-import { cityByHereId, promptCity } from "../../../shared/api/promptCity";
+import { promptLocation } from "../../../shared/api/promptLocation";
 
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
@@ -30,7 +30,7 @@ export type CreateOrganisationContextData = {
   firstName: string;
   displayName: string;
   organisationSafeProxy: GnosisSafeProxy;
-  location: string;
+  location: any;
   locationName: string;
   lat: number;
   lon: number;
@@ -82,13 +82,13 @@ const processDefinition = (processId: string) =>
           previous: "#description",
         },
       }),
-      location: promptCity<CreateOrganisationContext, any>({
+      location: promptLocation<CreateOrganisationContext, any>({
         id: "location",
         field: "location",
         params: {
           view: {
             title: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.title"),
-            description: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.description"),
+            description: null,
             placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisation.editorContent.location.placeholder"),
             submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.location.submitButtonText"),
           },
@@ -115,7 +115,7 @@ const processDefinition = (processId: string) =>
         navigation: {
           next: "#checkDeploy",
           previous: "#description",
-          canSkip: () => true,
+          canSkip: () => false,
         },
       }),
       checkDeploy: {
@@ -197,12 +197,6 @@ const processDefinition = (processId: string) =>
         entry: () => console.log(`upsertOrganisation ...`),
         invoke: {
           src: async (context) => {
-            if (context.data.location) {
-              const city = await cityByHereId(context.data.location);
-              context.data.lat = city.position.lat;
-              context.data.lon = city.position.lng;
-              context.data.locationName = city.title;
-            }
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const result = await apiClient.mutate({
               mutation: UpsertOrganisationDocument,
@@ -213,10 +207,10 @@ const processDefinition = (processId: string) =>
                   circlesAddress: context.data.circlesAddress.toLowerCase(),
                   description: context.data.description,
                   firstName: context.data.firstName,
-                  location: context.data.location,
-                  lat: context.data.lat,
-                  lon: context.data.lon,
-                  locationName: context.data.locationName,
+                  location: context.data.location.place_id,
+                  lat: context.data.location.lat,
+                  lon: context.data.location.lng,
+                  locationName: context.data.location.address,
                 },
               },
             });

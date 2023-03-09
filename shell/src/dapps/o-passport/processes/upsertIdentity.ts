@@ -14,7 +14,7 @@ import { promptFile } from "../../../shared/api/promptFile";
 import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
-import { cityByHereId, promptCity } from "../../../shared/api/promptCity";
+import { promptLocation } from "../../../shared/api/promptLocation";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -33,7 +33,7 @@ export type UpsertIdentityContextData = {
   avatarUrl?: string;
   avatarMimeType?: string;
   successAction?: (data: UpsertIdentityContextData) => void;
-  location: string;
+  location: any;
   locationName: string;
   lat: number;
   lon: number;
@@ -42,44 +42,24 @@ export type UpsertIdentityContextData = {
 export type UpsertIdentityContext = ProcessContext<UpsertIdentityContextData>;
 
 const editorContent: { [x: string]: EditorViewContext } = {
-  /*
-  info: {
-    title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.info.title"),
-    description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.info.description"),
-    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.info.submitButtonText"),
-  },
-   */
   firstName: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.title"),
     description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.description"),
     placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.placeholder"),
-    submitButtonText: window.o.i18n(
-      "dapps.o-passport.processes.upsertIdentity.editorContent.firstName.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.submitButtonText"),
   },
   lastName: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.title"),
     description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.description"),
     placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.placeholder"),
-    submitButtonText: window.o.i18n(
-      "dapps.o-passport.processes.upsertIdentity.editorContent.lastName.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.submitButtonText"),
   },
-  // emailAddress: {
-  //   title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
-  //   description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"),
-  //   placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"),
-  //   submitButtonText: window.o.i18n(
-  //     "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
-  //   ),
-  // },
+
   imageView: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.title"),
     description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.description"),
     placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.placeholder"),
-    submitButtonText: window.o.i18n(
-      "dapps.o-passport.processes.upsertIdentity.editorContent.imageView.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.submitButtonText"),
   },
   newsletter: {
     title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.title"),
@@ -99,100 +79,6 @@ const processDefinition = (processId: string) =>
       // TODO: Check if this works as intended
       ...fatalError<UpsertIdentityContext, any>("error"),
 
-      /*
-      info: prompt({
-        id: "info",
-        field: "info",
-        component: HtmlViewer,
-        params: {
-          view: editorContent.info,
-          html: () => "",
-          hideNav: false,
-        },
-        navigation: {
-          canSkip: () => false,
-          canGoBack: () => false,
-          next: "#emailAddress",
-        },
-      }),
-
- */
-
-      // emailAddress: prompt<UpsertIdentityContext, any>({
-      //   id: "emailAddress",
-      //   field: "emailAddress",
-      //   component: EmailAddressEditor,
-      //   params: {
-      //     view: (editorContent.emailAddress = {
-      //       title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.title"),
-      //       description: window.o.i18n(
-      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.description"
-      //       ),
-      //       placeholder: window.o.i18n(
-      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.placeholder"
-      //       ),
-      //       submitButtonText: window.o.i18n(
-      //         "dapps.o-passport.processes.upsertIdentity.editorContent.emailAddress.submitButtonText"
-      //       ),
-      //     }),
-      //   },
-      //   navigation: {
-      //     canSkip: () => true,
-      //     canGoBack: () => false,
-      //     skip: "#firstName",
-      //     next: [
-      //       {
-      //         cond: (context) => !!context.data.emailAddress && context.data.emailAddress.trim() != "",
-      //         target: "#newsletter",
-      //       },
-      //       {
-      //         target: "#firstName",
-      //       },
-      //     ],
-      //   },
-      // }),
-
-      // newsletter: promptChoice<UpsertRegistrationContext, any>({
-      //   id: "newsletter",
-      //   component: ChoiceSelector,
-      //   params: {
-      //     view: (editorContent.newsletter = {
-      //       title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.title"),
-      //       description: window.o.i18n(
-      //         "dapps.o-passport.processes.upsertIdentity.editorContent.newsletter.description"
-      //       ),
-      //       placeholder: "",
-      //       submitButtonText: "",
-      //     }),
-      //   },
-      //   options: [
-      //     {
-      //       key: "dontSubscribe",
-      //       label: "No thanks",
-      //       target: "#firstName",
-      //       class: "btn btn-outline",
-      //       action: (context) => {
-      //         context.data.newsletter = false;
-      //       },
-      //     },
-      //     {
-      //       key: "subscribe",
-      //       label: "Yes please",
-      //       target: "#firstName",
-      //       class: "btn btn-outline",
-      //       action: (context) => {
-      //         context.data.newsletter = true;
-      //       },
-      //     },
-      //   ],
-      //   navigation: {
-      //     canGoBack: () => true,
-      //     previous: "#emailAddress",
-      //     canSkip: () => false,
-      //     skip: "#firstName",
-      //   },
-      // }),
-
       firstName: prompt<UpsertIdentityContext, any>({
         field: "firstName",
         component: TextEditor,
@@ -201,9 +87,7 @@ const processDefinition = (processId: string) =>
             title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.title"),
             description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.description"),
             placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.firstName.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.firstName.submitButtonText"),
           }),
         },
         dataSchema: yup.string().required(window.o.i18n("dapps.o-passport.processes.upsertIdentity.requiredName")),
@@ -222,9 +106,7 @@ const processDefinition = (processId: string) =>
             title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.title"),
             description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.description"),
             placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.lastName.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.lastName.submitButtonText"),
           }),
         },
         navigation: {
@@ -245,9 +127,7 @@ const processDefinition = (processId: string) =>
             title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.title"),
             description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.description"),
             placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.imageView.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.imageView.submitButtonText"),
           }),
         },
         navigation: {
@@ -257,17 +137,15 @@ const processDefinition = (processId: string) =>
         },
       }),
 
-      location: promptCity<UpsertIdentityContext, any>({
+      location: promptLocation<UpsertIdentityContext, any>({
         id: "location",
         field: "location",
         params: {
           view: (editorContent.city = {
             title: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.title"),
-            description: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.description"),
-            placeholder: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"
-            ),
+            description: null,
+            placeholder: null,
+            submitButtonText: window.o.i18n("dapps.o-passport.processes.upsertIdentity.editorContent.city.submitButtonText"),
           }),
         },
         navigation: {
@@ -285,19 +163,10 @@ const processDefinition = (processId: string) =>
               localStorage.removeItem("circlesKey");
             }
 
-            if (context.data.location) {
-              const city = await cityByHereId(context.data.location);
-              context.data.lat = city.position.lat;
-              context.data.lon = city.position.lng;
-              context.data.locationName = city.title;
-            }
-
             const apiClient = await window.o.apiClient.client.subscribeToResult();
             const safeOwnerAddress =
               context.data.circlesSafeOwner ??
-              (sessionStorage.getItem("circlesKey")
-                ? RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).address
-                : undefined);
+              (sessionStorage.getItem("circlesKey") ? RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).address : undefined);
 
             const result = await apiClient.mutate({
               mutation: UpsertProfileDocument,
@@ -309,21 +178,19 @@ const processDefinition = (processId: string) =>
                 lastName: context.data.lastName,
                 emailAddress: context.data.emailAddress,
                 askedForEmailAddress: true,
-                // dream: context.data.dream,
-                // newsletter: context.data.newsletter,
                 displayTimeCircles: context.data.displayTimeCircles ?? true,
                 country: context.data.country,
                 avatarUrl: context.data.avatarUrl,
                 avatarMimeType: context.data.avatarMimeType,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
-                location: context.data.location,
-                lat: context.data.lat,
-                lon: context.data.lon,
-                locationName: context.data.locationName,
+                location: context.data.location.place_id,
+                lat: context.data.location.lat,
+                lon: context.data.location.lng,
+                locationName: context.data.location.address,
               },
             });
-            // sessionStorage.setItem("askedForEmailAddress", "true");
+
             return result.data.upsertProfile;
           },
           onDone: "#success",

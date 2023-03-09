@@ -76,7 +76,7 @@ function editProfileField(onlyThesePages: string[]) {
   {#if profile}
     {#if profile.locationName}
       <div class="mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">
-        {profile.locationName ? profile.locationName : ""}
+        {profile.locationName ? (profile.locationName.length >= 38 ? profile.locationName.slice(0, 38) + "..." : profile.locationName) : ""}
         <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary -mt-1 ml-1" />
       </div>
     {:else}
