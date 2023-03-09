@@ -1,33 +1,25 @@
 import { EditorContext } from "./editorContext";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { EditorViewContext } from "./shared/editorViewContext";
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
 
-export type DropdownSelectorParams<
-  TContext extends ProcessContext<any>,
-  TOption,
-  TKey
-> = {
+export type DropdownSelectorParams<TContext extends ProcessContext<any>, TOption, TKey> = {
   view?: EditorViewContext;
   keyProperty?: string;
   getLabel: (option: TOption) => string;
   getKey: (option: TOption) => TKey;
-  getHighlight?: (option: TOption) => {start: number, end: number};
+  getHighlight?: (option: TOption) => { start: number; end: number };
   itemTemplate?: any;
   showResultsOnLoad?: boolean;
   showNavigation?: boolean;
-  submitOnBlur?:boolean;
-  choices: {
+  submitOnBlur?: boolean;
+  choices?: {
     byKey: (key: TKey, context: TContext) => Promise<TOption | undefined>;
-    find: (filter: string | undefined, context: TContext) => Observable<TOption[]>|Promise<TOption[]>;
+    find: (filter: string | undefined, context: TContext) => Observable<TOption[]> | Promise<TOption[]>;
   };
   [x: string]: any;
 };
 
-export type DropdownSelectorContext<
-  TContext extends ProcessContext<any>,
-  TOption,
-  TKey
-> = EditorContext & {
+export type DropdownSelectorContext<TContext extends ProcessContext<any>, TOption, TKey> = EditorContext & {
   params: DropdownSelectorParams<TContext, TOption, TKey>;
 };

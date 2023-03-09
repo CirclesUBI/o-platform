@@ -11,11 +11,14 @@ import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { marketStore } from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import GoogleMap from "../../../shared/molecules/GoogleMaps/GoogleMap.svelte";
 import { log } from "xstate/lib/actions";
+import { Environment } from "../../../shared/environment";
 import { UserActionItem, UserActions } from "../../../shared/userActions";
 import { transfer } from "../../o-banking/processes/transfer";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
+
 
 export let circlesAddress: string;
 
@@ -32,8 +35,19 @@ let hasOpeningHours: boolean = false;
 
 let mapHeight = "16em";
 
+
+const mapOptions = {
+  zoomControl: true,
+  mapTypeControl: false,
+  scaleControl: true,
+  streetViewControl: false,
+  rotateControl: false,
+  fullscreenControl: false,
+};
+
 let detailActions: UserActionItem[];
 let availableActions = [];
+
 
 onMount(async () => {
   detailActions = [];
@@ -124,7 +138,7 @@ async function shareLink() {
 <div class="bg-marketlisting" style="display: none;"></div>
 <section class="p-4">
   {#if business}
-    <div class="flex w-full justify-center">
+    <div class="flex justify-center w-full">
       <div class="relative xl:w-2/3 xl:h-2/3">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
@@ -160,7 +174,7 @@ async function shareLink() {
 
     {#if !showShareOptions}
       <button
-        class=" mt-3 text-base font-heading btn btn-outline btn-sm rounded-full"
+        class="mt-3 text-base rounded-full font-heading btn btn-outline btn-sm"
         on:click="{() => {
           showShareOptions = !showShareOptions;
         }}">
@@ -171,17 +185,18 @@ async function shareLink() {
 
     {#if showShareOptions}
       <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-3">
-        <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
+        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
           <CopyClipboard text="{link}" let:copy>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div on:click="{copy}">
-              <Icon name="link" class="self-center inline w-10 h-10 heroicon smallicon p-2" />
+              <Icon name="link" class="self-center inline w-10 h-10 p-2 heroicon smallicon" />
             </div>
           </CopyClipboard>
         </div>
-        <div class="text-center rounded-full cursor-pointer w-10 h-10 copylink bg-light-light">
+
+        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
           <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
-            <Icon name="mail" class="inline w-10 h-10 heroicon smallicon p-2" />
+            <Icon name="mail" class="inline w-10 h-10 p-2 heroicon smallicon" />
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
@@ -198,7 +213,7 @@ async function shareLink() {
     {/if}
 
     {#if hasOpeningHours}
-      <div class="flex pt-4 mt-4 border-t-2 text-black">
+      <div class="flex pt-4 mt-4 text-black border-t-2">
         <div>
           <div class="flex mb-5 ml-2">
             <Icon name="clock" class="w-6 h-6" />
@@ -214,60 +229,60 @@ async function shareLink() {
           <div class="opening-hours-container">
             {#if visible}
               {#each everythingBeforeTheCurrentDay as day}
-                <div class="flex mb-3 flex-col">
+                <div class="flex flex-col mb-3">
                   {#if parseTimeString(day, "weekday")}
-                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                    <div class="flex table-cell pl-2 mb-1 font-semibold">
                       {parseTimeString(day, "weekday")}
                     </div>
                   {/if}
                   {#if parseTimeString(day, "hours")}
-                    <div class="flex ml-2 flex-wrap">
+                    <div class="flex flex-wrap ml-2">
                       {#each parseTimeString(day, "hours") as hours}
-                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                        <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
                       {/each}
                     </div>
                   {:else}
-                    <div class="badge badge-error badge-outline ml-2">Closed</div>
+                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
                   {/if}
                 </div>
               {/each}
             {/if}
 
             {#if currentDayOpenHours}
-              <div class="flex mb-3 flex-col">
+              <div class="flex flex-col mb-3">
                 {#if parseTimeString(currentDayOpenHours, "weekday")}
-                  <div class="flex table-cell pl-2 font-semibold mb-1">
+                  <div class="flex table-cell pl-2 mb-1 font-semibold">
                     {parseTimeString(currentDayOpenHours, "weekday")}
                   </div>
                 {/if}
                 {#if parseTimeString(currentDayOpenHours, "hours")}
-                  <div class="flex ml-2 flex-wrap">
+                  <div class="flex flex-wrap ml-2">
                     {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                      <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                      <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
                     {/each}
                   </div>
                 {:else}
-                  <div class="badge badge-error badge-outline ml-2">Closed</div>
+                  <div class="ml-2 badge badge-error badge-outline">Closed</div>
                 {/if}
               </div>
             {/if}
 
             {#if visible}
               {#each everythingAfterTheCurrentDay as after}
-                <div class="flex mb-3 flex-col">
+                <div class="flex flex-col mb-3">
                   {#if parseTimeString(after, "weekday")}
-                    <div class="flex table-cell pl-2 font-semibold mb-1">
+                    <div class="flex table-cell pl-2 mb-1 font-semibold">
                       {parseTimeString(after, "weekday")}
                     </div>
                   {/if}
                   {#if parseTimeString(after, "hours")}
-                    <div class="flex ml-2 flex-wrap">
+                    <div class="flex flex-wrap ml-2">
                       {#each parseTimeString(after, "hours") as hours}
-                        <div class="flex badge whitespace-nowrap badge-success badge-outline mr-2">{hours}</div>
+                        <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
                       {/each}
                     </div>
                   {:else}
-                    <div class="badge badge-error badge-outline ml-2">Closed</div>
+                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
                   {/if}
                 </div>
               {/each}
@@ -278,19 +293,21 @@ async function shareLink() {
     {/if}
 
     {#if business.phoneNumber}
-      <div class="flex pt-4 mt-4 border-t-2 text-black">
+      <div class="flex pt-4 mt-4 text-black border-t-2">
         <Icon name="phone" class="w-6 h-6" />
         <p class="pl-4">{business.phoneNumber}</p>
       </div>
     {/if}
 
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
-      {#if business.lat && business.lon}
-        {#if $myLocation instanceof GeolocationPosition}
-          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" bubbletext="{business.name}" />
-        {:else}
-          <Map height="{mapHeight}" position="{{ lat: business.lat, long: business.lon }}" bubbletext="{business.name}" />
-        {/if}
+      {#if business.lat && business.lon && business.location}
+        <GoogleMap
+          apiKey="{Environment.placesApiKey}"
+          zoom="{17}"
+          options="{mapOptions}"
+          center="{{ lat: business.lat, lng: business.lon }}"
+          placeId="{business.location}"
+          placeName="{business.name}" />
       {/if}
     </div>
   {:else}
