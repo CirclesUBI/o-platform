@@ -39,7 +39,7 @@ export let store: Readable<ProfileEvent[]> & {
 let isLoading = true;
 let hasMore = true;
 let events: ProfileEvent[] = [];
-let eventsWithViews: { component: SvelteComponentDev; event: ProfileEvent }[] = [];
+let eventsWithViews: { i:number, component: SvelteComponentDev; event: ProfileEvent }[] = [];
 let initialScrollToBottom: boolean = false;
 let lastElement: HTMLElement;
 
@@ -58,6 +58,7 @@ onMount(() => {
       setTimeout(() => (reverse ? scrollToBottom() : scrollToTop()));
     }
 
+    let i = 0;
     eventsWithViews = events
       .map((event) => {
         const view: EventListView = views[event.type];
@@ -71,6 +72,7 @@ onMount(() => {
         }
 
         return {
+          i: i++,
           event: event,
           component: viewComponent,
         };
@@ -132,10 +134,10 @@ const handleChange = async (e) => {
   <div use:inview="{{}}" on:change="{handleChange}"></div>
 {/if}
 {#if store}
-  {#each eventsWithViews as eventWithView, i}
+  {#each eventsWithViews as eventWithView(eventWithView.event.transaction_hash)}
     <svelte:component this="{eventWithView.component}" event="{eventWithView.event}" />
 
-    {#if store && !reverse && i > events.length - 25}
+    {#if store && !reverse && eventWithView.i > events.length - 25}
       <div use:inview="{{}}" on:change="{handleChange}"></div>
     {/if}
   {/each}

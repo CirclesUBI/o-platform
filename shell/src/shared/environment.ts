@@ -14,6 +14,14 @@ export class Environment {
     return "__SHOW_LANGUAGE_SWITCHER__" == "true";
   }
 
+  public static get endOfTime(): Date {
+    return new Date(9999, 1, 1);
+  }
+
+  public static get beginningOfTime(): Date {
+    return new Date(0, 1, 1);
+  }
+
   public static get placesApiKey(): string {
     return "__PLACES_API_KEY__";
   }
