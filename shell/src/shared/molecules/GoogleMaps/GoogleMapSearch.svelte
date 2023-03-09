@@ -13,6 +13,7 @@ export let apiKey;
 export let center = null;
 export let zoom = 8;
 export let options = {};
+export let placeholder: string;
 
 export function getDomBounds() {
   return mapElement.getBoundingClientRect();
@@ -46,7 +47,9 @@ let currentPlaceAddress: string = null;
 let inputText = "";
 
 onMount(() => {
-  input = document.getElementById("pac-input") as HTMLInputElement;
+  input = document.getElementById("pacInput") as HTMLInputElement;
+
+  placeholder = placeholder ? placeholder : "Enter a location or drop Pin";
 });
 
 // Adds a marker to the map and push to the array.
@@ -79,8 +82,6 @@ function addMarker(map: google.maps.Map, place: google.maps.Place, customInfoWin
   currentPlaceAddress = addressArray.join("<br/>");
 
   if (customInfoWindow) {
-    // (infowindowContent.children.namedItem("place-name") as HTMLElement).textContent = place.name as string;
-    // (infowindowContent.children.namedItem("place-address") as HTMLElement).textContent = place.formatted_address as string;
     infowindow.open(map, marker);
   }
 }
@@ -106,7 +107,7 @@ function deleteMarkers(): void {
 function placeChanged(map, place, customInfoWindow = true) {
   error.set(null);
 
-  if (!place.geometry || !place.geometry.location || place.types?.find((element) => element == "plus_code")) {
+  if (!place.geometry || !place.geometry.location) {
     error.set("Invalid location.");
     return;
   }
@@ -202,28 +203,33 @@ function initialise() {
 <GoogleSdk apiKey="{apiKey}" on:ready="{initialise}" />
 <div style="">
   <input
-    id="pac-input"
+    id="pacInput"
     class="w-full text-sm controls form-control input input-bordered"
     type="text"
     bind:value="{inputText}"
     on:focus="{() => (inputText = '')}"
-    placeholder="Enter a location or drop Pin" />
+    placeholder="{placeholder}" />
 </div>
 <div class="mt-2 rounded-md map" bind:this="{mapElement}">
   {#if map}
     <slot />
   {/if}
 </div>
-<div id="infowindow-content" class="address" bind:this="{infowindowContent}">
-  {#if currentPlaceName}
-    <div id="place-name" class="font-bold address-line title">{currentPlaceName}</div>
-  {/if}
-  {#if currentPlaceAddress}
-    <div id="place-address" class="address-line">{@html currentPlaceAddress}</div>
-  {/if}
+<div class="infowindowWrapper">
+  <div id="infowindowContent" class="address" bind:this="{infowindowContent}">
+    {#if currentPlaceName}
+      <div id="placeName" class="font-bold address-line title">{currentPlaceName}</div>
+    {/if}
+    {#if currentPlaceAddress}
+      <div id="placeAddress" class="address-line">{@html currentPlaceAddress}</div>
+    {/if}
+  </div>
 </div>
 
 <style>
+.infowindowWrapper {
+  display: none;
+}
 .address {
   color: #333;
   font-family: Arial;
