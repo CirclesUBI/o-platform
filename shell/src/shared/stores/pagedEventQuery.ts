@@ -9,6 +9,7 @@ import {
 } from "../api/data/types";
 import {writable} from "svelte/store";
 import {me} from "./me";
+import {Environment} from "../environment";
 
 export type PagedEventQueryIndexEntry = {
   indexName: string,
@@ -36,6 +37,7 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
 
   private _profileChangedSubscription:any;
   private _isInitialized = false;
+  private _onDestroy?: () => void;
 
   abstract getPrimaryKey(eventPayload:EventPayload) : string;
   protected abstract getIndexedValues(event:ProfileEvent) : PagedEventQueryIndexEntry[];
@@ -51,11 +53,12 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
   }
   private _scrollPosition:number;
 
-  constructor(eventTypes: EventType[], order: SortOrder, pageSize: number, filter?: ProfileEventFilter) {
+  constructor(eventTypes: EventType[], order: SortOrder, pageSize: number, filter?: ProfileEventFilter, onDestroy?: () => void) {
     this.eventTypes = eventTypes;
     this.sortOrder = order;
     this.pageSize = pageSize;
     this.filter = filter;
+    this._onDestroy = onDestroy;
 
     const { subscribe, set, update } = writable<ProfileEvent[]>(
       [], (set) => {
@@ -80,6 +83,7 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
 
         return () => {
           this._profileChangedSubscription();
+          this._onDestroy?.call(this);
         }
       }
     );
@@ -100,8 +104,8 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
       order: this.sortOrder,
       limit: this.pageSize,
       continueAt: this.sortOrder == SortOrder.Desc
-        ? new Date().toJSON()
-        : new Date(0).toJSON()
+        ? Environment.endOfTime.toJSON()
+        : Environment.beginningOfTime.toJSON()
     };
     this.refresh();
   }
