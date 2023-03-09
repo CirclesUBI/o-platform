@@ -75,22 +75,20 @@ export class UserActions {
       /* PERSON */
       {
         actions = actions.concat(
-          trustsYou
-            ? [
-              {
-                key: "transfer",
-                icon: "cash",
-                title: window.o.i18n("shared.userActions.sendMoney"),
-                action: async () => {
-                  window.o.runProcess(transfer, {
-                    safeAddress: $me.circlesAddress,
-                    recipientAddress: recipientProfile.contactAddress,
-                    privateKey: sessionStorage.getItem("circlesKey"),
-                  });
-                },
+          [
+            {
+              key: "transfer",
+              icon: "cash",
+              title: window.o.i18n("shared.userActions.sendMoney"),
+              action: async () => {
+                window.o.runProcess(transfer, {
+                  safeAddress: $me.circlesAddress,
+                  recipientAddress: recipientProfile.contactAddress,
+                  privateKey: sessionStorage.getItem("circlesKey"),
+                });
               },
-            ]
-            : [],
+            },
+          ],
           youTrust && recipientProfile.contactAddress_Profile.type == ProfileType.Person.toString()
             ? [
               {
