@@ -20,9 +20,8 @@ const typeOfUserData = TypeOfUser;
 const genderOfUserData = GenderOfUser;
 
 const surveySessionId = generateLongId();
-
-sessionStorage.setItem("SurveySessionId", surveySessionId);
 sessionStorage.removeItem("SurveyComplete");
+sessionStorage.removeItem("SurveySessionId");
 
 const villageId = field("villageId", "", [required()]);
 const gender = field("gender", "", [required()]);
@@ -31,6 +30,7 @@ const invite = field("invite", "", [required()]);
 const myForm = form(villageId, gender, dateOfBirth, invite);
 let allBaliVillages: BaliVillage[];
 let allBaliVillagesLookup;
+let _finally: boolean = false;
 
 onDestroy(() => {});
 
@@ -50,6 +50,8 @@ onMount(async () => {
   );
 });
 
+const getNetworkErrors = (error) => error.networkError.response.json().then((e) => e.errors.map((e) => e.message).join(","));
+
 async function handleClick(button) {
   if (button === "back") {
     push("#/survey/page/2");
@@ -59,26 +61,33 @@ async function handleClick(button) {
     $surveyData = $myForm.summary;
 
     const apiClient = await window.o.apiClient.client.subscribeToResult();
-    const result = await apiClient.mutate({
-      mutation: SurveyDataDocument,
-      variables: {
-        surveyData: {
-          sessionId: surveySessionId,
-          allConsentsGiven: $surveyConsents.allConsentsGiven,
-          villageId: parseInt($villageId.value),
-          gender: $gender.value,
-          dateOfBirth: $dateOfBirth.value,
+    const result = await apiClient
+      .mutate({
+        mutation: SurveyDataDocument,
+        variables: {
+          surveyData: {
+            sessionId: surveySessionId,
+            allConsentsGiven: $surveyConsents.allConsentsGiven,
+            villageId: parseInt($villageId.value),
+            gender: $gender.value,
+            dateOfBirth: $dateOfBirth.value,
+          },
         },
-      },
-    });
-
-    if (result.errors) {
-      throw new Error(`Couldn't store Survey data properly: ${JSON.stringify(result.errors)}`);
-    }
-    sessionStorage.setItem("SurveyComplete", "true");
-    sessionStorage.removeItem("surveyConsentPage1");
-    sessionStorage.removeItem("surveyConsentPage2");
-    push("#/survey/page/4");
+      })
+      .then(() => {
+        sessionStorage.setItem("SurveySessionId", surveySessionId);
+        sessionStorage.setItem("SurveyComplete", "true");
+        sessionStorage.removeItem("surveyConsentPage1");
+        sessionStorage.removeItem("surveyConsentPage2");
+        push("#/survey/page/4");
+      })
+      .catch((error) => {
+        if (error.networkError) {
+          getNetworkErrors(error).then(console.log);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
   }
 }
 
