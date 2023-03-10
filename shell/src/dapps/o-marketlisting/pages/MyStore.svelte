@@ -342,35 +342,4 @@ function onPlaceChanged(e) {
   width: 100%;
   height: 300px;
 }
-:global(.autocomplete) {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-:global(.autocomplete input) {
-  padding-right: 2rem !important;
-}
-:global(.autocomplete-list-item) {
-  padding: 0.5rem !important;
-  width: 100%;
-  height: auto;
-}
-:global(.autocomplete-list-item.selected) {
-  background-color: #fff !important;
-  color: #ffcc33;
-}
-:global(.hide-arrow) {
-  display: none;
-}
-.customItem {
-  display: flex;
-  align-items: center;
-  cursor: default;
-  padding: 0;
-  overflow: hidden;
-  @apply bg-white;
-  @apply border-light;
-}
-:global(.autocomplete-list-item.selected .customItem) {
-  @apply border-primary;
-}
 </style>

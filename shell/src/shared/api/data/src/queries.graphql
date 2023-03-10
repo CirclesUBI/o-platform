@@ -1291,6 +1291,15 @@ query allBusinessCategories {
   }
 }
 
+query allBaliVillages {
+  allBaliVillages {
+    id
+    desa
+    kecamatan
+    kabupaten
+  }
+}
+
 query myFavorites {
   myFavorites {
     createdAt
