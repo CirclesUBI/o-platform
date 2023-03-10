@@ -1,7 +1,8 @@
 <script lang="ts">
 import { surveyConsents, surveyData, inviteUrl } from "../stores/surveyStore";
 import { onMount, onDestroy } from "svelte";
-import { SurveyDataDocument, SurveyData, SurveyDataInput } from "../../../shared/api/data/types";
+import { Environment } from "../../../shared/environment";
+import { SurveyDataDocument, SurveyData, SurveyDataInput, BaliVillage } from "../../../shared/api/data/types";
 import Label from "../../../shared/atoms/Label.svelte";
 import { GenderOfUser } from "../../../shared/models/GenderOfUser.model";
 import { TypeOfUser } from "../../../shared/models/TypeOfUser.model";
@@ -23,11 +24,13 @@ const surveySessionId = generateLongId();
 sessionStorage.setItem("SurveySessionId", surveySessionId);
 sessionStorage.removeItem("SurveyComplete");
 
-const userType = field("userType", "", [required()]);
+const villageId = field("villageId", "", [required()]);
 const gender = field("gender", "", [required()]);
 const dateOfBirth = field("dateOfBirth", <Date>null, [required()]);
 const invite = field("invite", "", [required()]);
-const myForm = form(userType, gender, dateOfBirth, invite);
+const myForm = form(villageId, gender, dateOfBirth, invite);
+let allBaliVillages: BaliVillage[];
+let allBaliVillagesLookup;
 
 onDestroy(() => {});
 
@@ -38,6 +41,14 @@ $: {
     $invite = "true";
   }
 }
+
+onMount(async () => {
+  allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
+  allBaliVillagesLookup = allBaliVillages.toLookup(
+    (o) => o.id,
+    (o) => o
+  );
+});
 
 async function handleClick(button) {
   if (button === "back") {
@@ -54,7 +65,7 @@ async function handleClick(button) {
         surveyData: {
           sessionId: surveySessionId,
           allConsentsGiven: $surveyConsents.allConsentsGiven,
-          userType: $userType.value,
+          villageId: parseInt($villageId.value),
           gender: $gender.value,
           dateOfBirth: $dateOfBirth.value,
         },
@@ -72,8 +83,8 @@ async function handleClick(button) {
 }
 
 function handleOnChange(event) {
-  if (event.detail.target === "userType") {
-    userType.set(event.detail.value);
+  if (event.detail.target === "village") {
+    villageId.set(event.detail.value);
   }
   if (event.detail.target === "gender") {
     gender.set(event.detail.value);
@@ -98,16 +109,11 @@ function handleOnChange(event) {
       <div class="flex flex-col mb-5 text-sm">
         <Label key="dapps.o-homepage.components.survey.userDataCollection.useCircleAs" />
         <div class="flex">
-          <DropDown
-            selected="Select your type of user"
-            items="{typeOfUserData}"
-            id="userType"
-            key="id"
-            value="name"
-            dropDownClass="max-w-xs text-base"
-            on:dropDownChange="{handleOnChange}" />
+          {#if allBaliVillages}
+            <DropDown selected="Select your Village" items="{allBaliVillages}" id="village" key="id" value="desa" dropDownClass="max-w-xs text-base" on:dropDownChange="{handleOnChange}" />
+          {/if}
 
-          {#if $userType.value && $userType.value !== "undefined"}
+          {#if $villageId.value && $villageId.value !== "undefined"}
             <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
           {:else}
             <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
