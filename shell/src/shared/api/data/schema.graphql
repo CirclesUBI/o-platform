@@ -153,6 +153,13 @@ type BusinessCategory {
   name: String!
 }
 
+type BaliVillage {
+  id: Int!
+  desa: String!
+  kecamatan: String!
+  kabupaten: String!
+}
+
 type Favorite {
   createdAt: String!
   createdByAddress: String!
@@ -898,8 +905,8 @@ type Mutation {
 input SurveyDataInput {
   sessionId: String!
   allConsentsGiven: Boolean!
-  userType: String!
   gender: String!
+  villageId: Int!
   dateOfBirth: Date!
 }
 
@@ -976,6 +983,7 @@ type Query {
   signMessage(message: String!, key: String!): String!
   directPath(from: String!, to: String!, amount: String!): TransitivePath!
   paymentPath(from: String!, to: String!, amount: String!): TransitivePath!
+  allBaliVillages: [BaliVillage!]!
   allBusinessCategories: [BusinessCategory!]!
   allBusinesses(queryParams: QueryAllBusinessesParameters): [Businesses!]!
   myFavorites: [Favorite!]!
@@ -1018,7 +1026,7 @@ type SurveyData {
   id: Int
   sesssionId: String!
   allConsentsGiven: Boolean!
-  userType: String!
   gender: String!
+  villageId: Int!
   dateOfBirth: Date!
 }

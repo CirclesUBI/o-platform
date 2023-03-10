@@ -54,6 +54,14 @@ export type AssetBalance = {
   token_balance: Scalars['String'];
 };
 
+export type BaliVillage = {
+  __typename?: 'BaliVillage';
+  id: Scalars['Int'];
+  desa: Scalars['String'];
+  kecamatan: Scalars['String'];
+  kabupaten: Scalars['String'];
+};
+
 export type BusinessCategory = {
   __typename?: 'BusinessCategory';
   id: Scalars['Int'];
@@ -917,6 +925,7 @@ export type Query = {
   signMessage: Scalars['String'];
   directPath: TransitivePath;
   paymentPath: TransitivePath;
+  allBaliVillages: Array<BaliVillage>;
   allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
   myFavorites: Array<Favorite>;
@@ -1245,16 +1254,16 @@ export type SurveyData = {
   id?: Maybe<Scalars['Int']>;
   sesssionId: Scalars['String'];
   allConsentsGiven: Scalars['Boolean'];
-  userType: Scalars['String'];
   gender: Scalars['String'];
+  villageId: Scalars['Int'];
   dateOfBirth: Scalars['Date'];
 };
 
 export type SurveyDataInput = {
   sessionId: Scalars['String'];
   allConsentsGiven: Scalars['Boolean'];
-  userType: Scalars['String'];
   gender: Scalars['String'];
+  villageId: Scalars['Int'];
   dateOfBirth: Scalars['Date'];
 };
 
@@ -2662,6 +2671,17 @@ export type AllBusinessCategoriesQuery = (
   & { allBusinessCategories: Array<(
     { __typename?: 'BusinessCategory' }
     & Pick<BusinessCategory, 'id' | 'name'>
+  )> }
+);
+
+export type AllBaliVillagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBaliVillagesQuery = (
+  { __typename?: 'Query' }
+  & { allBaliVillages: Array<(
+    { __typename?: 'BaliVillage' }
+    & Pick<BaliVillage, 'id' | 'desa' | 'kecamatan' | 'kabupaten'>
   )> }
 );
 
@@ -4283,6 +4303,16 @@ export const AllBusinessCategoriesDocument = gql`
   }
 }
     `;
+export const AllBaliVillagesDocument = gql`
+    query allBaliVillages {
+  allBaliVillages {
+    id
+    desa
+    kecamatan
+    kabupaten
+  }
+}
+    `;
 export const MyFavoritesDocument = gql`
     query myFavorites {
   myFavorites {
@@ -4496,6 +4526,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     allBusinessCategories(variables?: AllBusinessCategoriesQueryVariables): Promise<AllBusinessCategoriesQuery> {
       return withWrapper(() => client.request<AllBusinessCategoriesQuery>(print(AllBusinessCategoriesDocument), variables));
+    },
+    allBaliVillages(variables?: AllBaliVillagesQueryVariables): Promise<AllBaliVillagesQuery> {
+      return withWrapper(() => client.request<AllBaliVillagesQuery>(print(AllBaliVillagesDocument), variables));
     },
     myFavorites(variables?: MyFavoritesQueryVariables): Promise<MyFavoritesQuery> {
       return withWrapper(() => client.request<MyFavoritesQuery>(print(MyFavoritesDocument), variables));
