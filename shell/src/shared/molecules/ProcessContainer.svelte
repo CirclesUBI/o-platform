@@ -1,13 +1,9 @@
 <script lang="ts">
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Prompt from "./Prompt.svelte";
 import { createEventDispatcher } from "svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { ShellEvent } from "@o-platform/o-process/dist/events/shellEvent";
-import {
-  Cancel,
-  CancelRequest,
-} from "@o-platform/o-process/dist/events/cancel";
+import { Cancel, CancelRequest } from "@o-platform/o-process/dist/events/cancel";
 import { Prompt as PromptEvent } from "@o-platform/o-process/dist/events/prompt";
 import { Subscription } from "rxjs";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
@@ -63,19 +59,12 @@ $: {
     interceptedProcess = {
       ...process,
       sendAnswer(answer: PlatformEvent) {
-        if (
-          cancelDialogVisible &&
-          answer.type == "process.continue" &&
-          (<any>answer).data.___cancelRequest
-        ) {
+        if (cancelDialogVisible && answer.type == "process.continue" && (<any>answer).data.___cancelRequest) {
           console.log("Cancel dialog answer:", answer);
           if ((<any>answer).data.___cancelRequest.key === "yes") {
             window.o.publishEvent({ type: "shell.root" });
           } else if ((<any>answer).data.___cancelRequest.key === "no") {
-            if (
-              beforeCancelPrompt.navigation.canGoBack &&
-              beforeCancelPrompt.dirtyFlags
-            ) {
+            if (beforeCancelPrompt.navigation.canGoBack && beforeCancelPrompt.dirtyFlags) {
               window.o.publishEvent({ type: "process.canGoBack" });
             }
             if (beforeCancelPrompt.navigation.canSkip) {
@@ -123,9 +112,7 @@ let lastBubble: Bubble;
 
 function ensureProcess(action: (p: Process) => void) {
   if (!process) {
-    console.warn(
-      "ProcessContainer.svelte: No running 'process' attached to ProcessContainer."
-    );
+    console.warn("ProcessContainer.svelte: No running 'process' attached to ProcessContainer.");
     return;
   }
   action(process);
@@ -151,11 +138,8 @@ function subscribeToProcess() {
         if (
           beforeCancelPrompt &&
           beforeCancelPrompt.field !== "___cancelRequest" &&
-          Object.values(beforeCancelPrompt.editorDirtyFlags).filter(
-            (o) => o === true
-          ).length == 0 &&
-          Object.values(beforeCancelPrompt.dirtyFlags).filter((o) => o === true)
-            .length == 0
+          Object.values(beforeCancelPrompt.editorDirtyFlags).filter((o) => o === true).length == 0 &&
+          Object.values(beforeCancelPrompt.dirtyFlags).filter((o) => o === true).length == 0
         ) {
           // No changes yet, just cancel
           process.sendEvent(new Cancel());
@@ -199,10 +183,7 @@ function subscribeToProcess() {
           responseToId: "123",
           ...p,
         };
-      } else if (
-        next.event.type === "process.cancelRequest" &&
-        cancelDialogVisible
-      ) {
+      } else if (next.event.type === "process.cancelRequest" && cancelDialogVisible) {
         // Todo: Don't cancel
         const cancelCancel = {
           ___cancelRequest: {
@@ -217,10 +198,7 @@ function subscribeToProcess() {
         });
       }
 
-      if (
-        waitForNextOutgoingEvent &&
-        next.event.type === "process.ipc.sinker"
-      ) {
+      if (waitForNextOutgoingEvent && next.event.type === "process.ipc.sinker") {
         waitForNextOutgoingEvent = false;
         waiting = true;
       }
@@ -261,9 +239,7 @@ function subscribeToProcess() {
           };
           dispatch("navigation", nav);
 
-          const isOnlyEditablePage =
-            (promptEvent.onlyThesePages ? promptEvent.onlyThesePages : [])
-              .length == 1; //promptEvent.skipIfNotDirty && Object.keys(promptEvent.dirtyFlags).length == 1;
+          const isOnlyEditablePage = (promptEvent.onlyThesePages ? promptEvent.onlyThesePages : []).length == 1; //promptEvent.skipIfNotDirty && Object.keys(promptEvent.dirtyFlags).length == 1;
           if (promptEvent.navigation.canGoBack && !isOnlyEditablePage) {
             window.o.publishEvent({ type: "process.canGoBack" });
           }
@@ -320,9 +296,7 @@ function subscribeToProcess() {
 function sinkEvent(event) {
   if (!lastBubble) {
     // TODO: This is error prone without event-ids
-    throw new Error(
-      window.o.i18n("shared.molecules.processContainer.error")
-    );
+    throw new Error(window.o.i18n("shared.molecules.processContainer.error"));
   }
   ensureProcess((p) => {
     p.sendEvent(<Sinker>{
@@ -333,15 +307,6 @@ function sinkEvent(event) {
     });
   });
 }
-
-const cancel = {
-  data: {
-    label: window.o.i18n("shared.molecules.processContainer.cancel"),
-  },
-  design: {
-    icon: faTimes,
-  },
-};
 </script>
 
 {#if waiting}
@@ -353,10 +318,7 @@ const cancel = {
     <Error data="{{ error }}" />
   </div>
 {:else if interceptedProcess && prompt}
-  <Prompt
-    process="{interceptedProcess}"
-    prompt="{prompt}"
-    bubble="{lastBubble}" />
+  <Prompt process="{interceptedProcess}" prompt="{prompt}" bubble="{lastBubble}" />
 {:else}
   <!-- TODO: This could be both: Undefined state or loading .. -->
   <div class="p-4">
