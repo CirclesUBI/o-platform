@@ -3,8 +3,6 @@ import { onMount } from "svelte";
 import { ApiClient } from "../../../shared/apiConnection";
 import { Businesses, LinkTargetType, Profile } from "../../../shared/api/data/types";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
-import { fade } from "svelte/transition";
-import Map from "../../../dapps/o-marketlisting/atoms/Map.svelte";
 import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
 import { myLocation } from "../../../shared/stores/myLocation";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
@@ -18,7 +16,6 @@ import { UserActionItem, UserActions } from "../../../shared/userActions";
 import { transfer } from "../../o-banking/processes/transfer";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
-
 
 export let circlesAddress: string;
 
@@ -35,7 +32,6 @@ let hasOpeningHours: boolean = false;
 
 let mapHeight = "16em";
 
-
 const mapOptions = {
   zoomControl: true,
   mapTypeControl: false,
@@ -47,7 +43,6 @@ const mapOptions = {
 
 let detailActions: UserActionItem[];
 let availableActions = [];
-
 
 onMount(async () => {
   detailActions = [];
