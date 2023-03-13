@@ -1,12 +1,9 @@
 <script lang="ts">
-import Select from "../../../shell/src/shared/molecules/Select/Select.svelte";
 import ProcessNavigation from "./ProcessNavigation.svelte";
 import { EditorContext } from "./editorContext";
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import { onMount } from "svelte";
-import Item from "./DropdownSelectItem.svelte";
-import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
-import AutoComplete from "simple-svelte-autocomplete";
+
 import GoogleMapSearch from "../../../shell/src/shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 import { Environment } from "../../../shell/src/shared/environment";
 import { error } from "../../../shell/src/shared/stores/error";
