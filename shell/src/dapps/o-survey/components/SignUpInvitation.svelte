@@ -7,7 +7,7 @@ let inviteUrl = sessionStorage.getItem("inviteUrl");
 
 async function handleClick(button) {
   if (button === "back") {
-    push("#/survey/3");
+    push("#/survey/page/3");
   } else if (button === "submit") {
     push(inviteUrl);
   }
@@ -38,15 +38,10 @@ async function handleClick(button) {
       <div class="text-sm text-center text-info">
         <Label key="dapps.o-homepage.components.survey.signupInvitation.noInvitationCode" />
       </div>
-      <button
-        class="relative px-8 mt-6 overflow-hidden transition-all transform btn btn-primary"
-        on:click="{() => handleClick('back')}">
+      <button class="relative px-8 mt-6 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('back')}">
         {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
     {:else}
-      <a
-        href="{inviteUrl}"
-        class="relative px-16 overflow-hidden transition-all transform btn btn-primary"
-        on:click="{() => handleClick('submit')}">
+      <a href="{inviteUrl}" class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
         {$_("dapps.o-homepage.components.survey.button.signUpNow")}</a>
     {/if}
   </div>
