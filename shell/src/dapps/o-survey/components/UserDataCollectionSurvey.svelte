@@ -112,7 +112,7 @@ function handleOnChange(event) {
 }
 </script>
 
-<div class="mx-auto mb-20 md:w-2/3 xl:w-1/2">
+<div class="mx-auto mb-20 md:w-2/3 xl:w-1/2 user-data-container">
   <div class="flex flex-col items-center justify-center overflow-hidden text-white whitespace-pre-line">
     <div class="flex flex-col items-center justify-center">
       <div class="text-2xl text-white uppercase xs:text-4xl font-heading">
@@ -214,5 +214,10 @@ function handleOnChange(event) {
   height: 45px !important;
   width: 320px !important;
   border-radius: var(--rounded-btn, 0.5rem) !important;
+}
+
+:global(.user-data-container) {
+  margin-right: 5px;
+  margin-left: 5px;
 }
 </style>
