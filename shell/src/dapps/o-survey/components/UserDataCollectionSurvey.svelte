@@ -2,7 +2,7 @@
 import { surveyConsents, surveyData, inviteUrl } from "../stores/surveyStore";
 import { onMount, onDestroy } from "svelte";
 import { Environment } from "../../../shared/environment";
-import { SurveyDataDocument, SurveyData, SurveyDataInput, BaliVillage } from "../../../shared/api/data/types";
+import { SurveyDataDocument, BaliVillage } from "../../../shared/api/data/types";
 import Label from "../../../shared/atoms/Label.svelte";
 import { GenderOfUser } from "../../../shared/models/GenderOfUser.model";
 import { TypeOfUser } from "../../../shared/models/TypeOfUser.model";
@@ -15,6 +15,7 @@ import { form, field } from "svelte-forms";
 import { required } from "svelte-forms/validators";
 import { generateLongId } from "../../../shared/functions/generateRandomUid";
 import { error } from "../../../shared/stores/error";
+import getCookies from "../../../shared/functions/getCookies";
 
 const typeOfUserData = TypeOfUser;
 const genderOfUserData = GenderOfUser;
@@ -28,6 +29,8 @@ const gender = field("gender", "", [required()]);
 const dateOfBirth = field("dateOfBirth", <Date>null, [required()]);
 const invite = field("invite", "", [required()]);
 const myForm = form(villageId, gender, dateOfBirth, invite);
+
+let hasInvite = false;
 let allBaliVillages: BaliVillage[];
 let allBaliVillagesLookup;
 let _finally: boolean = false;
@@ -43,6 +46,12 @@ $: {
 }
 
 onMount(async () => {
+  let cookies = getCookies();
+  if (cookies && cookies.invitationCode) {
+    $inviteUrl = "/";
+    sessionStorage.setItem("inviteUrl", "/");
+  }
+
   allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
   allBaliVillagesLookup = allBaliVillages.toLookup(
     (o) => o.id,
@@ -58,36 +67,38 @@ async function handleClick(button) {
   } else if (button === "openQRCode") {
     push("#/survey/scanInvite");
   } else if (button === "next") {
-    $surveyData = $myForm.summary;
+    if ($myForm.valid) {
+      $surveyData = $myForm.summary;
 
-    const apiClient = await window.o.apiClient.client.subscribeToResult();
-    const result = await apiClient
-      .mutate({
-        mutation: SurveyDataDocument,
-        variables: {
-          surveyData: {
-            sessionId: surveySessionId,
-            allConsentsGiven: $surveyConsents.allConsentsGiven,
-            villageId: parseInt($villageId.value),
-            gender: $gender.value,
-            dateOfBirth: $dateOfBirth.value,
+      const apiClient = await window.o.apiClient.client.subscribeToResult();
+      const result = await apiClient
+        .mutate({
+          mutation: SurveyDataDocument,
+          variables: {
+            surveyData: {
+              sessionId: surveySessionId,
+              allConsentsGiven: $surveyConsents.allConsentsGiven,
+              villageId: parseInt($villageId.value),
+              gender: $gender.value,
+              dateOfBirth: $dateOfBirth.value,
+            },
           },
-        },
-      })
-      .then(() => {
-        sessionStorage.setItem("SurveySessionId", surveySessionId);
-        sessionStorage.setItem("SurveyComplete", "true");
-        sessionStorage.removeItem("surveyConsentPage1");
-        sessionStorage.removeItem("surveyConsentPage2");
-        push("#/survey/page/4");
-      })
-      .catch((error) => {
-        if (error.networkError) {
-          getNetworkErrors(error).then(console.log);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
+        })
+        .then(() => {
+          sessionStorage.setItem("SurveySessionId", surveySessionId);
+          sessionStorage.setItem("SurveyComplete", "true");
+          sessionStorage.removeItem("surveyConsentPage1");
+          sessionStorage.removeItem("surveyConsentPage2");
+          push("#/survey/page/4");
+        })
+        .catch((error) => {
+          if (error.networkError) {
+            getNetworkErrors(error).then(console.log);
+          } else {
+            console.log("Error", error.message);
+          }
+        });
+    }
   }
 }
 
@@ -116,6 +127,18 @@ function handleOnChange(event) {
     </div>
     <div>
       <div class="flex flex-col mb-5 text-sm">
+        <Label key="dapps.o-homepage.components.survey.userDataCollection.bornOn" />
+        <div class="flex items-center h-12 mb-2 date-picker">
+          <DateInput bind:value="{$dateOfBirth.value}" min="{new Date('1920-01-01')}" format="MM-dd-yyyy" placeholder="Choose a date" closeOnSelection="{true}" />
+
+          {#if $dateOfBirth.value}
+            <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
+          {:else}
+            <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
+          {/if}
+        </div>
+      </div>
+      <div class="flex flex-col mb-5 text-sm">
         <Label key="dapps.o-homepage.components.survey.userDataCollection.useCircleAs" />
         <div class="flex">
           {#if allBaliVillages}
@@ -140,37 +163,27 @@ function handleOnChange(event) {
           {/if}
         </div>
       </div>
-      <div class="flex flex-col items-start mb-2 text-sm">
-        <Label key="dapps.o-homepage.components.survey.userDataCollection.bornOn" />
-        <div class="flex items-center h-12 mb-2 date-picker">
-          <DateInput bind:value="{$dateOfBirth.value}" min="{new Date('1920-01-01')}" format="MM-dd-yyyy" placeholder="Choose a date" closeOnSelection="{true}" />
 
-          {#if $dateOfBirth.value}
-            <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-          {:else}
-            <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
-          {/if}
+      {#if !$inviteUrl}
+        <div class="flex flex-col items-start w-full mb-2 text-sm">
+          <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
+
+          <div class="flex items-center w-full h-12 pr-8 mb-2">
+            <button class="px-8 overflow-hidden transition-all transform btn btn-primary btn-block" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
+              <!-- {$_("dapps.o-homepage.components.survey.button.scanInviteNow")} -->
+              Scan Invite Now
+            </button>
+
+            <input type="hidden" bind:value="{$invite.value}" />
+
+            {#if $inviteUrl}
+              <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
+            {:else}
+              <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
+            {/if}
+          </div>
         </div>
-      </div>
-
-      <div class="flex flex-col items-start w-full mb-2 text-sm">
-        <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
-
-        <div class="flex items-center w-full h-12 pr-8 mb-2">
-          <button class="px-8 overflow-hidden transition-all transform btn btn-primary btn-block" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
-            <!-- {$_("dapps.o-homepage.components.survey.button.scanInviteNow")} -->
-            Scan Invite Now
-          </button>
-
-          <input type="hidden" bind:value="{$invite.value}" />
-
-          {#if $inviteUrl}
-            <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="inline ml-2 text-success" /></span>
-          {:else}
-            <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="inline ml-2 text-alert" /></span>
-          {/if}
-        </div>
-      </div>
+      {/if}
     </div>
     {#if $error}
       <p class="mb-2 text-sm text-center text-alert ">{$error}</p>
