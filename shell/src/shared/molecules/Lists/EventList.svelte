@@ -17,14 +17,7 @@ import { onMount } from "svelte";
 
 import { inview } from "svelte-inview/dist/index";
 
-import {
-  poppedScrollPosition,
-  scrollToTop,
-  scrollToBottom,
-  scrollToPosition,
-  popScrollPosition,
-  scrollPositionStackPopulated,
-} from "../../layouts/Center.svelte";
+import { poppedScrollPosition, scrollToTop, scrollToBottom, scrollToPosition, popScrollPosition, scrollPositionStackPopulated } from "../../layouts/Center.svelte";
 import { Readable } from "svelte/store";
 import { SvelteComponentDev } from "svelte/internal";
 import Label from "../../atoms/Label.svelte";
@@ -39,20 +32,14 @@ export let store: Readable<ProfileEvent[]> & {
 let isLoading = true;
 let hasMore = true;
 let events: ProfileEvent[] = [];
-let eventsWithViews: { i:number, component: SvelteComponentDev; event: ProfileEvent }[] = [];
+let eventsWithViews: { i: number; component: SvelteComponentDev; event: ProfileEvent }[] = [];
 let initialScrollToBottom: boolean = false;
 let lastElement: HTMLElement;
 
 onMount(() => {
   isLoading = true;
   return store.subscribe((data: any) => {
-    events = reverse
-      ? data.metadata
-        ? data.events.map((o) => o).reverse()
-        : data.map((o) => o).reverse()
-      : data.metadata
-      ? data.events.map((o) => o)
-      : data.map((o) => o);
+    events = reverse ? (data.metadata ? data.events.map((o) => o).reverse() : data.map((o) => o).reverse()) : data.metadata ? data.events.map((o) => o) : data.map((o) => o);
 
     if (data.metadata?.itemAdded) {
       setTimeout(() => (reverse ? scrollToBottom() : scrollToTop()));
@@ -134,7 +121,7 @@ const handleChange = async (e) => {
   <div use:inview="{{}}" on:change="{handleChange}"></div>
 {/if}
 {#if store}
-  {#each eventsWithViews as eventWithView(eventWithView.event.transaction_hash)}
+  {#each eventsWithViews as eventWithView (eventWithView.event.transaction_hash ?? eventWithView.event.timestamp)}
     <svelte:component this="{eventWithView.component}" event="{eventWithView.event}" />
 
     {#if store && !reverse && eventWithView.i > events.length - 25}

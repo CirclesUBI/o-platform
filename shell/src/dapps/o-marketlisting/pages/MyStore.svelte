@@ -19,16 +19,16 @@ import { _ } from "svelte-i18n";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
 import { showToast } from "../../../shared/toast";
-import { me } from "../../../shared/stores/me";
+
 import Center from "../../../shared/layouts/Center.svelte";
 import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelte";
 import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
 import { getGeoDataFromHereId } from "../../../shared/functions/locationHandler";
-import AutoComplete from "simple-svelte-autocomplete";
-import { buildAddressString } from "../../../shared/functions/locationHandler";
+
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import GoogleMapSearch from "../../../shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -39,17 +39,35 @@ let allCategories: BusinessCategory[];
 let allCategoriesLookup;
 let _state: Readable<any>;
 
-let placeholder = `${$_("dapps.o-passport.pages.upsertOrganization.locationInputPlaceholder")}`;
-
 let showModal = false;
 let editImage = false;
 let error = null;
 
-export let location: Location | null = null;
+type Location = {
+  place_id: string;
+  address: string;
+  lat: string;
+  lng: string;
+};
+
+let location: Location = null;
 
 let week: OpeningHourWeek;
 
+const mapOptions = {
+  zoomControl: true,
+  mapTypeControl: false,
+  scaleControl: true,
+  streetViewControl: false,
+  rotateControl: false,
+  fullscreenControl: false,
+};
+
+let center = {};
+
 onMount(async () => {
+  center = { lat: -8.670458, lng: 115.212631 };
+
   allCategories = (await Environment.api.allBusinessCategories()).allBusinessCategories;
   allCategoriesLookup = allCategories.toLookup(
     (o) => o.id,
@@ -66,11 +84,8 @@ onMount(async () => {
 
   business = businesses.allBusinesses[0];
   if (business) {
-    if (business.location) {
-      location = await getGeoDataFromHereId(business.location);
-    }
-
     week = OpeningHourWeek.parseOpeningHours(business);
+    console.log("BUSIN:", business);
   }
 });
 
@@ -84,6 +99,7 @@ async function save() {
         id: business.id <= 0 ? 0 : business.id,
         circlesAddress: business.circlesAddress,
         firstName: business.name,
+        location: business.location,
         locationName: business.locationName,
         lat: business.lat,
         lon: business.lon,
@@ -96,7 +112,6 @@ async function save() {
         businessHoursSaturday: business.businessHoursSaturday,
         businessHoursSunday: business.businessHoursSunday,
         description: business.description,
-        location: business.location,
         phoneNumber: business.phoneNumber,
         businessCategoryId: business.businessCategoryId,
       },
@@ -129,7 +144,7 @@ function handleImageUpload(event) {
   const machineOptions = {
     context: {
       data: {
-        appId: "wurst",
+        appId: "circlesUbi",
         mimeType: "image/jpeg",
         bytes: event.detail.croppedImage,
       },
@@ -149,35 +164,17 @@ $: {
   }
 }
 
-/* Filter out non street-level results */
-function isViableResult(item) {
-  return item.resultType == "street" || item.resultType == "houseNumber";
-}
+function mapRecenter({ place }) {
+  location = place;
 
-async function getItems(keyword) {
-  if (keyword) {
-    const url = "https://autocomplete.search.hereapi.com/v1/autocomplete?q=" + encodeURIComponent(keyword) + "&apiKey=" + Environment.hereApiKey;
-    const response = await fetch(url);
-    const json = await response.json();
-
-    return json.items.filter(isViableResult);
-  }
-}
-
-async function attachGeoData(locationId) {
-  if (locationId) {
-    const geoData = await getGeoDataFromHereId(locationId);
-    business.locationName = buildAddressString(geoData.address);
-    business.location = geoData.id;
-    business.lat = geoData.position.lat;
-    business.lon = geoData.position.lng;
-  }
+  business.locationName = place.formatted_address;
+  business.location = place.place_id;
+  business.lat = place.geometry.location.lat();
+  business.lon = place.geometry.location.lng();
 }
 
 function onPlaceChanged(e) {
   if (e && e.id) {
-    attachGeoData(e.id);
-
     // We have to manipulate this a little bit in order to display the just Selected Value in the dropdown correctly
     // When just selecting a new value, for some reason the title has the city/street etc.. in reverse order, but the address.label is correct.
     e.title = e.address.label;
@@ -247,33 +244,17 @@ function onPlaceChanged(e) {
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                   <div class="flex mt-2">
-                    <AutoComplete
-                      inputClassName="select input w-full"
-                      selectName="text-primary"
-                      searchFunction="{getItems}"
-                      delay="200"
-                      localFiltering="{false}"
-                      labelFieldName="title"
-                      valueFieldName="id"
-                      hideArrow="{true}"
-                      onChange="{onPlaceChanged}"
-                      bind:selectedItem="{location}">
-                      <div slot="item" let:item let:city let:street let:district let:houseNumber class="text-sm text-base bg-transparent selection:bg-transparent">
-                        <section class="flex items-center justify-center mb-4 mr-1 border rounded-lg customItem ">
-                          <div class="flex items-center w-full p-0 space-x-2 sm:space-x-6 item-body ">
-                            <div class="relative flex-grow p-3 text-left ">
-                              <div class="max-w-full -mt-1 leading-8 cursor-pointer ">
-                                {buildAddressString(item.address)}
-                              </div>
-                            </div>
-                          </div>
-                        </section>
+                    <div class="w-full mb-8 section-txt h-80" id="map">
+                      <div class="map-wrap">
+                        <GoogleMapSearch
+                          apiKey="{Environment.placesApiKey}"
+                          on:recenter="{(e) => mapRecenter(e.detail)}"
+                          zoom="{17}"
+                          options="{mapOptions}"
+                          placeholder="{business.locationName ? business.locationName : null}"
+                          center="{center}" />
                       </div>
-
-                      <div slot="no-results" let:noResultsText>
-                        <strong>NO RESULTS - {noResultsText}</strong>
-                      </div>
-                    </AutoComplete>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -357,35 +338,8 @@ function onPlaceChanged(e) {
 {/if}
 
 <style>
-:global(.autocomplete) {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-:global(.autocomplete input) {
-  padding-right: 2rem !important;
-}
-:global(.autocomplete-list-item) {
-  padding: 0.5rem !important;
+.map-wrap {
   width: 100%;
-  height: auto;
-}
-:global(.autocomplete-list-item.selected) {
-  background-color: #fff !important;
-  color: #ffcc33;
-}
-:global(.hide-arrow) {
-  display: none;
-}
-.customItem {
-  display: flex;
-  align-items: center;
-  cursor: default;
-  padding: 0;
-  overflow: hidden;
-  @apply bg-white;
-  @apply border-light;
-}
-:global(.autocomplete-list-item.selected .customItem) {
-  @apply border-primary;
+  height: 300px;
 }
 </style>

@@ -5,6 +5,7 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import { form, field } from "svelte-forms";
 import { required } from "svelte-forms/validators";
+import { onMount } from "svelte";
 sessionStorage.setItem("surveyConsentPage1", "false");
 
 function validateCheckBox() {
@@ -15,6 +16,12 @@ const participate = field("participate", false, [required(), validateCheckBox()]
 const ending = field("ending", false, [required(), validateCheckBox()]);
 const myForm = form(research, participate, ending);
 myForm.validate();
+
+onMount(() => {
+  $research.value = $surveyConsents.researchConsent;
+  $participate.value = $surveyConsents.participateConsent;
+  $ending.value = $surveyConsents.endingConsent;
+});
 
 function handleClick(button) {
   if (button === "back") {
@@ -71,17 +78,12 @@ function handleClick(button) {
     {/if}
     <div class="flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
-        <button
-          class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
-          on:click="{() => handleClick('back')}">
+        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning" on:click="{() => handleClick('back')}">
           {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
       </div>
       <div>
         {#if $myForm.dirty}
-          <button
-            class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
-            on:click="{() => handleClick('next')}"
-            disabled="{!$myForm.valid}">
+          <button class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick('next')}" disabled="{!$myForm.valid}">
             {$_("dapps.o-homepage.components.survey.button.next")}</button>
         {/if}
       </div>

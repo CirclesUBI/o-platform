@@ -1,22 +1,13 @@
 <script lang="ts">
-  import { faTimes } from "@fortawesome/free-solid-svg-icons";
-  import NavItem from "../atoms/NavItem.svelte";
+import NavItem from "../atoms/NavItem.svelte";
 
-  export let isOpen: boolean;
-
-  const close = {
-    data: {
-      label: window.o.i18n("shared.molecules.processNav.close"),
-    },
-    design: {
-      icon: faTimes,
-    },
-  };
+export let isOpen: boolean;
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-  on:click={() => {
+  on:click="{() => {
     isOpen = false;
-  }}>
-  <NavItem mapping={close} />
+  }}">
+  <NavItem />
 </div>
