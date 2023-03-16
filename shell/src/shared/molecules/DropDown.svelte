@@ -9,6 +9,7 @@ export let selected: string;
 export let dropDownClass: string = "";
 export let isButton: boolean = false;
 export let isShevron: boolean = false;
+export let notFull: boolean = false;
 
 const eventDispatcher = createEventDispatcher();
 
@@ -26,7 +27,7 @@ function handleOnChange(e) {
 <select
   class="{dropDownClass}"
   class:select="{!isButton && !isShevron}"
-  class:w-full="{!isButton && !isShevron}"
+  class:w-full="{!isButton && !isShevron && !notFull}"
   class:btn="{isButton || isShevron}"
   class:btn-xs="{isButton || isShevron}"
   class:btn-circle="{isButton || isShevron}"
