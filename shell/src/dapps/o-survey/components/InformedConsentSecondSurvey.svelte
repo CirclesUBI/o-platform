@@ -5,6 +5,7 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import { form, field } from "svelte-forms";
 import { required } from "svelte-forms/validators";
+import { onMount } from "svelte";
 sessionStorage.setItem("surveyConsentPage2", "false");
 
 function validateCheckBox() {
@@ -16,6 +17,12 @@ const dataCollect = field("dataCollect", false, [required(), validateCheckBox()]
 const onlyFromFriends = field("onlyFromFriends", false, [required(), validateCheckBox()]);
 const myForm = form(exchange, dataCollect, onlyFromFriends);
 myForm.validate();
+
+onMount(() => {
+  $exchange.value = $surveyConsents.exchangeConsent;
+  $dataCollect.value = $surveyConsents.dataCollectConsent;
+  $onlyFromFriends.value = $surveyConsents.onlyFromFriends;
+});
 
 function handleClick(button) {
   if (button === "back") {
@@ -61,11 +68,7 @@ function handleClick(button) {
       </label>
     </div>
     <div class="mx-10 my-5 uppercase">
-      <input
-        id="check-3"
-        type="checkbox"
-        class="mr-2 checkbox checkbox-warning"
-        bind:checked="{$onlyFromFriends.value}" />
+      <input id="check-3" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$onlyFromFriends.value}" />
       <label for="check-3" class="cursor-pointer">
         <Label key="dapps.o-homepage.components.survey.informedConsent.sixthCheckbox" />
       </label>
@@ -77,17 +80,12 @@ function handleClick(button) {
     {/if}
     <div class="flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
-        <button
-          class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning"
-          on:click="{() => handleClick('back')}">
+        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning" on:click="{() => handleClick('back')}">
           {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
       </div>
       <div>
         {#if $myForm.dirty}
-          <button
-            class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
-            on:click="{() => handleClick('next')}"
-            disabled="{!$myForm.valid}">
+          <button class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick('next')}" disabled="{!$myForm.valid}">
             {$_("dapps.o-homepage.components.survey.button.next")}</button>
         {/if}
       </div>

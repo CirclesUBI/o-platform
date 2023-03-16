@@ -22,30 +22,12 @@ $: {
 <div class="w-full bg-white rounded-lg">
   <div class="mt-2 mb-2 alert alert-error">
     <div class="flex-1">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-12 h-12 mx-2 stroke-current">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-      </svg>
-      <span class="pt-3 break-all"
-        ><h4><strong><Label key="shared.atoms.error.processEncounteredAnError" ></Label></strong></h4>
-        <br />
+      <span class="text-white"
+        ><h4 class="pb-2"><strong><Label key="shared.atoms.error.processEncounteredAnError" /></strong></h4>
         <span>{error?.message}</span>
       </span>
       <br />
     </div>
-  </div>
-  <div class="mt-4">
-    <a href="{window.o.i18n('common.supportUrl')}">
-      <Label key="shared.atoms.error.pleaseTryToReload" /><a
-        href="{window.o.i18n('common.supportUrl')}"
-        rel="noreferrer"
-        target="_blank"
-        class="btn-link">{window.o.i18n('common.supportUrl')}</a
-      ><Label key="shared.atoms.error.ifTheProblemPersists" />
-    </a>
   </div>
   <div class="mt-4">
     <center>
