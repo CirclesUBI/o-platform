@@ -53,10 +53,17 @@ onMount(async () => {
   }
 
   allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
+  let firstVillage = 0;
   allBaliVillagesLookup = allBaliVillages.toLookup(
-    (o) => o.id,
+    (o) => {
+      if (firstVillage === undefined) {
+        firstVillage = o.id;
+      }
+      return o.id;
+    },
     (o) => o
   );
+  villageId.set(1);
 });
 
 const getNetworkErrors = (error) => error.networkError.response.json().then((e) => e.errors.map((e) => e.message).join(","));
