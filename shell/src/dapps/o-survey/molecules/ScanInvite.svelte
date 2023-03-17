@@ -1,94 +1,59 @@
 <script type="ts">
-import QrScanner from "qr-scanner";
 import { onDestroy, onMount } from "svelte";
 import { inviteUrl } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
-import { showToast } from "../../../shared/toast";
-import { toast } from "../../../shared/molecules/Toast";
-import { error } from "../../../shared/stores/error";
-import { _ } from "svelte-i18n";
+import { Html5Qrcode } from "html5-qrcode";
 
-let video: HTMLVideoElement;
-let scanner: QrScanner;
-let camQrResult: HTMLElement;
-let camList: HTMLElement;
-let camHasCamera: HTMLElement;
-let statusText: string = "";
-let scannerError: string = null;
+let scanning = false;
 
-// this is needed to disable using the native QR Code detector on Apple silicon devices running Ventura using Chrome 107.x.
-QrScanner["_disableBarcodeDetector"] = true;
+let html5Qrcode;
 
-$: {
-  camQrResult = camQrResult;
-}
+onMount(init);
 
 onDestroy(() => {
-  scanner.stop();
+  stop();
 });
 
-async function setResult(label, result) {
-  const validInviteUrlPartMatch = /\/trigger\?hash\=/g;
-  const isValidInviteLinkFormat = result.data.match(validInviteUrlPartMatch);
+function init() {
+  html5Qrcode = new Html5Qrcode("reader");
+  start();
 
-  if (!isValidInviteLinkFormat) {
-    scannerError = $_("dapps.o-homepage.components.survey.molecules.scanInvite.error.invalidInvite");
+  setTimeout(() => {
+    console.log("I've waited too long for a QR-Code. Goodbye :)");
+    stop();
+    window.o.publishEvent({ type: "shell.requestCloseModal" });
+  }, 10000);
+}
 
-    error.set(scannerError);
-    clearTimeout(label.highlightTimeout);
-  } else {
-    label.textContent = result.data;
-    label.style.color = "teal";
+function start() {
+  html5Qrcode.start(
+    { facingMode: "environment" },
+    {
+      fps: 1,
+      qrbox: { width: 250, height: 250 },
+    },
+    onScanSuccess,
+    onScanFailure
+  );
+  scanning = true;
+}
 
-    clearTimeout(label.highlightTimeout);
-    label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
-    $inviteUrl = result.data;
-    sessionStorage.setItem("inviteUrl", result.data);
-  }
-  // We're done here, closing up... TODO: this is not the most beautiful solution.
+async function stop() {
+  await html5Qrcode.stop();
+  scanning = false;
+}
+
+function onScanSuccess(decodedText, decodedResult) {
+  stop();
+
+  $inviteUrl = decodedText;
+  sessionStorage.setItem("inviteUrl", decodedText);
   window.o.publishEvent({ type: "shell.requestCloseModal" });
 }
 
-function startScanner() {
-  scanner.start().then(() => {
-    // List cameras after the scanner started to avoid listCamera's stream and the scanner's stream being requested
-    // at the same time which can result in listCamera's unconstrained stream also being offered to the scanner.
-    // Note that we can also start the scanner after listCameras, we just have it this way around in the demo to
-    // start the scanner earlier.
-    QrScanner.listCameras(true).then((cameras) =>
-      cameras.forEach((camera) => {
-        const option = document.createElement("option");
-        option.value = camera.id;
-        option.text = `Camera: ${camera.label}`;
-        camList.add(option);
-      })
-    );
-  });
-  scanner.setInversionMode("both");
+function onScanFailure(error) {
+  console.warn(`Waiting for QR Code...`);
 }
-// ####### Web Cam Scanning #######
-onMount(() => {
-  error.set(null);
-  scanner = new QrScanner(video, (result) => setResult(camQrResult, result), {
-    returnDetailedScanResult: true,
-    onDecodeError: (error) => {
-      // console.log("CAMQRRESULT", camQrResult); //keep this off, it'll drive you crazy!
-    },
-    highlightScanRegion: true,
-    highlightCodeOutline: true,
-  });
-
-  startScanner();
-
-  // TODO: Maybe we want a 'you don't have a camera message?
-  // QrScanner.hasCamera().then(
-  //   (hasCamera) => (camHasCamera.textContent = hasCamera)
-  // );
-
-  camList.addEventListener("change", (event) => {
-    scanner.setCamera(event.target.value);
-  });
-});
 </script>
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
@@ -97,54 +62,34 @@ onMount(() => {
       <Label key="dapps.o-homepage.molecules.scanInvite.heading" />
     </h1>
   </div>
-  <div class="w-full text-center">
-    <span class="break-all text-alert-dark">{statusText}</span>
-  </div>
 
   <div class="w-full">
     <div id="video-container" class="default-style">
-      <video id="qr-video" bind:this="{video}"><track kind="captions" /></video>
-    </div>
-
-    <div class="mt-4">
-      <select id="cam-list" bind:this="{camList}" class="w-full border select input">
-        <option value="environment" selected><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
-        <option value="user"><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
-      </select>
-    </div>
-
-    <div class="mt-4 text-center">
-      <b><Label key="dapps.o-marketplace.pages.scanPurchase.detectedQrCode" /></b>
-      <span id="cam-qr-result" bind:this="{camQrResult}"><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
+      <main class="rounded-lg">
+        <reader id="reader" class="rounded-lg"></reader>
+      </main>
     </div>
   </div>
+  <button class="btn btn-primary" on:click="{() => window.o.publishEvent({ type: 'shell.requestCloseModal' })}">
+    <Label key="common.close" />
+  </button>
 </section>
 
 <style>
-#video-container {
-  line-height: 0;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
-
-:global(#video-container.example-style-1 .scan-region-highlight-svg, #video-container.example-style-1 .code-outline-highlight) {
-  stroke: #64a2f3 !important;
-}
-
-:global(#video-container.example-style-2) {
-  position: relative;
-  width: max-content;
-  height: max-content;
+reader {
+  /* width: 100%;
+  min-height: 250px;
+  border-radius: 0.5rem;
+  padding-top: 0.8rem; */
+  width: 350px;
+  border-radius: 10px;
   overflow: hidden;
-}
-:global(#video-container.example-style-2 .scan-region-highlight) {
-  border-radius: 30px;
-  outline: rgba(0, 0, 0, 0.25) solid 50vmax;
-}
-:global(#video-container.example-style-2 .scan-region-highlight-svg) {
-  display: none;
-}
-:global(#video-container.example-style-2 .code-outline-highlight) {
-  stroke: rgba(255, 255, 255, 0.5) !important;
-  stroke-width: 15 !important;
-  stroke-dasharray: none !important;
 }
 </style>

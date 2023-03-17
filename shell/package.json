@@ -8,7 +8,7 @@
     "clean": "npx shx rm -rf public/bundle.*",
     "local": "ENVIRONMENT='local' webpack serve --hot --config webpack.config.js --mode=development",
     "docker": "DEPLOY_ENVIRONMENT='docker' ENVIRONMENT='docker' HERE_API_KEY='TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA' USE_MOCKS='true' webpack serve --hot --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
-    "override": "ENVIRONMENT='override' webpack serve --hot --host localhost --port 8080 --config webpack.config.js --mode=development",
+    "override": "USE_MOCKS='true' ENVIRONMENT='override' webpack serve --hot --host localhost --port 8080 --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
     "validate": "svelte-check"
   },
@@ -31,7 +31,6 @@
     "apollo-link": "^1.2.14",
     "apollo-link-http": "^1.5.17",
     "bip39": "^3.0.3",
-    "date-picker-svelte": "^2.3.0",
     "dayjs": "^1.11.3",
     "ethereumjs-util": "^7.0.10",
     "ethers-multisend": "^2.1.1",
@@ -48,6 +47,8 @@
     "yup": "^1.0.2"
   },
   "devDependencies": {
+    "html5-qrcode": "^2.3.7",
+    "svelte-flatpickr": "^3.3.2",
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@beyonk/async-script-loader": "^2.3.0",
@@ -56,7 +57,7 @@
     "@graphql-codegen/typescript-graphql-request": "^2.0.1",
     "@graphql-codegen/typescript-operations": "^1.17.8",
     "@tailwindcss/typography": "^0.5.7",
-    "@toruslabs/openlogin": "^1.5.0",
+    "@toruslabs/openlogin": "^3.2.1",
     "@tsconfig/svelte": "^2.0.1",
     "@types/google.maps": "^3.52.2",
     "@types/web3": "^1.2.2",
