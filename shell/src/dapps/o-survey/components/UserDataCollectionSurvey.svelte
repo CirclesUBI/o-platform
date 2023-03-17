@@ -31,6 +31,7 @@ const myForm = form(villageId, gender, dateOfBirth, invite);
 
 let allBaliVillages: BaliVillage[];
 let allBaliVillagesLookup;
+let selectedDate: string = "";
 
 onDestroy(() => {});
 
@@ -92,7 +93,7 @@ async function handleClick(button) {
               allConsentsGiven: $surveyConsents.allConsentsGiven,
               villageId: parseInt($villageId.value),
               gender: $gender.value,
-              dateOfBirth: $dateOfBirth.value,
+              dateOfBirth: selectedDate,
             },
           },
         })
@@ -125,8 +126,17 @@ function handleOnChange(event) {
 
 const options = {
   element: "#datePicker",
-  enableTime: false,
   disableMobile: true,
+  dateFormat: "Y-m-d", //change format also
+  enableTime: false,
+  weekNumbers: true,
+  altInput: true,
+  altFormat: "F j, Y",
+  time_24hr: true,
+  onChange(selectedDates, dateStr) {
+    console.log("flatpickr hook", selectedDates, dateStr);
+    selectedDate = dateStr;
+  },
 };
 </script>
 
