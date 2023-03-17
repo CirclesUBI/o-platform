@@ -10,6 +10,7 @@ import { _ } from "svelte-i18n";
 
 let video: HTMLVideoElement;
 let scanner: QrScanner;
+let qrScanner: QrScanner;
 let camQrResult: HTMLElement;
 let camList: HTMLElement;
 let camHasCamera: HTMLElement;
@@ -24,7 +25,7 @@ $: {
 }
 
 onDestroy(() => {
-  scanner.stop();
+  qrScanner.stop();
 });
 
 async function setResult(label, result) {
@@ -44,6 +45,7 @@ async function setResult(label, result) {
     label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
     $inviteUrl = result.data;
     sessionStorage.setItem("inviteUrl", result.data);
+    console.log("FOUND IT");
   }
   // We're done here, closing up... TODO: this is not the most beautiful solution.
   window.o.publishEvent({ type: "shell.requestCloseModal" });
@@ -69,6 +71,9 @@ function startScanner() {
 // ####### Web Cam Scanning #######
 onMount(() => {
   error.set(null);
+
+  qrScanner = new QrScanner(video, (result) => setResult(camQrResult, result), { highlightScanRegion: true, highlightCodeOutline: true, maxScansPerSecond: 10 });
+
   scanner = new QrScanner(video, (result) => setResult(camQrResult, result), {
     returnDetailedScanResult: true,
     onDecodeError: (error) => {
@@ -78,16 +83,18 @@ onMount(() => {
     highlightCodeOutline: true,
   });
 
-  startScanner();
+  // startScanner();
+  qrScanner.start();
+  console.log("Camera started");
 
   // TODO: Maybe we want a 'you don't have a camera message?
   // QrScanner.hasCamera().then(
   //   (hasCamera) => (camHasCamera.textContent = hasCamera)
   // );
 
-  camList.addEventListener("change", (event) => {
-    scanner.setCamera(event.target.value);
-  });
+  // camList.addEventListener("change", (event) => {
+  //   scanner.setCamera(event.target.value);
+  // });
 });
 </script>
 
