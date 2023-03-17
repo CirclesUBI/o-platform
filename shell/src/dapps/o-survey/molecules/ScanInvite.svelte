@@ -4,9 +4,6 @@ import { inviteUrl } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
 import { Html5Qrcode } from "html5-qrcode";
 
-import { error } from "../../../shared/stores/error";
-import { _ } from "svelte-i18n";
-
 let scanning = false;
 
 let html5Qrcode;
@@ -26,7 +23,7 @@ function start() {
   html5Qrcode.start(
     { facingMode: "environment" },
     {
-      fps: 5,
+      fps: 1,
       qrbox: { width: 250, height: 250 },
     },
     onScanSuccess,
@@ -62,11 +59,14 @@ function onScanFailure(error) {
 
   <div class="w-full">
     <div id="video-container" class="default-style">
-      <main>
-        <reader id="reader"></reader>
+      <main class="rounded-lg">
+        <reader id="reader" class="rounded-lg"></reader>
       </main>
     </div>
   </div>
+  <button class="btn btn-primary" on:click="{() => window.o.publishEvent({ type: 'shell.requestCloseModal' })}">
+    <Label key="common.close" />
+  </button>
 </section>
 
 <style>
@@ -75,13 +75,12 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  @apply rounded-lg;
+  gap: 10px;
 }
 reader {
   width: 100%;
   min-height: 250px;
-  background-color: black;
-  @apply rounded-lg;
+  border-radius: 0.5rem;
+  padding-top: 0.8rem;
 }
 </style>
