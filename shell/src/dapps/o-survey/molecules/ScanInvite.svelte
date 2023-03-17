@@ -17,6 +17,12 @@ onDestroy(() => {
 function init() {
   html5Qrcode = new Html5Qrcode("reader");
   start();
+
+  setTimeout(() => {
+    console.log("I've waited too long for a QR-Code. Goodbye :)");
+    stop();
+    window.o.publishEvent({ type: "shell.requestCloseModal" });
+  }, 10000);
 }
 
 function start() {
@@ -78,9 +84,12 @@ main {
   gap: 10px;
 }
 reader {
-  width: 100%;
+  /* width: 100%;
   min-height: 250px;
   border-radius: 0.5rem;
-  padding-top: 0.8rem;
+  padding-top: 0.8rem; */
+  width: 350px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 </style>
