@@ -44,8 +44,14 @@ $: {
 
 onMount(async () => {
   allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
+  let firstVillage = 0;
   allBaliVillagesLookup = allBaliVillages.toLookup(
-    (o) => o.id,
+    (o) => {
+      if (firstVillage === undefined) {
+        firstVillage = o.id;
+      }
+      return o.id;
+    },
     (o) => o
   );
 
@@ -234,31 +240,6 @@ const options = {
         </div>
       </div>
 
-      <div>
-        <!--
-
-
-      {#if !$inviteUrl}
-        <div class="flex flex-col items-start w-full mb-2 text-sm">
-          <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
-
-          <div class="flex items-center w-full h-12 pr-8 mb-2">
-            <button class="px-8 overflow-hidden transition-all transform btn btn-primary btn-block" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
-              
-              Scan Invite Now
-            </button>
-
-            <input type="hidden" bind:value="{$invite.value}" />
-
-            {#if $inviteUrl}
-              <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="text-success" /></span>
-            {:else}
-              <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="text-alert" /></span>
-            {/if}
-          </div>
-        </div>
-      {/if} -->
-      </div>
       {#if $error}
         <p class="mb-2 text-sm text-center text-alert ">{$error}</p>
       {/if}
@@ -287,13 +268,6 @@ const options = {
   </div>
 {/if}
 
-<!-- 
-
-      border-right-color: red;
-    border-right-width: 10px;
-
-    
- -->
 <style>
 :global(.date-time-field input) {
   border-radius: var(--rounded-btn, 0.5rem) !important;
