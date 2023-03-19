@@ -39,8 +39,11 @@ function start() {
 }
 
 async function stop() {
-  await html5Qrcode.stop();
+  if (!scanning)
+    return;
+
   scanning = false;
+  await html5Qrcode.stop();
 }
 
 function onScanSuccess(decodedText, decodedResult) {
