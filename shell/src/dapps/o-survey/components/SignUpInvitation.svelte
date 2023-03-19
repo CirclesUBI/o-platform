@@ -3,13 +3,12 @@ import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import Label from "../../../shared/atoms/Label.svelte";
 
-let inviteUrl = sessionStorage.getItem("inviteUrl");
 
 async function handleClick(button) {
   if (button === "back") {
     push("#/survey/page/3");
   } else if (button === "submit") {
-    push(inviteUrl);
+    window.location = sessionStorage.getItem("inviteUrl");
   }
 }
 </script>
@@ -34,14 +33,14 @@ async function handleClick(button) {
     </div>
   </div>
   <div class="text-center whitespace-pre-line">
-    {#if !inviteUrl}
+    {#if !sessionStorage.getItem("inviteUrl")}
       <div class="text-sm text-center text-info">
         <Label key="dapps.o-homepage.components.survey.signupInvitation.noInvitationCode" />
       </div>
       <button class="relative px-8 mt-6 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('back')}">
         {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
     {:else}
-      <a href="{inviteUrl}" class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
+      <a href="{sessionStorage.getItem('inviteUrl')}" class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
         {$_("dapps.o-homepage.components.survey.button.signUpNow")}</a>
     {/if}
   </div>
