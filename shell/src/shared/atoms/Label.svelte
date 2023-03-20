@@ -9,5 +9,5 @@ export let key: string;
 </script>
 
 {#if $isLocaleLoaded}
-  <span data-i18n-key="{key}">{$_(`${key}`)}</span>
+  <span data-i18n-key="{key}">{@html $_(`${key}`)}</span>
 {/if}
