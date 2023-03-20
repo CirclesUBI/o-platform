@@ -1,11 +1,10 @@
 /**
  * Contains environment variables which are filled in by webpack.
  */
-import {getSdk, Sdk} from "./api/data/types";
-import {GraphQLClient} from "graphql-request";
+import { getSdk, Sdk } from "./api/data/types";
+import { GraphQLClient } from "graphql-request";
 
 export class Environment {
-
   static get api(): Sdk {
     return getSdk(new GraphQLClient(Environment.apiEndpointUrl));
   }
@@ -68,8 +67,8 @@ export class Environment {
   }
 
   public static get userLanguage(): string {
-    if (!this.showLanguageSwitcher)
-      return "en";
+    // if (!this.showLanguageSwitcher)
+    //   return "en";
 
     if (localStorage.getItem("userLanguage")) {
       return localStorage.getItem("userLanguage");
