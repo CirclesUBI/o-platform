@@ -17,7 +17,7 @@ import Icons from "../../../shared/molecules/Icons.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {
@@ -172,21 +172,11 @@ function commit() {
 {#if isEditing}
   <tr>
     <td>
-      <input
-        bind:this="{fromEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editFromValue}"
-        on:change="{validate}" />
+      <input bind:this="{fromEditorInput}" type="time" class="text-xs input input-sm" bind:value="{editFromValue}" on:change="{validate}" />
     </td>
     <td> &nbsp;-&nbsp; </td>
     <td>
-      <input
-        bind:this="{toEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editToValue}"
-        on:change="{validate}" />
+      <input bind:this="{toEditorInput}" type="time" class="text-xs input input-sm" bind:value="{editToValue}" on:change="{validate}" />
     </td>
   </tr>
   {#if !isValid}

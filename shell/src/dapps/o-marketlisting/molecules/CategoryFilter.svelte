@@ -2,7 +2,7 @@
 import { BusinessCategory } from "../../../shared/api/data/types";
 import { Environment } from "../../../shared/environment";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
@@ -43,20 +43,11 @@ function handleRemoveFilter(filterId) {
     {#each $marketFilterStore as filterId}
       <div class="text-xs badge badge-outline">
         {allCategoriesLookup[filterId].name}
-        <button class="pl-2 cursor-pointer text-cpurple" on:click="{handleRemoveFilter(filterId)}"
-          ><Icons icon="closex" size="{2}" /></button>
+        <button class="pl-2 cursor-pointer text-cpurple" on:click="{handleRemoveFilter(filterId)}"><Icons icon="closex" size="{2}" /></button>
       </div>
     {/each}
     <div class="inline">
-      <DropDown
-        selected="add Filter"
-        items="{allCategories}"
-        id="filters"
-        key="id"
-        isButton="{true}"
-        value="name"
-        dropDownClass="mt-1"
-        on:dropDownChange="{handleOnChange}" />
+      <DropDown selected="add Filter" items="{allCategories}" id="filters" key="id" isButton="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{handleOnChange}" />
     </div>
   </div>
 {/if}

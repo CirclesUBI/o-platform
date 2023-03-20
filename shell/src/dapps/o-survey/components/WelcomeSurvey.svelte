@@ -1,6 +1,6 @@
 <script lang="ts">
 import Label from "../../../shared/atoms/Label.svelte";
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 import { push } from "svelte-spa-router";
 
 function handleClick() {
@@ -30,9 +30,7 @@ function handleClick() {
   </div>
   <div class="flex flex-row items-start justify-around pt-8 mb-5 text-center align-top">
     <div>
-      <button
-        class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple"
-        on:click="{() => handleClick()}">
+      <button class="relative px-16 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick()}">
         {$_("dapps.o-homepage.components.survey.button.next")}</button>
     </div>
   </div>

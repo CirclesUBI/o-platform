@@ -2,7 +2,7 @@
 import { push } from "svelte-spa-router";
 import Button from "../../../shared/atoms/button/Button.svelte";
 import { me } from "../../../shared/stores/me";
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 </script>
 
 <section class="relative pb-2 mb-4 bg-white border cardborder ">

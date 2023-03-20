@@ -1,11 +1,11 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
-import {Contact} from "../../../shared/api/data/types";
+import { Contact } from "../../../shared/api/data/types";
 import { onMount } from "svelte";
 
-import { _ } from "svelte-i18n";
-import {trustFromContactMetadata} from "../../../shared/functions/trustFromContactMetadata";
+import { _ } from "src/i18n/i18n";
+import { trustFromContactMetadata } from "../../../shared/functions/trustFromContactMetadata";
 
 export let contact: Contact;
 
@@ -18,9 +18,9 @@ onMount(() => {
   safeAddress = contact.contactAddress;
   message = "";
 
-  const {trustIn, trustOut} = trustFromContactMetadata(contact);
+  const { trustIn, trustOut } = trustFromContactMetadata(contact);
   console.log("trustIn", trustIn);
-    console.log("trustOut", trustOut);
+  console.log("trustOut", trustOut);
 
   if (trustIn > 0 && trustOut > 0) {
     message += `${$_("dapps.o-contacts.atoms.contactCard.mutualTrust")}`;

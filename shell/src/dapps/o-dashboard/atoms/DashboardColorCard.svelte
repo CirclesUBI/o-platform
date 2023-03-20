@@ -1,7 +1,7 @@
 <script lang="ts">
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { push } from "svelte-spa-router";
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 import { isMobile } from "../../../shared/functions/isMobile";
 
 export let color: string;
