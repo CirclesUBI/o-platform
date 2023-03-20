@@ -2,7 +2,9 @@ import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-// import { I18nDictionary } from "./i18n/i18nDictionary";
+import { setupI18n, _ } from "./i18n/i18nDictionary";
+import { get } from "svelte/store";
+const i18nString = get(_);
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { Generate } from "@o-platform/o-utils/dist/generate";
@@ -26,6 +28,8 @@ import { IShell } from "./iShell";
 
 import * as Sentry from "@sentry/browser";
 import { BrowserTracing } from "@sentry/tracing";
+
+setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
 
 Sentry.init({
   dsn: "https://42e2eed7fcd94a3f86fa2ca4ffa7bd70@o4504719125905408.ingest.sentry.io/4504719127740416",
@@ -72,7 +76,7 @@ RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 declare global {
   interface Window {
     o: IShell;
-    // i18n: (id: string, options?: any) => string;
+    i18n: (id: string) => string;
   }
 }
 
@@ -134,7 +138,7 @@ window.o = {
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
     entropyToMnemonic: (entropy: string) => bip39.entropyToMnemonic(entropy),
   },
-  // i18n: (key: string, options?: any) => I18nDictionary.instance.getString(key, options),
+  i18n: (key: string) => i18nString(key),
   stateMachines: {
     findById(processId: string) {
       return runningProcesses[processId];

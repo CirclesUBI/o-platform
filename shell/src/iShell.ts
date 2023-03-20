@@ -25,5 +25,5 @@ export interface IShell {
     findById(processId: string): Process;
     run<TContext>(definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>): Promise<Process>;
   };
-  // i18n: (key: string, options?: any) => string;
+  i18n: (key: string, options?: any) => string;
 }

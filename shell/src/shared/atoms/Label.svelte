@@ -1,6 +1,13 @@
 <script lang="ts">
-import { _ } from "src/i18n/i18n";
+import { setupI18n, isLocaleLoaded, _ } from "src/i18n/i18nDictionary";
+
+$: if (!$isLocaleLoaded) {
+  setupI18n({ withLocale: "en" });
+}
+
 export let key: string;
 </script>
 
-<span data-i18n-key="{key}">{@html $_(`${key}`)}</span>
+{#if $isLocaleLoaded}
+  <span data-i18n-key="{key}">{$_(`${key}`)}</span>
+{/if}

@@ -1,8 +1,9 @@
 <script lang="ts">
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { push } from "svelte-spa-router";
-import { _ } from "src/i18n/i18n";
+
 import { isMobile } from "../../../shared/functions/isMobile";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let color: string;
 export let link: string;
@@ -19,11 +20,6 @@ function loadLink(alink, external = false) {
     push(alink);
   }
 }
-
-let titleString = $_(title);
-if (titleString.length > textCutoff) {
-  titleString = titleString.slice(0, textCutoff) + "...";
-}
 </script>
 
 <section
@@ -32,7 +28,7 @@ if (titleString.length > textCutoff) {
   on:click="{() => loadLink(link)}">
   <div class="absolute z-50 flex flex-row items-center h-20 pl-4">
     <div class="text-2xl text-white sm:text-3xl font-heading">
-      {titleString}
+      <Label key="{title}" />
     </div>
   </div>
   <div class="blob bg-{color}-light z-10" style="border-radius: {blobshape}">

@@ -10,7 +10,7 @@ import { ApiClient } from "../../../shared/apiConnection";
 import { isMobile } from "../../../shared/functions/isMobile";
 import { UserActions, UserActionItem } from "../../../shared/userActions";
 
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let id: string;

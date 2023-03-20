@@ -5,7 +5,7 @@ import { onMount } from "svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 
 import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
 

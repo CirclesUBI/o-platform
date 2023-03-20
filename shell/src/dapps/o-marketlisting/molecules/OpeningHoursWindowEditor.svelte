@@ -17,7 +17,7 @@ import Icons from "../../../shared/molecules/Icons.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {

@@ -11,11 +11,19 @@ import { ubiMachine } from "./shared/ubiTimer2";
 import { InitContext } from "./dapps/o-onboarding/processes/initContext";
 import { LogoutDocument } from "./shared/api/data/types";
 import { me } from "./shared/stores/me";
-import { setupI18n, isLocaleLoaded } from "src/i18n/i18n";
+import { setupI18n, isLocaleLoaded, locale } from "./i18n/i18nDictionary";
 
-$: if (!$isLocaleLoaded) {
-  setupI18n({ withLocale: "en" });
-}
+import { Environment } from "./shared/environment";
+import LocaleSwitcher from "./i18n/atoms/LocaleSwitcher.svelte";
+import { onMount } from "svelte";
+import { bool, boolean } from "yup";
+
+let isLoading: boolean = true;
+
+onMount(async () => {
+  const foo = await setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
+  isLoading = false;
+});
 
 let ubiMachineInterpreter: any;
 const v = 1;
@@ -45,7 +53,8 @@ let _routes = {
 };
 </script>
 
-{#if $isLocaleLoaded}
+{#if !isLoading}
+  <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
   <Router
     routes="{_routes}"
     on:routeLoaded="{() => {
