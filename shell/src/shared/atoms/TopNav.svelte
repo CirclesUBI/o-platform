@@ -55,7 +55,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
         </span>
       </div>
 
-      <div class="self-center pr-1 ">
+      <div class="self-center pr-3 ">
         <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
 
         <span
