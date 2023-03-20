@@ -54,7 +54,6 @@ let _routes = {
 </script>
 
 {#if !isLoading}
-  <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
   <Router
     routes="{_routes}"
     on:routeLoaded="{() => {
