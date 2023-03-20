@@ -1,7 +1,7 @@
 <script lang="ts">
 import { surveyConsents } from "../../o-survey/stores/surveyStore";
 import Label from "../../../shared/atoms/Label.svelte";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import { form, field } from "svelte-forms";
 import { required } from "svelte-forms/validators";

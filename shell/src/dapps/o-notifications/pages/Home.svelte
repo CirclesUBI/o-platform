@@ -3,7 +3,7 @@ import SimpleHeader from "src/shared/atoms/SimpleHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { EventType, SortOrder } from "../../../shared/api/data/types";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { MyInbox } from "../../../shared/stores/inbox";
 import EventList from "../../../shared/molecules/Lists/EventList.svelte";

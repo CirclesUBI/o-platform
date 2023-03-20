@@ -6,7 +6,7 @@ import { OpeningHourDay } from "../models/openingHourDay";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
 import { generateUID } from "../../../shared/functions/generateRandomUid";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import { createEventDispatcher } from "svelte";
 
 export let openingHoursDay: OpeningHourDay = new OpeningHourDay("monday");

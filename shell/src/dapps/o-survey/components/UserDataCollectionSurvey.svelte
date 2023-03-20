@@ -5,7 +5,7 @@ import { Environment } from "../../../shared/environment";
 import { SurveyDataDocument, BaliVillage } from "../../../shared/api/data/types";
 import Label from "../../../shared/atoms/Label.svelte";
 import { GenderOfUser } from "../../../shared/models/GenderOfUser.model";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";

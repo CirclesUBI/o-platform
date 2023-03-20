@@ -13,7 +13,7 @@ import { UpsertProfileDocument, DisplayCurrency, WhoamiDocument, WhoamiQueryVari
 import { upsertIdentity } from "../processes/upsertIdentity";
 import { ApiClient } from "../../../shared/apiConnection";
 import Label from "../../../shared/atoms/Label.svelte";
-import { _ } from "src/i18n/i18n";
+import { _ } from "svelte-i18n";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
