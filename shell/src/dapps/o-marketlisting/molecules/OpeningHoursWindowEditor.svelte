@@ -172,21 +172,11 @@ function commit() {
 {#if isEditing}
   <tr>
     <td>
-      <input
-        bind:this="{fromEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editFromValue}"
-        on:change="{validate}" />
+      <input bind:this="{fromEditorInput}" type="time" class="text-xs input input-sm" bind:value="{editFromValue}" on:change="{validate}" />
     </td>
     <td> &nbsp;-&nbsp; </td>
     <td>
-      <input
-        bind:this="{toEditorInput}"
-        type="time"
-        class="text-xs input input-sm"
-        bind:value="{editToValue}"
-        on:change="{validate}" />
+      <input bind:this="{toEditorInput}" type="time" class="text-xs input input-sm" bind:value="{editToValue}" on:change="{validate}" />
     </td>
   </tr>
   {#if !isValid}

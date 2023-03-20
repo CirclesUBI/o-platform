@@ -7,10 +7,10 @@ import { ApiConnection } from "./shared/apiConnection";
 
 export interface IShell {
   bip39: {
-    mnemonicToSeed: any,
-    mnemonicToEntropy: any,
-    entropyToMnemonic: any
-  },
+    mnemonicToSeed: any;
+    mnemonicToEntropy: any;
+    entropyToMnemonic: any;
+  };
   depositedEvent?: PlatformEvent; // TODO: Hack. This field should be checked by a freshly initializing dapp. The value must be cleared whenever a dapp was loaded (success or error).
   contactUsername?: string;
   authorization?: string;
@@ -20,18 +20,10 @@ export interface IShell {
   events?: Subject<PlatformEvent>;
   publishEvent?: (event: PlatformEvent) => void;
   requestEvent?: <TResult extends PlatformEvent>(event: PlatformEvent) => Promise<TResult>;
-  runProcess?: (
-    processDefinition: ProcessDefinition<any, any>,
-    contextData: { [x: string]: any },
-    dirtyFlags?: { [x: string]: boolean },
-    onlyThesePages?: string[]
-  ) => Promise<any>;
+  runProcess?: (processDefinition: ProcessDefinition<any, any>, contextData: { [x: string]: any }, dirtyFlags?: { [x: string]: boolean }, onlyThesePages?: string[]) => Promise<any>;
   stateMachines: {
     findById(processId: string): Process;
-    run<TContext>(
-      definition: ProcessDefinition<any, any>,
-      contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>
-    ): Promise<Process>;
+    run<TContext>(definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>): Promise<Process>;
   };
   i18n: (key: string, options?: any) => string;
 }

@@ -9,12 +9,7 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { showToast } from "../../../shared/toast";
 import Svelecte, { addFormatter } from "svelecte";
-import {
-  UpsertProfileDocument,
-  DisplayCurrency,
-  WhoamiDocument,
-  WhoamiQueryVariables,
-} from "../../../shared/api/data/types";
+import { UpsertProfileDocument, DisplayCurrency, WhoamiDocument, WhoamiQueryVariables } from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
 import { ApiClient } from "../../../shared/apiConnection";
 import Label from "../../../shared/atoms/Label.svelte";
@@ -102,10 +97,7 @@ function editProfileField(onlyThesePages: string[], dirtyFlags: any = {}) {
       <div slot="standardHeaderBoxContent">
         <div class="w-full form-control">
           <label class="pl-0 label" for="emailAddress">
-            <div
-              class="w-full text-left cursor-pointer"
-              role="presentation"
-              on:click="{() => editProfileField(['emailAddress'], { emailAddress: true })}">
+            <div class="w-full text-left cursor-pointer" role="presentation" on:click="{() => editProfileField(['emailAddress'], { emailAddress: true })}">
               {$me.emailAddress ? $me.emailAddress : "click to enter your email address"}
               <!-- <input
                     name="emailAddress"

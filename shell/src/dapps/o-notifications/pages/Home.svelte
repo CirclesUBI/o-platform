@@ -15,13 +15,7 @@ import ContactCard from "../../o-notifications/atoms/ContactCard.svelte";
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
 
-let inbox = new MyInbox(SortOrder.Desc, 30, [
-  EventType.CrcHubTransfer,
-  EventType.CrcMinting,
-  EventType.CrcTrust,
-  EventType.InvitationRedeemed,
-  EventType.Erc20Transfer,
-]);
+let inbox = new MyInbox(SortOrder.Desc, 30, [EventType.CrcHubTransfer, EventType.CrcMinting, EventType.CrcTrust, EventType.InvitationRedeemed, EventType.Erc20Transfer]);
 
 const views = {
   [EventType.CrcHubTransfer]: { component: TransactionCard },
@@ -30,7 +24,6 @@ const views = {
   [EventType.InvitationRedeemed]: { component: RedeemedInvitationCard },
   [EventType.Erc20Transfer]: { component: TransactionCard },
 };
-
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
