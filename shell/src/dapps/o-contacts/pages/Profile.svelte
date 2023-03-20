@@ -4,23 +4,13 @@ import { me } from "../../../shared/stores/me";
 import LoadingIndicator from "../../../shared/atoms/LoadingIndicator.svelte";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 
-import {
-  CommonTrust,
-  CommonTrustDocument,
-  CommonTrustQueryVariables,
-  Contact,
-  ContactDirection,
-  ContactPoint,
-  EventType,
-  Profile,
-  SessionInfo,
-} from "../../../shared/api/data/types";
+import { CommonTrust, CommonTrustDocument, CommonTrustQueryVariables, Contact, ContactDirection, ContactPoint, EventType, Profile, SessionInfo } from "../../../shared/api/data/types";
 import { contacts } from "../../../shared/stores/contacts";
 import { ApiClient } from "../../../shared/apiConnection";
 import { isMobile } from "../../../shared/functions/isMobile";
 import { UserActions, UserActionItem } from "../../../shared/userActions";
 
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let id: string;
@@ -156,10 +146,7 @@ async function setProfile(id: string) {
         <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
-          <div
-            class="mt-4 break-words"
-            class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}"
-            class:text-xs="{displayName.startsWith('0x')}">
+          <div class="mt-4 break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
             {displayName}
           </div>
         {/if}

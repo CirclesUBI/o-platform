@@ -11,6 +11,11 @@ import { ubiMachine } from "./shared/ubiTimer2";
 import { InitContext } from "./dapps/o-onboarding/processes/initContext";
 import { LogoutDocument } from "./shared/api/data/types";
 import { me } from "./shared/stores/me";
+import { setupI18n, isLocaleLoaded } from "src/i18n/i18n";
+
+$: if (!$isLocaleLoaded) {
+  setupI18n({ withLocale: "en" });
+}
 
 let ubiMachineInterpreter: any;
 const v = 1;
@@ -40,17 +45,21 @@ let _routes = {
 };
 </script>
 
-<Router
-  routes="{_routes}"
-  on:routeLoaded="{() => {
-    if (!ubiMachineInterpreter && $me && $me.circlesAddress) {
-      ubiMachineInterpreter = interpret(ubiMachine)
-        .onEvent((event) => {
-          console.log('UBI machine event:', event);
-        })
-        .onTransition((state) => {
-          console.log('UBI machine transition:', state.value);
-        })
-        .start();
-    }
-  }}" />
+{#if $isLocaleLoaded}
+  <Router
+    routes="{_routes}"
+    on:routeLoaded="{() => {
+      if (!ubiMachineInterpreter && $me && $me.circlesAddress) {
+        ubiMachineInterpreter = interpret(ubiMachine)
+          .onEvent((event) => {
+            console.log('UBI machine event:', event);
+          })
+          .onTransition((state) => {
+            console.log('UBI machine transition:', state.value);
+          })
+          .start();
+      }
+    }}" />
+{:else}
+  <p>Loading...</p>
+{/if}

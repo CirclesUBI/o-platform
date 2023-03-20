@@ -1,5 +1,5 @@
 <script lang="ts">
-import { _ } from "svelte-i18n";
+import { _ } from "src/i18n/i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 import { QueryAllBusinessesOrderOptions } from "../../../shared/api/data/types";
@@ -56,15 +56,7 @@ function SortChange(event) {
   <div class="text-sm text-left whitespace-nowrap">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
     <span class="pl-2 text-black">{currentSort}</span>
-    <DropDown
-      selected="Select Sort Option"
-      items="{dropdownItems}"
-      id="sort"
-      key="sortBy"
-      isShevron="{true}"
-      value="name"
-      dropDownClass="mt-1"
-      on:dropDownChange="{SortChange}" />
+    <DropDown selected="Select Sort Option" items="{dropdownItems}" id="sort" key="sortBy" isShevron="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{SortChange}" />
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
 
