@@ -15,7 +15,7 @@ import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
 import { ApiClient } from "../../../shared/apiConnection";
 
-import { _ } from "svelte-i18n";
+import { setupI18n, isLocaleLoaded, _ } from "src/i18n/i18nDictionary";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
 import { showToast } from "../../../shared/toast";

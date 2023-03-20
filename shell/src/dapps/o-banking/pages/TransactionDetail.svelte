@@ -5,15 +5,9 @@ import { onMount } from "svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
+import { _ } from "svelte-i18n";
 
-import {
-  CrcHubTransfer,
-  CrcMinting,
-  Erc20Transfer,
-  EventType,
-  Profile,
-  ProfileEvent,
-} from "../../../shared/api/data/types";
+import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
 
 import { myTransactions } from "../../../shared/stores/myTransactions";
 import Icons from "../../../shared/molecules/Icons.svelte";
@@ -40,10 +34,7 @@ onMount(async () => {
     transfer = await myTransactions.findByPrimaryKey(EventType.Erc20Transfer, transactionHash);
   }
   if (!transfer) {
-    transfer = await myTransactions.findSingleItemFallback(
-      [EventType.CrcHubTransfer, EventType.CrcMinting, EventType.Erc20Transfer],
-      transactionHash
-    );
+    transfer = await myTransactions.findSingleItemFallback([EventType.CrcHubTransfer, EventType.CrcMinting, EventType.Erc20Transfer], transactionHash);
   }
   if (transfer && transfer.payload?.__typename == "CrcMinting") {
     const minting = transfer.payload as CrcMinting;
@@ -140,8 +131,7 @@ function openDetail(transfer: ProfileEvent) {
             )}
           {/if}
         </span>
-        <span class="text-6xl font-enso {classes}"
-          ><Icons icon="timeCircle" size="{12}" customClass="inline -mt-3" /></span>
+        <span class="text-6xl font-enso {classes}"><Icons icon="timeCircle" size="{12}" customClass="inline -mt-3" /></span>
       </div>
       <UserImage profile="{targetProfile}" size="{36}" />
       <div
@@ -194,13 +184,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
         <div class="flex items-center w-full">
           <div class="text-left ">
-            {Currency.instance().displayAmount(
-              transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0",
-              transfer.timestamp,
-              "CRC",
-              null,
-              true
-            )}
+            {Currency.instance().displayAmount(transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0", transfer.timestamp, "CRC", null, true)}
           </div>
         </div>
       </div>
