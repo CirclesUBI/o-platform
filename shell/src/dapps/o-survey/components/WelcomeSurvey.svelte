@@ -8,7 +8,7 @@ function handleClick() {
 }
 </script>
 
-<div class="p-1 pr-4 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
+<div class="p-1 px-4 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 font-heading">
   <div class="flex flex-col items-center justify-center">
     <div class="ml-2 text-4xl text-white uppercase">
       <Label key="dapps.o-homepage.components.survey.title.top" />
