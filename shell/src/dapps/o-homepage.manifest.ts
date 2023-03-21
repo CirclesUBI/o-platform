@@ -12,7 +12,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 const externalForum: Link<any, DappState> = {
   type: "link",
@@ -74,8 +74,8 @@ const notFound: Page<any, DappState> = {
   anonymous: true,
   title: "notFound",
   routeParts: ["=notfound"],
-  pageBackgroundClass: 'bg-white',
-  component: NotFound
+  pageBackgroundClass: "bg-white",
+  component: NotFound,
 };
 
 export interface DappState {
