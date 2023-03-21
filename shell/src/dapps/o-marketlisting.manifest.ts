@@ -11,7 +11,7 @@ import MyStore from "./o-marketlisting/pages/MyStore.svelte";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: ["=chat"],
   openInNewTab: true,
   url: () => "https://wa.me/6281337303696",
