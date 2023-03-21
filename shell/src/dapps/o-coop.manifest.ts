@@ -18,10 +18,10 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 const index: Page<any, ContactsDappState> = {

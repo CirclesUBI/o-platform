@@ -25,10 +25,10 @@ const sharePersonalInvite: Page<any, DappState> = {
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: [],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 export interface DappState {

@@ -13,10 +13,10 @@ export class NotificationDappState {}
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 export const index: Page<any, NotificationDappState> = {

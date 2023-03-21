@@ -11,10 +11,10 @@ import MyStore from "./o-marketlisting/pages/MyStore.svelte";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 const listing: Page<any, ContactsDappState> = {
