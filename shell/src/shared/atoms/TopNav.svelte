@@ -6,7 +6,16 @@ import { Profile } from "../api/data/types";
 import { push } from "svelte-spa-router";
 
 import { SvelteToast } from "../molecules/Toast";
-import LangSwitcher from "./LangSwitcher.svelte";
+
+import { setupI18n, isLocaleLoaded, locale } from "src/i18n/i18nDictionary";
+
+import LocaleSwitcher from "src/i18n/atoms/LocaleSwitcher.svelte";
+import { Environment } from "../environment";
+
+$: if (!$isLocaleLoaded) {
+  setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
+}
+
 export let runtimeDapp: RuntimeDapp<any>;
 let profile: Profile;
 let showSwitcher = true;
@@ -31,29 +40,29 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
 }
 </script>
 
-<!-- bg-home bg-cpurple bg-marketplace bg-contact bg-passport -->
-<div class="fixed top-0 left-0 z-50 w-full">
-  <SvelteToast />
-  <div class="flex flex-row justify-between w-full text-white navbar">
-    <div
-      class="p-1 xs:p-3 pr-6 xs:pr-12 -mt-8 xs:-mt-2 whitespace-nowrap {cleanRoute
-        ? 'bg-' + cleanRoute
-        : 'bg-cpurple'} navbarHomeElement">
-      <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
+{#if $isLocaleLoaded}
+  <!-- bg-home bg-cpurple bg-marketplace bg-contact bg-passport -->
+  <div class="fixed top-0 left-0 z-50 w-full">
+    <SvelteToast />
+    <div class="flex flex-row justify-between w-full text-white navbar">
+      <div class="p-1 xs:p-3 pr-6 xs:pr-12 -mt-8 xs:-mt-2 whitespace-nowrap {cleanRoute ? 'bg-' + cleanRoute : 'bg-cpurple'} navbarHomeElement">
+        <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
 
-      <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading ">
-        <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
-          {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
-        </a>
-      </span>
-    </div>
+        <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading ">
+          <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
+            {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
+          </a>
+        </span>
+      </div>
 
-    <div class="self-center pr-1 ">
-      <span
-        class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl"
-        class:text-white="{cleanRoute != 'home'}"
-        class:text-passport="{cleanRoute === 'home' || cleanRoute === 'contacts'}">Beta</span>
-      <!-- {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
+      <div class="self-center pr-3 ">
+        <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
+
+        <span
+          class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl"
+          class:text-white="{cleanRoute != 'home'}"
+          class:text-passport="{cleanRoute === 'home' || cleanRoute === 'contacts'}">Beta</span>
+        <!-- {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
         <div class="relative mr-4 cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
           {#if $cartContents && $cartContents.length > 0}
             <div class="absolute left-0 w-full text-center text-secondary -top-4 font-heading">
@@ -70,6 +79,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
           </div>
         {/if}
       {/if} -->
+      </div>
     </div>
   </div>
-</div>
+{/if}

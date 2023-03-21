@@ -43,20 +43,11 @@ function handleRemoveFilter(filterId) {
     {#each $marketFilterStore as filterId}
       <div class="text-xs badge badge-outline">
         {allCategoriesLookup[filterId].name}
-        <button class="pl-2 cursor-pointer text-cpurple" on:click="{handleRemoveFilter(filterId)}"
-          ><Icons icon="closex" size="{2}" /></button>
+        <button class="pl-2 cursor-pointer text-cpurple" on:click="{handleRemoveFilter(filterId)}"><Icons icon="closex" size="{2}" /></button>
       </div>
     {/each}
     <div class="inline">
-      <DropDown
-        selected="add Filter"
-        items="{allCategories}"
-        id="filters"
-        key="id"
-        isButton="{true}"
-        value="name"
-        dropDownClass="mt-1"
-        on:dropDownChange="{handleOnChange}" />
+      <DropDown selected="add Filter" items="{allCategories}" id="filters" key="id" isButton="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{handleOnChange}" />
     </div>
   </div>
 {/if}

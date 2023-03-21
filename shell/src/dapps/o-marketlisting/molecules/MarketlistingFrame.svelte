@@ -56,15 +56,7 @@ function SortChange(event) {
   <div class="text-sm text-left whitespace-nowrap">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
     <span class="pl-2 text-black">{currentSort}</span>
-    <DropDown
-      selected="Select Sort Option"
-      items="{dropdownItems}"
-      id="sort"
-      key="sortBy"
-      isShevron="{true}"
-      value="name"
-      dropDownClass="mt-1"
-      on:dropDownChange="{SortChange}" />
+    <DropDown selected="Select Sort Option" items="{dropdownItems}" id="sort" key="sortBy" isShevron="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{SortChange}" />
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
 
