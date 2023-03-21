@@ -24,7 +24,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 const index: Page<any, DappState> = {
@@ -116,10 +116,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
       }
 
       if (recipientProfile?.contactAddress) {
-        if (
-          recipientProfile.contactAddress_Profile &&
-          recipientProfile.contactAddress_Profile.type == ProfileType.Person
-        ) {
+        if (recipientProfile.contactAddress_Profile && recipientProfile.contactAddress_Profile.type == ProfileType.Person) {
           actions = actions.concat(
             trustsYou
               ? [
