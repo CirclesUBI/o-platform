@@ -14,7 +14,7 @@ const externalChat: Link<any, DappState> = {
   icon: "support",
   routeParts: ["=chat"],
   openInNewTab: true,
-  url: () => "https://api.whatsapp.com/send?phone=6281337303696",
+  url: () => "https://wa.me/6281337303696",
 };
 
 const listing: Page<any, ContactsDappState> = {
