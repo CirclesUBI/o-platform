@@ -2,7 +2,9 @@ import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { I18nDictionary } from "./i18n/i18nDictionary";
+import { setupI18n, _ } from "./i18n/i18nDictionary";
+import { get } from "svelte/store";
+const i18nString = get(_);
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { Generate } from "@o-platform/o-utils/dist/generate";
@@ -26,6 +28,8 @@ import { IShell } from "./iShell";
 
 import * as Sentry from "@sentry/browser";
 import { BrowserTracing } from "@sentry/tracing";
+
+setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
 
 Sentry.init({
   dsn: "https://42e2eed7fcd94a3f86fa2ca4ffa7bd70@o4504719125905408.ingest.sentry.io/4504719127740416",
@@ -64,7 +68,6 @@ function monkeyPatchConsole () {
 monkeyPatchConsole();
 */
 
-
 dayjs.extend(relativeTime);
 RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 
@@ -73,16 +76,16 @@ RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 declare global {
   interface Window {
     o: IShell;
-    i18n: (id: string, options?: any) => string;
+    i18n: (id: string) => string;
   }
 }
 
 declare global {
   interface Array<T> {
-    groupBy(groupSelector: (item: T) => string|number|null|undefined): { [group: string]: T[] };
-    skip(number:number): T[];
+    groupBy(groupSelector: (item: T) => string | number | null | undefined): { [group: string]: T[] };
+    skip(number: number): T[];
     toLookup(keySelector: (item: T) => string): { [key: string]: boolean };
-    toLookup<TValue>(keySelector: (item: T) => string|number|null|undefined, valueSelector?: (item: T) => TValue): { [key: string]: TValue };
+    toLookup<TValue>(keySelector: (item: T) => string | number | null | undefined, valueSelector?: (item: T) => TValue): { [key: string]: TValue };
   }
 }
 
@@ -98,11 +101,11 @@ Array.prototype.groupBy = function groupBy<T>(groupSelector: (item: T) => string
     p[group].push(c);
     return p;
   }, <{ [group: string]: T[] }>{});
-}
+};
 
-Array.prototype.skip = function skip<T>(number:number): T[] {
+Array.prototype.skip = function skip<T>(number: number): T[] {
   return (<T[]>this).slice(number);
-}
+};
 
 Array.prototype.toLookup = function toLookup<T, TValue>(keySelector: (item: T) => string, valueSelector?: (item: T) => TValue): { [key: string]: TValue } {
   return this.reduce((p, c) => {
@@ -113,7 +116,7 @@ Array.prototype.toLookup = function toLookup<T, TValue>(keySelector: (item: T) =
     p[key] = !valueSelector ? true : valueSelector(c);
     return p;
   }, <{ [key: string]: TValue }>{});
-}
+};
 
 export async function getProcessContext(): Promise<ProcessContext<any>> {
   return <ProcessContext<any>>{
@@ -122,9 +125,6 @@ export async function getProcessContext(): Promise<ProcessContext<any>> {
 }
 
 (<any>window).rpcGateway = RpcGateway.get();
-
-
-
 
 const runningProcesses: {
   [id: string]: Process;
@@ -138,15 +138,12 @@ window.o = {
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
     entropyToMnemonic: (entropy: string) => bip39.entropyToMnemonic(entropy),
   },
-  i18n: (key: string, options?: any) => I18nDictionary.instance.getString(key, options),
+  i18n: (key: string) => i18nString(key),
   stateMachines: {
     findById(processId: string) {
       return runningProcesses[processId];
     },
-    async run<TContext>(
-      definition: ProcessDefinition<any, any>,
-      contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>
-    ) {
+    async run<TContext>(definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>) {
       const processId = Generate.randomHexString(8);
       console.log(`Starting process (id: ${processId}) with definition:`, definition);
 
@@ -219,9 +216,7 @@ window.o = {
         },
         sendAnswer(answer: PlatformEvent) {
           if (!this.lastReceivedBubble || this.lastReceivedBubble.noReply) {
-            throw new Error(
-              "Cannot answer because no Bubble event was received before or the event had the 'noReply' property set."
-            );
+            throw new Error("Cannot answer because no Bubble event was received before or the event had the 'noReply' property set.");
           }
           process.sendEvent(<Sinker>{
             type: "process.ipc.sinker",
@@ -255,9 +250,7 @@ window.o = {
       let timeout = setTimeout(() => {
         if (answered) return;
 
-        reject(
-          new Error(`The request event with the id ${requestEvent.id} wasn't answered within ${timeoutPeriod} ms`)
-        );
+        reject(new Error(`The request event with the id ${requestEvent.id} wasn't answered within ${timeoutPeriod} ms`));
       }, timeoutPeriod);
 
       answerSubscription = window.o.events.subscribe((event) => {
@@ -285,9 +278,8 @@ declare global {
   }
 }
 
-
 async function load() {
-  await I18nDictionary.instance.waitHandle;
+  // await I18nDictionary.instance.waitHandle;
   const App = require("src/App.svelte");
   new App.default({
     target: document.body,

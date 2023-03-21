@@ -18,6 +18,8 @@ import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 
 export let context: DropdownSelectorContext<any, any, any>;
 
+let disableSubmit: boolean = true;
+
 type Location = {
   place_id: string;
   address: string;
@@ -63,6 +65,7 @@ function mapRecenter({ place }) {
 
   context.editorDirtyFlags[context.field] = true;
   _context.data[context.field] = location;
+  disableSubmit = false;
 }
 
 const submitHandler = () => {
@@ -86,7 +89,7 @@ const submitHandler = () => {
     </label>
   {/if} -->
 
-  <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" />
+  <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" isDisabled="{disableSubmit}" />
 </div>
 
 <style>

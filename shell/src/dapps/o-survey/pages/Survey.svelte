@@ -22,7 +22,6 @@ if (inviteCode) {
 
 sessionStorage.getItem("circlesKey");
 </script>
-
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
 <div class="mt-8">
   {#if id == "1"}

@@ -29,7 +29,7 @@ function start() {
   html5Qrcode.start(
     { facingMode: "environment" },
     {
-      fps: 1,
+      fps: 10,
       qrbox: { width: 250, height: 250 },
     },
     onScanSuccess,
@@ -39,8 +39,10 @@ function start() {
 }
 
 async function stop() {
-  await html5Qrcode.stop();
+  if (!scanning) return;
+
   scanning = false;
+  await html5Qrcode.stop();
 }
 
 function onScanSuccess(decodedText, decodedResult) {
