@@ -24,7 +24,7 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 const externalChat: Link<any, DappState> = {
   type: "link",
   title: "common.support",
-  icon: "support",
+  icon: "whatsapp",
   routeParts: ["=chat"],
   openInNewTab: true,
   url: () => "https://wa.me/6281337303696",
