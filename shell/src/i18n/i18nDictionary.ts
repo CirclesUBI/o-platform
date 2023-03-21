@@ -2,7 +2,7 @@ import { derived } from "svelte/store";
 import { dictionary, locale, _, init } from "svelte-i18n";
 import { Environment } from "../shared/environment";
 
-const MESSAGE_FILE_URL_TEMPLATE = "https://raw.githubusercontent.com/CirclesUBI/o-platform-i18n-files/dev/{locale}.json";
+const MESSAGE_FILE_URL_TEMPLATE = "https://cdn.jsdelivr.net/gh/CirclesUBI/o-platform-i18n@dev/{locale}.json";
 // const MESSAGE_FILE_URL_TEMPLATE = "./dictionaries/{locale}.json";
 // TODO: Add Local Fallback if fetch fails. ( LOCAL DEVELOPMENT WITHOUT NETWORK WILL OTHERWISE NOT WORK)
 
