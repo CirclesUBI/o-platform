@@ -34,6 +34,7 @@ onMount(init);
     {#if $me && $me.__typename === "Profile" && capabilities && capabilities.find((o) => o.type === CapabilityType.Invite)}
       <DashboardInvitesWidget />
     {/if}
+
     <div class="flex flex-col space-y-4">
       <DashboardColorCard color="passport" link="/passport/profile" blobshape="60% 40% 56% 38% / 99% 50% 90% 57%" icon="passport" title="dapps.o-dashboard.pages.home.passport" />
 
