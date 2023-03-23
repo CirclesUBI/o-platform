@@ -11,7 +11,6 @@ export let actions: {
   action: () => void;
 }[];
 
-
 function handleClick(action) {
   if (action.event) {
     window.o.publishEvent(action.event);
@@ -26,22 +25,17 @@ function handleClick(action) {
   <div class="flex flex-row flex-wrap items-stretch justify-around mt-2 -mr-2 text-dark">
     {#each actions as action}
       {#if action.key === $me.circlesAddress}
-        <div
-          class="text-center align-top list-none cursor-pointer inline-table"
-          role="presentation"
-          on:click="{() => window.o.publishEvent({ type: 'shell.closeModal' })}">
+        <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click="{() => window.o.publishEvent({ type: 'shell.closeModal' })}">
           <span>
             <span class="inline table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-              <div
-                class="self-center text-center rounded-full justify-self-center rounded-corners-gradient-borders"
-                style="padding: 1px;">
+              <div class="self-center text-center rounded-full justify-self-center rounded-corners-gradient-borders" style="padding: 1px;">
                 <div class="w-12 h-12 m-auto bg-white rounded-full">
                   <img class="w-12 h-12 rounded-full" src="{action.icon}" alt="{action.title}" />
                 </div>
               </div>
             </span>
             <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm ">
-              {action.title}
+              {action.title ? (action.title.length >= 38 ? action.title.slice(0, 38) + "..." : action.title) : ""}
             </span>
           </span>
         </div>
@@ -62,7 +56,7 @@ function handleClick(action) {
               </span>
             {/if}
             <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm ">
-              {action.title}
+              {action.title ? (action.title.length >= 38 ? action.title.slice(0, 38) + "..." : action.title) : ""}
             </span>
           </span>
         </div>
