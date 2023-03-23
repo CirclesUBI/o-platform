@@ -39,24 +39,18 @@ let foo = false;
       </div>
       <div class="w-12 h-12 text-center align-top list-none cursor-pointer copylink inline-table">
         <span class="inline table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-          <a
-            href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to invite you to circlesland. Check it out: {$me.invitationLink}"
-            target="_blank" rel="noreferrer">
+          <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to invite you to circlesland. Check it out: {$me.invitationLink}" target="_blank" rel="noreferrer">
             <Icons icon="mail" customClass="inline w-6 h-6 heroicon smallicon" />
           </a>
         </span>
       </div>
       <div class="-mt-1 text-center align-top list-none cursor-pointer whatsapp inline-table">
-        <a
-          href="whatsapp://send?text=Hey, i'd like to invite you to circlesland. Check it out: {$me.invitationLink}"
-          target="_blank" rel="noreferrer">
+        <a href="https://wa.me/?text=Hey, i'd like to invite you to circlesland. Check it out: {$me.invitationLink}" target="_blank" rel="noreferrer">
           <Icons icon="whatsapp" customClass="inline" size="{14}" />
         </a>
       </div>
       <div class="text-center align-top list-none cursor-pointer telegram inline-table">
-        <a
-          href="https://telegram.me/share/url?url={$me.invitationLink}&text=Hey, i'd like to invite you to circlesland. Check it out!"
-          target="_blank" rel="noreferrer">
+        <a href="https://telegram.me/share/url?url={$me.invitationLink}&text=Hey, i'd like to invite you to circlesland. Check it out!" target="_blank" rel="noreferrer">
           <Icons icon="telegram" customClass="inline" size="{11}" />
         </a>
       </div>
