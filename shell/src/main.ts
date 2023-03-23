@@ -76,7 +76,7 @@ RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 declare global {
   interface Window {
     o: IShell;
-    i18n: (id: string) => string;
+    i18n: (id: string, options?: any) => string;
   }
 }
 
@@ -138,7 +138,7 @@ window.o = {
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
     entropyToMnemonic: (entropy: string) => bip39.entropyToMnemonic(entropy),
   },
-  i18n: (key: string) => i18nString(key),
+  i18n: (key: string, options?: any) => i18nString(key, options),
   stateMachines: {
     findById(processId: string) {
       return runningProcesses[processId];
