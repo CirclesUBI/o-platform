@@ -15,8 +15,6 @@ export type Scalars = {
   Date: any;
 };
 
-
-
 export type AcceptMembershipResult = {
   __typename?: 'AcceptMembershipResult';
   success: Scalars['Boolean'];
@@ -511,6 +509,8 @@ export type Memberships = IAggregatePayload & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  getNonce: Nonce;
+  sendSignedTransaction: SendSignedTransactionResult;
   logout: LogoutResponse;
   upsertProfile: Profile;
   requestUpdateSafe: RequestUpdateSafeResponse;
@@ -533,7 +533,6 @@ export type Mutation = {
   importOrganisationsOfAccount: Array<Organisation>;
   verifySafe: VerifySafeResult;
   revokeSafeVerification: VerifySafeResult;
-  proofUniqueness: ProofUniquenessResult;
   updateValue?: Maybe<I18n>;
   addNewLang?: Maybe<Scalars['Int']>;
   createNewStringAndKey?: Maybe<I18n>;
@@ -541,6 +540,16 @@ export type Mutation = {
   setIsFavorite: Scalars['Boolean'];
   shareLink: Scalars['String'];
   markAsRead: MarkAsReadResult;
+};
+
+
+export type MutationGetNonceArgs = {
+  data: NonceRequest;
+};
+
+
+export type MutationSendSignedTransactionArgs = {
+  data: SendSignedTransactionInput;
 };
 
 
@@ -641,11 +650,6 @@ export type MutationRevokeSafeVerificationArgs = {
 };
 
 
-export type MutationProofUniquenessArgs = {
-  humanodeToken: Scalars['String'];
-};
-
-
 export type MutationUpdateValueArgs = {
   lang?: Maybe<Scalars['String']>;
   key?: Maybe<Scalars['String']>;
@@ -700,6 +704,16 @@ export type NewUser = IEventPayload & {
   __typename?: 'NewUser';
   transaction_hash?: Maybe<Scalars['String']>;
   profile: Profile;
+};
+
+export type Nonce = {
+  __typename?: 'Nonce';
+  nonce: Scalars['Int'];
+};
+
+export type NonceRequest = {
+  signature: Scalars['String'];
+  address?: Maybe<Scalars['String']>;
 };
 
 export type NotificationEvent = {
@@ -863,11 +877,6 @@ export enum ProfileType {
   Organisation = 'ORGANISATION',
   Region = 'REGION'
 }
-
-export type ProofUniquenessResult = {
-  __typename?: 'ProofUniquenessResult';
-  existingSafe?: Maybe<Scalars['String']>;
-};
 
 export type PublicEvent = {
   __typename?: 'PublicEvent';
@@ -1215,6 +1224,15 @@ export type SendMessageResult = {
   event?: Maybe<ProfileEvent>;
 };
 
+export type SendSignedTransactionInput = {
+  signedTransaction: Scalars['String'];
+};
+
+export type SendSignedTransactionResult = {
+  __typename?: 'SendSignedTransactionResult';
+  transactionHash: Scalars['String'];
+};
+
 export type Server = {
   __typename?: 'Server';
   version: Scalars['String'];
@@ -1225,6 +1243,7 @@ export type SessionInfo = {
   isLoggedOn: Scalars['Boolean'];
   hasProfile?: Maybe<Scalars['Boolean']>;
   profileId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   profile?: Maybe<Profile>;
   capabilities: Array<Capability>;
   useShortSignup?: Maybe<Scalars['Boolean']>;
@@ -1719,19 +1738,6 @@ export type RevokeSafeVerificationMutation = (
   ) }
 );
 
-export type ProofUniquenessMutationVariables = Exact<{
-  humanodeToken: Scalars['String'];
-}>;
-
-
-export type ProofUniquenessMutation = (
-  { __typename?: 'Mutation' }
-  & { proofUniqueness: (
-    { __typename?: 'ProofUniquenessResult' }
-    & Pick<ProofUniquenessResult, 'existingSafe'>
-  ) }
-);
-
 export type SetIsFavoriteMutationVariables = Exact<{
   circlesAddress: Scalars['String'];
   isFavorite: Scalars['Boolean'];
@@ -1768,6 +1774,46 @@ export type SurveyDataMutation = (
       { __typename?: 'SurveyData' }
       & Pick<SurveyData, 'id' | 'sesssionId'>
     )> }
+  ) }
+);
+
+export type GetNonceForEoaMutationVariables = Exact<{
+  signature: Scalars['String'];
+}>;
+
+
+export type GetNonceForEoaMutation = (
+  { __typename?: 'Mutation' }
+  & { getNonce: (
+    { __typename?: 'Nonce' }
+    & Pick<Nonce, 'nonce'>
+  ) }
+);
+
+export type GetNonceForSafeMutationVariables = Exact<{
+  signature: Scalars['String'];
+  safeAddress: Scalars['String'];
+}>;
+
+
+export type GetNonceForSafeMutation = (
+  { __typename?: 'Mutation' }
+  & { getNonce: (
+    { __typename?: 'Nonce' }
+    & Pick<Nonce, 'nonce'>
+  ) }
+);
+
+export type SendSignedTransactionMutationVariables = Exact<{
+  signedTransaction: Scalars['String'];
+}>;
+
+
+export type SendSignedTransactionMutation = (
+  { __typename?: 'Mutation' }
+  & { sendSignedTransaction: (
+    { __typename?: 'SendSignedTransactionResult' }
+    & Pick<SendSignedTransactionResult, 'transactionHash'>
   ) }
 );
 
@@ -1827,7 +1873,7 @@ export type SessionInfoQuery = (
   { __typename?: 'Query' }
   & { sessionInfo: (
     { __typename?: 'SessionInfo' }
-    & Pick<SessionInfo, 'isLoggedOn' | 'hasProfile' | 'profileId' | 'useShortSignup'>
+    & Pick<SessionInfo, 'isLoggedOn' | 'hasProfile' | 'profileId' | 'sessionId' | 'useShortSignup'>
     & { capabilities: Array<(
       { __typename?: 'Capability' }
       & Pick<Capability, 'type'>
@@ -2934,13 +2980,6 @@ export const RevokeSafeVerificationDocument = gql`
   }
 }
     `;
-export const ProofUniquenessDocument = gql`
-    mutation proofUniqueness($humanodeToken: String!) {
-  proofUniqueness(humanodeToken: $humanodeToken) {
-    existingSafe
-  }
-}
-    `;
 export const SetIsFavoriteDocument = gql`
     mutation setIsFavorite($circlesAddress: String!, $isFavorite: Boolean!) {
   setIsFavorite(circlesAddress: $circlesAddress, isFavorite: $isFavorite)
@@ -2960,6 +2999,27 @@ export const SurveyDataDocument = gql`
       id
       sesssionId
     }
+  }
+}
+    `;
+export const GetNonceForEoaDocument = gql`
+    mutation getNonceForEoa($signature: String!) {
+  getNonce(data: {signature: $signature}) {
+    nonce
+  }
+}
+    `;
+export const GetNonceForSafeDocument = gql`
+    mutation getNonceForSafe($signature: String!, $safeAddress: String!) {
+  getNonce(data: {signature: $signature, address: $safeAddress}) {
+    nonce
+  }
+}
+    `;
+export const SendSignedTransactionDocument = gql`
+    mutation sendSignedTransaction($signedTransaction: String!) {
+  sendSignedTransaction(data: {signedTransaction: $signedTransaction}) {
+    transactionHash
   }
 }
     `;
@@ -3047,6 +3107,7 @@ export const SessionInfoDocument = gql`
     isLoggedOn
     hasProfile
     profileId
+    sessionId
     capabilities {
       type
     }
@@ -4395,9 +4456,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     revokeSafeVerification(variables: RevokeSafeVerificationMutationVariables): Promise<RevokeSafeVerificationMutation> {
       return withWrapper(() => client.request<RevokeSafeVerificationMutation>(print(RevokeSafeVerificationDocument), variables));
     },
-    proofUniqueness(variables: ProofUniquenessMutationVariables): Promise<ProofUniquenessMutation> {
-      return withWrapper(() => client.request<ProofUniquenessMutation>(print(ProofUniquenessDocument), variables));
-    },
     setIsFavorite(variables: SetIsFavoriteMutationVariables): Promise<SetIsFavoriteMutation> {
       return withWrapper(() => client.request<SetIsFavoriteMutation>(print(SetIsFavoriteDocument), variables));
     },
@@ -4406,6 +4464,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     surveyData(variables: SurveyDataMutationVariables): Promise<SurveyDataMutation> {
       return withWrapper(() => client.request<SurveyDataMutation>(print(SurveyDataDocument), variables));
+    },
+    getNonceForEoa(variables: GetNonceForEoaMutationVariables): Promise<GetNonceForEoaMutation> {
+      return withWrapper(() => client.request<GetNonceForEoaMutation>(print(GetNonceForEoaDocument), variables));
+    },
+    getNonceForSafe(variables: GetNonceForSafeMutationVariables): Promise<GetNonceForSafeMutation> {
+      return withWrapper(() => client.request<GetNonceForSafeMutation>(print(GetNonceForSafeDocument), variables));
+    },
+    sendSignedTransaction(variables: SendSignedTransactionMutationVariables): Promise<SendSignedTransactionMutation> {
+      return withWrapper(() => client.request<SendSignedTransactionMutation>(print(SendSignedTransactionDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));

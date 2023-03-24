@@ -20,7 +20,7 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { Sinker } from "@o-platform/o-process/dist/events/sinker";
 import { shellEvents } from "./shared/shellEvents";
-import { ApiConnection } from "./shared/apiConnection";
+import {ApiClient, ApiConnection} from "./shared/apiConnection";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { me } from "./shared/stores/me";
 import { Environment } from "./shared/environment";
@@ -131,6 +131,13 @@ const runningProcesses: {
 } = {};
 
 import * as bip39 from "bip39";
+import {
+  GetNonceForEoaDocument,
+  GetNonceForEoaMutation, GetNonceForEoaMutationVariables, GetNonceForSafeDocument, GetNonceForSafeMutationVariables,
+  MutationGetNonceArgs,
+  Nonce, SessionInfo, SessionInfoDocument, SessionInfoQueryVariables,
+  UpsertProfileDocument
+} from "./shared/api/data/types";
 
 window.o = {
   bip39: {
@@ -285,4 +292,28 @@ async function load() {
     target: document.body,
   });
 }
+
+/*
+setInterval(async () => {
+  const sessionInfo = await ApiClient.query<SessionInfo, SessionInfoQueryVariables>(SessionInfoDocument, {});
+  const signature = RpcGateway.get().eth.accounts.privateKeyToAccount(sessionStorage.getItem("circlesKey")).sign(sessionInfo.sessionId);
+  const eoaNonce = await ApiClient.mutate<Nonce, GetNonceForEoaMutationVariables>(GetNonceForEoaDocument, {
+    signature: signature.signature,
+  })
+
+  let $me;
+  me.subscribe((value) => ($me = value));
+  console.log("$me.circlesAddress: ", $me.circlesAddress);
+  const safeNonce = await ApiClient.mutate<Nonce, GetNonceForSafeMutationVariables>(GetNonceForSafeDocument, {
+    safeAddress: $me.circlesAddress,
+    signature: signature.signature,
+  });
+
+  console.log("eoanonce: ", eoaNonce);
+  console.log("safenonce: ", safeNonce);
+
+}, 10000);
+
+*/
+
 load();
