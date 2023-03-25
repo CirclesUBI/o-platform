@@ -1,26 +1,31 @@
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
-import { prompt } from "@o-platform/o-process/dist/states/prompt";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { GnosisSafeProxy } from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { CirclesHub } from "@o-platform/o-circles/dist/circles/circlesHub";
-import { BN } from "ethereumjs-util";
-import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {fatalError} from "@o-platform/o-process/dist/states/fatalError";
+import {createMachine} from "xstate";
+import {prompt} from "@o-platform/o-process/dist/states/prompt";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {GnosisSafeProxy} from "@o-platform/o-circles/dist/safe/gnosisSafeProxy";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import {CirclesHub} from "@o-platform/o-circles/dist/circles/circlesHub";
+import {BN} from "ethereumjs-util";
+import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
 import HtmlViewer from "@o-platform/o-editors/src/HtmlViewer.svelte";
 import TrustChangeConfirmation from "../molecules/TrustChangeConfirmation.svelte";
-import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
-import type { TransactionReceipt } from "web3-core";
-import { Environment } from "../../../shared/environment";
+import {promptCirclesSafe} from "../../../shared/api/promptCirclesSafe";
+import type {TransactionReceipt} from "web3-core";
+import {Environment} from "../../../shared/environment";
 
 import {
+  Contact,
+  ContactDirection,
   Profile,
   ProfilesByCirclesAddressDocument,
   ProfilesByCirclesAddressQueryVariables,
 } from "../../../shared/api/data/types";
-import { ApiClient } from "../../../shared/apiConnection";
+import {ApiClient} from "../../../shared/apiConnection";
+import {loadProfile} from "../../o-passport/processes/identify/services/loadProfile";
+import {me} from "../../../shared/stores/me";
+import {contacts} from "../../../shared/stores/contacts";
 
 export type SetTrustContextData = {
   safeAddress: string;
@@ -71,6 +76,85 @@ const editorContent: { [x: string]: EditorViewContext } = {
     submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.success.submitButtonText"),
   },
 };
+
+/**
+ * Checks which users are trusted by the current user and automatically trusts these users also in all orgas.
+ * @param mainSafeAddress
+ */
+async function hSetTrust(mainSafeAddress:string) {
+    let $contacts:Contact[];
+    contacts.subscribe(value => $contacts = value)();
+
+    const iTrust = $contacts.filter(contact => {
+      const trustMetadata = contact.metadata.find(metadata => metadata.name == "CrcTrust");
+      if (!trustMetadata) return false;
+
+      const outDirectionIdx = trustMetadata.directions.indexOf(ContactDirection.Out);
+      if (outDirectionIdx == -1) return false;
+
+      const outTrustLimit = trustMetadata.values[outDirectionIdx];
+      return {
+        contactAddress: contact.contactAddress,
+        trustLimit: outTrustLimit
+      };
+    });
+
+    let $me:Profile;
+    me.subscribe(value => $me = value)();
+    const myAdminMemberships =  $me.memberships
+          ?.filter(o => o.isAdmin)
+            ?.map(o => o.organisation.circlesAddress)
+            ?? [];
+
+
+
+}
+
+async function gSetTrust(mainSafeAddress:string, trustReceiver:string, limit: number) {
+  const myProfile = await loadProfile(mainSafeAddress);
+  const myAdminMemberships =  myProfile.memberships
+      ?.filter(o => o.isAdmin)
+      ?.map(o => o.organisation.circlesAddress)
+      ?? [];
+
+  const web3 = await RpcGateway.get();
+  const safeProxy = new GnosisSafeProxy(web3, myProfile.circlesAddress);
+  const key = sessionStorage.getItem("circlesKey");
+
+  const personTrustReceipt = await fSetTrust({
+    data: {
+      privateKey: key,
+      hubAddress: Environment.circlesHubAddress,
+      safeAddress: safeProxy.address,
+      trustLimit: limit,
+      trustReceiver: trustReceiver,
+    },
+    dirtyFlags: {},
+    messages: {},
+    onlyThesePages: undefined
+  });
+  console.log("personTrustReceipt.transactionHash: ", personTrustReceipt.transactionHash);
+
+  for (const membership of myAdminMemberships) {
+    try {
+      const followTrust = await fSetTrust({
+        data: {
+          privateKey: key,
+          hubAddress: Environment.circlesHubAddress,
+          safeAddress: membership,
+          trustLimit: limit,
+          trustReceiver: trustReceiver,
+        },
+        dirtyFlags: {},
+        messages: {},
+        onlyThesePages: undefined
+      });
+      console.log("followTrust.transactionHash: ", followTrust.transactionHash);
+    } catch (e) {
+      console.error(`followTrust error. mainSafeAddress: ${mainSafeAddress}, followTrustSafeAddress: ${membership}, limit: ${limit}, error:`, e);
+    }
+  }
+}
 
 export async function fSetTrust(context: ProcessContext<SetTrustContextData>): Promise<TransactionReceipt> {
   const gnosisSafeProxy = new GnosisSafeProxy(RpcGateway.get(), context.data.safeAddress);
@@ -169,7 +253,7 @@ const processDefinition = (processId: string) =>
               console.info(`Could not load Profile for circlesAddress: ${context.data.trustReceiver}`);
             }
 
-            return await fSetTrust(context);
+            return await gSetTrust(context.data.safeAddress, context.data.trustReceiver, context.data.trustLimit);
           },
           onDone: "#showSuccess",
 

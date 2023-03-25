@@ -1,7 +1,3 @@
-directive @cost(value: Int) on FIELD_DEFINITION
-
-directive @costFactor(value: Int) on FIELD_DEFINITION
-
 # A date and time value in JSON format.
 scalar Date
 
@@ -278,6 +274,7 @@ type SessionInfo {
   isLoggedOn: Boolean!
   hasProfile: Boolean
   profileId: Int
+  sessionId: String
   profile: Profile
   capabilities: [Capability!]!
   useShortSignup: Boolean
@@ -505,7 +502,7 @@ type Members implements IAggregatePayload {
 }
 
 union EventPayload =
-    CrcSignup
+  CrcSignup
   | CrcTrust
   | CrcTokenTransfer
   | CrcHubTransfer
@@ -574,7 +571,12 @@ type ContactPoint {
   timestamps: [String!]!
 }
 
-union AggregatePayload = CrcBalances | Erc20Balances | Contacts | Memberships | Members
+union AggregatePayload =
+  CrcBalances
+  | Erc20Balances
+  | Contacts
+  | Memberships
+  | Members
 
 type ProfileAggregate {
   type: String!
@@ -861,21 +863,40 @@ type TransitivePath {
   transfers: [TransitiveTransfer!]!
 }
 
-type ProofUniquenessResult {
-  existingSafe: String
-}
-
 type MarkAsReadResult {
   count: Int!
 }
 
+input NonceRequest {
+  signature: String!
+  address: String
+}
+
+type Nonce {
+  nonce: Int!
+}
+
+input SendSignedTransactionInput {
+  signedTransaction: String!
+}
+
+type SendSignedTransactionResult {
+  transactionHash: String!
+}
+
 type Mutation {
+  getNonce(data: NonceRequest!): Nonce!
+  sendSignedTransaction(
+    data: SendSignedTransactionInput!
+  ): SendSignedTransactionResult!
   logout: LogoutResponse!
   upsertProfile(data: UpsertProfileInput!): Profile!
   requestUpdateSafe(data: RequestUpdateSafeInput!): RequestUpdateSafeResponse!
   updateSafe(data: UpdateSafeInput!): UpdateSafeResponse!
   upsertTag(data: UpsertTagInput!): Tag!
-  upsertOrganisation(organisation: UpsertOrganisationInput!): CreateOrganisationResult!
+  upsertOrganisation(
+    organisation: UpsertOrganisationInput!
+  ): CreateOrganisationResult!
   addMember(groupId: String!, memberAddress: String!): AddMemberResult
   acceptMembership(membershipId: Int!): AcceptMembershipResult
   removeMember(groupId: String!, memberAddress: String!): RemoveMemberResult
@@ -884,18 +905,33 @@ type Mutation {
   createTestInvitation: CreateInvitationResult!
   claimInvitation(code: String!): ClaimInvitationResult!
   redeemClaimedInvitation: RedeemClaimedInvitationResult!
-  tagTransaction(transactionHash: String!, tag: CreateTagInput!): TagTransactionResult!
-  sendMessage(fromSafeAddress: String, toSafeAddress: String!, content: String!): SendMessageResult!
+  tagTransaction(
+    transactionHash: String!
+    tag: CreateTagInput!
+  ): TagTransactionResult!
+  sendMessage(
+    fromSafeAddress: String
+    toSafeAddress: String!
+    content: String!
+  ): SendMessageResult!
   surveyData(data: SurveyDataInput!): SurveyDataResult!
   requestSessionChallenge(address: String!): String!
-  verifySessionChallenge(challenge: String!, signature: String!): ExchangeTokenResponse
+  verifySessionChallenge(
+    challenge: String!
+    signature: String!
+  ): ExchangeTokenResponse
   importOrganisationsOfAccount: [Organisation!]!
   verifySafe(safeAddress: String!): VerifySafeResult!
   revokeSafeVerification(safeAddress: String!): VerifySafeResult!
-  proofUniqueness(humanodeToken: String!): ProofUniquenessResult!
   updateValue(lang: String, key: String, createdBy: String, value: String): i18n
   addNewLang(langToCreate: String, langToCopyFrom: String): Int
-  createNewStringAndKey(lang: String, key: String, createdBy: String, value: String, version: Int): i18n
+  createNewStringAndKey(
+    lang: String
+    key: String
+    createdBy: String
+    value: String
+    version: Int
+  ): i18n
   setStringUpdateState(key: String): i18n
   setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
   shareLink(targetType: LinkTargetType!, targetKey: String!): String!
@@ -940,18 +976,53 @@ type RandomAccount {
   address: String
 }
 
+input CompareTrustRelationsInput {
+  canSendTo: String!
+  compareWith: [String!]!
+}
+
+type TrustComparison {
+  canSendTo: String!
+  differences: [TrustDifference!]!
+}
+
+type TrustDifference {
+  operation: String!
+  user: String!
+}
+
+type CompareTrustRelationsResult {
+  canSendTo: String!
+  diffs: [TrustComparison!]!
+}
+
 type Query {
   version: Version!
   sessionInfo: SessionInfo!
   init: SessionInfo!
+  compareTrustRelations(
+    data: CompareTrustRelationsInput!
+  ): CompareTrustRelationsResult!
   claimedInvitation: ClaimedInvitation
   invitationTransaction: ProfileEvent
   hubSignupTransaction: ProfileEvent
   safeInfo(safeAddress: String): SafeInfo
   lastAcknowledgedAt(safeAddress: String!): Date
-  verifications(pagination: PaginationArgs, filter: VerifiedSafesFilter): [Verification!]!
-  events(types: [EventType!]!, safeAddress: String!, pagination: PaginationArgs!, filter: ProfileEventFilter): [ProfileEvent!]!
-  aggregates(types: [AggregateType!]!, safeAddress: String!, filter: ProfileAggregateFilter): [ProfileAggregate!]!
+  verifications(
+    pagination: PaginationArgs
+    filter: VerifiedSafesFilter
+  ): [Verification!]!
+  events(
+    types: [EventType!]!
+    safeAddress: String!
+    pagination: PaginationArgs!
+    filter: ProfileEventFilter
+  ): [ProfileEvent!]!
+  aggregates(
+    types: [AggregateType!]!
+    safeAddress: String!
+    filter: ProfileAggregateFilter
+  ): [ProfileAggregate!]!
   organisations(pagination: PaginationArgs): [Organisation!]!
   regions(pagination: PaginationArgs): [Organisation!]!
   organisationsByAddress(addresses: [String!]!): [Organisation!]!
@@ -974,8 +1045,19 @@ type Query {
   getAllStringsByMaxVersion: [i18n]
   getAllStringsByMaxVersionAndLang(lang: String): [i18n]
   getOlderVersionsByKeyAndLang(key: String, lang: String): [i18n]
-  getPaginatedStrings(pagination_key: String, key: String, lang: String, value: String): [i18n]
-  getPaginatedStringsToUpdate(pagination_key: String, key: String, lang: String, value: String, needsUpdate: Boolean): [i18n]
+  getPaginatedStrings(
+    pagination_key: String
+    key: String
+    lang: String
+    value: String
+  ): [i18n]
+  getPaginatedStringsToUpdate(
+    pagination_key: String
+    key: String
+    lang: String
+    value: String
+    needsUpdate: Boolean
+  ): [i18n]
   getStringsToBeUpdatedAmount(lang: String, key: String): Int
   allProfiles(sinceLastChange: Date): [ExportProfile]!
   allTrusts(sinceLastChange: Date): [ExportTrustRelation!]!
