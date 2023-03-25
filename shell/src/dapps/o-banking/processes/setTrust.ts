@@ -21,6 +21,7 @@ import {
   ProfilesByCirclesAddressQueryVariables,
 } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
+import {loadProfile} from "../../o-passport/processes/identify/services/loadProfile";
 
 export type SetTrustContextData = {
   safeAddress: string;
@@ -71,6 +72,52 @@ const editorContent: { [x: string]: EditorViewContext } = {
     submitButtonText: window.o.i18n("dapps.o-banking.processes.setTrust.editorContent.success.submitButtonText"),
   },
 };
+
+async function gSetTrust(mainSafeAddress:string, trustReceiver:string, limit: number) {
+  const myProfile = await loadProfile(mainSafeAddress);
+  const myAdminMemberships =  myProfile.memberships
+      ?.filter(o => o.isAdmin)
+      ?.map(o => o.organisation.circlesAddress)
+      ?? [];
+
+  const web3 = await RpcGateway.get();
+  const safeProxy = new GnosisSafeProxy(web3, myProfile.circlesAddress);
+  const key = sessionStorage.getItem("circlesKey");
+
+  const personTrustReceipt = await fSetTrust({
+    data: {
+      privateKey: key,
+      hubAddress: Environment.circlesHubAddress,
+      safeAddress: safeProxy.address,
+      trustLimit: limit,
+      trustReceiver: trustReceiver,
+    },
+    dirtyFlags: {},
+    messages: {},
+    onlyThesePages: undefined
+  });
+  console.log("personTrustReceipt.transactionHash: ", personTrustReceipt.transactionHash);
+
+  for (const membership of myAdminMemberships) {
+    try {
+      const followTrust = await fSetTrust({
+        data: {
+          privateKey: key,
+          hubAddress: Environment.circlesHubAddress,
+          safeAddress: membership,
+          trustLimit: limit,
+          trustReceiver: trustReceiver,
+        },
+        dirtyFlags: {},
+        messages: {},
+        onlyThesePages: undefined
+      });
+      console.log("followTrust.transactionHash: ", followTrust.transactionHash);
+    } catch (e) {
+      console.error(`followTrust error. mainSafeAddress: ${mainSafeAddress}, followTrustSafeAddress: ${membership}, limit: ${limit}, error:`, e);
+    }
+  }
+}
 
 export async function fSetTrust(context: ProcessContext<SetTrustContextData>): Promise<TransactionReceipt> {
   const gnosisSafeProxy = new GnosisSafeProxy(RpcGateway.get(), context.data.safeAddress);
@@ -169,7 +216,7 @@ const processDefinition = (processId: string) =>
               console.info(`Could not load Profile for circlesAddress: ${context.data.trustReceiver}`);
             }
 
-            return await fSetTrust(context);
+            return await gSetTrust(context.data.safeAddress, context.data.trustReceiver, context.data.trustLimit);
           },
           onDone: "#showSuccess",
 
