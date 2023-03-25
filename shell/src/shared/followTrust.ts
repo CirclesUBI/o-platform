@@ -1,13 +1,12 @@
 import {
     CompareTrustRelationsDocument,
     CompareTrustRelationsQueryVariables,
-    CompareTrustRelationsResult,
-    Profile
+    CompareTrustRelationsResult, Profile, ProfileByIdDocument, ProfileByIdQueryVariables
 } from "./api/data/types";
-import {me} from "./stores/me";
 import {ApiClient} from "./apiConnection";
 import {fSetTrust} from "../dapps/o-banking/processes/setTrust";
 import {Environment} from "./environment";
+import {getSessionInfo} from "../dapps/o-passport/processes/identify/services/getSessionInfo";
 
 export class FollowTrust {
 
@@ -28,6 +27,9 @@ export class FollowTrust {
     }
 
     reset(interval?:number) {
+        if (!interval) {
+            interval = FollowTrust.shortIntervalInMilliseconds;
+        }
         console.log(`Resetting FollowTrust to ${interval == FollowTrust.longIntervalInMilliseconds ? 'long' : 'short'} interval.`);
         this.stop();
         this.intervalInMilliseconds = interval ? interval : FollowTrust.shortIntervalInMilliseconds;
@@ -49,7 +51,7 @@ export class FollowTrust {
                 .then((transactionHash) => {
                     if (transactionHash) {
                         console.log(`FollowTrust is done: (transactionHash: ${transactionHash}). Using short interval.`);
-                        this.reset(FollowTrust.shortIntervalInMilliseconds);
+                        this.reset();
                     } else {
                         console.log(`FollowTrust is done. Currently no trust changes. Using long interval.`);
                         this.reset(FollowTrust.longIntervalInMilliseconds);
@@ -74,17 +76,31 @@ export class FollowTrust {
     }
 
     private async followTrust() {
-        let $me: Profile;
-        me.subscribe((me) => $me = me)();
-        console.log(`FollowTrust is running for ${$me?.circlesAddress}`);
+        // Either use the selected profile (which will be usually an orge) ..
+        // let $me: Profile;
+        // me.subscribe((me) => $me = me)();
+        // .. or use the sessionInfo (which will always a person)
+        const sessionInfo = await getSessionInfo();
+        if (!sessionInfo.profileId) {
+            console.log(`FollowTrust is not running because there is no profile in sessionInfo.`);
+        }
 
-        if (!$me) {
+        const profile = await ApiClient.query<Profile[], ProfileByIdQueryVariables>(ProfileByIdDocument, {
+            id: sessionInfo.profileId
+        });
+        if (!profile.length) {
+            console.log(`FollowTrust is not running because there is no profile with id ${sessionInfo.profileId}.`);
+        }
+
+        console.log(`FollowTrust is running for ${profile[0]?.circlesAddress}`);
+
+        if (!profile) {
             throw new Error(`$me is not yet initialized.`);
         }
 
         try {
             const diff = await ApiClient.query<CompareTrustRelationsResult, CompareTrustRelationsQueryVariables>(CompareTrustRelationsDocument, {
-                canSendTo: $me.circlesAddress,
+                canSendTo: profile[0].circlesAddress,
                 compareWith: []
             });
 
