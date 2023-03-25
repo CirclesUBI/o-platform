@@ -1,11 +1,3 @@
-<script context="module" lang="ts">
-  import {FollowTrust} from "./shared/followTrust";
-
-  const followTrust: FollowTrust = new FollowTrust();
-  followTrust.start();
-
-  export const FollowTrustWorker = followTrust;followTrust
-</script>
 <script lang="ts">
 import "./shared/css/tailwind.css";
 
@@ -24,6 +16,7 @@ import { setupI18n, isLocaleLoaded, locale } from "./i18n/i18nDictionary";
 import { Environment } from "./shared/environment";
 import LocaleSwitcher from "./i18n/atoms/LocaleSwitcher.svelte";
 import { onMount } from "svelte";
+import {FollowTrust} from "./shared/followTrust";
 
 let isLoading: boolean = true;
 

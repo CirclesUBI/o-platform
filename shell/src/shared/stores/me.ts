@@ -4,6 +4,7 @@ import { InitDocument, InitQueryVariables, Profile, ProfileType, SessionInfo } f
 import { Subscriber } from "svelte/types/runtime/store";
 import { getSessionInfo } from "../../dapps/o-passport/processes/identify/services/getSessionInfo";
 import { ApiClient } from "../apiConnection";
+import {FollowTrust} from "../followTrust";
 
 let sessionInfo: SessionInfo | undefined = undefined;
 
@@ -74,6 +75,7 @@ const _me = readable<Profile | null>(null, function start(set) {
         set(event.profile);
         console.log("me.ts new $me: ", event.profile);
         localStorage.setItem("me", JSON.stringify(event.profile));
+        FollowTrust.instance.reset();
       }
     }
   );
