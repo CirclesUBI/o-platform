@@ -127,6 +127,17 @@ export type CommonTrust = {
   profile?: Maybe<Profile>;
 };
 
+export type CompareTrustRelationsInput = {
+  canSendTo: Scalars['String'];
+  compareWith: Array<Scalars['String']>;
+};
+
+export type CompareTrustRelationsResult = {
+  __typename?: 'CompareTrustRelationsResult';
+  canSendTo: Scalars['String'];
+  diffs: Array<TrustComparison>;
+};
+
 export type Contact = {
   __typename?: 'Contact';
   metadata: Array<ContactPoint>;
@@ -895,6 +906,7 @@ export type Query = {
   version: Version;
   sessionInfo: SessionInfo;
   init: SessionInfo;
+  compareTrustRelations: CompareTrustRelationsResult;
   claimedInvitation?: Maybe<ClaimedInvitation>;
   invitationTransaction?: Maybe<ProfileEvent>;
   hubSignupTransaction?: Maybe<ProfileEvent>;
@@ -938,6 +950,11 @@ export type Query = {
   allBusinessCategories: Array<BusinessCategory>;
   allBusinesses: Array<Businesses>;
   myFavorites: Array<Favorite>;
+};
+
+
+export type QueryCompareTrustRelationsArgs = {
+  data: CompareTrustRelationsInput;
 };
 
 
@@ -1323,6 +1340,18 @@ export type TransitiveTransfer = {
   token?: Maybe<Scalars['String']>;
   tokenOwner: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type TrustComparison = {
+  __typename?: 'TrustComparison';
+  canSendTo: Scalars['String'];
+  differences: Array<TrustDifference>;
+};
+
+export type TrustDifference = {
+  __typename?: 'TrustDifference';
+  operation: Scalars['String'];
+  user: Scalars['String'];
 };
 
 export enum TrustDirection {
@@ -2740,6 +2769,28 @@ export type MyFavoritesQuery = (
     { __typename?: 'Favorite' }
     & Pick<Favorite, 'createdAt' | 'createdByAddress' | 'favoriteAddress' | 'comment'>
   )> }
+);
+
+export type CompareTrustRelationsQueryVariables = Exact<{
+  canSendTo: Scalars['String'];
+  compareWith: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type CompareTrustRelationsQuery = (
+  { __typename?: 'Query' }
+  & { compareTrustRelations: (
+    { __typename?: 'CompareTrustRelationsResult' }
+    & Pick<CompareTrustRelationsResult, 'canSendTo'>
+    & { diffs: Array<(
+      { __typename?: 'TrustComparison' }
+      & Pick<TrustComparison, 'canSendTo'>
+      & { differences: Array<(
+        { __typename?: 'TrustDifference' }
+        & Pick<TrustDifference, 'operation' | 'user'>
+      )> }
+    )> }
+  ) }
 );
 
 export type EventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -4384,6 +4435,20 @@ export const MyFavoritesDocument = gql`
   }
 }
     `;
+export const CompareTrustRelationsDocument = gql`
+    query compareTrustRelations($canSendTo: String!, $compareWith: [String!]!) {
+  compareTrustRelations(data: {canSendTo: $canSendTo, compareWith: $compareWith}) {
+    canSendTo
+    diffs {
+      canSendTo
+      differences {
+        operation
+        user
+      }
+    }
+  }
+}
+    `;
 export const EventsDocument = gql`
     subscription events {
   events {
@@ -4599,6 +4664,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     myFavorites(variables?: MyFavoritesQueryVariables): Promise<MyFavoritesQuery> {
       return withWrapper(() => client.request<MyFavoritesQuery>(print(MyFavoritesDocument), variables));
+    },
+    compareTrustRelations(variables: CompareTrustRelationsQueryVariables): Promise<CompareTrustRelationsQuery> {
+      return withWrapper(() => client.request<CompareTrustRelationsQuery>(print(CompareTrustRelationsDocument), variables));
     },
     events(variables?: EventsSubscriptionVariables): Promise<EventsSubscription> {
       return withWrapper(() => client.request<EventsSubscription>(print(EventsDocument), variables));

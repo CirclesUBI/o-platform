@@ -18,7 +18,7 @@ import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
 import {Process} from "@o-platform/o-process/dist/interfaces/process";
 import {Sinker} from "@o-platform/o-process/dist/events/sinker";
 import {shellEvents} from "./shared/shellEvents";
-import {ApiConnection} from "./shared/apiConnection";
+import {ApiClient, ApiConnection} from "./shared/apiConnection";
 import {Stopped} from "@o-platform/o-process/dist/events/stopped";
 import {Environment} from "./shared/environment";
 import {IShell} from "./iShell";
@@ -26,6 +26,13 @@ import {IShell} from "./iShell";
 import * as Sentry from "@sentry/browser";
 import {BrowserTracing} from "@sentry/tracing";
 import * as bip39 from "bip39";
+import {me} from "./shared/stores/me";
+import {
+  CompareTrustRelationsDocument,
+  CompareTrustRelationsQueryVariables,
+  CompareTrustRelationsResult,
+  Profile
+} from "./shared/api/data/types";
 
 const i18nString = get(_);
 
@@ -261,5 +268,29 @@ async function load() {
     target: document.body,
   });
 }
+
+/*
+setInterval(async () => {
+  console.log("tick");
+
+  let $me:Profile;
+  me.subscribe((me) => $me = me)();
+
+  if (!$me) {
+    return;
+  }
+
+  const diff = await ApiClient.query<CompareTrustRelationsResult, CompareTrustRelationsQueryVariables>(CompareTrustRelationsDocument, {
+    canSendTo: $me.circlesAddress,
+    compareWith: [
+        "0x5499e2277cea84b3e6fb47b00bddef856709cdbc",
+        "0x93ce29e858bbf866b0b4923c0dbc4cc3464343b6"
+    ]
+  });
+
+  console.log(diff);
+
+}, 5000);
+ */
 
 load();
