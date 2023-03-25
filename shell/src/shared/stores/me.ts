@@ -75,6 +75,7 @@ const _me = readable<Profile | null>(null, function start(set) {
         set(event.profile);
         console.log("me.ts new $me: ", event.profile);
         localStorage.setItem("me", JSON.stringify(event.profile));
+        FollowTrust.instance.reset();
       }
     }
   );
