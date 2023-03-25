@@ -253,7 +253,7 @@ const processDefinition = (processId: string) =>
               console.info(`Could not load Profile for circlesAddress: ${context.data.trustReceiver}`);
             }
 
-            return await gSetTrust(context.data.safeAddress, context.data.trustReceiver, context.data.trustLimit);
+            return await fSetTrust(context);
           },
           onDone: "#showSuccess",
 
