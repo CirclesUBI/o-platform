@@ -13,6 +13,10 @@ export class Environment {
     return "__SHOW_LANGUAGE_SWITCHER__" == "true";
   }
 
+  public static get i18nFileUrlTemplate(): string {
+    return "__I18N_FILE_URL_TEMPLATE__";
+  }
+
   public static get endOfTime(): Date {
     return new Date(9999, 1, 1);
   }
