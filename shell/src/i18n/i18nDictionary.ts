@@ -14,7 +14,7 @@ init({
 });
 
 function setupI18n({ withLocale: _locale } = { withLocale: Environment.userLanguage.slice(0, 2) }) {
-  const messsagesFileUrl = MESSAGE_FILE_URL_TEMPLATE.replace("{locale}", _locale);
+  const messsagesFileUrl = Environment.i18nFileUrlTemplate.replace("{locale}", _locale);
 
   return fetch(messsagesFileUrl)
     .then((response) => response.json())
