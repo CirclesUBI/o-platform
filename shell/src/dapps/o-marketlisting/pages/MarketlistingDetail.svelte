@@ -195,7 +195,7 @@ async function shareLink() {
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
-          <a href="https://api.whatsapp.com/send?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+          <a href="https://wa.me/?textHey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
             <Icons icon="whatsapp" customClass="inline" size="{12}" />
           </a>
         </div>
@@ -290,7 +290,7 @@ async function shareLink() {
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <Icon name="phone" class="w-6 h-6" />
-        <p class="pl-4">{business.phoneNumber}</p>
+        <p class="pl-4"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
 

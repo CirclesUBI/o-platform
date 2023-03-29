@@ -34,6 +34,7 @@ import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { Environment } from "../environment";
 import { MyInbox } from "../stores/inbox";
+import {FollowTrustWorker} from "../../App.svelte";
 
 export let params: {
   dappId: string;
@@ -342,6 +343,7 @@ function handleNotificationEvent(event: NotificationEvent) {
   } else if (event.type == EventType.CrcTrust) {
     contacts.findBySafeAddress(event.to, true);
     contacts.findBySafeAddress(event.from, true);
+    FollowTrustWorker.reset();
   } else if (event.type == EventType.MembershipAccepted) {
     contacts.findBySafeAddress(event.to, true);
     contacts.findBySafeAddress(event.from, true);

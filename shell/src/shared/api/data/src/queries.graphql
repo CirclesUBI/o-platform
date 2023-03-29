@@ -83,6 +83,7 @@ query sessionInfo {
     isLoggedOn
     hasProfile
     profileId
+    sessionId
     # lastAcknowledgedAt
     capabilities {
       type
@@ -1306,5 +1307,21 @@ query myFavorites {
     createdByAddress
     favoriteAddress
     comment
+  }
+}
+
+query compareTrustRelations($canSendTo: String!, $compareWith: [String!]!) {
+  compareTrustRelations(data:{
+    canSendTo: $canSendTo,
+    compareWith: $compareWith
+  }) {
+    canSendTo
+    diffs {
+      canSendTo
+      differences {
+        operation
+        user
+      }
+    }
   }
 }
