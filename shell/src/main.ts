@@ -1,33 +1,32 @@
-import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
+import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
-import { setupI18n, _ } from "./i18n/i18nDictionary";
-import { get } from "svelte/store";
-const i18nString = get(_);
-import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
-import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
-import { Generate } from "@o-platform/o-utils/dist/generate";
+import {_, setupI18n} from "./i18n/i18nDictionary";
+import {get} from "svelte/store";
+import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
+import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
+import {Generate} from "@o-platform/o-utils/dist/generate";
 import * as LoadingIndicator from "./shared/atoms/LoadingIndicator.svelte";
 import Success from "./shared/atoms/Success.svelte";
 import ErrorIndicator from "./shared/atoms/Error.svelte";
-import { useMachine } from "@xstate/svelte";
-import { Subject, Subscription } from "rxjs";
-import { ProcessEvent } from "@o-platform/o-process/dist/interfaces/processEvent";
-import { AnyEventObject } from "xstate";
-import { Bubble } from "@o-platform/o-process/dist/events/bubble";
-import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import { Process } from "@o-platform/o-process/dist/interfaces/process";
-import { Sinker } from "@o-platform/o-process/dist/events/sinker";
-import { shellEvents } from "./shared/shellEvents";
-import { ApiConnection } from "./shared/apiConnection";
-import { Stopped } from "@o-platform/o-process/dist/events/stopped";
-import { me } from "./shared/stores/me";
-import { Environment } from "./shared/environment";
-import { IShell } from "./iShell";
-
+import {useMachine} from "@xstate/svelte";
+import {Subject, Subscription} from "rxjs";
+import {ProcessEvent} from "@o-platform/o-process/dist/interfaces/processEvent";
+import {AnyEventObject} from "xstate";
+import {Bubble} from "@o-platform/o-process/dist/events/bubble";
+import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
+import {Process} from "@o-platform/o-process/dist/interfaces/process";
+import {Sinker} from "@o-platform/o-process/dist/events/sinker";
+import {shellEvents} from "./shared/shellEvents";
+import {ApiConnection} from "./shared/apiConnection";
+import {Stopped} from "@o-platform/o-process/dist/events/stopped";
+import {Environment} from "./shared/environment";
+import {IShell} from "./iShell";
 import * as Sentry from "@sentry/browser";
-import { BrowserTracing } from "@sentry/tracing";
+import {BrowserTracing} from "@sentry/tracing";
+import * as bip39 from "bip39";
+
+const i18nString = get(_);
 
 setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
 
@@ -48,35 +47,13 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-/*
-function monkeyPatchConsole () {
-   // Wrap 'log', 'warning' and 'error' methods
-    ['log', 'warn', 'error'].forEach(function (method) {
-        var original = console[method];
-        console[method] = function () {
-            var stack = (new Error()).stack.split(" at ").slice(3);
-            // Chrome includes a single " at " string on the stack, FF doesn't.
-            if (stack[0] === "") {
-                stack = stack.slice(1);
-            }
-            var args = [].slice.call(arguments).concat([stack]);
-            return original.apply(console, args);
-        };
-    });
-}
-
-monkeyPatchConsole();
-*/
-
 dayjs.extend(relativeTime);
 RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
 
-// TODO: Use a service like 'https://github.com/ipfs/js-ipfs/blob/6870873f0696bb5d8d91fce4a4ef1f7420443993/packages/ipfs-message-port-server/src/server.js#L134'
-//       to share data between different app domains.
 declare global {
   interface Window {
     o: IShell;
-    i18n: (id: string) => string;
+    i18n: (id: string, options?: any) => string;
   }
 }
 
@@ -130,15 +107,13 @@ const runningProcesses: {
   [id: string]: Process;
 } = {};
 
-import * as bip39 from "bip39";
-
 window.o = {
   bip39: {
     mnemonicToSeed: (mnemonic: string) => bip39.mnemonicToSeed(mnemonic),
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
     entropyToMnemonic: (entropy: string) => bip39.entropyToMnemonic(entropy),
   },
-  i18n: (key: string) => i18nString(key),
+  i18n: (key: string, options?: any) => i18nString(key, options),
   stateMachines: {
     findById(processId: string) {
       return runningProcesses[processId];
@@ -285,4 +260,5 @@ async function load() {
     target: document.body,
   });
 }
+
 load();
