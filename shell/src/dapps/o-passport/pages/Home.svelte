@@ -16,6 +16,7 @@ import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { push } from "svelte-spa-router";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { _ } from "svelte-i18n";
 
 let name;
 let profile: Profile;
@@ -127,7 +128,7 @@ function createNewOrga() {
                 {/each}
               {:else}
                 <div class="container p-1 pt-2 text-center xs:p-4">
-                  <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">Add new Shop</button>
+                  <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">{$_("dapps.o-passport.pages.home.addNewShop")}</button>
                 </div>
               {/if}
             </div>
@@ -141,7 +142,7 @@ function createNewOrga() {
             <div class="flex flex-col w-full space-y-2">
               <div class="container p-1 pt-2 xs:p-4">
                 <center>
-                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">Edit Shop</button></a>
+                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
                 </center>
               </div>
             </div>

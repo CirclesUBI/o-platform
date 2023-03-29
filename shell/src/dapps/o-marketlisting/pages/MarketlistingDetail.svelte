@@ -16,6 +16,7 @@ import { UserActionItem, UserActions } from "../../../shared/userActions";
 import { transfer } from "../../o-banking/processes/transfer";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
+import { _ } from "svelte-i18n";
 
 export let circlesAddress: string;
 
@@ -67,13 +68,13 @@ onMount(async () => {
 
     const currentDateIndex = new Date().getDay();
     const businessHours = [
-      business.businessHoursSunday + " Sunday",
-      business.businessHoursMonday + " Monday",
-      business.businessHoursTuesday + " Tuesday",
-      business.businessHoursWednesday + " Wednesday",
-      business.businessHoursThursday + " Thursday",
-      business.businessHoursFriday + " Friday",
-      business.businessHoursSaturday + " Saturday",
+      business.businessHoursSunday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.sunday"),
+      business.businessHoursMonday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.monday"),
+      business.businessHoursTuesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.tuesday"),
+      business.businessHoursWednesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.wednesday"),
+      business.businessHoursThursday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.thursday"),
+      business.businessHoursFriday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.friday"),
+      business.businessHoursSaturday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.saturday"),
     ];
 
     currentDayOpenHours = businessHours[currentDateIndex];
@@ -212,7 +213,7 @@ async function shareLink() {
         <div>
           <div class="flex mb-5 ml-2">
             <Icon name="clock" class="w-6 h-6" />
-            <div class="pl-4 pr-4">Opening Hours</div>
+            <div class="pl-4 pr-4">{$_("dapps.o-marketlisting.pages.marketListingDetail.openingHours")}</div>
             <div
               role="presentation"
               on:click="{() => {
@@ -237,7 +238,7 @@ async function shareLink() {
                       {/each}
                     </div>
                   {:else}
-                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
+                    <div class="ml-2 badge badge-error badge-outline">{$_("dapps.o-marketlisting.pages.marketListingDetail.closed")}</div>
                   {/if}
                 </div>
               {/each}
@@ -257,7 +258,7 @@ async function shareLink() {
                     {/each}
                   </div>
                 {:else}
-                  <div class="ml-2 badge badge-error badge-outline">Closed</div>
+                  <div class="ml-2 badge badge-error badge-outline">{$_("dapps.o-marketlisting.pages.marketListingDetail.closed")}</div>
                 {/if}
               </div>
             {/if}
@@ -277,7 +278,7 @@ async function shareLink() {
                       {/each}
                     </div>
                   {:else}
-                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
+                    <div class="ml-2 badge badge-error badge-outline">{$_("dapps.o-marketlisting.pages.marketListingDetail.closed")}</div>
                   {/if}
                 </div>
               {/each}
@@ -306,7 +307,7 @@ async function shareLink() {
       {/if}
     </div>
   {:else}
-    <p>loading details...</p>
+    <p>{$_("dapps.o-marketlisting.pages.marketListingDetail.loadingDetails")}</p>
   {/if}
 </section>
 

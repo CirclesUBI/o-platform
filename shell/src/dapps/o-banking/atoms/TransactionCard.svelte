@@ -10,6 +10,8 @@ import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { onMount } from "svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { isMobile } from "../../../shared/functions/isMobile";
+import { _ } from "svelte-i18n";
+
 export let event: ProfileEvent;
 
 let path: any;
@@ -40,14 +42,14 @@ $: {
       .displayAmount(event.payload && event.payload.value ? event.payload.value.toString() : "0", event.timestamp, "TIME_CRC", null)
       .toString();
 
-    message = "Universal basic income";
+    message = $_("dapps.o-banking.pages.transactionDetail.ubi");
   }
 
   if (event && event.payload?.__typename == "Erc20Transfer") {
     const ercTransfer = event.payload as Erc20Transfer;
     fromProfile = ercTransfer.from_profile ?? {
       id: 0,
-      firstName: "Circles Land",
+      firstName: $_("common.circlesLand"),
       lastName: "",
       avatarUrl: "/logos/erc20.png",
       circlesAddress: ercTransfer.from,

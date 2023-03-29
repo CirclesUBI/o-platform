@@ -2,6 +2,7 @@
 import { marketStore } from "../stores/marketStore";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { fade } from "svelte/transition";
+import { _ } from "svelte-i18n";
 
 export let dropdownItems: string[];
 
@@ -10,7 +11,7 @@ let opened: boolean = false;
 
 <div class="w-40 flex">
   <div class="relative">
-    <button class="text-black bg-white btn w-40 border-1 peer">Dropdown</button>
+    <button class="text-black bg-white btn w-40 border-1 peer">{$_("dapps.o-marketlisting.molecules.marketDropdown.dropdown")}</button>
     <div
       class="w-52 absolute top-5 z-10
 		after:content-[''] after:inline-block after:absolute after:top-0 after:bg-white
@@ -19,11 +20,11 @@ let opened: boolean = false;
     transition-all duration-20 invisible  opacity-0 
     ">
       <ul class="p-2 shadow menu bg-base-100 rounded-box w-52">
-        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">Eat an apple a day</li>
-        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">Eat an apple a day</li>
-        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">Eat an apple a day</li>
-        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">Eat an apple a day</li>
-        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">Eat an apple a day</li>
+        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">{$_("dapps.o-marketlisting.molecules.marketDropdown.eat")}</li>
+        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">{$_("dapps.o-marketlisting.molecules.marketDropdown.eat")}</li>
+        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">{$_("dapps.o-marketlisting.molecules.marketDropdown.eat")}</li>
+        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">{$_("dapps.o-marketlisting.molecules.marketDropdown.eat")}</li>
+        <li class="cursor-pointer p-3 rounded-md hover:bg-gray-400">{$_("dapps.o-marketlisting.molecules.marketDropdown.eat")}</li>
       </ul>
     </div>
   </div>
