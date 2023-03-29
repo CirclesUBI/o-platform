@@ -8,10 +8,10 @@ $: if (!$isLocaleLoaded) {
 }
 
 export let key: string;
-export let values: any;
+export let values: any = null;
 </script>
 
 {#if $isLocaleLoaded}
   <!-- <span data-i18n-key="{key}">{@html $_(`${key}`)}</span> -->
-  <span data-i18n-key="{key}">{i18nString(key, { values: values })}</span>
+  <span data-i18n-key="{key}">{@html i18nString(key, { values: values })}</span>
 {/if}
