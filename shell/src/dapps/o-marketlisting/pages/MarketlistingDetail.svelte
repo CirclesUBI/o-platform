@@ -290,7 +290,7 @@ async function shareLink() {
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <Icon name="phone" class="w-6 h-6" />
-        <p class="pl-4">{business.phoneNumber}</p>
+        <p class="pl-4"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
 
