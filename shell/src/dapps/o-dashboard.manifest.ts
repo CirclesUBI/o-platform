@@ -18,7 +18,7 @@ const sharePersonalInvite: Page<any, DappState> = {
   isSystem: true,
   position: "modal",
   routeParts: ["=share"],
-  title: "Share Profile",
+  title: "common.shareProfile",
   component: SharePersonalInvite,
 };
 

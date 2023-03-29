@@ -233,10 +233,10 @@ const options = {
         <div class="w-full form-control">
           <div class="w-full input-group">
             {#if $inviteUrl}
-              <span class="text-sm grow text-success">Invite Valid</span>
+              <span class="text-sm grow text-success">{$_("dapps.o-homepage.components.survey.userDataCollection.inviteValid")}</span>
             {:else}
               <button class="px-8 overflow-hidden transition-all transform grow btn btn-primary " on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
-                Scan Invite Now
+                {$_("dapps.o-homepage.components.survey.button.scanInviteNow")}
               </button>
             {/if}
             <span>

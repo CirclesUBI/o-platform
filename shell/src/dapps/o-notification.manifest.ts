@@ -8,7 +8,7 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { DappState } from "./o-passport.manifest";
 
-export class NotificationDappState {}
+export class NotificationDappState { }
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -23,7 +23,7 @@ export const index: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=all"],
-  title: "All",
+  title: "common.all",
   icon: "allnotificationbubble",
   navigation: {
     leftSlot: {
@@ -41,14 +41,14 @@ export const trusts: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=trusts"],
-  title: "Trust events",
+  title: "common.trustEvents",
   component: Trusts,
 };
 export const transactions: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=transactions"],
-  title: "Transactions",
+  title: "common.transactions",
   icon: "transactions",
   component: Transactions,
 };
@@ -56,7 +56,7 @@ export const redeemedInvitations: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=invitations"],
-  title: "Invitations",
+  title: "common.invitations",
   component: RedeemedInvitations,
 };
 
@@ -64,7 +64,7 @@ export const notifications: DappManifest<NotificationDappState> = {
   type: "dapp",
   dappId: "notifications:1",
   icon: "group",
-  title: "Notifications",
+  title: "common.notifications",
   routeParts: ["=notifications"],
   defaultRoute: ["all"],
   tag: Promise.resolve("alpha"),

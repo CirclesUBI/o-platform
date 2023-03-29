@@ -7,6 +7,7 @@ import Label from "../../../shared/atoms/Label.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
+import { _ } from "svelte-i18n";
 
 export let secret: string = undefined;
 export let runtimeDapp: RuntimeDapp<any>;
@@ -16,9 +17,7 @@ let showButton: boolean = false;
 
 function verify() {
   if (secret && secret != "failed" && secret != "success") {
-    window.location.assign(
-      `${Environment.apiEndpointUrl}/trigger?hash=${secret}`
-    );
+    window.location.assign(`${Environment.apiEndpointUrl}/trigger?hash=${secret}`);
   }
 }
 onMount(() => {
@@ -43,37 +42,31 @@ onMount(() => {
     </Card>
   </section> -->
   <section class="mx-4 mb-2 -mt-2">
-    <div
-      class="flex flex-col w-full px-3 py-2 space-x-2 bg-white rounded-lg shadow-md ">
+    <div class="flex flex-col w-full px-3 py-2 space-x-2 bg-white rounded-lg shadow-md ">
       <div class="flex flex-col space-y-2">
         <div class="text-left">
           {#if secret && secret == "success"}
-            <h1>Thank you</h1>
+            <h1>{$_("dapps.o-passport.pages.verifyEmail.thankYou")}</h1>
+            <p class="mt-4">{$_("dapps.o-passport.pages.verifyEmail.emailVerifiedAndChanged")}</p>
             <p class="mt-4">
-              Your Email address has been verified and changed.
-            </p>
-            <p class="mt-4">
-              <a href="/#/home" class="link link-primary"
-                >Go to the dashboard</a>
+              <a href="/#/home" class="link link-primary">{$_("dapps.o-passport.pages.verifyEmail.dashboard")}</a>
             </p>
           {:else if secret && secret == "failed"}
-            <h1>Oops</h1>
-            <p class="mt-4">Your Email address verification failed.</p>
+            <h1>{$_("dapps.o-passport.pages.verifyEmail.oops")}</h1>
+            <p class="mt-4">{$_("dapps.o-passport.pages.verifyEmail.emailVerificationFailed")}</p>
             <p class="mt-4">
-              It is possible that this link has expired.<br />
-              Please note that you have to click the verification link within 24
-              hours of receiving the email.
+              {$_("dapps.o-passport.pages.verifyEmail.linkExpired")}
+              <br />
+              {$_("dapps.o-passport.pages.verifyEmail.pleaseNote")}
             </p>
             <p class="mt-4">
-              Please <a href="/" class="link link-primary">Log in</a> and go to your
-              Passport settings to enter your new Email address again to restart
-              the verification process.
+              {$_("dapps.o-passport.pages.verifyEmail.please")}
+              <a href="/" class="link link-primary">{$_("dapps.o-passport.pages.verifyEmail.login")}</a>
+              {$_("dapps.o-passport.pages.verifyEmail.goToPassport")}
             </p>
           {:else if showButton}
-            <h1>Verify your Email address</h1>
-            <p class="mt-4">
-              Please use the button below to verify your Email address now.
-            </p>
+            <h1>{$_("dapps.o-passport.pages.verifyEmail.verifyEmailAddress")}</h1>
+            <p class="mt-4">{$_("dapps.o-passport.pages.verifyEmail.useButtonBellow")}</p>
             <p class="mt-4">
               <button
                 type="submit"
@@ -81,7 +74,7 @@ onMount(() => {
                   verify();
                 }}"
                 class="relative btn btn-primary "
-                ><span class="pr-4">Verify my Email Address</span>
+                ><span class="pr-4">{$_("dapps.o-passport.pages.verifyEmail.verifyMyEmailAddress")}</span>
                 <div class="absolute right-2">
                   <Icons icon="buttonrightarrow" />
                 </div>

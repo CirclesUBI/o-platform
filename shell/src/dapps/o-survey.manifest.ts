@@ -34,7 +34,7 @@ export const scanInvite: Page<any, DappState> = {
   isSystem: true,
   position: "modal",
   routeParts: ["=scanInvite"],
-  title: "Scan to trust",
+  title: "dapps.common.quickactions.scanToTrust",
   component: ScanInvite,
 };
 
