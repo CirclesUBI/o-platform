@@ -1,42 +1,39 @@
-import {readable} from "svelte/store";
-import {Subscriber} from "svelte/types/runtime/store";
+import { writable, get } from "svelte/store";
 
-export const myLocation = {
-  subscribe: (subscriber: Subscriber<GeolocationPosition|GeolocationPositionError|Error|null>) => _myLocation.subscribe(subscriber),
-  reload: () => {
-    // TODO: This doesn't open another access-prompt for the user (at least in FF)?!
-    _myLocationState = null;
-    _reload();
-  },
-  state: () => _myLocationState
+const initialState = {
+  supported: false,
+  allowed: false,
+  error: null,
+  location: null,
+  loading: false,
+  timestamp: -1,
 };
 
-let _myLocationState:GeolocationPosition|GeolocationPositionError|Error|null = null;
-let _reload: () => void;
+export const geolocation = writable(initialState);
 
-const _myLocation = readable<GeolocationPosition|GeolocationPositionError|Error>(null, function start(set) {
-
-  function onGetLocationError(error:Error|GeolocationPositionError) {
-    console.log("Couldn't get your position: ", error);
-    _myLocationState = error;
-    set(error);
-  }
-
-  function onConfigureMap(position: GeolocationPosition) {
-    console.log("Your position: ", position);
-    _myLocationState = position;
-    set(position);
-  }
-
-  _reload = function() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(onConfigureMap, onGetLocationError);
+if ("geolocation" in navigator) {
+  geolocation.update((state) => ({ ...state, supported: true }));
+}
+export const myLocation = () =>
+  new Promise((resolve, reject) => {
+    if (get(geolocation).supported) {
+      geolocation.update((state) => ({ ...state, loading: true }));
+      navigator.geolocation.getCurrentPosition(
+        ({ coords, timestamp }) => {
+          geolocation.set({ loading: false, supported: true, allowed: true, location: coords, timestamp, error: null });
+          resolve({ geolocation: coords, timestamp });
+        },
+        (error) => {
+          geolocation.update((state) => ({ ...state, error, loading: false }));
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 10000,
+          timeout: 5000,
+        }
+      );
     } else {
-      onGetLocationError(new Error(`navigator.geolocation is not available`));
+      reject(new Error(`navigator.geolocation is not available`));
     }
-  }
-
-  return function stop() {
-    console.log("myLocation store stopped.");
-  };
-});
+  });

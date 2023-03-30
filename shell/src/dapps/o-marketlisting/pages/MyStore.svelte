@@ -25,10 +25,11 @@ import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelt
 import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
-import { getGeoDataFromHereId } from "../../../shared/functions/locationHandler";
+import { myLocation } from "../../../shared/stores/myLocation";
 
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import GoogleMapSearch from "../../../shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
+import Geolocation from "svelte-geolocation";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
@@ -42,7 +43,11 @@ let _state: Readable<any>;
 let showModal = false;
 let editImage = false;
 let error = null;
-
+let geolocation;
+let geoLocationOptions = {
+  enableHighAccuracy: true,
+};
+let events = [];
 type Location = {
   place_id: string;
   address: string;
@@ -162,6 +167,14 @@ $: {
       _state = null;
     }
   }
+
+  if (business && business.lat) {
+    center = { lat: business.lat, lng: business.lon };
+  } else {
+    if (geolocation) {
+      center = { lat: geolocation.coords.latitude, lng: geolocation.coords.longitude };
+    }
+  }
 }
 
 function mapRecenter({ place }) {
@@ -171,14 +184,6 @@ function mapRecenter({ place }) {
   business.location = place.place_id;
   business.lat = place.geometry.location.lat();
   business.lon = place.geometry.location.lng();
-}
-
-function onPlaceChanged(e) {
-  if (e && e.id) {
-    // We have to manipulate this a little bit in order to display the just Selected Value in the dropdown correctly
-    // When just selecting a new value, for some reason the title has the city/street etc.. in reverse order, but the address.label is correct.
-    e.title = e.address.label;
-  }
 }
 </script>
 
@@ -192,6 +197,18 @@ function onPlaceChanged(e) {
   </div>
 {:else}
   <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
+    <Geolocation
+      options="{geoLocationOptions}"
+      watch="{true}"
+      getPosition
+      on:position="{(e) => {
+        geolocation = e.detail;
+      }}"
+      on:error="{(e) => {
+        events = [...events, e.detail];
+        console.log('POS ERROR', e.detail); // GeolocationError
+      }}" />
+
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
         <h1 class="text-center">{business.name}</h1>
@@ -252,7 +269,7 @@ function onPlaceChanged(e) {
                           zoom="{17}"
                           options="{mapOptions}"
                           placeholder="{business.locationName ? business.locationName : null}"
-                          center="{center}" />
+                          bind:center="{center}" />
                       </div>
                     </div>
                   </div>
