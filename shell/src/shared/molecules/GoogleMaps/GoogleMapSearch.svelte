@@ -35,6 +35,11 @@ export function setCentre(location) {
   map.setCenter(location);
 }
 
+$: {
+  if (center && map) {
+    map.setCenter(center);
+  }
+}
 let mapElement;
 let map;
 let markers: any[] = [];
