@@ -124,6 +124,8 @@ function placeChanged(map, place, customInfoWindow = true) {
     map.setZoom(17);
   }
 
+  placeholder = place.formatted_address;
+
   addMarker(map, place, customInfoWindow);
 
   dispatch("recenter", { place });

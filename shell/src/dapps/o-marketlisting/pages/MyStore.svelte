@@ -47,7 +47,7 @@ let geolocation;
 let geoLocationOptions = {
   enableHighAccuracy: true,
 };
-let events = [];
+
 type Location = {
   place_id: string;
   address: string;
@@ -205,7 +205,6 @@ function mapRecenter({ place }) {
         geolocation = e.detail;
       }}"
       on:error="{(e) => {
-        events = [...events, e.detail];
         console.log('POS ERROR', e.detail); // GeolocationError
       }}" />
 
