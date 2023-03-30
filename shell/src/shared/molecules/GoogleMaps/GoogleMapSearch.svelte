@@ -35,6 +35,11 @@ export function setCentre(location) {
   map.setCenter(location);
 }
 
+$: {
+  if (center && map) {
+    map.setCenter(center);
+  }
+}
 let mapElement;
 let map;
 let markers: any[] = [];
@@ -118,6 +123,8 @@ function placeChanged(map, place, customInfoWindow = true) {
     map.setCenter(place.geometry.location);
     map.setZoom(17);
   }
+
+  placeholder = place.formatted_address;
 
   addMarker(map, place, customInfoWindow);
 

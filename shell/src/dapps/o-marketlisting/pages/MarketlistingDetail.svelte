@@ -6,7 +6,7 @@ import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
 import { myLocation } from "../../../shared/stores/myLocation";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
-import { marketStore } from "../stores/marketStore";
+import marketStore from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import GoogleMap from "../../../shared/molecules/GoogleMaps/GoogleMap.svelte";
@@ -27,9 +27,7 @@ let everythingBeforeTheCurrentDay = [];
 let everythingAfterTheCurrentDay = [];
 let link: string;
 let showShareOptions: boolean = false;
-
 let hasOpeningHours: boolean = false;
-
 let mapHeight = "16em";
 
 const mapOptions = {
@@ -131,6 +129,7 @@ async function shareLink() {
 </script>
 
 <div class="bg-marketlisting" style="display: none;"></div>
+
 <section class="p-4">
   {#if business}
     <div class="flex justify-center w-full">
