@@ -13,6 +13,7 @@ import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
 import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
 import { promptLocation } from "../../../shared/api/promptLocation";
+
 export type CreateOrganisationContextData = {
   successAction: (data: CreateOrganisationContextData) => void;
   id: number | undefined;
