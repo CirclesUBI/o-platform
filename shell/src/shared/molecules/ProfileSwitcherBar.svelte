@@ -56,7 +56,7 @@ function handleClick(action) {
               </span>
             {/if}
             <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm ">
-              {action.title ? (action.title.length >= 38 ? action.title.slice(0, 38) + "..." : action.title) : ""}
+              {action.title ? (action.title.length >= 15 ? action.title.slice(0, 15) + "..." : action.title) : ""}
             </span>
           </span>
         </div>
