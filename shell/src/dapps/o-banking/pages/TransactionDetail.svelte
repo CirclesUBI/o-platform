@@ -7,11 +7,22 @@ import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
 import { _ } from "svelte-i18n";
 
-import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
+import {
+  CrcHubTransfer,
+  CrcMinting,
+  Erc20Transfer,
+  EventType, MarkAsReadDocument, MarkAsReadMutationVariables,
+  MarkAsReadResult,
+  Profile,
+  ProfileEvent
+} from "../../../shared/api/data/types";
 
 import { myTransactions } from "../../../shared/stores/myTransactions";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
+import {ApiClient} from "../../../shared/apiConnection";
+import {MyInbox} from "../../../shared/stores/inbox";
+import {markAsRead} from "../../../shared/functions/markAsRead";
 
 export let transactionHash: string;
 
@@ -93,6 +104,7 @@ onMount(async () => {
     }
 
     displayableName = targetProfile.displayName;
+    markAsRead(transfer);
   }
 });
 function openDetail(transfer: ProfileEvent) {

@@ -86,7 +86,7 @@ export class MyInbox extends PagedEventQuery {
     this.refresh();
   }
 
-  static update(event: NotificationEvent) {
+  static update(event: {type:string, transaction_hash: string}) {
     console.log("Updating inboxes")
     inboxes.forEach(inbox => {
       console.log("Updating inbox", inbox)
