@@ -4,14 +4,18 @@ import { push } from "svelte-spa-router";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { Businesses } from "../../../shared/api/data/types";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
+import { isMobile } from "../../../shared/functions/isMobile";
 
 export let business: Businesses & { isFavorite: boolean };
 
 const eventDispatcher = createEventDispatcher();
 
 function loadDetailPage(circlesAddress) {
+  console.log("dacian", business);
   push(`/market/detail/${circlesAddress}`);
 }
+
+let textCutoff = isMobile() ? 12 : 35;
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-1 mb-2">
@@ -37,10 +41,21 @@ function loadDetailPage(circlesAddress) {
       {/if}
     </div>
   </div>
-  {#if business.name}
-    <div class="pt-2 pl-2 text-2xl font-bold font-heading text-heading">{business.name ? (business.name.length >= 38 ? business.name.slice(0, 38) + "..." : business.name) : ""}</div>
-  {/if}
-  {#if business.description}
-    <div class="flex-wrap pl-2 text-grey">{business.description ? (business.description.length >= 70 ? business.description.slice(0, 70) + "..." : business.description) : ""}</div>
-  {/if}
+  <div class="container">
+    {#if business.name}
+      <div class="pl-2 text-2xl font-bold font-heading text-heading truncateText">
+        {business.name ? (business.name.length >= textCutoff ? business.name.slice(0, textCutoff) + "..." : business.name) : ""}
+      </div>
+    {/if}
+    {#if business.locationName}
+      <div class="pl-2 text-sm truncateText">
+        {business.locationName ? (business.locationName.length >= textCutoff ? business.locationName.slice(0, textCutoff) + "..." : business.locationName) : ""}
+      </div>
+    {/if}
+    {#if business.description}
+      <div class="pt-2 flex-wrap pl-2 text-lg truncateText">
+        {business.description ? (business.description.length >= textCutoff ? business.description.slice(0, textCutoff) + "..." : business.description) : ""}
+      </div>
+    {/if}
+  </div>
 </section>
