@@ -193,6 +193,7 @@ query myProfile {
     provenUniqueness
     location
     locationName
+    type
     memberships {
       isAdmin
       organisation {
@@ -235,6 +236,7 @@ query profiles($id: [Int!]!) {
     lastName
     dream
     avatarUrl
+    type
     displayCurrency
     provenUniqueness
     memberships {
@@ -266,8 +268,8 @@ query profiles($id: [Int!]!) {
   }
 }
 
-query profilesByName($searchString: String!) {
-  search(query: { searchString: $searchString }) {
+query profilesByName($searchString: String!, $profileType: ProfileType) {
+  search(query: { searchString: $searchString, profileType: $profileType }) {
     id
     origin
     circlesSafeOwner
@@ -280,6 +282,7 @@ query profilesByName($searchString: String!) {
     lastName
     dream
     country
+    type
     displayCurrency
     provenUniqueness
     verifications {
@@ -345,6 +348,7 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
     locationName
     lat
     lon
+    type
     memberships {
       isAdmin
       organisation {
@@ -1311,10 +1315,7 @@ query myFavorites {
 }
 
 query compareTrustRelations($canSendTo: String!, $compareWith: [String!]!) {
-  compareTrustRelations(data:{
-    canSendTo: $canSendTo,
-    compareWith: $compareWith
-  }) {
+  compareTrustRelations(data: { canSendTo: $canSendTo, compareWith: $compareWith }) {
     canSendTo
     diffs {
       canSendTo
