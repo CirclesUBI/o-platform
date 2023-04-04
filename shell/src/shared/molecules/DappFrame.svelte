@@ -337,8 +337,9 @@ function setNav(navArgs: GenerateNavManifestArgs) {
 
 function handleNotificationEvent(event: NotificationEvent) {
   if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
-    myTransactions.findSingleItemFallback([event.type], event.transaction_hash);
-    myTransactions.refresh(true);
+    myTransactions.findSingleItemFallback([event.type], event.transaction_hash).then((_) => {
+        myTransactions.refresh(true);
+    });
     assetBalances.update();
   } else if (event.type == EventType.CrcTrust) {
     contacts.findBySafeAddress(event.to, true);
