@@ -39,7 +39,7 @@ export class MyTransactions extends PagedEventQuery {
       pagination: {
         order: SortOrder.Desc,
         limit: 1,
-        continueAt: new Date().toJSON(),
+        continueAt: new Date('2100-01-01').toJSON(),
       },
       filter: <ProfileEventFilter>{
         transactionHash: primaryKey,
