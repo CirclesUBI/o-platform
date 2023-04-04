@@ -15,7 +15,7 @@ function loadDetailPage(circlesAddress) {
   push(`/market/detail/${circlesAddress}`);
 }
 
-let textCutoff = isMobile() ? 16 : 42;
+let textCutoff = isMobile() ? 12 : 35;
 </script>
 
 <section class="flex-row w-[50%] h-[50%] p-1 mb-2">
