@@ -15,6 +15,9 @@ import { DisplayCurrency, UpsertProfileDocument } from "../../../shared/api/data
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { UpsertRegistrationContext } from "../../o-onboarding/processes/registration/promptRegistration";
 import { promptLocation } from "../../../shared/api/promptLocation";
+import ErrorView from "../../../shared/atoms/Error.svelte";
+import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
+import { show } from "@o-platform/o-process/dist/actions/show";
 
 export type UpsertIdentityContextData = {
   id?: number;
@@ -194,8 +197,24 @@ const processDefinition = (processId: string) =>
             return result.data.upsertProfile;
           },
           onDone: "#success",
-          onError: "#error",
+          onError: {
+            actions: setWindowLastError,
+            target: "#showError",
+          },
         },
+      },
+      showError: {
+        id: "showError",
+        entry: show({
+          // TODO: fix <any> cast
+          component: ErrorView,
+          params: {},
+          field: {
+            name: "",
+            get: () => undefined,
+            set: (o: any) => {},
+          },
+        }),
       },
       success: {
         type: "final",

@@ -33,6 +33,7 @@ $: {
 onMount(async () => {
   field = normalizePromptField(context.field);
   const currentKey = field.get(context);
+
   if (currentKey) {
     selected = await context.params.choices.byKey(currentKey, context);
   } else {
@@ -87,7 +88,7 @@ function onkeydown(e: KeyboardEvent) {
 
 function onBlur(e) {
   if (context.params.submitOnBlur) {
-    console.log("onBlur")
+    console.log("onBlur");
     submitHandler();
   }
 }
@@ -101,9 +102,7 @@ function toggleInputView() {
   <div class="flex flex-col items-end form-control justify-self-center">
     <div class="h-12 text-base themed">
       {#if showSafeAddressInput}
-        <div
-          class="flex flex-row items-start space-x-4 form-control justify-self-center"
-          style="margin-bottom: 1.4rem;">
+        <div class="flex flex-row items-start space-x-4 form-control justify-self-center" style="margin-bottom: 1.4rem;">
           <input
             on:keydown="{onkeydown}"
             id="{fieldId}"
@@ -133,7 +132,7 @@ function toggleInputView() {
           noOptionsMessage=""
           placeholder="Search..."
           listAutoWidth="{false}"
-          getHighlight={context.params.getHighlight}
+          getHighlight="{context.params.getHighlight}"
           inlineSubmit="{context.params.showNavigation === undefined ? true : context.params.showNavigation}"
           isCreatable="{false}"
           listPlacement="top"
@@ -145,9 +144,9 @@ function toggleInputView() {
           getOptionLabel="{context.params.getLabel}"
           Item="{context.params.itemTemplate ? context.params.itemTemplate : Item}"
           on:select="{handleSelect}"
-          on:blur={onBlur}
+          on:blur="{onBlur}"
           bind:this="{selectComponent}"
-          bind:filterText
+          bind:filterText="{filterText}"
           on:buttonClick="{submitHandler}" />
       {/if}
       {#if context.params.allowAlternativeInput}
