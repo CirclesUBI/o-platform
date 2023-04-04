@@ -551,6 +551,7 @@ export type Mutation = {
   setIsFavorite: Scalars['Boolean'];
   shareLink: Scalars['String'];
   markAsRead: MarkAsReadResult;
+  markAllAsRead: MarkAsReadResult;
 };
 
 
@@ -1848,6 +1849,30 @@ export type SendSignedTransactionMutation = (
   ) }
 );
 
+export type MarkAllAsReadMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MarkAllAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAllAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
+export type MarkAsReadMutationVariables = Exact<{
+  entryIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type MarkAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
 export type InitQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3074,6 +3099,20 @@ export const SendSignedTransactionDocument = gql`
     mutation sendSignedTransaction($signedTransaction: String!) {
   sendSignedTransaction(data: {signedTransaction: $signedTransaction}) {
     transactionHash
+  }
+}
+    `;
+export const MarkAllAsReadDocument = gql`
+    mutation markAllAsRead {
+  markAllAsRead {
+    count
+  }
+}
+    `;
+export const MarkAsReadDocument = gql`
+    mutation markAsRead($entryIds: [Int!]!) {
+  markAsRead(entries: $entryIds) {
+    count
   }
 }
     `;
@@ -4546,6 +4585,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendSignedTransaction(variables: SendSignedTransactionMutationVariables): Promise<SendSignedTransactionMutation> {
       return withWrapper(() => client.request<SendSignedTransactionMutation>(print(SendSignedTransactionDocument), variables));
+    },
+    markAllAsRead(variables?: MarkAllAsReadMutationVariables): Promise<MarkAllAsReadMutation> {
+      return withWrapper(() => client.request<MarkAllAsReadMutation>(print(MarkAllAsReadDocument), variables));
+    },
+    markAsRead(variables: MarkAsReadMutationVariables): Promise<MarkAsReadMutation> {
+      return withWrapper(() => client.request<MarkAsReadMutation>(print(MarkAsReadDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));
