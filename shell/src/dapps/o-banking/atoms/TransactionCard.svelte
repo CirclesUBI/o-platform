@@ -137,15 +137,9 @@ let textCutoff = isMobile() ? 16 : 42;
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-xl text-heading font-heading whitespace-nowrap overflow-ellipsis">
               {#if event.unread}
-                <b
-                  >{targetProfile.displayName
-                    ? targetProfile.displayName.length >= textCutoff
-                      ? targetProfile.displayName.slice(0, textCutoff) + "..."
-                      : targetProfile.displayName
-                    : ""}</b>
-              {:else}
-                {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
+                <span class="text-negative"> * </span>
               {/if}
+              {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
             </h2>
           </div>
           <div class="self-end text-right pl-2 text-lg {amountTime.startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">

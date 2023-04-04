@@ -35,6 +35,7 @@ import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { Environment } from "../environment";
 import { MyInbox } from "../stores/inbox";
 import {FollowTrustWorker} from "../../App.svelte";
+import {unreadEventCount} from "../stores/unreadEventCount";
 
 export let params: {
   dappId: string;
@@ -381,7 +382,7 @@ async function init() {
     centerIsOpen: false,
     rightIsOpen: false,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
   });
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
@@ -439,7 +440,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount: 0, //  $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -457,7 +458,7 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -482,7 +483,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -505,7 +506,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
   });
   window.scrollTo(0, _scrollY);
 }
@@ -589,7 +590,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -602,7 +603,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -617,7 +618,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -995,7 +996,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     rightIsOpen: false,
   });
 }
@@ -1060,7 +1061,7 @@ function showModalPage(pushToStack: boolean, runtimeDapp: RuntimeDapp<any>, rout
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    notificationCount: $unreadEventCount,
     rightIsOpen: false,
   });
 }
