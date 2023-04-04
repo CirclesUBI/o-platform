@@ -1232,6 +1232,7 @@ export type SafeVerified = IEventPayload & {
 
 export type SearchInput = {
   searchString: Scalars['String'];
+  profileType?: Maybe<ProfileType>;
 };
 
 export type SendMessageResult = {
@@ -1997,7 +1998,7 @@ export type MyProfileQuery = (
   { __typename?: 'Query' }
   & { myProfile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness' | 'location' | 'locationName'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness' | 'location' | 'locationName' | 'type'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2025,7 +2026,7 @@ export type ProfilesQuery = (
   { __typename?: 'Query' }
   & { profilesById: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'type' | 'provenUniqueness'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2046,6 +2047,7 @@ export type ProfilesQuery = (
 
 export type ProfilesByNameQueryVariables = Exact<{
   searchString: Scalars['String'];
+  profileType?: Maybe<ProfileType>;
 }>;
 
 
@@ -2053,7 +2055,7 @@ export type ProfilesByNameQuery = (
   { __typename?: 'Query' }
   & { search: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'origin' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'successorOfCirclesAddress' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'country' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'origin' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'successorOfCirclesAddress' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'country' | 'type' | 'provenUniqueness'>
     & { verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
@@ -2095,7 +2097,7 @@ export type ProfilesByCirclesAddressQuery = (
   { __typename?: 'Query' }
   & { profilesBySafeAddress: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'origin' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'origin' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'type'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -3274,6 +3276,7 @@ export const MyProfileDocument = gql`
     provenUniqueness
     location
     locationName
+    type
     memberships {
       isAdmin
       organisation {
@@ -3317,6 +3320,7 @@ export const ProfilesDocument = gql`
     lastName
     dream
     avatarUrl
+    type
     displayCurrency
     provenUniqueness
     memberships {
@@ -3349,8 +3353,8 @@ export const ProfilesDocument = gql`
 }
     `;
 export const ProfilesByNameDocument = gql`
-    query profilesByName($searchString: String!) {
-  search(query: {searchString: $searchString}) {
+    query profilesByName($searchString: String!, $profileType: ProfileType) {
+  search(query: {searchString: $searchString, profileType: $profileType}) {
     id
     origin
     circlesSafeOwner
@@ -3363,6 +3367,7 @@ export const ProfilesByNameDocument = gql`
     lastName
     dream
     country
+    type
     displayCurrency
     provenUniqueness
     verifications {
@@ -3430,6 +3435,7 @@ export const ProfilesByCirclesAddressDocument = gql`
     locationName
     lat
     lon
+    type
     memberships {
       isAdmin
       organisation {
