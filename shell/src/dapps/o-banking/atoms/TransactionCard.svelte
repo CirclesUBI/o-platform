@@ -7,9 +7,9 @@ import relativeTimeString from "../../../shared/functions/relativeTimeString";
 
 import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { onMount } from "svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { isMobile } from "../../../shared/functions/isMobile";
+import {unreadEventInbox} from "../../../shared/stores/inbox";
 export let event: ProfileEvent;
 
 let path: any;
@@ -110,6 +110,7 @@ $: {
   targetProfile = event.direction === "in" ? fromProfile : toProfile;
 }
 function loadDetailPage(path) {
+  unreadEventInbox.markAsRead(event);
   push(`#/banking/transactions/${path}`);
 }
 let textCutoff = isMobile() ? 16 : 42;

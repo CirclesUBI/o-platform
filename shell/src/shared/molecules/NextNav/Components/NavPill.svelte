@@ -1,6 +1,6 @@
 <script lang="ts">
 import Icons from "../../Icons.svelte";
-import {unreadEventCount} from "../../../stores/unreadEventCount";
+import {unreadEventInbox} from "../../../stores/inbox";
 
 export let props;
 
@@ -19,11 +19,11 @@ function clickHandler() {
       role="presentation"
       on:click="{clickHandler}">
       {#if props && props.left}
-        {#if $unreadEventCount > 0 && props.center.props.icon !== "close"}
+        {#if $unreadEventInbox.events.length > 0 && props.center.props.icon !== "close"}
           <div class="relative self-center mr-2 text-primary" on:click="{clickHandler}">
             <Icons icon="notificationbubble" />
             <div class="absolute top-0 w-full text-base text-center font-heading">
-              {$unreadEventCount}
+              {$unreadEventInbox.events.length}
             </div>
           </div>
         {:else}

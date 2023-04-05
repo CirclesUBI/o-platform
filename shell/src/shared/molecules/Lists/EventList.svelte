@@ -18,14 +18,14 @@ import { onMount } from "svelte";
 import { inview } from "svelte-inview/dist/index";
 
 import { poppedScrollPosition, scrollToTop, scrollToBottom, scrollToPosition, popScrollPosition, scrollPositionStackPopulated } from "../../layouts/Center.svelte";
-import { Readable } from "svelte/store";
 import { SvelteComponentDev } from "svelte/internal";
 import Label from "../../atoms/Label.svelte";
 import GenericEventCard from "../../../dapps/o-notifications/atoms/GenericEventCard.svelte";
+import {PagedEventQuery} from "../../stores/pagedEventQuery";
 
 export let views: EventListViewMap = {};
 export let reverse: boolean = false;
-export let store: Readable<ProfileEvent[]> & {
+export let store: PagedEventQuery & {
   next: () => Promise<boolean>;
 };
 
@@ -47,12 +47,13 @@ onMount(() => {
 
     let i = 0;
     eventsWithViews = events
+      .filter((event) => views[event.type])
       .map((event) => {
         const view: EventListView = views[event.type];
         let viewComponent: SvelteComponentDev;
-        if (view.function) {
+        if (view?.function) {
           viewComponent = view.function(event);
-        } else if (view.component) {
+        } else if (view?.component) {
           viewComponent = view.component;
         } else {
           viewComponent = GenericEventCard;
@@ -63,10 +64,9 @@ onMount(() => {
           event: event,
           component: viewComponent,
         };
-      })
-      .filter((o) => o.component);
+      });
 
-    isLoading = !(<any>store)._isInitialized;
+    isLoading = !store.isInitialized;
   });
 });
 

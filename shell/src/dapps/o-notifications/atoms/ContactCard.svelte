@@ -8,7 +8,7 @@ import { _ } from "svelte-i18n";
 import { isMobile } from "../../../shared/functions/isMobile";
 import relativeTimeString from "../../../shared/functions/relativeTimeString";
 import Icons from "../../../shared/molecules/Icons.svelte";
-import {markAsRead} from "../../../shared/functions/markAsRead";
+import {unreadEventInbox} from "../../../shared/stores/inbox";
 
 export let event: ProfileEvent;
 
@@ -70,7 +70,7 @@ function getValues(): {
 
 function loadDetailPage(path: string) {
   push(`#/contacts/profile/${path}`);
-  markAsRead(event);
+  unreadEventInbox.markAsRead(event);
 }
 
 let textCutoff = isMobile() ? 16 : 42;
