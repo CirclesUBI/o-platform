@@ -551,6 +551,7 @@ export type Mutation = {
   setIsFavorite: Scalars['Boolean'];
   shareLink: Scalars['String'];
   markAsRead: MarkAsReadResult;
+  markAllAsRead: MarkAsReadResult;
 };
 
 
@@ -851,6 +852,7 @@ export type ProfileEvent = {
   __typename?: 'ProfileEvent';
   timestamp: Scalars['String'];
   unread: Scalars['Boolean'];
+  unread_marker_id?: Maybe<Scalars['Int']>;
   block_number?: Maybe<Scalars['Int']>;
   transaction_index?: Maybe<Scalars['Int']>;
   transaction_hash?: Maybe<Scalars['String']>;
@@ -1847,6 +1849,30 @@ export type SendSignedTransactionMutation = (
   ) }
 );
 
+export type MarkAllAsReadMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MarkAllAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAllAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
+export type MarkAsReadMutationVariables = Exact<{
+  entryIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type MarkAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
 export type InitQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2329,7 +2355,7 @@ export type StreamQuery = (
   { __typename?: 'Query' }
   & { events: Array<(
     { __typename?: 'ProfileEvent' }
-    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type' | 'unread'>
+    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type' | 'unread' | 'unread_marker_id'>
     & { contact_address_profile?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'type' | 'successorOfCirclesAddress' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'provenUniqueness'>
@@ -3076,6 +3102,20 @@ export const SendSignedTransactionDocument = gql`
   }
 }
     `;
+export const MarkAllAsReadDocument = gql`
+    mutation markAllAsRead {
+  markAllAsRead {
+    count
+  }
+}
+    `;
+export const MarkAsReadDocument = gql`
+    mutation markAsRead($entryIds: [Int!]!) {
+  markAsRead(entries: $entryIds) {
+    count
+  }
+}
+    `;
 export const InitDocument = gql`
     query init {
   init {
@@ -3792,6 +3832,7 @@ export const StreamDocument = gql`
     direction
     type
     unread
+    unread_marker_id
     payload {
       ... on CrcHubTransfer {
         transaction_hash
@@ -4544,6 +4585,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendSignedTransaction(variables: SendSignedTransactionMutationVariables): Promise<SendSignedTransactionMutation> {
       return withWrapper(() => client.request<SendSignedTransactionMutation>(print(SendSignedTransactionDocument), variables));
+    },
+    markAllAsRead(variables?: MarkAllAsReadMutationVariables): Promise<MarkAllAsReadMutation> {
+      return withWrapper(() => client.request<MarkAllAsReadMutation>(print(MarkAllAsReadDocument), variables));
+    },
+    markAsRead(variables: MarkAsReadMutationVariables): Promise<MarkAsReadMutation> {
+      return withWrapper(() => client.request<MarkAsReadMutation>(print(MarkAsReadDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));

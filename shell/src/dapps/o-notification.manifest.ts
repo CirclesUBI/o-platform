@@ -23,7 +23,7 @@ export const index: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=all"],
-  title: "All",
+  title: "New",
   icon: "allnotificationbubble",
   navigation: {
     leftSlot: {

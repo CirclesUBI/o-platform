@@ -33,6 +33,7 @@ export let isNotFoundPage: boolean = false;
       on:actionButton="{() => {
         navigation.navPill.center.props.action();
       }}"
+      navigation={navigation}
       props="{navigation.navPill}" />
   {/if}
   {#if navigation.loginPill && !isNotFoundPage}

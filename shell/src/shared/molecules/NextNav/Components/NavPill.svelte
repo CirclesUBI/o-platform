@@ -1,24 +1,13 @@
 <script lang="ts">
+import Icons from "../../Icons.svelte";
+import {unreadEventInbox} from "../../../stores/inbox";
+
 export let props;
 
 function clickHandler() {
-  /*if ($inbox.length && $inbox.length && props.center.props.icon !== "close") {
-    window.o.runProcess(
-      showNotifications,
-      {
-        events: $inbox.map((o) => o),
-      },
-      {
-        events: false,
-        currentEvent: false,
-        currentEventIndex: false,
-      }
-    );
-  } else {*/
   if (props && props.left) {
     props.left.props.action();
   }
-  //}
 }
 </script>
 
@@ -30,18 +19,18 @@ function clickHandler() {
       role="presentation"
       on:click="{clickHandler}">
       {#if props && props.left}
-        <!-- {#if $inbox.length && $inbox.length && props.center.props.icon !== "close"}
+        {#if $unreadEventInbox.events.length > 0 && props.center.props.icon !== "close"}
           <div class="relative self-center mr-2 text-primary" on:click="{clickHandler}">
             <Icons icon="notificationbubble" />
             <div class="absolute top-0 w-full text-base text-center font-heading">
-              {$inbox.length}
+              {$unreadEventInbox.events.length}
             </div>
           </div>
-        {:else}-->
+        {:else}
         <div class="flex flex-col self-center justify-center h-full mr-3">
           <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
         </div>
-        <!--{/if}-->
+        {/if}
       {/if}
     </div>
 
