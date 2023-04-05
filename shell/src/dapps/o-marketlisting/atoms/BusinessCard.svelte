@@ -11,7 +11,6 @@ export let business: Businesses & { isFavorite: boolean };
 const eventDispatcher = createEventDispatcher();
 
 function loadDetailPage(circlesAddress) {
-  console.log("dacian", business);
   push(`/market/detail/${circlesAddress}`);
 }
 
