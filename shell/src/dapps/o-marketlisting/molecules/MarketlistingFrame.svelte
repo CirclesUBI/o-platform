@@ -84,14 +84,14 @@ function SortChange(event) {
   on:error="{(e) => {
     console.log('POS ERROR', e.detail); // GeolocationError
   }}" />
-<section class="justify-center p-2 pt-0 mx-auto text-base align-middle">
-  <CategoryFilter on:change="{filterCategoriesChange}" />
-  <div class="text-sm text-left whitespace-nowrap">
+<section class="justify-center p-4 pt-0 mx-auto text-base align-middle">
+  <div class="py-2 text-left border-2 border-t-0 border-l-0 border-r-0 whitespace-nowrap border-b-marketplace">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
-    <span class="pl-2 text-black">{currentSort}</span>
+    <span class="pl-2">{currentSort}</span>
     <DropDown selected="Select Sort Option" items="{dropdownItems}" id="sort" key="sortBy" isShevron="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{SortChange}" />
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
+  <CategoryFilter on:change="{filterCategoriesChange}" />
 
   <div class="flex flex-wrap content-center w-full mb-20 justify-evenly">
     {#if $marketStore.messages.length > 0}

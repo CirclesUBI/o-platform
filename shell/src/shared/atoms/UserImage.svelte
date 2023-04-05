@@ -12,6 +12,7 @@ export let tooltip: boolean = false;
 export let profileLink: boolean = true;
 export let editable: boolean = false;
 let displayName: string = "";
+let isOrganisation: boolean = false;
 
 function linkToProfile(event) {
   if (profileLink) {
@@ -25,6 +26,7 @@ $: {
       displayName = profile.displayName;
     } else {
       displayName = profile.firstName ? profile.firstName : "";
+      isOrganisation = true;
     }
     displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
   }
@@ -51,7 +53,7 @@ $: {
     {/if}
 
     <div class="self-center text-center rounded-full justify-self-center w-{size}" class:rounded-corners-white-borders="{whiteRing}" style="padding: {size >= 20 ? `4px` : `1px`}">
-      <div class="relative w-{size} h-{size} m-auto rounded-full" class:bg-white="{!transparent}">
+      <div class="relative w-{size} h-{size} m-auto " class:bg-white="{!transparent}" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}">
         {#if profile.provenUniqueness}
           <img
             src="/icons/verified.svg"
@@ -67,7 +69,9 @@ $: {
             class:h-4="{size < 20}" />
         {/if}
         <img
-          class="rounded-full w-{size} h-{size}"
+          class=" w-{size} h-{size}"
+          class:rounded-full="{!isOrganisation}"
+          class:rounded-md="{isOrganisation}"
           src="{profile && profile.avatarUrl ? profile.avatarUrl : profile.circlesAddress ? AvataarGenerator.generate(profile.circlesAddress.toLowerCase()) : AvataarGenerator.default()}"
           alt="{displayName}" />
       </div>
