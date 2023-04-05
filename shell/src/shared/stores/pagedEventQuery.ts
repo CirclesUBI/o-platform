@@ -36,6 +36,9 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
   private _indexCache: {[indexKey:string]: string[]} = {};
 
   private _profileChangedSubscription:any;
+  public get isInitialized() : boolean {
+    return this._isInitialized;
+  }
   private _isInitialized = false;
   private _onDestroy?: () => void;
 
@@ -147,13 +150,13 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
       };
     }
 
-    const totalEventCount = this.refresh();
+    this.refresh();
     const newEventCount = nextPage.length;
     return newEventCount >= this.pageSize;
   }
 
   refresh(newItem:boolean = false) {
-    const eventList = Object.values(this._primaryCache).sort((a, b) => {
+    let eventList = Object.values(this._primaryCache).sort((a, b) => {
       const _a = new Date(a.timestamp).getTime();
       const _b = new Date(b.timestamp).getTime();
       return _a > _b
@@ -162,6 +165,10 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
           ? 1
           : 0;
     });
+
+    if (this.filter?.unreadOnly) {
+        eventList = eventList.filter(e => e.unread);
+    }
 
     this._set({
       events: eventList,
@@ -193,7 +200,11 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
   }
 
   async findByPrimaryKey(type:EventType, primaryKey:string) : Promise<ProfileEvent|undefined> {
-    return  this._primaryCache[`${type}_${primaryKey}`];
+    const result = this._primaryCache[`${type}_${primaryKey}`];
+    if (this.filter?.unreadOnly && !result?.unread) {
+      return undefined;
+    }
+    return result;
   }
 
   findByIndexKey(type:EventType, indexName:string, indexKey:string) : ProfileEvent[] {
@@ -201,6 +212,10 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     if (!entries) {
       return [];
     }
-    return entries.map(o => this._primaryCache[o]);
+    const result = entries.map(o => this._primaryCache[o]);
+    if (this.filter?.unreadOnly) {
+      return result.filter(o => o?.unread);
+    }
+    return result;
   }
 }

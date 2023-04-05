@@ -7195,15 +7195,6 @@ keccak@^3.0.3:
     node-gyp-build "^4.2.0"
     readable-stream "^3.6.0"
 
-keccak@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/keccak/-/keccak-3.0.3.tgz#4bc35ad917be1ef54ff246f904c2bbbf9ac61276"
-  integrity sha512-JZrLIAJWuZxKbCilMpNz5Vj7Vtb4scDG3dMXLOsbzBmQGyjwE61BbW7bJkfKKCShXiQZt3T6sBgALRtmd+nZaQ==
-  dependencies:
-    node-addon-api "^2.0.0"
-    node-gyp-build "^4.2.0"
-    readable-stream "^3.6.0"
-
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/keyv/-/keyv-3.1.0.tgz"
@@ -9798,15 +9789,6 @@ readable-stream@^3.6.2:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-readable-stream@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.2.tgz#56a9b36ea965c00c5a93ef31eb111a0f11056967"
-  integrity sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==
-  dependencies:
-    inherits "^2.0.3"
-    string_decoder "^1.1.1"
-    util-deprecate "^1.0.1"
-
 readable-stream@^4.0.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-4.2.0.tgz"
@@ -10881,6 +10863,11 @@ svelte-forms@^2.3.1:
   integrity sha512-ExX9PM0JgvdOWlHl2ztD7XzLNPOPt9U5hBKV8sUAisMfcYWpPRnyz+6EFmh35BOBGJJmuhTDBGm5/7seLjOTIA==
   dependencies:
     is-promise "^4.0.0"
+
+svelte-geolocation@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/svelte-geolocation/-/svelte-geolocation-0.3.0.tgz#560f404565c8b489a2ecd087a60c1ae930532390"
+  integrity sha512-6SV3vENzyWSiLRLT2uVgl7ZHxU1XY0Uy4dSKHLg3iedagjIoL+u/BJylxuQY2i5ZdJl9gg+09B3oKfUrknExJQ==
 
 svelte-hmr@^0.10.3:
   version "0.10.3"

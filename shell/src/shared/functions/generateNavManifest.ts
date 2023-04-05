@@ -11,7 +11,7 @@ export type GenerateNavManifestArgs = {
   centerIsOpen: boolean;
   centerContainsProcess: boolean;
   rightIsOpen: boolean;
-  notificationCount: number;
+  notificationCount?: number;
   canGoBack?: boolean;
   canSkip?: boolean;
   showLogin?: boolean;

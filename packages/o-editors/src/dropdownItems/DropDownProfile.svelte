@@ -10,11 +10,6 @@ let itemClasses = "";
 $: {
   let classes = [];
 
-  // if (isActive) {
-  //   classes.push("active border-primary");
-  // } else {
-  //   classes.push("border-light-lightest");
-  // }
   classes.push("border-light-lightest");
   if (isFirst) {
     classes.push("first");
@@ -31,10 +26,7 @@ $: {
     <div class="text-center">
       <div class="inline-flex">
         <div class="w-10 h-10 m-auto rounded-full">
-          <img
-            class="rounded-full"
-            src="{item.avatarUrl ? item.avatarUrl : '/images/market/city.png'}"
-            alt="user-icon" />
+          <img class="rounded-full" src="{item.avatarUrl ? item.avatarUrl : '/images/market/city.png'}" alt="user-icon" />
         </div>
       </div>
     </div>

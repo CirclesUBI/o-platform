@@ -6,7 +6,7 @@ import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { ShareLinkDocument, ShareLinkMutationVariables } from "../../../shared/api/data/types";
 import { myLocation } from "../../../shared/stores/myLocation";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
-import { marketStore } from "../stores/marketStore";
+import marketStore from "../stores/marketStore";
 import CopyClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import GoogleMap from "../../../shared/molecules/GoogleMaps/GoogleMap.svelte";
@@ -22,14 +22,8 @@ export let circlesAddress: string;
 let business: Businesses;
 
 let visible: boolean = false;
-let currentDayOpenHours = "";
-let everythingBeforeTheCurrentDay = [];
-let everythingAfterTheCurrentDay = [];
 let link: string;
 let showShareOptions: boolean = false;
-
-let hasOpeningHours: boolean = false;
-
 let mapHeight = "16em";
 
 const mapOptions = {
@@ -41,6 +35,17 @@ const mapOptions = {
   fullscreenControl: false,
 };
 
+type BusinessHour = {
+  day: string;
+  hours?: string[];
+  isNow: boolean;
+};
+const today = new Date();
+const currentDateIndex = today.getDay();
+const currentHour = today.getHours();
+let hours: BusinessHour[];
+let isOpenNow: boolean;
+let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 
@@ -48,7 +53,6 @@ onMount(async () => {
   detailActions = [];
 
   let $me: Profile | null = null;
-  let actions: UserActionItem[] = [];
 
   const unsub = me.subscribe((o) => {
     $me = o;
@@ -57,6 +61,7 @@ onMount(async () => {
   if (!$me) throw new Error(window.o.i18n("shared.userActions.errors.couldNotLoadYourProfile"));
 
   shareLink();
+
   return marketStore.subscribe((data) => {
     if (!data || data.businesses.length == 0) {
       return;
@@ -65,61 +70,84 @@ onMount(async () => {
     business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
     if (!business) return;
 
-    const currentDateIndex = new Date().getDay();
-    const businessHours = [
-      business.businessHoursSunday + " Sunday",
-      business.businessHoursMonday + " Monday",
-      business.businessHoursTuesday + " Tuesday",
-      business.businessHoursWednesday + " Wednesday",
-      business.businessHoursThursday + " Thursday",
-      business.businessHoursFriday + " Friday",
-      business.businessHoursSaturday + " Saturday",
+    hours = [
+      {
+        day: "Sunday",
+        hours: business.businessHoursSunday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Monday",
+        hours: business.businessHoursMonday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Tuesday",
+        hours: business.businessHoursTuesday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Wednesday",
+        hours: business.businessHoursWednesday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Thursday",
+        hours: business.businessHoursThursday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Friday",
+        hours: business.businessHoursFriday?.split(";"),
+        isNow: false,
+      },
+      {
+        day: "Saturday",
+        hours: business.businessHoursSaturday?.split(";"),
+        isNow: false,
+      },
     ];
 
-    currentDayOpenHours = businessHours[currentDateIndex];
-    everythingBeforeTheCurrentDay = businessHours.slice(0, currentDateIndex);
-    if (currentDateIndex < businessHours.length) {
-      everythingAfterTheCurrentDay = businessHours.slice(currentDateIndex + 1, businessHours.length);
+    hours[currentDateIndex].isNow = true;
+
+    if (hours[currentDateIndex].hours) {
+      isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
+    } else {
+      noData = true;
     }
-
-    hasOpeningHours = checkIfOpeningHoursExists(businessHours);
-
-    availableActions.push({
-      key: "transfer",
-      icon: "cash",
-      title: window.o.i18n("shared.userActions.sendMoney"),
-      action: async () => {
-        window.o.runProcess(transfer, {
-          safeAddress: $me.circlesAddress,
-          recipientAddress: business.circlesAddress,
-          privateKey: sessionStorage.getItem("circlesKey"),
-        });
-      },
-    });
   });
 });
 
-function parseTimeString(timeString, type) {
-  const [timeRange, weekdays] = timeString.split(" ");
-  const hoursArray = timeRange.split(";");
-
-  if (type === "weekday") {
-    return weekdays;
-  }
-  if (type === "hours") {
-    return hoursArray[0] !== "" ? hoursArray : false;
-  }
+function convertH2M(timeInHour) {
+  var timeParts = timeInHour.split(":");
+  return Number(timeParts[0]) * 60 + Number(timeParts[1]);
 }
 
-function checkIfOpeningHoursExists(businessHours: string[]) {
-  for (let i = 0; i < businessHours.length; i++) {
-    let day = businessHours[i];
-    for (let y = 0; y < businessHours[i].length; y++) {
-      if (day[y].match(/[0-9]/g)) {
+function checkIsOpenNow(timesArray) {
+  if (!timesArray) {
+    return;
+  }
+  var d = new Date(); // current time
+  let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
+  let open = false;
+
+  if (timesArray) {
+    timesArray.forEach(function (times) {
+      if (open) {
         return true;
       }
-    }
+      times = times.split("-");
+      if (times[1]) {
+        let begIn = convertH2M(times[0]);
+        let endIn = convertH2M(times[1]);
+
+        return (open = nIn >= begIn && (nIn < endIn || nIn === endIn));
+      }
+    });
+  } else {
+    return false;
   }
+  return open;
 }
 
 async function shareLink() {
@@ -131,6 +159,7 @@ async function shareLink() {
 </script>
 
 <div class="bg-marketlisting" style="display: none;"></div>
+
 <section class="p-4">
   {#if business}
     <div class="flex justify-center w-full">
@@ -195,7 +224,7 @@ async function shareLink() {
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
-          <a href="https://wa.me/?textHey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+          <a href="https://wa.me/?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
             <Icons icon="whatsapp" customClass="inline" size="{12}" />
           </a>
         </div>
@@ -207,57 +236,69 @@ async function shareLink() {
       </div>
     {/if}
 
-    {#if hasOpeningHours}
+    {#if !noData}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <div>
-          <div class="flex mb-5 ml-2">
+          <div
+            class="flex mb-5 ml-2 cursor-pointer"
+            role="presentation"
+            on:click="{() => {
+              visible = !visible;
+            }}">
             <Icon name="clock" class="w-6 h-6" />
-            <div class="pl-4 pr-4">Opening Hours</div>
-            <div
-              role="presentation"
-              on:click="{() => {
-                visible = !visible;
-              }}">
-              <Icon name="chevron-down" class="w-6 h-6" />
+            <div class="pl-4 pr-4">
+              Opening Hours:
+              <span
+                >{@html isOpenNow ? "<span class='text-success'>Open</span>" : "<span class='text-alert'>Closed</span>"}
+                <Icon name="chevron-down" class="inline w-5 h-5 -mt-1 -ml-1" />
+              </span>
             </div>
           </div>
           <div class="opening-hours-container">
             {#if visible}
-              {#each everythingBeforeTheCurrentDay as day}
+              <div class="grid gap-2 grid-rows">
+                {#each hours as businessHour}
+                  <div class="grid grid-cols-2 gap-1">
+                    <div class="text-sm">{businessHour.day}</div>
+                    <div class="text-sm">{@html businessHour.hours[0].length ? businessHour.hours.join(", ") : "<span class='text-alert'>Closed</span>"}</div>
+                  </div>
+                {/each}
+              </div>
+              <!-- {#each everythingBeforeTheCurrentDay as day}
                 <div class="flex flex-col mb-3">
                   {#if parseTimeString(day, "weekday")}
-                    <div class="flex table-cell pl-2 mb-1 font-semibold">
-                      {parseTimeString(day, "weekday")}
+                    <div class="pl-2 mb-1">
+                      <span class="mr-1 font-semibold">{parseTimeString(day, "weekday")}:</span>
+                      {#if parseTimeString(currentDayOpenHours, "hours")}
+                        {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                          <span class="text-sm">{hours}</span>
+                        {/each}
+                      {:else}
+                        <span class="text-sm">Closed</span>
+                      {/if}
                     </div>
-                  {/if}
-                  {#if parseTimeString(day, "hours")}
-                    <div class="flex flex-wrap ml-2">
-                      {#each parseTimeString(day, "hours") as hours}
-                        <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
-                      {/each}
-                    </div>
-                  {:else}
-                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
                   {/if}
                 </div>
-              {/each}
+              {/each} -->
             {/if}
-
+            <!-- 
             {#if currentDayOpenHours}
               <div class="flex flex-col mb-3">
                 {#if parseTimeString(currentDayOpenHours, "weekday")}
-                  <div class="flex table-cell pl-2 mb-1 font-semibold">
-                    {parseTimeString(currentDayOpenHours, "weekday")}
+                  <div class="flex table-cell pl-2 mb-1">
+                    {#if visible}
+                      <span class="mr-1 font-semibold">{parseTimeString(currentDayOpenHours, "weekday")}</span>
+                    {:else}
+                      <span class="mr-1 font-semibold">Today:</span>
+                    {/if}
+                    {#if parseTimeString(currentDayOpenHours, "hours")}
+                      {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                        <span class="text-sm">{hours}</span>
+                      {/each}
+                    {:else}
+                      <span class="text-sm">Closed</span>
+                    {/if}
                   </div>
-                {/if}
-                {#if parseTimeString(currentDayOpenHours, "hours")}
-                  <div class="flex flex-wrap ml-2">
-                    {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                      <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
-                    {/each}
-                  </div>
-                {:else}
-                  <div class="ml-2 badge badge-error badge-outline">Closed</div>
                 {/if}
               </div>
             {/if}
@@ -266,22 +307,20 @@ async function shareLink() {
               {#each everythingAfterTheCurrentDay as after}
                 <div class="flex flex-col mb-3">
                   {#if parseTimeString(after, "weekday")}
-                    <div class="flex table-cell pl-2 mb-1 font-semibold">
-                      {parseTimeString(after, "weekday")}
+                    <div class="flex table-cell pl-2 mb-1">
+                      <span class="mr-1 font-semibold">{parseTimeString(after, "weekday")}:</span>
+                      {#if parseTimeString(currentDayOpenHours, "hours")}
+                        {#each parseTimeString(currentDayOpenHours, "hours") as hours}
+                          <span class="text-sm">{hours}</span>
+                        {/each}
+                      {:else}
+                        <span class="text-sm">Closed</span>
+                      {/if}
                     </div>
-                  {/if}
-                  {#if parseTimeString(after, "hours")}
-                    <div class="flex flex-wrap ml-2">
-                      {#each parseTimeString(after, "hours") as hours}
-                        <div class="flex mr-2 badge whitespace-nowrap badge-success badge-outline">{hours}</div>
-                      {/each}
-                    </div>
-                  {:else}
-                    <div class="ml-2 badge badge-error badge-outline">Closed</div>
                   {/if}
                 </div>
               {/each}
-            {/if}
+            {/if} -->
           </div>
         </div>
       </div>

@@ -258,6 +258,7 @@ function subscribeToProcess() {
 
       // If the event is an error event, then set the error property else clear it
       if (event.type === "xstate.error") {
+        console.log("ERRR", event);
         error = (<any>event).data;
         waiting = false;
       } else {
