@@ -79,7 +79,7 @@ const processDefinition = (processId: string) =>
         navigation: {
           next: "#location",
           canSkip: () => false,
-          previous: "#description",
+          previous: "#firstName",
         },
       }),
       location: promptLocation<CreateOrganisationContext, any>({
@@ -114,7 +114,7 @@ const processDefinition = (processId: string) =>
         },
         navigation: {
           next: "#checkDeploy",
-          previous: "#description",
+          previous: "#location",
           canSkip: () => false,
         },
       }),
@@ -236,7 +236,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (o: any) => { },
           },
         }),
       },
