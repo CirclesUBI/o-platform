@@ -248,7 +248,7 @@ async function shareLink() {
             }}">
             <Icon name="clock" class="w-6 h-6" />
             <div class="pl-4 pr-4">
-              <Label key="dapps.o-marketplace.molecules.checkoutDelivery.openingHoursEnglish" />
+              <Label key="dapps.o-marketplace.molecules.checkoutDelivery.openingHours" />
               <span
                 >{@html isOpenNow ? "<span class='text-success'>Open</span>" : "<span class='text-alert'>Closed</span>"}
                 {#if visible}
