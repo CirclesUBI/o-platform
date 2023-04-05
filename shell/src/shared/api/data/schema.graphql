@@ -80,6 +80,7 @@ type ClaimedInvitation {
 type ProfileEvent {
   timestamp: String!
   unread: Boolean!
+  unread_marker_id: Int
   block_number: Int
   transaction_index: Int
   transaction_hash: String
@@ -212,6 +213,7 @@ input QueryProfileInput {
 
 input SearchInput {
   searchString: String!
+  profileType: ProfileType
 }
 
 input UpsertProfileInput {
@@ -936,6 +938,7 @@ type Mutation {
   setIsFavorite(circlesAddress: String!, isFavorite: Boolean!): Boolean!
   shareLink(targetType: LinkTargetType!, targetKey: String!): String!
   markAsRead(entries: [Int!]!): MarkAsReadResult!
+  markAllAsRead: MarkAsReadResult!
 }
 
 input SurveyDataInput {

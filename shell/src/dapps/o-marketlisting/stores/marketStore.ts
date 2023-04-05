@@ -1,58 +1,51 @@
-import {readable, Subscriber} from "svelte/store";
-import {AllBusinessesDocument, Businesses, QueryAllBusinessesOrderOptions} from "../../../shared/api/data/types";
-import {ApiClient} from "../../../shared/apiConnection";
-import {myLocation} from "../../../shared/stores/myLocation";
+import { readable, Subscriber } from "svelte/store";
+import { AllBusinessesDocument, Businesses, QueryAllBusinessesOrderOptions } from "../../../shared/api/data/types";
+import { ApiClient } from "../../../shared/apiConnection";
 
 export type MarketListingData = {
-  businesses: Businesses[]
-  orderBy: QueryAllBusinessesOrderOptions
-  filter?: number[]
-  messages: string[]
-}
-
-export const marketStore = {
-  subscribe: (subscriber: Subscriber<MarketListingData>) => _marketStore.subscribe(subscriber),
-  reload: reload,
+  businesses: Businesses[];
+  orderBy: QueryAllBusinessesOrderOptions;
+  filter?: number[];
+  messages: string[];
 };
+
+let ownLocation: GeolocationPosition;
+
+function marketStore() {
+  return {
+    subscribe: (subscriber: Subscriber<MarketListingData>) => _marketStore.subscribe(subscriber),
+    reload: reload,
+
+    init(location: GeolocationPosition) {
+      ownLocation = location;
+    },
+  };
+}
 
 const initial = {
   businesses: [],
-  orderBy: QueryAllBusinessesOrderOptions.MostPopular,
-  messages: []
+  orderBy: QueryAllBusinessesOrderOptions.Nearest,
+  messages: [],
 };
 
 const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
+
   reload(_marketListingData.orderBy, _marketListingData.filter);
-  return function stop() {
-  }
+  return function stop() {};
 });
 
-function reload(orderBy: QueryAllBusinessesOrderOptions, filter?:number[]) {
-  let ownLocation: GeolocationPosition | undefined;
-
-  if (orderBy == QueryAllBusinessesOrderOptions.Nearest) {
-    myLocation.subscribe((o) => {
-      if (!o || o instanceof GeolocationPositionError || o instanceof Error) {
-        myLocation.reload();
-      } else {
-        ownLocation = o;
-      }
-    })();
-  }
-
-  const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest
-    ? orderBy
-    : !ownLocation
-      ? _marketListingData.orderBy
-      : QueryAllBusinessesOrderOptions.Nearest;
+function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[]) {
+  const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest ? orderBy : !ownLocation ? QueryAllBusinessesOrderOptions.Newest : QueryAllBusinessesOrderOptions.Nearest;
 
   if (filter?.length === 0) {
     filter = undefined;
   }
 
   if (orderBy != newOrder) {
-    _marketListingData.messages = ["The last action couldn't be completed without you current location. Please try it again once the location is available."];
+    _marketListingData.messages = [
+      "<span class='text-alert'>We couldn't get your Location.</span><br/>Sorting by 'Nearest' will only work if you grant the browser access to your location.",
+    ];
   } else {
     _marketListingData.messages = [];
   }
@@ -60,22 +53,25 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?:number[]) {
   ApiClient.query<Businesses[], any>(AllBusinessesDocument, {
     queryParams: {
       order: {
-        orderBy: newOrder
+        orderBy: newOrder,
       },
-      ... ownLocation ? {
-        ownCoordinates: {
-          lat: ownLocation.coords.latitude,
-          lon: ownLocation.coords.longitude
-        }
-      } : {},
-      ...filter ? {
-        where: {
-          inCategories: filter
-        }
-      } : {}
-    }
-  })
-  .then(businesses => {
+      ...(ownLocation
+        ? {
+            ownCoordinates: {
+              lat: ownLocation.coords.latitude,
+              lon: ownLocation.coords.longitude,
+            },
+          }
+        : {}),
+      ...(filter
+        ? {
+            where: {
+              inCategories: filter,
+            },
+          }
+        : {}),
+    },
+  }).then((businesses) => {
     _marketListingData.orderBy = orderBy;
     _marketListingData.filter = filter;
     _marketListingData.businesses = businesses;
@@ -85,3 +81,5 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?:number[]) {
 
 let _set: (marketListingData: MarketListingData) => void;
 let _marketListingData: MarketListingData = initial;
+
+export default marketStore();

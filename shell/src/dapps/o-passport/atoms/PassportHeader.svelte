@@ -69,7 +69,7 @@ function editProfileField(onlyThesePages: string[]) {
 
   <div class="text-center" role="presentation" on:click="{() => (profile.__typename === 'Organisation' ? editProfileField(['firstName']) : editProfileField(['firstName', 'lastName']))}">
     <h2 class="text-2xl cursor-pointer sm:text-4xl font-heading">
-      {displayName ? (displayName.length >= 38 ? displayName.slice(0, 38) + "..." : displayName) : ""}
+      {displayName ? (displayName.length >= 15 ? displayName.slice(0, 15) + "..." : displayName) : ""}
       <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary" />
     </h2>
   </div>
