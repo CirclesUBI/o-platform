@@ -23,7 +23,7 @@ function clickHandler() {
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="relative self-center mr-2 text-primary" on:click="{clickHandler}">
             <Icons icon="bell" size="{10}" solid="{true}" customClass="mt-1" />
-            <div class="absolute right-0.5 w-full text-center top-1.5 text-secondary font-heading">12</div>
+            <div class="absolute right-0.5 w-full text-center top-1.5 text-secondary font-heading">{$unreadEventInbox.events.length}</div>
           </div>
         {:else}
           <div class="flex flex-col self-center justify-center h-full mr-3">
