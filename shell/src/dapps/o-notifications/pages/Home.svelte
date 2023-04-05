@@ -4,28 +4,15 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import {
   EventType,
-  MarkAllAsReadDocument,
-  MarkAllAsReadMutationVariables, MarkAsReadResult,
-  SortOrder
 } from "../../../shared/api/data/types";
-import { MyInbox } from "../../../shared/stores/inbox";
+import {unreadEventInbox} from "../../../shared/stores/inbox";
 import EventList from "../../../shared/molecules/Lists/EventList.svelte";
 import TransactionCard from "../../o-banking/atoms/TransactionCard.svelte";
 import RedeemedInvitationCard from "../atoms/RedeemedInvitationCard.svelte";
 import ContactCard from "../../o-notifications/atoms/ContactCard.svelte";
-import {onMount} from "svelte";
-import {ApiClient} from "../../../shared/apiConnection";
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let routable: Routable;
-
-let inbox = new MyInbox(
-        SortOrder.Desc,
-        30,
-        [EventType.CrcHubTransfer, EventType.CrcMinting, EventType.CrcTrust, EventType.InvitationRedeemed, EventType.Erc20Transfer],
-        {
-          unreadOnly: true
-        });
 
 const views = {
   [EventType.CrcHubTransfer]: { component: TransactionCard },
@@ -34,12 +21,6 @@ const views = {
   [EventType.InvitationRedeemed]: { component: RedeemedInvitationCard },
   [EventType.Erc20Transfer]: { component: TransactionCard },
 };
-
-onMount(async () => {
-  // Mark all notifications as read
-  //const markedAsReadCount = await ApiClient.mutate<MarkAsReadResult, MarkAllAsReadMutationVariables>(
-  //        MarkAllAsReadDocument, {});
-});
 </script>
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
@@ -50,5 +31,5 @@ onMount(async () => {
   </h1>
 </div> -->
 <div class="px-4 pt-12 mx-auto mb-20 md:w-2/3 xl:w-1/2">
-  <EventList store="{inbox}" views="{views}" />
+  <EventList store="{unreadEventInbox}" views="{views}" />
 </div>

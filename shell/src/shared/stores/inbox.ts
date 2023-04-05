@@ -1,9 +1,12 @@
 import {PagedEventQuery, PagedEventQueryIndexEntry} from "./pagedEventQuery";
 import {
-  AcknowledgeDocument,
   EventPayload,
-  EventType, NotificationEvent,
-  Profile,
+  EventType,
+  MarkAllAsReadDocument,
+  MarkAllAsReadMutationVariables,
+  MarkAsReadDocument,
+  MarkAsReadMutationVariables,
+  MarkAsReadResult,
   ProfileEvent,
   ProfileEventFilter,
   QueryEventsArgs,
@@ -23,6 +26,36 @@ export class MyInbox extends PagedEventQuery {
     });
     inboxes.push(this);
     console.log("Opened inbox", inboxes.length)
+  }
+
+  async markAsRead (event:ProfileEvent) {
+    if (!event || !event.unread) return;
+
+    const result = await ApiClient.mutate<MarkAsReadResult, MarkAsReadMutationVariables>(
+        MarkAsReadDocument, {
+          entryIds: [event.unread_marker_id]
+        }).then(result => {
+      MyInbox.update({
+        type: event.type,
+        transaction_hash: event.transaction_hash,
+      });
+      return result;
+    });
+
+    event.unread = false;
+    this.refresh();
+    return result.count;
+  }
+
+  async markAllAsRead () {
+    const result = await ApiClient.mutate<MarkAsReadResult, MarkAllAsReadMutationVariables>(
+        MarkAllAsReadDocument, {}).then(result => {
+      return result;
+    });
+
+    this.refresh();
+
+    return result.count;
   }
 
   getPrimaryKey(eventPayload: EventPayload): string {
@@ -64,26 +97,13 @@ export class MyInbox extends PagedEventQuery {
 
     if (foundEvents && foundEvents.length > 0) {
       const event = foundEvents[0];
+      console.log("Found event is an unread event", event.unread);
       this.addToCache(event);
       return event;
     }
   }
 
   protected maintainExternalCaches(event: ProfileEvent): void {
-  }
-
-  async acknowledge(event: ProfileEvent) {
-    let $me:Profile;
-    me.subscribe(me => $me = me)();
-    const apiClient = await window.o.apiClient.client.subscribeToResult();
-    await apiClient.mutate({
-      mutation: AcknowledgeDocument,
-      variables: {
-        safeAddress: $me.circlesAddress,
-        until: new Date(event.timestamp).toJSON(),
-      },
-    });
-    this.refresh();
   }
 
   static update(event: {type:string, transaction_hash: string}) {
@@ -97,3 +117,13 @@ export class MyInbox extends PagedEventQuery {
     })
   }
 }
+
+const unreadEventStore = new MyInbox(
+    SortOrder.Desc,
+    50,
+    [EventType.CrcHubTransfer, EventType.CrcMinting, EventType.CrcTrust, EventType.InvitationRedeemed, EventType.Erc20Transfer],
+    {
+      unreadOnly: true
+    });
+
+export const unreadEventInbox = unreadEventStore
