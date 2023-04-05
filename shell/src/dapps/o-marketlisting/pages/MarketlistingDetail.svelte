@@ -241,13 +241,12 @@ async function shareLink() {
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <div>
           <div
-            class="flex mb-5 ml-2 cursor-pointer"
+            class="flex cursor-pointer"
             role="presentation"
             on:click="{() => {
               visible = !visible;
             }}">
-            <Icon name="clock" class="w-6 h-6" />
-            <div class="pl-4 pr-4">
+            <div>
               <Label key="dapps.o-marketplace.molecules.checkoutDelivery.openingHours" />
               <span
                 >{@html isOpenNow ? "<span class='text-success'>Open</span>" : "<span class='text-alert'>Closed</span>"}
@@ -261,7 +260,7 @@ async function shareLink() {
           </div>
           <div class="opening-hours-container">
             {#if visible}
-              <div class="grid gap-2 grid-rows">
+              <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
                     <div class="text-sm">{businessHour.day}</div>
