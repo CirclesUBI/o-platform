@@ -8,13 +8,7 @@ module.exports = {
   },
 
   mode: "jit",
-  content: [
-    "./src/**/*.svelte",
-    "../packages/o-editors/src/**/*.svelte",
-    "./public/**/*.html",
-    "./../packages/**/*.svelte",
-    "./src/**/*.{js,jsx,ts,tsx,vue}",
-  ],
+  content: ["./src/**/*.svelte", "../packages/o-editors/src/**/*.svelte", "./public/**/*.html", "./../packages/**/*.svelte", "./src/**/*.{js,jsx,ts,tsx,vue}"],
 
   daisyui: {
     styled: true,
@@ -41,6 +35,7 @@ module.exports = {
         },
         grey: {
           DEFAULT: "#999999",
+          dark: "#414042",
         },
         dark: {
           DEFAULT: "#0A2262",
