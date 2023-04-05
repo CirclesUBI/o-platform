@@ -16,6 +16,7 @@ import { UserActionItem, UserActions } from "../../../shared/userActions";
 import { transfer } from "../../o-banking/processes/transfer";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let circlesAddress: string;
 
@@ -247,10 +248,14 @@ async function shareLink() {
             }}">
             <Icon name="clock" class="w-6 h-6" />
             <div class="pl-4 pr-4">
-              Opening Hours:
+              <Label key="dapps.o-marketplace.molecules.checkoutDelivery.openingHours" />
               <span
                 >{@html isOpenNow ? "<span class='text-success'>Open</span>" : "<span class='text-alert'>Closed</span>"}
-                <Icon name="chevron-down" class="inline w-5 h-5 -mt-1 -ml-1" />
+                {#if visible}
+                  <Icon name="chevron-up" class="inline w-5 h-5 -mt-1 -ml-1" />
+                {:else}
+                  <Icon name="chevron-down" class="inline w-5 h-5 -mt-1 -ml-1" />
+                {/if}
               </span>
             </div>
           </div>
@@ -264,63 +269,7 @@ async function shareLink() {
                   </div>
                 {/each}
               </div>
-              <!-- {#each everythingBeforeTheCurrentDay as day}
-                <div class="flex flex-col mb-3">
-                  {#if parseTimeString(day, "weekday")}
-                    <div class="pl-2 mb-1">
-                      <span class="mr-1 font-semibold">{parseTimeString(day, "weekday")}:</span>
-                      {#if parseTimeString(currentDayOpenHours, "hours")}
-                        {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                          <span class="text-sm">{hours}</span>
-                        {/each}
-                      {:else}
-                        <span class="text-sm">Closed</span>
-                      {/if}
-                    </div>
-                  {/if}
-                </div>
-              {/each} -->
             {/if}
-            <!-- 
-            {#if currentDayOpenHours}
-              <div class="flex flex-col mb-3">
-                {#if parseTimeString(currentDayOpenHours, "weekday")}
-                  <div class="flex table-cell pl-2 mb-1">
-                    {#if visible}
-                      <span class="mr-1 font-semibold">{parseTimeString(currentDayOpenHours, "weekday")}</span>
-                    {:else}
-                      <span class="mr-1 font-semibold">Today:</span>
-                    {/if}
-                    {#if parseTimeString(currentDayOpenHours, "hours")}
-                      {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                        <span class="text-sm">{hours}</span>
-                      {/each}
-                    {:else}
-                      <span class="text-sm">Closed</span>
-                    {/if}
-                  </div>
-                {/if}
-              </div>
-            {/if}
-
-            {#if visible}
-              {#each everythingAfterTheCurrentDay as after}
-                <div class="flex flex-col mb-3">
-                  {#if parseTimeString(after, "weekday")}
-                    <div class="flex table-cell pl-2 mb-1">
-                      <span class="mr-1 font-semibold">{parseTimeString(after, "weekday")}:</span>
-                      {#if parseTimeString(currentDayOpenHours, "hours")}
-                        {#each parseTimeString(currentDayOpenHours, "hours") as hours}
-                          <span class="text-sm">{hours}</span>
-                        {/each}
-                      {:else}
-                        <span class="text-sm">Closed</span>
-                      {/if}
-                    </div>
-                  {/if}
-                </div>
-              {/each}
-            {/if} -->
           </div>
         </div>
       </div>

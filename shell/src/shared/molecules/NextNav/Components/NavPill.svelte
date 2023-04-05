@@ -1,6 +1,6 @@
 <script lang="ts">
 import Icons from "../../Icons.svelte";
-import {unreadEventInbox} from "../../../stores/inbox";
+import { unreadEventInbox } from "../../../stores/inbox";
 
 export let props;
 
@@ -20,16 +20,15 @@ function clickHandler() {
       on:click="{clickHandler}">
       {#if props && props.left}
         {#if $unreadEventInbox.events.length > 0 && props.center.props.icon !== "close"}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="relative self-center mr-2 text-primary" on:click="{clickHandler}">
-            <Icons icon="notificationbubble" />
-            <div class="absolute top-0 w-full text-base text-center font-heading">
-              {$unreadEventInbox.events.length}
-            </div>
+            <Icons icon="bell" size="{10}" solid="{true}" customClass="mt-1" />
+            <div class="absolute right-0.5 w-full text-center top-1.5 text-secondary font-heading">12</div>
           </div>
         {:else}
-        <div class="flex flex-col self-center justify-center h-full mr-3">
-          <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
-        </div>
+          <div class="flex flex-col self-center justify-center h-full mr-3">
+            <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
+          </div>
         {/if}
       {/if}
     </div>
