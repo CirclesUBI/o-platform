@@ -40,7 +40,7 @@ function loadLink(alink, external = false) {
     class:bg-marketplace-light="{color == 'marketplace'}">
     <div class="text-white ">
       <!-- <Icons icon="dashpassport" /> -->
-      <Icons icon="{icon}" customClass="relative w-12 h-12 left-32 heroicon top-12" solid="{true}" />
+      <Icons icon="{icon}" size="{10}" customClass="relative w-12 h-12 left-32 heroicon top-11" solid="{true}" />
     </div>
   </div>
 </section>
