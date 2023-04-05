@@ -49,6 +49,7 @@ let isOpenNow: boolean;
 let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
+let isMe: boolean;
 
 onMount(async () => {
   detailActions = [];
@@ -70,6 +71,8 @@ onMount(async () => {
 
     business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
     if (!business) return;
+
+    isMe = $me.id === business.id;
 
     hours = [
       {
@@ -115,6 +118,21 @@ onMount(async () => {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
     } else {
       noData = true;
+    }
+
+    if (!isMe) {
+      availableActions.push({
+        key: "transfer",
+        icon: "cash",
+        title: window.o.i18n("shared.userActions.sendMoney"),
+        action: async () => {
+          window.o.runProcess(transfer, {
+            safeAddress: $me.circlesAddress,
+            recipientAddress: business.circlesAddress,
+            privateKey: sessionStorage.getItem("circlesKey"),
+          });
+        },
+      });
     }
   });
 });
