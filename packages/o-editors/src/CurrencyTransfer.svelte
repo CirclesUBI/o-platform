@@ -6,6 +6,7 @@ import Icons from "../../../shell/src/shared/molecules/Icons.svelte";
 import circlesIcon from "./dropdownItems/CirclesIcon.svelte";
 import xdaiIcon from "./dropdownItems/XdaiIcon.svelte";
 import { RpcGateway } from "../../o-circles/dist/rpcGateway";
+import {convertCirclesToTimeCircles} from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
 
 export let context: CurrencyTransferContext;
 
@@ -21,8 +22,12 @@ $: selectedCurrency = context.params.currencies.find((o) => o.value === selected
 $: {
   if (selected && context.data.maxFlows) {
     const key = selected.toLowerCase();
-    if (context.data.maxFlows[key]) {
-      maxAmount = parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether")).toFixed(2).toString();
+    if (context.data.maxFlows[key] != "") {
+      maxAmount =
+              convertCirclesToTimeCircles(parseFloat(
+                      RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether")
+                              .toString()), new Date().toJSON()
+              ).toFixed(2);
     }
   }
 
