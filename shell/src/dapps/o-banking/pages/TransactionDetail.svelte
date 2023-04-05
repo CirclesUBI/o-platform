@@ -3,15 +3,19 @@ import Time from "svelte-time";
 import { push } from "svelte-spa-router";
 import { onMount } from "svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
-import { me } from "../../../shared/stores/me";
 import { Currency } from "../../../shared/currency";
-import { _ } from "svelte-i18n";
 
-import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
+import {
+  CrcHubTransfer,
+  CrcMinting,
+  Erc20Transfer,
+  EventType, Profile,
+  ProfileEvent, SortOrder
+} from "../../../shared/api/data/types";
 
-import { myTransactions } from "../../../shared/stores/myTransactions";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
+import {MyInbox, unreadEventInbox} from "../../../shared/stores/inbox";
 
 export let transactionHash: string;
 
@@ -24,6 +28,8 @@ let targetProfile: Profile;
 let message: string = "";
 let error: string;
 let displayableName: string = "";
+
+let myTransactions = new MyInbox(SortOrder.Desc, 0, [EventType.CrcHubTransfer, EventType.CrcMinting, EventType.Erc20Transfer]);
 
 onMount(async () => {
   transfer = await myTransactions.findByPrimaryKey(EventType.CrcHubTransfer, transactionHash);
@@ -93,6 +99,7 @@ onMount(async () => {
     }
 
     displayableName = targetProfile.displayName;
+    unreadEventInbox.markAsRead(transfer);
   }
 });
 function openDetail(transfer: ProfileEvent) {

@@ -7,9 +7,9 @@ import relativeTimeString from "../../../shared/functions/relativeTimeString";
 
 import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import { onMount } from "svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { isMobile } from "../../../shared/functions/isMobile";
+import {unreadEventInbox} from "../../../shared/stores/inbox";
 export let event: ProfileEvent;
 
 let path: any;
@@ -110,6 +110,7 @@ $: {
   targetProfile = event.direction === "in" ? fromProfile : toProfile;
 }
 function loadDetailPage(path) {
+  unreadEventInbox.markAsRead(event);
   push(`#/banking/transactions/${path}`);
 }
 let textCutoff = isMobile() ? 16 : 42;
@@ -137,15 +138,9 @@ let textCutoff = isMobile() ? 16 : 42;
           <div class="flex-grow min-w-0">
             <h2 class="overflow-hidden text-xl text-heading font-heading whitespace-nowrap overflow-ellipsis">
               {#if event.unread}
-                <b
-                  >{targetProfile.displayName
-                    ? targetProfile.displayName.length >= textCutoff
-                      ? targetProfile.displayName.slice(0, textCutoff) + "..."
-                      : targetProfile.displayName
-                    : ""}</b>
-              {:else}
-                {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
+                <span class="text-negative"> * </span>
               {/if}
+              {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
             </h2>
           </div>
           <div class="self-end text-right pl-2 text-lg {amountTime.startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">

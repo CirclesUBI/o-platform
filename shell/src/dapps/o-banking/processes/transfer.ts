@@ -1,7 +1,7 @@
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import { createMachine } from "xstate";
+import {createMachine} from "xstate";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import CurrencyTransfer from "@o-platform/o-editors/src/CurrencyTransfer.svelte";
 import { ipc } from "@o-platform/o-process/dist/triggers/ipc";
@@ -19,11 +19,10 @@ import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfile
 import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
 
 import { me } from "../../../shared/stores/me";
-import {AllBusinessesDocument, DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
+import {DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
 import {
   convertCirclesToTimeCircles,
-  convertTimeCirclesToCircles,
-  displayCirclesAmount
+  convertTimeCirclesToCircles
 } from "../../../shared/functions/displayCirclesAmount";
 import { TransactionReceipt } from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";
@@ -225,10 +224,32 @@ const processDefinition = (processId: string) =>
         invoke: {
           id: "getMaxFlow",
           src: async (context) => {
-            const flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
+            let flow:any = {
+              isValid: false
+            };
+            let amount = "0"
+
+            /*
+            let tries = 0;
+            while(!flow.isValid && tries < 32) {
+              flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
+                from: context.data.safeAddress,
+                to: context.data.recipientAddress,
+                amount: amount,
+              });
+              if (!flow.isValid) {
+                let oldAmount = amount == "0" ? flow.flow : amount
+                amount = new BN(oldAmount).sub(new BN(oldAmount).div(new BN("32"))).toString();
+                console.log(`Flow not valid, reducing amount from ${oldAmount} to ${amount}`);
+              }
+              tries++;
+            }*/
+
+
+            flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
               from: context.data.safeAddress,
               to: context.data.recipientAddress,
-              amount: "0",
+              amount: amount,
             });
 
             if (!context.data.maxFlows) {
@@ -326,8 +347,6 @@ const processDefinition = (processId: string) =>
             if (!context.data.recipientAddress) {
               throw new Error(window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.invoke"));
             }
-            // context.data.maxFlows = {};
-            // context.data.maxFlows["xdai"] = await RpcGateway.get().eth.getBalance(context.data.safeAddress);
 
             const amount = new Currency().convertTimeCirclesToCircles(
               Number.parseFloat(context.data.tokens.amount),
@@ -347,7 +366,15 @@ const processDefinition = (processId: string) =>
             // context.data.maxFlows["crc"] = flow.flow;
             context.data.transitivePath = flow;
           },
-          onDone: "#checkAmount",
+          onDone: [{
+            target: "#checkAmount",
+            cond: (context) => (<any>context?.data?.transitivePath).isValid
+          }, {
+            target: "#tokens",
+            actions: (context) => {
+              context.messages["tokens"] = window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.tryWithSmallerAmount");
+            }
+          }],
           onError: "#error",
         },
       },
@@ -398,7 +425,7 @@ const processDefinition = (processId: string) =>
                   convertCirclesToTimeCircles(parseFloat(
                     RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether")
                       .toString()), new Date().toJSON()
-                  ).toFixed(0) + ".00";
+                  ).toFixed(2);
               }
 
               context.messages["tokens"] = window.o.i18n(

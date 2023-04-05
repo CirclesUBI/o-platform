@@ -23,17 +23,16 @@ import NavigationList from "../../shared/molecules/NavigationList.svelte";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { media } from "../stores/media";
 import { me } from "../stores/me";
-import { Capability, CrcTrust, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
+import { Capability, EventsDocument, EventType, I18n, NotificationEvent, SessionInfo } from "../api/data/types";
 import { contacts } from "../stores/contacts";
 import { clearScrollPosition, popScrollPosition, pushScrollPosition } from "../layouts/Center.svelte";
-import { myTransactions } from "../stores/myTransactions";
 import { assetBalances } from "../stores/assetsBalances";
 import { upsertIdentity } from "../../dapps/o-passport/processes/upsertIdentity";
 import { goToPreviouslyDesiredRouteIfExisting } from "../../dapps/o-onboarding/processes/init";
 import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { Environment } from "../environment";
-import { MyInbox } from "../stores/inbox";
+import {MyInbox, unreadEventInbox} from "../stores/inbox";
 import {FollowTrustWorker} from "../../App.svelte";
 
 export let params: {
@@ -336,20 +335,27 @@ function setNav(navArgs: GenerateNavManifestArgs) {
 }
 
 function handleNotificationEvent(event: NotificationEvent) {
-  if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
-    myTransactions.findSingleItemFallback([event.type], event.transaction_hash).then((_) => {
-        myTransactions.refresh(true);
+    if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
+        assetBalances.update();
+    } else if (event.type == EventType.CrcTrust) {
+        contacts.findBySafeAddress(event.to, true);
+        contacts.findBySafeAddress(event.from, true);
+        FollowTrustWorker.reset();
+    } else if (event.type == EventType.MembershipAccepted) {
+        contacts.findBySafeAddress(event.to, true);
+        contacts.findBySafeAddress(event.from, true);
+    }
+    MyInbox.update({
+        type: event.type,
+        transaction_hash: event.transaction_hash,
     });
-    assetBalances.update();
-  } else if (event.type == EventType.CrcTrust) {
-    contacts.findBySafeAddress(event.to, true);
-    contacts.findBySafeAddress(event.from, true);
-    FollowTrustWorker.reset();
-  } else if (event.type == EventType.MembershipAccepted) {
-    contacts.findBySafeAddress(event.to, true);
-    contacts.findBySafeAddress(event.from, true);
-  }
-  MyInbox.update(event);
+
+    unreadEventInbox.findSingleItemFallback([event.type], event.transaction_hash).then((e) => {
+        setNav({
+            ...currentNavArgs,
+
+        });
+    });
 }
 
 /**
@@ -380,9 +386,9 @@ async function init() {
     centerContainsProcess: false,
     centerIsOpen: false,
     rightIsOpen: false,
-    leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+    leftIsOpen: false
   });
+
   if (!identityChecked && !dapp.anonymous) {
     //window.o.runProcess(identify, {}, {});
     identityChecked = true;
@@ -439,7 +445,7 @@ function onOpenNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
-    notificationCount: 0, //  $inbox ? $inbox.length : 0,
+
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -457,7 +463,7 @@ function onCloseNavigation() {
     leftSlotOverride: leftSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     centerIsOpen: false,
     centerContainsProcess: false,
   });
@@ -482,7 +488,7 @@ function onOpenModal() {
   setNav({
     leftIsOpen: false,
     rightIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     centerIsOpen: true,
     centerContainsProcess: false,
   });
@@ -505,7 +511,7 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
   });
   window.scrollTo(0, _scrollY);
 }
@@ -589,7 +595,7 @@ function onProcessContinued() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -602,7 +608,7 @@ function onProcessCanGoBack() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -617,7 +623,7 @@ function onProcessCanSkip() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -995,7 +1001,7 @@ function showModalProcess(processId?: string) {
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     rightIsOpen: false,
   });
 }
@@ -1060,7 +1066,7 @@ function showModalPage(pushToStack: boolean, runtimeDapp: RuntimeDapp<any>, rout
     centerIsOpen: true,
     centerContainsProcess: false,
     leftIsOpen: false,
-    notificationCount: 0, // $inbox ? $inbox.length : 0,
+
     rightIsOpen: false,
   });
 }

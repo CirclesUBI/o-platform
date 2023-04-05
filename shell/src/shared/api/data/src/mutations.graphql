@@ -286,3 +286,15 @@ mutation sendSignedTransaction($signedTransaction: String!) {
     transactionHash
   }
 }
+
+mutation markAllAsRead {
+  markAllAsRead {
+    count
+  }
+}
+
+mutation markAsRead($entryIds: [Int!]!) {
+  markAsRead(entries: $entryIds) {
+    count
+  }
+}
