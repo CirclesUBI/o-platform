@@ -520,6 +520,7 @@ query profileBySafeAddress($safeAddress: String!) {
     provenUniqueness
     location
     locationName
+    type
     lat
     lon
     memberships {
