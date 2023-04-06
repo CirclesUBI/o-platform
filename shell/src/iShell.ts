@@ -2,10 +2,12 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { Process } from "@o-platform/o-process/dist/interfaces/process";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
+import { PostHog } from "posthog-js";
 import { Subject } from "rxjs";
 import { ApiConnection } from "./shared/apiConnection";
 
 export interface IShell {
+  posthog:  PostHog;
   bip39: {
     mnemonicToSeed: any;
     mnemonicToEntropy: any;

@@ -25,6 +25,7 @@ import {IShell} from "./iShell";
 import * as Sentry from "@sentry/browser";
 import {BrowserTracing} from "@sentry/tracing";
 import * as bip39 from "bip39";
+import posthog from 'posthog-js'
 
 const i18nString = get(_);
 
@@ -46,6 +47,7 @@ Sentry.init({
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
 });
+
 
 dayjs.extend(relativeTime);
 RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
@@ -107,7 +109,9 @@ const runningProcesses: {
   [id: string]: Process;
 } = {};
 
+
 window.o = {
+  posthog: <any>posthog.init(Environment.posthogId, { api_host: Environment.posthogUrl }),
   bip39: {
     mnemonicToSeed: (mnemonic: string) => bip39.mnemonicToSeed(mnemonic),
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
