@@ -4,7 +4,7 @@ import { push } from "svelte-spa-router";
 import { Profile, Organisation } from "../api/data/types";
 import Icons from "../molecules/Icons.svelte";
 
-export let profile: Profile | Organisation;
+export let profile: Profile;
 export let size: number = 10;
 export let whiteRing: boolean = false;
 export let transparent: boolean = false;
@@ -22,7 +22,7 @@ function linkToProfile(event) {
 }
 $: {
   if (profile) {
-    if (profile.__typename == "Profile") {
+    if ((profile.__typename && profile.__typename == "Profile") || (!profile.__typename && profile.type == "PERSON")) {
       displayName = profile.displayName;
     } else {
       displayName = profile.firstName ? profile.firstName : "";
@@ -53,12 +53,12 @@ $: {
     {/if}
 
     <div class="self-center text-center rounded-full justify-self-center w-{size}" class:rounded-corners-white-borders="{whiteRing}" style="padding: {size >= 20 ? `4px` : `1px`}">
-      <div class="relative w-{size} h-{size} m-auto " class:bg-white="{!transparent}" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}">
+      <div class="relative w-{size} h-{size} m-auto" class:bg-white="{!transparent}" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}">
         {#if profile.provenUniqueness}
           <img
             src="/icons/verified.svg"
             alt="verified user"
-            class="absolute "
+            class="absolute"
             class:right-0="{size >= 15}"
             class:top-0="{size >= 15}"
             class:w-8="{size >= 20}"

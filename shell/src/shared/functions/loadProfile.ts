@@ -1,14 +1,12 @@
 import { loadProfileByProfileId } from "../api/loadProfileByProfileId";
 import { loadProfileBySafeAddress } from "../api/loadProfileBySafeAddress";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-import {CommonTrust, CommonTrustDocument, CommonTrustQueryVariables, Profile} from "../api/data/types";
-import {ApiClient} from "../apiConnection";
+import { CommonTrust, CommonTrustDocument, CommonTrustQueryVariables, Profile } from "../api/data/types";
+import { ApiClient } from "../apiConnection";
 
 export async function loadProfile(id: string, $me) {
   if (!id) {
-    console.warn(
-      `No profile specified ('id' must contain safeAddress or profileId)`
-    );
+    console.warn(`No profile specified ('id' must contain safeAddress or profileId)`);
     return;
   }
 
@@ -51,6 +49,7 @@ async function setProfile(apiProfile: Profile, $me) {
       location: apiProfile.location,
       lat: apiProfile.lat,
       lon: apiProfile.lon,
+      type: apiProfile.type,
       trusting: undefined,
       trustedBy: undefined,
     },

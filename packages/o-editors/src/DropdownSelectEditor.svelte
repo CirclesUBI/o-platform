@@ -78,16 +78,11 @@ export function handleClear() {
 }
 
 function submitHandler() {
-  if (context.data.recipientProfile.id === $me.id) {
-    errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
-  } else {
-    const event = new Continue();
-
-    event.data = {};
-    event.data[field.name] = context.params.getKey(selected);
-    context.data[field.name] = context.params.getKey(selected);
-    context.process?.sendAnswer(event);
-  }
+  const event = new Continue();
+  event.data = {};
+  event.data[field.name] = context.params.getKey(selected);
+  context.data[field.name] = context.params.getKey(selected);
+  context.process?.sendAnswer(event);
 }
 
 const submitSafeAddressInput = () => {
