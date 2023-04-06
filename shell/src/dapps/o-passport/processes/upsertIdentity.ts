@@ -187,10 +187,10 @@ const processDefinition = (processId: string) =>
                 avatarMimeType: context.data.avatarMimeType,
                 status: "",
                 displayCurrency: context.data.displayCurrency,
-                location: context.data.location.place_id,
-                lat: context.data.location.lat,
-                lon: context.data.location.lng,
-                locationName: context.data.location.address,
+                location: context.data.location ? context.data.location.place_id : null,
+                lat: context.data.location ? context.data.location.lat : null,
+                lon: context.data.location ? context.data.location.lng : null,
+                locationName: context.data.location ? context.data.location.address : null,
               },
             });
 
