@@ -111,7 +111,9 @@ const runningProcesses: {
 
 
 window.o = {
-  posthog: <any>posthog.init(Environment.posthogId, { api_host: Environment.posthogUrl }),
+  posthog: Environment.apiEndpointUrl.indexOf("localhost") >= 0
+      ? null
+      : <any>posthog.init(Environment.posthogId, { api_host: Environment.posthogUrl }),
   bip39: {
     mnemonicToSeed: (mnemonic: string) => bip39.mnemonicToSeed(mnemonic),
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),

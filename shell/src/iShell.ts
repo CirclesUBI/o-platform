@@ -7,7 +7,7 @@ import { Subject } from "rxjs";
 import { ApiConnection } from "./shared/apiConnection";
 
 export interface IShell {
-  posthog:  PostHog;
+  posthog?:  PostHog;
   bip39: {
     mnemonicToSeed: any;
     mnemonicToEntropy: any;
