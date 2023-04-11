@@ -5,6 +5,7 @@ import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { Businesses } from "../../../shared/api/data/types";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import { isMobile } from "../../../shared/functions/isMobile";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let business: Businesses & { isFavorite: boolean };
 
@@ -17,8 +18,8 @@ function loadDetailPage(circlesAddress) {
 let textCutoff = isMobile() ? 12 : 35;
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-1 mb-2">
-  <div class="relative">
+<section class="p-1 mb-2">
+  <div class="relative w-full min-w-0">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
       src="{business.picture}"
@@ -40,20 +41,20 @@ let textCutoff = isMobile() ? 12 : 35;
       {/if}
     </div>
   </div>
-  <div class="container">
+  <div class="container w-full">
     {#if business.name}
-      <div class="pl-2 text-2xl font-bold font-heading text-heading truncateText">
-        {business.name ? (business.name.length >= textCutoff ? business.name.slice(0, textCutoff) + "..." : business.name) : ""}
+      <div class="pb-0 pl-2 text-2xl font-bold font-heading text-heading">
+        <Label text="{business.name}" truncate="{true}" />
       </div>
     {/if}
     {#if business.locationName}
-      <div class="pl-2 text-sm truncateText">
-        {business.locationName ? (business.locationName.length >= textCutoff ? business.locationName.slice(0, textCutoff) + "..." : business.locationName) : ""}
+      <div class="pt-0 pl-2 text-sm">
+        <Label text="{business.locationName}" truncate="{true}" />
       </div>
     {/if}
     {#if business.description}
-      <div class="pt-2 flex-wrap pl-2 text-lg truncateText">
-        {business.description ? (business.description.length >= textCutoff ? business.description.slice(0, textCutoff) + "..." : business.description) : ""}
+      <div class="flex-wrap pt-1 pl-2 text-md">
+        <Label text="{business.description}" truncate="{true}" />
       </div>
     {/if}
   </div>
