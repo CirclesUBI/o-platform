@@ -35,10 +35,10 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
   navigation?: {
     // If you want to allow the user to go one step back then specify here where he came from
     previous?: string;
-    canGoBack?: (context: ProcessContext<TContext>, event: { type: string; [x: string]: any }) => boolean;
+    canGoBack?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
     next?: string;
     skip?: string;
-    canSkip?: (context: ProcessContext<TContext>, event: { type: string; [x: string]: any }) => boolean;
+    canSkip?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
   };
 }) {
   const field = normalizePromptField(spec.field);
@@ -105,7 +105,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
       allowAlternativeInput: true,
       view: spec.params.view,
       getKey: (profile) => {
-        return profile.circlesAddress;
+        return profile?.circlesAddress;
       },
       keyProperty: "circlesAddress",
       itemTemplate: DropDownProfile,
@@ -143,16 +143,16 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
               const searchResult = (
                 profiles && profiles.length > 0
                   ? profiles
-                      .filter((o) => o.circlesAddress)
-                      .map((o) => {
-                        return {
-                          ...o,
-                          circlesAddress: o.circlesAddress,
-                          type: o.type,
-                          avatarUrl: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
-                        };
-                      })
-                      .reverse()
+                    .filter((o) => o.circlesAddress)
+                    .map((o) => {
+                      return {
+                        ...o,
+                        circlesAddress: o.circlesAddress,
+                        type: o.type,
+                        avatarUrl: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
+                      };
+                    })
+                    .reverse()
                   : []
               ).sort(sortByNameComparer);
               console.log("SEARCH RESULT: ", resultsObservable);
