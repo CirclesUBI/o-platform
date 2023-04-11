@@ -56,7 +56,7 @@ onMount(async () => {
 
 async function fetchProfiles() {
   for (const action of profiles) {
-    if (action.key !== "logout") {
+    if (action.key.startsWith("0x")) {
       action.profile = (await loadProfile(action.key, $me))?.profile;
     }
   }
