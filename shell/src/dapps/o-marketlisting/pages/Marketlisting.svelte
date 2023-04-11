@@ -24,8 +24,10 @@ export let routable: Routable;
     {#if $marketStore.businesses.length == 0}
       <p><Label key="dapps.o-marketlisting.pages.marketlisting.noentries" /></p>
     {/if}
-    {#each $marketStore.businesses as business}
-      <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
-    {/each}
+    <div class="grid grid-cols-2">
+      {#each $marketStore.businesses as business}
+        <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
+      {/each}
+    </div>
   </MarketlistingFrame>
 </div>
