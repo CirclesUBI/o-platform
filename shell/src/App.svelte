@@ -63,7 +63,10 @@ let _routes = {
 {#if !isLoading}
   <Router
     routes="{_routes}"
-    on:routeLoaded="{() => {
+    on:routeLoaded="{(e) => {
+      window.o.posthog?.capture('routeLoaded', {
+        route: e.detail.route
+      });
       if (!ubiMachineInterpreter && $me && $me.circlesAddress) {
         ubiMachineInterpreter = interpret(ubiMachine)
           .onEvent((event) => {

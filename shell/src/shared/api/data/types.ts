@@ -2221,7 +2221,7 @@ export type ProfileBySafeAddressQuery = (
   { __typename?: 'Query' }
   & { profilesBySafeAddress: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'canInvite' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'circlesTokenAddress'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'canInvite' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'type' | 'lat' | 'lon' | 'circlesTokenAddress'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -3651,6 +3651,7 @@ export const ProfileBySafeAddressDocument = gql`
     provenUniqueness
     location
     locationName
+    type
     lat
     lon
     memberships {
