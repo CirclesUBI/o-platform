@@ -141,7 +141,7 @@ function toggleInputView() {
             autocomplete="{fieldId}"
             type="text"
             placeholder="Enter Safe Address"
-            class="flex-grow h-12 input input-lg input-bordered"
+            class="flex-grow h-12 min-w-0 input input-lg input-bordered"
             class:input-error="{context.messages[context.field]}"
             bind:value="{_context.data[context.field]}"
             on:focus

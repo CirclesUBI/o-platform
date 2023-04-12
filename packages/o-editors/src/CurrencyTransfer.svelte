@@ -6,7 +6,7 @@ import Icons from "../../../shell/src/shared/molecules/Icons.svelte";
 import circlesIcon from "./dropdownItems/CirclesIcon.svelte";
 import xdaiIcon from "./dropdownItems/XdaiIcon.svelte";
 import { RpcGateway } from "../../o-circles/dist/rpcGateway";
-import {convertCirclesToTimeCircles} from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
+import { convertCirclesToTimeCircles } from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
 
 export let context: CurrencyTransferContext;
 
@@ -23,11 +23,7 @@ $: {
   if (selected && context.data.maxFlows) {
     const key = selected.toLowerCase();
     if (context.data.maxFlows[key] != "") {
-      maxAmount =
-              convertCirclesToTimeCircles(parseFloat(
-                      RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether")
-                              .toString()), new Date().toJSON()
-              ).toFixed(2);
+      maxAmount = convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON()).toFixed(2);
     }
   }
 
@@ -60,7 +56,6 @@ function onkeydown(e: KeyboardEvent) {
     sendAnswer(amount);
   }
 }
-console.log("CONT", context);
 </script>
 
 <div>
@@ -82,7 +77,7 @@ console.log("CONT", context);
     </div>
   {/if}
   <div class="flex flex-row w-full space-x-2">
-    <div class="relative w-full mt-1 rounded-md shadow-sm ">
+    <div class="relative w-full mt-1 rounded-md shadow-sm">
       <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
         <Icons icon="timeCircle" size="{4}" customClass="inline" />
       </div>
