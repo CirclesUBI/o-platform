@@ -78,7 +78,7 @@ export function handleClear() {
 }
 
 function submitHandler() {
-  if (context.data?.recipientAddress === context.params.getKey(selected)) {
+  if (context?.data?.safeAddress === context?.params.getKey(selected)) {
     errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
   } else {
     errorMessage = "";
