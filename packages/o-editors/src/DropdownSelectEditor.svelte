@@ -7,6 +7,9 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
+import { error } from "xstate/lib/actions";
+import { Profile } from "@o-platform/shell/src/shared/api/data/types";
+import { me } from "@o-platform/shell/src/shared/stores/me";
 
 /*
  * allow arbitrary values in dropdownselecteditor
@@ -25,12 +28,21 @@ let field: PromptField<any>;
 let filterText: string;
 let showSafeAddressInput: boolean = false;
 let fieldId = context.isSensitive ? Math.random().toString().replace(".", "") : context.field;
+let errorMessage = "";
 
 $: {
   _context = context;
 }
 
 onMount(async () => {
+  let $me: Profile | null = null;
+
+  const unsub = me.subscribe((o) => {
+    $me = o;
+  });
+  unsub();
+  if (!$me) throw new Error(window.o.i18n("shared.userActions.errors.couldNotLoadYourProfile"));
+
   field = normalizePromptField(context.field);
   const currentKey = field.get(context);
 
@@ -66,18 +78,27 @@ export function handleClear() {
 }
 
 function submitHandler() {
-  const event = new Continue();
-
-  event.data = {};
-  event.data[field.name] = context.params.getKey(selected);
-  context.data[field.name] = context.params.getKey(selected);
-  context.process?.sendAnswer(event);
+  if (context?.data?.safeAddress === context?.params.getKey(selected)) {
+    errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
+  } else {
+    errorMessage = "";
+    const event = new Continue();
+    event.data = {};
+    event.data[field.name] = context.params.getKey(selected);
+    context.data[field.name] = context.params.getKey(selected);
+    context.process?.sendAnswer(event);
+  }
 }
 
 const submitSafeAddressInput = () => {
-  const answer = new Continue();
-  answer.data = context.data;
-  context.process?.sendAnswer(answer);
+  if (context.data?.recipientAddress === context.data?.safeAddress) {
+    errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
+  } else {
+    errorMessage = "";
+    const answer = new Continue();
+    answer.data = context.data;
+    context.process?.sendAnswer(answer);
+  }
 };
 
 function onkeydown(e: KeyboardEvent) {
@@ -100,6 +121,16 @@ function toggleInputView() {
 
 {#if field}
   <div class="flex flex-col items-end form-control justify-self-center">
+    {#if errorMessage}
+      <div class="mt-2 mb-2 alert alert-error">
+        <div class="flex-1">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+          </svg>
+          <label for="input">{errorMessage} </label>
+        </div>
+      </div>
+    {/if}
     <div class="h-12 text-base themed">
       {#if showSafeAddressInput}
         <div class="flex flex-row items-start space-x-4 form-control justify-self-center" style="margin-bottom: 1.4rem;">
@@ -110,7 +141,7 @@ function toggleInputView() {
             autocomplete="{fieldId}"
             type="text"
             placeholder="Enter Safe Address"
-            class="flex-grow h-12 input input-lg input-bordered"
+            class="flex-grow h-12 min-w-0 input input-lg input-bordered"
             class:input-error="{context.messages[context.field]}"
             bind:value="{_context.data[context.field]}"
             on:focus
