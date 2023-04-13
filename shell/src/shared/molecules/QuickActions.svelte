@@ -9,8 +9,6 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import ProfileSwitcherBar from "./ProfileSwitcherBar.svelte";
 import LangSwitcher from "../atoms/LangSwitcher.svelte";
-import { loadProfile } from "../functions/loadProfile";
-import { me } from "../stores/me";
 
 export let runtimeDapp: RuntimeDapp<any>;
 
@@ -19,13 +17,12 @@ let categories: {
   items: {
     ["action"]: JumplistItem[];
     ["profile"]: JumplistItem[];
+    ["organisation"]: JumplistItem[];
   };
 }[] = [];
 
 let actions: JumplistItem[] = [];
 let profiles: JumplistItem[] = [];
-
-let promise;
 let showSwitcher: boolean = false;
 
 onMount(async () => {
@@ -39,6 +36,7 @@ onMount(async () => {
           items: {
             ["action"]: JumplistItem[];
             ["profile"]: JumplistItem[];
+            ["organisation"]: JumplistItem[];
           };
         }
       >{
@@ -49,19 +47,7 @@ onMount(async () => {
   );
   actions = categories.filter((o) => o.items["action"]).flatMap((o) => o.items["action"]);
   profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);
-
-  promise = await fetchProfiles();
-  // Attach actual Profiles to the object.
 });
-
-async function fetchProfiles() {
-  for (const action of profiles) {
-    if (action.key.startsWith("0x")) {
-      action.profile = (await loadProfile(action.key, $me))?.profile;
-    }
-  }
-  return profiles;
-}
 
 const eventDispatcher = createEventDispatcher();
 </script>
@@ -79,11 +65,7 @@ const eventDispatcher = createEventDispatcher();
 
     <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
       <div class="">
-        {#await promise}
-          <p>loading Profiles...</p>
-        {:then theProfiles}
-          <ProfileSwitcherBar actions="{theProfiles}" />
-        {/await}
+        <ProfileSwitcherBar actions="{profiles}" />
       </div>
     </div>
     <div class="w-full text-center">
