@@ -11,6 +11,7 @@ import LoadingSpinner from "../../../shell/src/shared/atoms/LoadingSpinner.svelt
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 import Geolocation from "svelte-geolocation";
 import { mapsLoading } from "@o-platform/shell/src/shared/stores/googleMaps";
+import Label from "@o-platform/shell/src/shared/atoms/Label.svelte";
 
 export let context: DropdownSelectorContext<any, any, any>;
 
@@ -117,11 +118,13 @@ const submitHandler = () => {
         console.log('POS ERROR', e.detail); // GeolocationError
       }}">
       {#if notSupported}
-        Your browser does not support the Geolocation API.
+        <Label key="common.googlemaps.locationService.noLocationSupport" />
       {:else}
         {#if loading}
           <div class="w-full text-center">
-            <span class="text-sm text-info">Loading your Location...</span>
+            <span class="text-sm text-info">
+              <Label key="common.googlemaps.locationService.loadingLocation" />
+            </span>
             <center class="mt-4">
               <LoadingSpinner />
             </center>
@@ -142,7 +145,9 @@ const submitHandler = () => {
         {/if}
         {#if error}
           {#if error.code == error.PERMISSION_DENIED}
-            <span class="text-sm text-center text-info"> Browser location denied. Can't display your location.</span>
+            <span class="text-sm text-center text-info">
+              <Label key="common.googlemaps.locationService.locationDenied" />
+            </span>
           {/if}
 
           <div class="w-full mb-8 section-txt h-80" id="map">
