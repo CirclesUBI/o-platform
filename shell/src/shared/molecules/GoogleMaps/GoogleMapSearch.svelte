@@ -124,6 +124,7 @@ function placeChanged(map, place, customInfoWindow = true) {
     map.setZoom(17);
   }
 
+  console.log("DER NEUE PLACE", place);
   placeholder = place.formatted_address;
 
   addMarker(map, place, customInfoWindow);
@@ -132,6 +133,7 @@ function placeChanged(map, place, customInfoWindow = true) {
 }
 
 function initialise() {
+  console.log("Initialize");
   setTimeout(() => {
     google = window.google;
 
@@ -193,10 +195,12 @@ function initialise() {
     });
 
     dispatch("ready");
+    console.log("Initialize Done");
   }, 1);
 }
 
 function setPlaceByCoords(latLng, geocoderService) {
+  console.log("Set place by coords:", latLng);
   geocoderService.geocode(
     {
       latLng: latLng,
