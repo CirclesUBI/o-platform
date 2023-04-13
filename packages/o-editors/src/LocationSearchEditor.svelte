@@ -7,8 +7,10 @@ import { onMount } from "svelte";
 import GoogleMapSearch from "../../../shell/src/shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 import { Environment } from "../../../shell/src/shared/environment";
 import { error } from "../../../shell/src/shared/stores/error";
+import LoadingSpinner from "../../../shell/src/shared/atoms/LoadingSpinner.svelte";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 import Geolocation from "svelte-geolocation";
+import { mapsLoading } from "@o-platform/shell/src/shared/stores/googleMaps";
 
 export let context: DropdownSelectorContext<any, any, any>;
 
@@ -40,6 +42,7 @@ const options = {
 
 let location: Location = null;
 let center = {};
+let locationAllowed: boolean = null;
 
 let validAddress: boolean = false;
 $: {
@@ -84,22 +87,111 @@ const submitHandler = () => {
 };
 </script>
 
-<Geolocation
-  options="{geoLocationOptions}"
-  watch="{true}"
-  getPosition
-  on:position="{(e) => {
-    geolocation = e.detail;
-  }}"
-  on:error="{(e) => {
-    console.log('POS ERROR', e.detail); // GeolocationError
-  }}" />
-<div class="flex flex-col items-end w-full m-auto form-control justify-self-center sm:w-3/4">
-  <div class="w-full mb-8 section-txt h-80" id="map">
-    <div class="map-wrap">
-      <GoogleMapSearch apiKey="{Environment.placesApiKey}" on:recenter="{(e) => mapRecenter(e.detail)}" zoom="{17}" options="{options}" bind:center="{center}" placeholder="{placeholder}" />
+<div class="flex flex-col items-end w-full m-auto text-center form-control justify-self-center sm:w-3/4">
+  {#if _context && _context.data.lat}
+    <div class="w-full mb-8 section-txt h-80" id="map">
+      <div class="map-wrap">
+        <GoogleMapSearch
+          apiKey="{Environment.placesApiKey}"
+          on:recenter="{(e) => mapRecenter(e.detail)}"
+          zoom="{17}"
+          options="{options}"
+          bind:center="{center}"
+          placeholder="{placeholder}" />
+      </div>
     </div>
-  </div>
+  {:else}
+    <Geolocation
+      options="{geoLocationOptions}"
+      watch="{false}"
+      getPosition
+      let:coords
+      let:loading
+      let:success
+      let:error
+      let:notSupported
+      on:position="{(e) => {
+        geolocation = e.detail;
+      }}"
+      on:error="{(e) => {
+        console.log('POS ERROR', e.detail); // GeolocationError
+      }}">
+      {#if notSupported}
+        Your browser does not support the Geolocation API.
+      {:else}
+        {#if loading}
+          <div class="w-full text-center">
+            <span class="text-sm text-info">Loading your Location...</span>
+            <center class="mt-4">
+              <LoadingSpinner />
+            </center>
+          </div>
+        {/if}
+        {#if success}
+          <div class="w-full mb-8 section-txt h-80" id="map">
+            <div class="map-wrap">
+              <GoogleMapSearch
+                apiKey="{Environment.placesApiKey}"
+                on:recenter="{(e) => mapRecenter(e.detail)}"
+                zoom="{17}"
+                options="{options}"
+                bind:center="{center}"
+                placeholder="{placeholder}" />
+            </div>
+          </div>
+        {/if}
+        {#if error}
+          {#if error.code == error.PERMISSION_DENIED}
+            <span class="text-sm text-center text-info"> Browser location denied. Can't display your location.</span>
+          {/if}
+
+          <div class="w-full mb-8 section-txt h-80" id="map">
+            <div class="map-wrap">
+              <GoogleMapSearch
+                apiKey="{Environment.placesApiKey}"
+                on:recenter="{(e) => mapRecenter(e.detail)}"
+                zoom="{17}"
+                options="{options}"
+                bind:center="{center}"
+                placeholder="{placeholder}" />
+            </div>
+          </div>
+        {/if}
+      {/if}
+    </Geolocation>
+  {/if}
+  <!-- 
+  {#if locationAllowed === null}
+    Please allow
+  {:else if locationAllowed === false}
+    <div class="w-full mb-8 section-txt h-80" id="map">
+      <div class="map-wrap">
+        <GoogleMapSearch
+          apiKey="{Environment.placesApiKey}"
+          on:recenter="{(e) => mapRecenter(e.detail)}"
+          zoom="{17}"
+          options="{options}"
+          bind:center="{center}"
+          placeholder="{placeholder}" />
+      </div>
+    </div>
+  {:else if locationAllowed === true}
+    {#if geolocation}
+      <div class="w-full mb-8 section-txt h-80" id="map">
+        <div class="map-wrap">
+          <GoogleMapSearch
+            apiKey="{Environment.placesApiKey}"
+            on:recenter="{(e) => mapRecenter(e.detail)}"
+            zoom="{17}"
+            options="{options}"
+            bind:center="{center}"
+            placeholder="{placeholder}" />
+        </div>
+      </div>
+    {:else}
+      Loading...
+    {/if}
+  {/if} -->
 
   <!--   
   {#if context.messages[context.field]}
