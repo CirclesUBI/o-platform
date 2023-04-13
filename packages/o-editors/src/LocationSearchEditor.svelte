@@ -46,7 +46,9 @@ let center = {};
 let locationAllowed: boolean = null;
 
 let validAddress: boolean = false;
-$: {
+
+onMount(async () => {
+  center = { lat: -8.670458, lng: 115.212631 };
   _context = context;
 
   if (_context && _context.data.lat) {
@@ -57,11 +59,6 @@ $: {
       center = { lat: geolocation.coords.latitude, lng: geolocation.coords.longitude };
     }
   }
-}
-
-onMount(async () => {
-  center = { lat: -8.670458, lng: 115.212631 };
-  // TODO ADD $mylocation Navigator geolocation and set center to that. only works in https.
 });
 
 $: if (location && $error !== null) {
