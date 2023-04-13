@@ -6,7 +6,6 @@ export let icon: string = null;
 export let size: number = 8;
 export let colorClass: string = "";
 export let customClass: string = "inline";
-console.log("ICON: ", icon);
 </script>
 
 <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click>
