@@ -148,8 +148,6 @@ function initialise() {
     const geocoderService = new google.maps.Geocoder();
     const placesService = new google.maps.places.PlacesService(map);
 
-    console.log("MAP", map);
-    console.log("PLACE", placesService);
     setPlaceByCoords(map.center, geocoderService);
     // placeChanged(map, placesService.place);
 
@@ -199,7 +197,6 @@ function initialise() {
 }
 
 function setPlaceByCoords(latLng, geocoderService) {
-  console.log("LATA", latLng);
   geocoderService.geocode(
     {
       latLng: latLng,
