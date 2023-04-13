@@ -278,11 +278,13 @@ function mapRecenter({ place }) {
                           console.log('POS ERROR', e.detail); // GeolocationError
                         }}">
                         {#if notSupported}
-                          Your browser does not support the Geolocation API.
+                          <Label key="common.googlemaps.locationService.noLocationSupport" />
                         {:else}
                           {#if loading}
                             <div class="w-full text-center">
-                              <span class="text-sm text-info">Loading your Location...</span>
+                              <span class="text-sm text-info">
+                                <Label key="common.googlemaps.locationService.loadingLocation" />
+                              </span>
                               <center class="mt-4">
                                 <LoadingSpinner />
                               </center>
@@ -303,7 +305,9 @@ function mapRecenter({ place }) {
                           {/if}
                           {#if error}
                             {#if error.code == error.PERMISSION_DENIED}
-                              <span class="text-sm text-center text-info"> Browser location denied. Can't display your location.</span>
+                              <span class="text-sm text-center text-info">
+                                <Label key="common.googlemaps.locationService.locationDenied" />
+                              </span>
                             {/if}
 
                             <div class="w-full mb-8 section-txt h-80" id="map">
