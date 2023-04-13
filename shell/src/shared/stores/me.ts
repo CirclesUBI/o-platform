@@ -17,6 +17,7 @@ export const me = {
   },
   reload: async () => {
     const freshSessionInfo = await ApiClient.query<SessionInfo, InitQueryVariables>(InitDocument, {});
+
     if (freshSessionInfo.profile) {
       if ((<any>sessionInfo.profile)?.__typename === "Person") {
         window.o.publishEvent(<PlatformEvent>{
@@ -26,10 +27,9 @@ export const me = {
       } else {
         // TODO: Need to implement real session change
         sessionInfo = await getSessionInfo();
-        console.log("$me.reload() -> reload organisation", sessionInfo);
       }
     }
-
+    console.log("SO FRESH OIDA", freshSessionInfo.profile);
     return freshSessionInfo.profile;
   },
 };
@@ -55,6 +55,8 @@ const _me = readable<Profile | null>(null, function start(set) {
           askedForEmailAddress: true,
           dream: null,
           country: null,
+          lat: null,
+          lon: null,
           avatarUrl: "",
           avatarCid: null,
           avatarMimeType: "image/jpeg",

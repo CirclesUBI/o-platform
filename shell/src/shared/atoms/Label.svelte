@@ -36,7 +36,7 @@ export let truncate: boolean = false;
   flex: 1;
 }
 .long-and-truncated,
-.long-and-truncated > * {
+:global(.long-and-truncated > *) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
