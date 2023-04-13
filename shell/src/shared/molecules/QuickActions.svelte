@@ -9,6 +9,7 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import ProfileSwitcherBar from "./ProfileSwitcherBar.svelte";
 import LangSwitcher from "../atoms/LangSwitcher.svelte";
+import Label from "../atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 
@@ -59,7 +60,7 @@ const eventDispatcher = createEventDispatcher();
     {/if}
 
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading">My Profiles</h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.myprofiles" /></h1>
     </div>
 
     <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
@@ -69,7 +70,7 @@ const eventDispatcher = createEventDispatcher();
     </div>
 
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading">Quick Actions</h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.quickactions" /></h1>
     </div>
     <div class="py-6">
       <DetailActionBar
