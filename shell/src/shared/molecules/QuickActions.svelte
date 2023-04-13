@@ -17,7 +17,6 @@ let categories: {
   items: {
     ["action"]: JumplistItem[];
     ["profile"]: JumplistItem[];
-    ["organisation"]: JumplistItem[];
   };
 }[] = [];
 
@@ -36,7 +35,6 @@ onMount(async () => {
           items: {
             ["action"]: JumplistItem[];
             ["profile"]: JumplistItem[];
-            ["organisation"]: JumplistItem[];
           };
         }
       >{
@@ -52,13 +50,14 @@ onMount(async () => {
 const eventDispatcher = createEventDispatcher();
 </script>
 
-{#if profiles}
+{#if profiles && actions}
   <div class="z-10 flex flex-col flex-1" use:clickOutside on:click_outside="{() => eventDispatcher('clickedOutside')}">
     {#if showSwitcher}
       <div class="w-full p-6">
         <LangSwitcher />
       </div>
     {/if}
+
     <div class="w-full text-center">
       <h1 class="pt-4 text-3xl uppercase font-heading">My Profiles</h1>
     </div>
@@ -68,6 +67,7 @@ const eventDispatcher = createEventDispatcher();
         <ProfileSwitcherBar actions="{profiles}" />
       </div>
     </div>
+
     <div class="w-full text-center">
       <h1 class="pt-4 text-3xl uppercase font-heading">Quick Actions</h1>
     </div>
