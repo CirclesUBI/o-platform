@@ -63,6 +63,7 @@ function addMarker(map: google.maps.Map, place: google.maps.Place, customInfoWin
 
   const marker = new google.maps.Marker({
     map,
+    animation: google.maps.Animation.DROP,
   });
 
   marker.addListener("click", () => {
@@ -182,7 +183,9 @@ function initialise() {
     autocomplete.bindTo("bounds", map);
 
     // We have to set this manually in this case.
-    infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow({
+      maxWidth: 420,
+    });
     infowindow.setContent(infowindowContent);
 
     autocomplete.addListener("place_changed", () => {
@@ -245,6 +248,9 @@ function setPlaceByCoords(latLng, geocoderService) {
 </div>
 
 <style>
+:global(.gm-style .gm-style-iw-c) {
+  max-width: 320px !important;
+}
 .infowindowWrapper {
   display: none;
 }
