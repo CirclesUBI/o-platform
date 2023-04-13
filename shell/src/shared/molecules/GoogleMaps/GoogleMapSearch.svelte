@@ -148,23 +148,15 @@ function initialise() {
     const geocoderService = new google.maps.Geocoder();
     const placesService = new google.maps.places.PlacesService(map);
 
+    console.log("MAP", map);
+    console.log("PLACE", placesService);
+    setPlaceByCoords(map.center, geocoderService);
+    // placeChanged(map, placesService.place);
+
     google.maps.event.addListener(map, "click", function (event) {
       if (!event.placeId) {
         // ONLY FIRE THIS IF NO PLACE IS SELECTED. This is important otherwise we will generate unneccessary cost in calling the geocoding api....
-        geocoderService.geocode(
-          {
-            latLng: event.latLng,
-          },
-          function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-              if (results[0]) {
-                placeChanged(map, results[0]);
-              }
-            } else {
-              error.set("Invalid location.");
-            }
-          }
-        );
+        setPlaceByCoords(event.latLng, geocoderService);
       } else {
         // This is triggered when the user clicks on a POI Marker. then we have to get the details from the placesService.
         placesService.getDetails(
@@ -204,6 +196,24 @@ function initialise() {
 
     dispatch("ready");
   }, 1);
+}
+
+function setPlaceByCoords(latLng, geocoderService) {
+  console.log("LATA", latLng);
+  geocoderService.geocode(
+    {
+      latLng: latLng,
+    },
+    function (results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          placeChanged(map, results[0]);
+        }
+      } else {
+        error.set("Invalid location.");
+      }
+    }
+  );
 }
 </script>
 
