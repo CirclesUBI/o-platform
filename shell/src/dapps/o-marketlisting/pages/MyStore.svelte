@@ -197,17 +197,6 @@ function mapRecenter({ place }) {
   </div>
 {:else}
   <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
-    <Geolocation
-      options="{geoLocationOptions}"
-      watch="{true}"
-      getPosition
-      on:position="{(e) => {
-        geolocation = e.detail;
-      }}"
-      on:error="{(e) => {
-        console.log('POS ERROR', e.detail); // GeolocationError
-      }}" />
-
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
         <h1 class="text-center">{business.name}</h1>
@@ -220,7 +209,7 @@ function mapRecenter({ place }) {
           <div slot="standardHeaderBoxContent">
             <div class="flex flex-col space-y-2">
               <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm ">
+                <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.picture" />
                   <div class="flex justify-center w-full mt-2" role="presentation" on:click="{() => imageEditor(false)}">
                     <UserImage
@@ -260,17 +249,78 @@ function mapRecenter({ place }) {
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.location" />
                   <div class="flex mt-2">
-                    <div class="w-full mb-8 section-txt h-80" id="map">
-                      <div class="map-wrap">
-                        <GoogleMapSearch
-                          apiKey="{Environment.placesApiKey}"
-                          on:recenter="{(e) => mapRecenter(e.detail)}"
-                          zoom="{17}"
-                          options="{mapOptions}"
-                          placeholder="{business.locationName ? business.locationName : null}"
-                          bind:center="{center}" />
+                    {#if business && business.lat}
+                      <div class="w-full mb-8 section-txt h-80" id="map">
+                        <div class="map-wrap">
+                          <GoogleMapSearch
+                            apiKey="{Environment.placesApiKey}"
+                            on:recenter="{(e) => mapRecenter(e.detail)}"
+                            zoom="{17}"
+                            options="{mapOptions}"
+                            placeholder="{business.locationName ? business.locationName : null}"
+                            bind:center="{center}" />
+                        </div>
                       </div>
-                    </div>
+                    {:else}
+                      <Geolocation
+                        options="{geoLocationOptions}"
+                        watch="{false}"
+                        getPosition
+                        let:coords
+                        let:loading
+                        let:success
+                        let:error
+                        let:notSupported
+                        on:position="{(e) => {
+                          geolocation = e.detail;
+                        }}"
+                        on:error="{(e) => {
+                          console.log('POS ERROR', e.detail); // GeolocationError
+                        }}">
+                        {#if notSupported}
+                          Your browser does not support the Geolocation API.
+                        {:else}
+                          {#if loading}
+                            <div class="w-full text-center">
+                              <span class="text-sm text-info">Loading your Location...</span>
+                              <center class="mt-4">
+                                <LoadingSpinner />
+                              </center>
+                            </div>
+                          {/if}
+                          {#if success}
+                            <div class="w-full mb-8 section-txt h-80" id="map">
+                              <div class="map-wrap">
+                                <GoogleMapSearch
+                                  apiKey="{Environment.placesApiKey}"
+                                  on:recenter="{(e) => mapRecenter(e.detail)}"
+                                  zoom="{17}"
+                                  options="{mapOptions}"
+                                  placeholder="{business.locationName ? business.locationName : null}"
+                                  bind:center="{center}" />
+                              </div>
+                            </div>
+                          {/if}
+                          {#if error}
+                            {#if error.code == error.PERMISSION_DENIED}
+                              <span class="text-sm text-center text-info"> Browser location denied. Can't display your location.</span>
+                            {/if}
+
+                            <div class="w-full mb-8 section-txt h-80" id="map">
+                              <div class="map-wrap">
+                                <GoogleMapSearch
+                                  apiKey="{Environment.placesApiKey}"
+                                  on:recenter="{(e) => mapRecenter(e.detail)}"
+                                  zoom="{17}"
+                                  options="{mapOptions}"
+                                  placeholder="{business.locationName ? business.locationName : null}"
+                                  bind:center="{center}" />
+                              </div>
+                            </div>
+                          {/if}
+                        {/if}
+                      </Geolocation>
+                    {/if}
                   </div>
                 </div>
               </div>
