@@ -137,7 +137,7 @@ export const passport: DappManifest<DappState> = {
         <JumplistItem>{
           category: "Passport",
           key: "logout",
-          type: "profile",
+          type: "action",
           title: window.o.i18n("dapps.common.quickactions.logout"),
           icon: "logout",
           action: () => {
@@ -155,6 +155,7 @@ export const passport: DappManifest<DappState> = {
           category: "Passport",
           key: o.circlesAddress,
           title: o.displayName,
+          profile: o,
           type: "profile",
           icon: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
           action: () => {
