@@ -15,7 +15,7 @@ import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import TrustChangeConfirmation from "../../o-banking/molecules/TrustChangeConfirmation.svelte";
 import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
-import {setWindowLastError} from "../../../shared/processes/actions/setWindowLastError";
+import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
 
 export type AddOwnerContextData = {
   successAction: (data: AddOwnerContextData) => void;
@@ -94,7 +94,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (o: any) => { },
           },
         }),
       },
@@ -104,7 +104,7 @@ const processDefinition = (processId: string) =>
         component: HtmlViewer,
         params: {
           view: "",
-          html: () => "A new owner was successfully added.",
+          html: () => window.o.i18n("dapps.o-coop.processes.addOwner.ownerAdded"),
           hideNav: false,
         },
         navigation: {

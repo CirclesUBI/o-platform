@@ -85,7 +85,7 @@ function validate() {
 
   isValid = to.hour * 60 + to.minute > from.hour * 60 + from.minute;
   if (!isValid) {
-    message = "The time-window ends before it starts";
+    message = $_("dapps.o-passport.molecules.openingHoursDayEditor.endsBeforeItStarts");
     return;
   }
 
