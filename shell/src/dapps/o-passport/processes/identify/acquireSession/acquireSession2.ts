@@ -138,7 +138,9 @@ const processDefinition = (processId: string) =>
         params: {
           view: {
             error: {
-              title: "OOps! Something went wrong",
+              title: window.o.i18n(
+                "dapps.o-passport.processes.identify.acquireSession.acquireSession2.acquireSession.error.somethingWentWrong"
+              ),
             },
           },
           hideNav: false,

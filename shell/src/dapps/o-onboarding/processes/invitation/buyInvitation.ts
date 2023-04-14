@@ -18,14 +18,14 @@ export type PromptGetInvitedContext = ProcessContext<PromptGetInvitedData>;
 
 const editorContent = {
   info: {
-    title: "Get invited",
-    description: "Find somebody who can give you an invite code to join.",
-    submitButtonText: "I have a code",
+    title: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.getInvited"),
+    description: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.findSomeone"),
+    submitButtonText: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.haveCode"),
   },
   checkInviteCode: {
-    title: "Enter invitation code",
-    description: "Please enter your invitation code below to get started.",
-    submitButtonText: "Verify",
+    title: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.enterInvitCode"),
+    description: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.enterInvitCodeBelow"),
+    submitButtonText: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.verify"),
   },
 };
 const processDefinition = (processId: string) =>
@@ -40,9 +40,9 @@ const processDefinition = (processId: string) =>
         component: HtmlViewer,
         params: {
           view: (editorContent.info = {
-            title: "Get invited",
-            description: "Find somebody who can give you an invite code to join.",
-            submitButtonText: "I have a code",
+            title: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.getInvited"),
+            description: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.findSomeone"),
+            submitButtonText: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.haveCode"),
           }),
           html: () => "",
           hideNav: false,
@@ -56,9 +56,9 @@ const processDefinition = (processId: string) =>
         component: TextareaEditor,
         params: {
           view: (editorContent.checkInviteCode = {
-            title: "Enter invitation code",
-            description: "Please enter your invitation code below to get started.",
-            submitButtonText: "Verify",
+            title: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.enterInvitCode"),
+            description: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.enterInvitCodeBelow"),
+            submitButtonText: window.o.i18n("dapps.o-onboarding.processes.invitation.buyInvitation.verify"),
           }),
         },
         dataSchema: yup

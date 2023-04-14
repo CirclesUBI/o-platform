@@ -16,6 +16,7 @@ import { UserActionItem, UserActions } from "../../../shared/userActions";
 import { transfer } from "../../o-banking/processes/transfer";
 import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
+import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let circlesAddress: string;
@@ -72,41 +73,50 @@ onMount(async () => {
     business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
     if (!business) return;
 
+    const currentDateIndex = new Date().getDay();
+    const businessHours = [
+      business.businessHoursSunday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.sunday"),
+      business.businessHoursMonday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.monday"),
+      business.businessHoursTuesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.tuesday"),
+      business.businessHoursWednesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.wednesday"),
+      business.businessHoursThursday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.thursday"),
+      business.businessHoursFriday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.friday"),
+      business.businessHoursSaturday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.saturday"),
     isMe = $me.id === business.id;
 
     hours = [
       {
-        day: "Sunday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.sunday",
         hours: business.businessHoursSunday?.split(";"),
         isNow: false,
       },
       {
-        day: "Monday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.monday",
         hours: business.businessHoursMonday?.split(";"),
         isNow: false,
       },
       {
-        day: "Tuesday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.tuesday",
         hours: business.businessHoursTuesday?.split(";"),
         isNow: false,
       },
       {
-        day: "Wednesday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.wednesday",
         hours: business.businessHoursWednesday?.split(";"),
         isNow: false,
       },
       {
-        day: "Thursday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.thursday",
         hours: business.businessHoursThursday?.split(";"),
         isNow: false,
       },
       {
-        day: "Friday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.friday",
         hours: business.businessHoursFriday?.split(";"),
         isNow: false,
       },
       {
-        day: "Saturday",
+        day: "dapps.o-marketlisting.pages.marketListingDetail.saturday",
         hours: business.businessHoursSaturday?.split(";"),
         isNow: false,
       },
@@ -311,7 +321,7 @@ async function shareLink() {
       {/if}
     </div>
   {:else}
-    <p>loading details...</p>
+    <p>{$_("dapps.o-marketlisting.pages.marketListingDetail.loadingDetails")}</p>
   {/if}
 </section>
 

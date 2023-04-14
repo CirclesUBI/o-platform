@@ -44,7 +44,7 @@ const verifyEmail: Page<any, DappState> = {
   anonymous: true,
   routeParts: ["=verifyEmail", "verify", ":secret"],
   component: VerifyEmail,
-  title: "Email address",
+  title: "common.emailAddress",
   type: "page",
 };
 
@@ -52,7 +52,7 @@ const profile: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=profile", ":profileId"],
   component: Home,
-  title: "Profile",
+  title: "common.profile",
 
   type: "page",
   navigation: {
@@ -129,7 +129,7 @@ export const passport: DappManifest<DappState> = {
   tag: Promise.resolve("alpha"),
   jumplist: {
     type: "jumplist",
-    title: "Actions",
+    title: "common.actions",
     isSystem: false,
     routeParts: ["=actions"],
     items: async () => {

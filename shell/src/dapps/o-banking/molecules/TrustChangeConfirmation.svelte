@@ -2,6 +2,7 @@
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import ProcessNavigation from "@o-platform/o-editors/src/ProcessNavigation.svelte";
 import UserImage from "src/shared/atoms/UserImage.svelte";
+import { _ } from "svelte-i18n";
 
 export let context: any;
 let _context: any;
@@ -24,9 +25,9 @@ function submit() {
     <div>
       <span class="mt-4 text-xl">
         {#if _context.data.trustLimit == 100}
-          You trust {_context.data.profile[0].displayName} now
+          {$_("dapps.o-banking.molecules.trustChangeConfirmation.youTrust")} {_context.data.profile[0].displayName} {$_("dapps.o-banking.molecules.trustChangeConfirmation.now")}
         {:else}
-          You removed your trust to {_context.data.profile[0].displayName}
+          {$_("dapps.o-banking.molecules.trustChangeConfirmation.youRemovedTrust")} {_context.data.profile[0].displayName}
         {/if}
       </span>
     </div>
