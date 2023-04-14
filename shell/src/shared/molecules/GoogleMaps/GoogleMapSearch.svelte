@@ -82,9 +82,11 @@ function addMarker(map: google.maps.Map, place: google.maps.Place, customInfoWin
   markers.push(marker);
   currentPlaceName = place.name;
   let addressArray = place.formatted_address.split(",");
+
   if (currentPlaceName) {
     addressArray.pop();
   }
+
   currentPlaceAddress = addressArray.join("<br/>");
 
   if (customInfoWindow) {
@@ -125,7 +127,12 @@ function placeChanged(map, place, customInfoWindow = true) {
     map.setZoom(17);
   }
 
-  console.log("DER NEUE PLACE", place);
+  // Replace Plus code...
+
+  let plusCode = place.address_components.find((o) => o.types[0] === "plus_code")?.long_name;
+
+  place.formatted_address = place.formatted_address.replace(plusCode, "");
+
   placeholder = place.formatted_address;
 
   addMarker(map, place, customInfoWindow);
@@ -134,7 +141,6 @@ function placeChanged(map, place, customInfoWindow = true) {
 }
 
 function initialise() {
-  console.log("Initialize");
   setTimeout(() => {
     google = window.google;
 
@@ -198,12 +204,10 @@ function initialise() {
     });
 
     dispatch("ready");
-    console.log("Initialize Done");
   }, 1);
 }
 
 function setPlaceByCoords(latLng, geocoderService) {
-  console.log("Set place by coords:", latLng);
   geocoderService.geocode(
     {
       latLng: latLng,
