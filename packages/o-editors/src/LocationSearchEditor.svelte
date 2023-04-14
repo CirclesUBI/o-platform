@@ -8,13 +8,7 @@ import GoogleMapSearch from "../../../shell/src/shared/molecules/GoogleMaps/Goog
 import { Environment } from "../../../shell/src/shared/environment";
 import { error } from "../../../shell/src/shared/stores/error";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
-/*
- * allow arbitrary values in dropdownselecteditor
- * allow to add new tags in dropdownselecteditor
- * add a "most-recent" list to the dropdownselecteditor
- */
-
-// export let context: EditorContext;
+import Geolocation from "svelte-geolocation";
 
 export let context: DropdownSelectorContext<any, any, any>;
 
@@ -26,6 +20,12 @@ type Location = {
   lat: string;
   lng: string;
 };
+
+let geolocation;
+let geoLocationOptions = {
+  enableHighAccuracy: true,
+};
+let placeholder: string = null;
 
 let _context: EditorContext;
 
@@ -44,6 +44,15 @@ let center = {};
 let validAddress: boolean = false;
 $: {
   _context = context;
+
+  if (_context && _context.data.lat) {
+    placeholder = _context.data.locationName;
+    center = { lat: _context.data.lat, lng: _context.data.lon };
+  } else {
+    if (geolocation) {
+      center = { lat: geolocation.coords.latitude, lng: geolocation.coords.longitude };
+    }
+  }
 }
 
 onMount(async () => {
@@ -75,10 +84,20 @@ const submitHandler = () => {
 };
 </script>
 
+<Geolocation
+  options="{geoLocationOptions}"
+  watch="{true}"
+  getPosition
+  on:position="{(e) => {
+    geolocation = e.detail;
+  }}"
+  on:error="{(e) => {
+    console.log('POS ERROR', e.detail); // GeolocationError
+  }}" />
 <div class="flex flex-col items-end w-full m-auto form-control justify-self-center sm:w-3/4">
   <div class="w-full mb-8 section-txt h-80" id="map">
     <div class="map-wrap">
-      <GoogleMapSearch apiKey="{Environment.placesApiKey}" on:recenter="{(e) => mapRecenter(e.detail)}" zoom="{17}" options="{options}" center="{center}" />
+      <GoogleMapSearch apiKey="{Environment.placesApiKey}" on:recenter="{(e) => mapRecenter(e.detail)}" zoom="{17}" options="{options}" bind:center="{center}" placeholder="{placeholder}" />
     </div>
   </div>
 

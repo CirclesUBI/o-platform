@@ -4,6 +4,8 @@ import { push } from "svelte-spa-router";
 import Icon from "@krowten/svelte-heroicons/Icon.svelte";
 import { Businesses } from "../../../shared/api/data/types";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
+import { isMobile } from "../../../shared/functions/isMobile";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let business: Businesses & { isFavorite: boolean };
 
@@ -12,10 +14,12 @@ const eventDispatcher = createEventDispatcher();
 function loadDetailPage(circlesAddress) {
   push(`/market/detail/${circlesAddress}`);
 }
+
+let textCutoff = isMobile() ? 12 : 35;
 </script>
 
-<section class="flex-row w-[50%] h-[50%] p-1 mb-2">
-  <div class="relative">
+<section class="p-1 mb-2">
+  <div class="relative w-full min-w-0">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
       src="{business.picture}"
@@ -37,10 +41,21 @@ function loadDetailPage(circlesAddress) {
       {/if}
     </div>
   </div>
-  {#if business.name}
-    <div class="pt-2 pl-2 text-2xl font-bold font-heading text-heading">{business.name ? (business.name.length >= 38 ? business.name.slice(0, 38) + "..." : business.name) : ""}</div>
-  {/if}
-  {#if business.description}
-    <div class="flex-wrap pl-2 text-grey">{business.description ? (business.description.length >= 70 ? business.description.slice(0, 70) + "..." : business.description) : ""}</div>
-  {/if}
+  <div class="container w-full">
+    {#if business.name}
+      <div class="pb-0 pl-2 text-2xl font-bold font-heading text-heading">
+        <Label text="{business.name}" truncate="{true}" />
+      </div>
+    {/if}
+    {#if business.locationName}
+      <div class="pt-0 pl-2 text-sm">
+        <Label text="{business.locationName}" truncate="{true}" />
+      </div>
+    {/if}
+    {#if business.description}
+      <div class="flex-wrap pt-1 pl-2 text-md">
+        <Label text="{business.description}" truncate="{true}" />
+      </div>
+    {/if}
+  </div>
 </section>

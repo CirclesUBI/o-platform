@@ -29,7 +29,7 @@ export const index: Page<any, NotificationDappState> = {
     leftSlot: {
       component: ListComponent,
       props: {
-        icon: "chat",
+        icon: "bell",
         backgroundColorClass: "notifications",
         // action: () => processNavigation.back(),
       },

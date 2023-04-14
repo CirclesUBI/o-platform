@@ -1,5 +1,4 @@
 <script lang="ts">
-import CopyToClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import PassportHeader from "../atoms/PassportHeader.svelte";
 import { me } from "../../../shared/stores/me";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
@@ -144,44 +143,6 @@ function createNewOrga() {
                 <center>
                   <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
                 </center>
-              </div>
-            </div>
-          </section>
-        </div>
-      </StandardHeaderBox>
-    {/if}
-    {#if profile.circlesAddress}
-      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.address">
-        <div slot="standardHeaderBoxContent">
-          <section class="justify-center">
-            <div class="flex flex-col w-full space-y-1">
-              <div class="flex items-center w-full space-x-2 sm:space-x-4">
-                <div class="text-left">
-                  <div class="inline-block break-all" id="clipboard">
-                    {#if profile}
-                      {profile.circlesAddress ? profile.circlesAddress : ""}
-
-                      <CopyToClipboard text="{name}" let:copy>
-                        <svg
-                          role="presentation"
-                          on:click="{copy}"
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="inline w-4 h-4 stroke-current text-primary"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor">
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0
-                00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0
-                012 2"></path>
-                        </svg>
-                      </CopyToClipboard>
-                    {/if}
-                  </div>
-                </div>
               </div>
             </div>
           </section>

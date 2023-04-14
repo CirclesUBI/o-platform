@@ -123,8 +123,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           },
           onDone: [
             {
-              cond: (context) =>
-                !!context.eoa && !sessionStorage.getItem("circlesKey") && !!localStorage.getItem("circlesKeys"),
+              cond: (context) => !!context.eoa && !sessionStorage.getItem("circlesKey") && !!localStorage.getItem("circlesKeys"),
               actions: () => console.log(`!!context.eoa && !sessionStorage.getItem("circlesKey")  -->  tryUnlockEoa`),
               target: "eoa.tryUnlockEoa",
             },
@@ -135,32 +134,22 @@ export const initMachine = createMachine<InitContext, InitEvent>(
             },
             {
               cond: (context) => false, // !!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != "",
-              actions: () =>
-                console.log(
-                  `!!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != ""  -->  init.ubi`
-                ),
+              actions: () => console.log(`!!context.safe?.address && !!context.profile?.firstName && context.profile?.firstName != ""  -->  init.ubi`),
               target: "ubi",
             },
             {
               cond: (context) => !!context.invitation?.claimedAt && !!context.safe?.address,
-              actions: () =>
-                console.log(`!!context.invitation?.claimedAt && !!context.safe?.address  -->  init.profile`),
+              actions: () => console.log(`!!context.invitation?.claimedAt && !!context.safe?.address  -->  init.profile`),
               target: "profile",
             },
             {
               cond: (context) => !!context.registration?.circlesSafeOwner && !!context.invitation?.claimedAt,
-              actions: () =>
-                console.log(
-                  `!!context.registration?.circlesSafeOwner && !!context.invitation?.claimedAt  -->  init.eoa.redeemInvitation`
-                ),
+              actions: () => console.log(`!!context.registration?.circlesSafeOwner && !!context.invitation?.claimedAt  -->  init.eoa.redeemInvitation`),
               target: "eoa.redeemInvitation",
             },
             {
               cond: (context) => !!context.registration?.profileId && !!context.registration?.circlesSafeOwner,
-              actions: () =>
-                console.log(
-                  `!!context.registration?.profileId && !!context.registration?.circlesSafeOwner  -->  init.invitation`
-                ),
+              actions: () => console.log(`!!context.registration?.profileId && !!context.registration?.circlesSafeOwner  -->  init.invitation`),
               target: "invitation",
             },
             {
@@ -494,10 +483,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
         if (!ctx.registration) throw new Error(`ctx.registration is not set`);
 
         try {
-          const claimedInvitation = await ApiClient.query<ClaimedInvitation, ClaimedInvitationQueryVariables>(
-            ClaimedInvitationDocument,
-            {}
-          );
+          const claimedInvitation = await ApiClient.query<ClaimedInvitation, ClaimedInvitationQueryVariables>(ClaimedInvitationDocument, {});
 
           if (claimedInvitation) {
             callback(<InitEvent>{
@@ -575,10 +561,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
         if (!ctx.eoa) throw new Error(`ctx.eoa is not set`);
 
         // TODO: This is missing an error response
-        const invitationTransaction = await ApiClient.query<ProfileEvent, InvitationTransactionQueryVariables>(
-          InvitationTransactionDocument,
-          {}
-        );
+        const invitationTransaction = await ApiClient.query<ProfileEvent, InvitationTransactionQueryVariables>(InvitationTransactionDocument, {});
 
         if (invitationTransaction) {
           callback({
@@ -623,10 +606,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
       },
       loadUbi: (ctx) => async (callback) => {
         // TODO: This is missing an error response
-        const hubSignupTransaction = await ApiClient.query<ProfileEvent, HubSignupTransactionQueryVariables>(
-          HubSignupTransactionDocument,
-          {}
-        );
+        const hubSignupTransaction = await ApiClient.query<ProfileEvent, HubSignupTransactionQueryVariables>(HubSignupTransactionDocument, {});
 
         if (hubSignupTransaction?.payload) {
           callback({

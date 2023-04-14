@@ -5,7 +5,7 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import BusinessCard from "../atoms/BusinessCard.svelte";
 import { marketFavoritesStore } from "../stores/marketFavoritesStore";
-import { marketStore } from "../stores/marketStore";
+import marketStore from "../stores/marketStore";
 import MarketlistingFrame from "../molecules/MarketlistingFrame.svelte";
 import { marketFilterStore } from "../stores/marketFilterStore";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
