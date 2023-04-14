@@ -7,11 +7,38 @@ $: if (!$isLocaleLoaded) {
   setupI18n({ withLocale: "en" });
 }
 
-export let key: string;
-export let values: any;
+export let key: string = null;
+export let values: any = null;
+export let text: string = null;
+export let truncate: boolean = false;
 </script>
 
-{#if $isLocaleLoaded}
+{#if text}
+  <div class:flex-parent="{truncate}" class:inline="{!truncate}">
+    <div class:long-and-truncated="{truncate}" class:inline="{!truncate}">
+      {text}
+    </div>
+  </div>
+{:else if $isLocaleLoaded}
   <!-- <span data-i18n-key="{key}">{@html $_(`${key}`)}</span> -->
-  <span data-i18n-key="{key}">{i18nString(key, { values: values })}</span>
+  <span data-i18n-key="{key}">{@html i18nString(key, { values: values })}</span>
 {/if}
+
+<style lang="css">
+.flex-parent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+.long-and-truncated {
+  flex: 1;
+}
+.long-and-truncated,
+.long-and-truncated > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

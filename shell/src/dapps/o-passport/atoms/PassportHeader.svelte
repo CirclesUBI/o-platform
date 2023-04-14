@@ -69,14 +69,14 @@ function editProfileField(onlyThesePages: string[]) {
 
   <div class="text-center" role="presentation" on:click="{() => (profile.__typename === 'Organisation' ? editProfileField(['firstName']) : editProfileField(['firstName', 'lastName']))}">
     <h2 class="text-2xl cursor-pointer sm:text-4xl font-heading">
-      {displayName ? (displayName.length >= 38 ? displayName.slice(0, 38) + "..." : displayName) : ""}
+      {displayName ? (displayName.length >= 15 ? displayName.slice(0, 15) + "..." : displayName) : ""}
       <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary" />
     </h2>
   </div>
   {#if profile}
     {#if profile.locationName}
       <div class="mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">
-        {profile.locationName ? (profile.locationName.length >= 38 ? profile.locationName.slice(0, 38) + "..." : profile.locationName) : ""}
+        {profile.locationName ? (profile.locationName.length >= 38 ? profile.locationName.slice(0, 30) + "..." : profile.locationName) : ""}
         <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary -mt-1 ml-1" />
       </div>
     {:else}

@@ -551,6 +551,7 @@ export type Mutation = {
   setIsFavorite: Scalars['Boolean'];
   shareLink: Scalars['String'];
   markAsRead: MarkAsReadResult;
+  markAllAsRead: MarkAsReadResult;
 };
 
 
@@ -851,6 +852,7 @@ export type ProfileEvent = {
   __typename?: 'ProfileEvent';
   timestamp: Scalars['String'];
   unread: Scalars['Boolean'];
+  unread_marker_id?: Maybe<Scalars['Int']>;
   block_number?: Maybe<Scalars['Int']>;
   transaction_index?: Maybe<Scalars['Int']>;
   transaction_hash?: Maybe<Scalars['String']>;
@@ -1232,6 +1234,7 @@ export type SafeVerified = IEventPayload & {
 
 export type SearchInput = {
   searchString: Scalars['String'];
+  profileType?: Maybe<ProfileType>;
 };
 
 export type SendMessageResult = {
@@ -1846,6 +1849,30 @@ export type SendSignedTransactionMutation = (
   ) }
 );
 
+export type MarkAllAsReadMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MarkAllAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAllAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
+export type MarkAsReadMutationVariables = Exact<{
+  entryIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type MarkAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & { markAsRead: (
+    { __typename?: 'MarkAsReadResult' }
+    & Pick<MarkAsReadResult, 'count'>
+  ) }
+);
+
 export type InitQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1997,7 +2024,7 @@ export type MyProfileQuery = (
   { __typename?: 'Query' }
   & { myProfile?: Maybe<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness' | 'location' | 'locationName'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'canInvite' | 'provenUniqueness' | 'location' | 'locationName' | 'type'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2025,7 +2052,7 @@ export type ProfilesQuery = (
   { __typename?: 'Query' }
   & { profilesById: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'type' | 'provenUniqueness'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2046,6 +2073,7 @@ export type ProfilesQuery = (
 
 export type ProfilesByNameQueryVariables = Exact<{
   searchString: Scalars['String'];
+  profileType?: Maybe<ProfileType>;
 }>;
 
 
@@ -2053,7 +2081,7 @@ export type ProfilesByNameQuery = (
   { __typename?: 'Query' }
   & { search: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'origin' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'successorOfCirclesAddress' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'country' | 'provenUniqueness'>
+    & Pick<Profile, 'id' | 'origin' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'successorOfCirclesAddress' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'country' | 'type' | 'provenUniqueness'>
     & { verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
       & Pick<Verification, 'createdAt' | 'revokedAt' | 'verifierSafeAddress'>
@@ -2095,7 +2123,7 @@ export type ProfilesByCirclesAddressQuery = (
   { __typename?: 'Query' }
   & { profilesBySafeAddress: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'origin' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'origin' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'avatarUrl' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'type'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2193,7 +2221,7 @@ export type ProfileBySafeAddressQuery = (
   { __typename?: 'Query' }
   & { profilesBySafeAddress: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'canInvite' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'circlesTokenAddress'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'canInvite' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'type' | 'lat' | 'lon' | 'circlesTokenAddress'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
@@ -2327,7 +2355,7 @@ export type StreamQuery = (
   { __typename?: 'Query' }
   & { events: Array<(
     { __typename?: 'ProfileEvent' }
-    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type' | 'unread'>
+    & Pick<ProfileEvent, 'timestamp' | 'transaction_hash' | 'block_number' | 'safe_address' | 'contact_address' | 'direction' | 'type' | 'unread' | 'unread_marker_id'>
     & { contact_address_profile?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'type' | 'successorOfCirclesAddress' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'provenUniqueness'>
@@ -3074,6 +3102,20 @@ export const SendSignedTransactionDocument = gql`
   }
 }
     `;
+export const MarkAllAsReadDocument = gql`
+    mutation markAllAsRead {
+  markAllAsRead {
+    count
+  }
+}
+    `;
+export const MarkAsReadDocument = gql`
+    mutation markAsRead($entryIds: [Int!]!) {
+  markAsRead(entries: $entryIds) {
+    count
+  }
+}
+    `;
 export const InitDocument = gql`
     query init {
   init {
@@ -3274,6 +3316,7 @@ export const MyProfileDocument = gql`
     provenUniqueness
     location
     locationName
+    type
     memberships {
       isAdmin
       organisation {
@@ -3317,6 +3360,7 @@ export const ProfilesDocument = gql`
     lastName
     dream
     avatarUrl
+    type
     displayCurrency
     provenUniqueness
     memberships {
@@ -3349,8 +3393,8 @@ export const ProfilesDocument = gql`
 }
     `;
 export const ProfilesByNameDocument = gql`
-    query profilesByName($searchString: String!) {
-  search(query: {searchString: $searchString}) {
+    query profilesByName($searchString: String!, $profileType: ProfileType) {
+  search(query: {searchString: $searchString, profileType: $profileType}) {
     id
     origin
     circlesSafeOwner
@@ -3363,6 +3407,7 @@ export const ProfilesByNameDocument = gql`
     lastName
     dream
     country
+    type
     displayCurrency
     provenUniqueness
     verifications {
@@ -3430,6 +3475,7 @@ export const ProfilesByCirclesAddressDocument = gql`
     locationName
     lat
     lon
+    type
     memberships {
       isAdmin
       organisation {
@@ -3605,6 +3651,7 @@ export const ProfileBySafeAddressDocument = gql`
     provenUniqueness
     location
     locationName
+    type
     lat
     lon
     memberships {
@@ -3786,6 +3833,7 @@ export const StreamDocument = gql`
     direction
     type
     unread
+    unread_marker_id
     payload {
       ... on CrcHubTransfer {
         transaction_hash
@@ -4538,6 +4586,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendSignedTransaction(variables: SendSignedTransactionMutationVariables): Promise<SendSignedTransactionMutation> {
       return withWrapper(() => client.request<SendSignedTransactionMutation>(print(SendSignedTransactionDocument), variables));
+    },
+    markAllAsRead(variables?: MarkAllAsReadMutationVariables): Promise<MarkAllAsReadMutation> {
+      return withWrapper(() => client.request<MarkAllAsReadMutation>(print(MarkAllAsReadDocument), variables));
+    },
+    markAsRead(variables: MarkAsReadMutationVariables): Promise<MarkAsReadMutation> {
+      return withWrapper(() => client.request<MarkAsReadMutation>(print(MarkAsReadDocument), variables));
     },
     init(variables?: InitQueryVariables): Promise<InitQuery> {
       return withWrapper(() => client.request<InitQuery>(print(InitDocument), variables));

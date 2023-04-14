@@ -38,8 +38,8 @@ function handleRemoveFilter(filterId) {
 </script>
 
 {#if allCategories}
-  <div class="flex flex-row flex-wrap items-center space-x-2">
-    <div class="text-sm"><Label key="dapps.o-marketlisting.molecules.categoryfilter.filter" /></div>
+  <div class="flex flex-row flex-wrap items-center py-2 space-x-2">
+    <div class="text-base"><Label key="dapps.o-marketlisting.molecules.categoryfilter.filter" /></div>
     {#each $marketFilterStore as filterId}
       <div class="text-xs badge badge-outline">
         {allCategoriesLookup[filterId].name}

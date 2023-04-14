@@ -58,10 +58,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
       <div class="self-center pr-3 ">
         <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
 
-        <span
-          class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl"
-          class:text-white="{cleanRoute != 'home'}"
-          class:text-passport="{cleanRoute === 'home' || cleanRoute === 'contacts'}">Beta</span>
+        <span class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl text-grey-dark">Beta</span>
         <!-- {#if runtimeDapp && runtimeDapp.dappId !== "homepage:1" && !runtimeDapp.anonymous}
         <div class="relative mr-4 cursor-pointer justify-self-center" on:click="{() => push(`#/marketplace/cart`)}">
           {#if $cartContents && $cartContents.length > 0}

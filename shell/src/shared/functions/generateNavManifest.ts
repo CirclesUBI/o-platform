@@ -11,35 +11,38 @@ export type GenerateNavManifestArgs = {
   centerIsOpen: boolean;
   centerContainsProcess: boolean;
   rightIsOpen: boolean;
-  notificationCount: number;
+  notificationCount?: number;
   canGoBack?: boolean;
   canSkip?: boolean;
   showLogin?: boolean;
   hideFooterGradient?: boolean;
 };
 
-function applyOverrides(leftStatic:any, leftSlotOverride: NavigationElement) {
+function applyOverrides(leftStatic: any, leftSlotOverride: NavigationElement) {
   const left = leftStatic;
   if (leftSlotOverride && leftSlotOverride.props) {
     left.props = {
       ...left.props,
-      ...leftSlotOverride.props
-    }
+      ...leftSlotOverride.props,
+    };
   }
   return left;
 }
 
 const homeNavManifest = (leftSlotOverride?: NavigationElement) => {
-  const left = applyOverrides({
-    component: LinkComponent,
-    props: {
-      icon: "menu",
-      action: () =>
-        window.o.publishEvent({
-          type: "shell.openNavigation",
-        }),
-    }
-  }, leftSlotOverride);
+  const left = applyOverrides(
+    {
+      component: LinkComponent,
+      props: {
+        icon: "menu",
+        action: () =>
+          window.o.publishEvent({
+            type: "shell.openNavigation",
+          }),
+      },
+    },
+    leftSlotOverride
+  );
   return {
     leftSlot: left,
     loginPill: {
@@ -57,16 +60,19 @@ const homeNavManifest = (leftSlotOverride?: NavigationElement) => {
 };
 
 const defaultNavManifest: (leftSlotOverride?: NavigationElement) => NavigationManifest = (leftSlotOverride?: NavigationElement) => {
-  const left = applyOverrides({
-    component: LinkComponent,
-    props: {
-      icon: "menu",
-      action: () =>
-        window.o.publishEvent({
-          type: "shell.openNavigation",
-        }),
+  const left = applyOverrides(
+    {
+      component: LinkComponent,
+      props: {
+        icon: "menu",
+        action: () =>
+          window.o.publishEvent({
+            type: "shell.openNavigation",
+          }),
+      },
     },
-  }, leftSlotOverride);
+    leftSlotOverride
+  );
 
   return {
     leftSlot: left,
@@ -74,7 +80,7 @@ const defaultNavManifest: (leftSlotOverride?: NavigationElement) => NavigationMa
       left: {
         component: ListComponent,
         props: {
-          icon: "chat",
+          icon: "bell",
           action: () =>
             window.o.publishEvent({
               type: "shell.contacts",

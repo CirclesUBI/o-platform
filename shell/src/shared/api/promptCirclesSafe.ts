@@ -1,32 +1,32 @@
-import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {
-  normalizePromptField,
-  prompt,
-  PromptField,
-} from "@o-platform/o-process/dist/states/prompt";
+import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { normalizePromptField, prompt, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
 import DropDownProfile from "@o-platform/o-editors/src/dropdownItems/DropDownProfile.svelte";
-import {DropdownSelectorParams} from "@o-platform/o-editors/src/DropdownSelectEditorContext";
-import {AvataarGenerator} from "../avataarGenerator";
-import {EditorViewContext} from "@o-platform/o-editors/src/shared/editorViewContext";
+import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
+import { AvataarGenerator } from "../avataarGenerator";
+import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
 import {
   Contact,
+  Organisation,
   Profile,
-  ProfileBySafeAddressDocument, ProfileBySafeAddressQueryVariables,
-  ProfilesByNameDocument, ProfilesByNameQueryVariables,
+  ProfileType,
+  ProfileBySafeAddressDocument,
+  ProfileBySafeAddressQueryVariables,
+  ProfilesByNameDocument,
+  ProfilesByNameQueryVariables,
 } from "./data/types";
-import {ApiClient} from "../apiConnection";
-import {Observable} from "rxjs";
-import {contacts} from "../stores/contacts";
-import {trustFromContactMetadata} from "../functions/trustFromContactMetadata";
+import { ApiClient } from "../apiConnection";
+import { Observable } from "rxjs";
+import { contacts } from "../stores/contacts";
+import { trustFromContactMetadata } from "../functions/trustFromContactMetadata";
 
-export function promptCirclesSafe<TContext extends ProcessContext<any>,
-  TEvent extends PlatformEvent>(spec: {
+export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent extends PlatformEvent>(spec: {
   field: PromptField<TContext>;
   onlyWhenDirty?: boolean;
   id?: string;
   params: {
+    profileType?: ProfileType;
     view: EditorViewContext;
     placeholder: string;
     submitButtonText: string;
@@ -35,36 +35,24 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
   navigation?: {
     // If you want to allow the user to go one step back then specify here where he came from
     previous?: string;
-    canGoBack?: (
-      context: ProcessContext<TContext>,
-      event: { type: string; [x: string]: any }
-    ) => boolean;
+    canGoBack?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
     next?: string;
     skip?: string;
-    canSkip?: (
-      context: ProcessContext<TContext>,
-      event: { type: string; [x: string]: any }
-    ) => boolean;
+    canSkip?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
   };
 }) {
   const field = normalizePromptField(spec.field);
 
   function sortByNameComparer(a: Profile, b: Profile) {
     let firstNameOrder = 0;
-    if (a.firstName > b.firstName)
-      firstNameOrder = 1;
-    else if (a.firstName < b.firstName)
-      firstNameOrder = -1;
-    else
-      firstNameOrder = 0;
+    if (a.firstName > b.firstName) firstNameOrder = 1;
+    else if (a.firstName < b.firstName) firstNameOrder = -1;
+    else firstNameOrder = 0;
 
     let lastNameOrder = 0;
-    if (a.lastName > b.lastName)
-      lastNameOrder = 1;
-    else if (a.lastName < b.lastName)
-      lastNameOrder = -1;
-    else
-      lastNameOrder = 0;
+    if (a.lastName > b.lastName) lastNameOrder = 1;
+    else if (a.lastName < b.lastName) lastNameOrder = -1;
+    else lastNameOrder = 0;
 
     if (firstNameOrder != 0) {
       return firstNameOrder;
@@ -74,7 +62,10 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
   }
 
   function sortByDistanceComparer(contacts: Contact[]) {
-    const contactsBySafeAddress = contacts.toLookup(o => o.contactAddress, o => o);
+    const contactsBySafeAddress = contacts.toLookup(
+      (o) => o.contactAddress,
+      (o) => o
+    );
     return (a: Profile, b: Profile) => {
       // A profile is considered near when it is a contact of mine
       const aContact = contactsBySafeAddress[a.circlesAddress];
@@ -88,7 +79,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
       }
 
       const aTrust = trustFromContactMetadata(aContact);
-      const bTrust = trustFromContactMetadata(bContact)
+      const bTrust = trustFromContactMetadata(bContact);
 
       if (aTrust.trustIn && !bTrust.trustIn) {
         return 1;
@@ -102,11 +93,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
         return -1;
       }
 
-      return aContact.metadata.length > bContact.metadata.length
-        ? 1
-        : aContact.metadata.length < bContact.metadata.length
-          ? -1
-          : 0;
+      return aContact.metadata.length > bContact.metadata.length ? 1 : aContact.metadata.length < bContact.metadata.length ? -1 : 0;
     };
   }
 
@@ -114,57 +101,61 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
     id: spec.id ?? field.name,
     field: spec.field,
     component: DropdownSelectEditor,
-    params: <DropdownSelectorParams<TContext, Profile, string>>{
+    params: <DropdownSelectorParams<TContext, Profile | Organisation, string>>{
       allowAlternativeInput: true,
       view: spec.params.view,
       getKey: (profile) => {
-        return profile.circlesAddress;
+        return profile?.circlesAddress;
       },
       keyProperty: "circlesAddress",
       itemTemplate: DropDownProfile,
+      getType: (profile) => profile.__typename,
       getLabel: (profile) => profile.displayName,
       choices: {
         byKey: async (key: string) => {
           const profiles = await ApiClient.query<Profile[], ProfileBySafeAddressQueryVariables>(ProfileBySafeAddressDocument, {
-            safeAddress: key
+            safeAddress: key,
           });
-          return profiles?.length
-            ? profiles[0]
-            : undefined;
+          return profiles?.length ? profiles[0] : undefined;
         },
         find: (filter?: string) => {
           let _contacts: Contact[] = [];
           const resultsObservable = new Observable<Profile[]>((observer) => {
-            contacts.subscribe(c => {
+            contacts.subscribe((c) => {
               _contacts = c;
-              const filteredCachedContacts = c.filter(contact =>
-                ((contact.contactAddress_Profile?.firstName ?? "")
-                  + (contact.contactAddress_Profile?.firstName ?? "")
-                  + (contact.contactAddress_Profile?.circlesAddress ?? ""))
-                  .toLowerCase()
-                  .indexOf(filter.toLowerCase()) > -1
-              ).sort((a, b) => sortByNameComparer(a.contactAddress_Profile, b.contactAddress_Profile));
+              const filteredCachedContacts = c
+                .filter((contact) => (spec.params.profileType ? contact.contactAddress_Profile?.type === spec.params.profileType : null))
+                .filter(
+                  (contact) =>
+                    ((contact.contactAddress_Profile?.firstName ?? "") + (contact.contactAddress_Profile?.firstName ?? "") + (contact.contactAddress_Profile?.circlesAddress ?? ""))
+                      .toLowerCase()
+                      .indexOf(filter.toLowerCase()) > -1
+                )
+                .sort((a, b) => sortByNameComparer(a.contactAddress_Profile, b.contactAddress_Profile));
               const sortByDistanceCmp = sortByDistanceComparer(_contacts);
-              observer.next(filteredCachedContacts.map(o => o.contactAddress_Profile).sort(sortByDistanceCmp));
+              observer.next(filteredCachedContacts.map((o) => o.contactAddress_Profile).sort(sortByDistanceCmp));
             })();
 
             ApiClient.query<Profile[], ProfilesByNameQueryVariables>(ProfilesByNameDocument, {
               searchString: (filter ?? "") + "%",
-            }).then(profiles => {
-              const searchResult = (profiles && profiles.length > 0
-                ? profiles
-                  .filter((o) => o.circlesAddress)
-                  .map((o) => {
-                    return {
-                      ...o,
-                      circlesAddress: o.circlesAddress,
-                      avatarUrl: o.avatarUrl
-                        ? o.avatarUrl
-                        : AvataarGenerator.generate(o.circlesAddress),
-                    };
-                  })
-                  .reverse()
-                : []).sort(sortByNameComparer);
+              profileType: spec.params.profileType ?? null,
+            }).then((profiles) => {
+              const searchResult = (
+                profiles && profiles.length > 0
+                  ? profiles
+                    .filter((o) => o.circlesAddress)
+                    .map((o) => {
+                      return {
+                        ...o,
+                        circlesAddress: o.circlesAddress,
+                        type: o.type,
+                        avatarUrl: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
+                      };
+                    })
+                    .reverse()
+                  : []
+              ).sort(sortByNameComparer);
+              console.log("SEARCH RESULT: ", resultsObservable);
 
               const sortByDistanceCmp = sortByDistanceComparer(_contacts);
               observer.next(searchResult.sort(sortByDistanceCmp));
@@ -173,7 +164,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>,
           });
 
           return resultsObservable;
-        }
+        },
       },
     },
     navigation: spec.navigation,
