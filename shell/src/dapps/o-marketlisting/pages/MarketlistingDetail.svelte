@@ -74,51 +74,42 @@ onMount(async () => {
     if (!business) return;
 
     const currentDateIndex = new Date().getDay();
-    const businessHours = [
-      business.businessHoursSunday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.sunday"),
-      business.businessHoursMonday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.monday"),
-      business.businessHoursTuesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.tuesday"),
-      business.businessHoursWednesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.wednesday"),
-      business.businessHoursThursday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.thursday"),
-      business.businessHoursFriday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.friday"),
-      business.businessHoursSaturday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.saturday"),
-    ];
 
     isMe = $me.id === business.id;
 
     hours = [
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.sunday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.sunday"),
         hours: business.businessHoursSunday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.monday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.monday"),
         hours: business.businessHoursMonday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.tuesday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.tuesday"),
         hours: business.businessHoursTuesday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.wednesday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.wednesday"),
         hours: business.businessHoursWednesday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.thursday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.thursday"),
         hours: business.businessHoursThursday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.friday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.friday"),
         hours: business.businessHoursFriday?.split(";"),
         isNow: false,
       },
       {
-        day: "dapps.o-marketlisting.pages.marketListingDetail.saturday",
+        day: $_("dapps.o-marketlisting.pages.marketListingDetail.saturday"),
         hours: business.businessHoursSaturday?.split(";"),
         isNow: false,
       },
