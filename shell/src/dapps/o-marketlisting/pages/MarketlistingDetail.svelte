@@ -293,7 +293,7 @@ async function shareLink() {
               <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
-                    <div class="text-sm">{businessHour.day}</div>
+                    <div class="text-sm"><Label key="{businessHour.day}" /></div>
                     <div class="text-sm">{@html businessHour.hours[0].length ? businessHour.hours.join(", ") : "<span class='text-alert'>Closed</span>"}</div>
                   </div>
                 {/each}
