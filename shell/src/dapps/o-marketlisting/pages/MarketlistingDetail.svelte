@@ -214,7 +214,9 @@ async function shareLink() {
     <div class="flex justify-between">
       <div class="flex flex-col">
         <h1 class="mt-3 font-bold break-all font-heading text-heading">{business.name}</h1>
-        <p class="text-black break-all"><Label text="{business.description ? business.description : ''}" /></p>
+        {#if business.description}
+          <p class="text-black break-all"><Label text="{business.description}" /></p>
+        {/if}
       </div>
       <div class="mr-12">
         <DetailActionBar actions="{availableActions}" />
