@@ -65,6 +65,10 @@ $: if (location && $error !== null) {
   validAddress = true;
 }
 
+$: if (geolocation) {
+  center = { lat: geolocation.coords.latitude, lng: geolocation.coords.longitude };
+}
+
 function mapRecenter({ place }) {
   location = {
     place_id: place.place_id,
