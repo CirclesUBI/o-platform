@@ -8,6 +8,7 @@ import { Currency } from "../../../shared/currency";
 import { BN } from "ethereumjs-util";
 import { assetBalances } from "../../../shared/stores/assetsBalances";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import { _ } from "svelte-i18n";
 
 export let balanceEuro: string = "0";
 export let balanceTime: string = "0";
@@ -24,9 +25,7 @@ $: {
 <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
 
 <PageHeader heightClass=" relative h-60 sm:h-80" color="bg-banking" largeHeader="{true}">
-  <div
-    class="absolute w-4/5 h-full overflow-hidden -top-6 blob bg-banking"
-    style="border-radius:137% 1% 119% 38% / 99% 60% 86% 73%">
+  <div class="absolute w-4/5 h-full overflow-hidden -top-6 blob bg-banking" style="border-radius:137% 1% 119% 38% / 99% 60% 86% 73%">
     <div class="pt-2 text-white"></div>
   </div>
   <div class="flex items-center w-full pt-2 text-white ">
@@ -41,7 +40,7 @@ $: {
                 </h1>
                 <Icons icon="timeCircle" size="{14}" customClass="inline ml-2 inline-icon" />
               </div>
-              <span class="text-3xl text-right"> BALANCE </span>
+              <span class="text-3xl text-right"> {$_("dapps.o-banking.atoms.bankingHeader.balance")} </span>
             </section>
           </span>
         </div>

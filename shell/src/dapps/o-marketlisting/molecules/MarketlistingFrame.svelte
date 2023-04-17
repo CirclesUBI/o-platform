@@ -76,7 +76,7 @@ function SortChange(event) {
 
 <Geolocation
   options="{geoLocationOptions}"
-  watch="{true}"
+  watch="{false}"
   getPosition
   on:position="{(e) => {
     geolocation = e.detail;

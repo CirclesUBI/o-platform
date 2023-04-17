@@ -44,7 +44,7 @@ const verifyEmail: Page<any, DappState> = {
   anonymous: true,
   routeParts: ["=verifyEmail", "verify", ":secret"],
   component: VerifyEmail,
-  title: "Email address",
+  title: "common.emailAddress",
   type: "page",
 };
 
@@ -52,7 +52,7 @@ const profile: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=profile", ":profileId"],
   component: Home,
-  title: "Profile",
+  title: "common.profile",
 
   type: "page",
   navigation: {
@@ -129,7 +129,7 @@ export const passport: DappManifest<DappState> = {
   tag: Promise.resolve("alpha"),
   jumplist: {
     type: "jumplist",
-    title: "Actions",
+    title: "common.actions",
     isSystem: false,
     routeParts: ["=actions"],
     items: async () => {
@@ -137,7 +137,7 @@ export const passport: DappManifest<DappState> = {
         <JumplistItem>{
           category: "Passport",
           key: "logout",
-          type: "profile",
+          type: "action",
           title: window.o.i18n("dapps.common.quickactions.logout"),
           icon: "logout",
           action: () => {
@@ -155,6 +155,7 @@ export const passport: DappManifest<DappState> = {
           category: "Passport",
           key: o.circlesAddress,
           title: o.displayName,
+          profile: o,
           type: "profile",
           icon: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
           action: () => {

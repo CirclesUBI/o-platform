@@ -144,6 +144,8 @@ query findSafesByOwner($owner: String!) {
       lastName
       dream
       avatarUrl
+      lat
+      lon
     }
   }
 }
@@ -191,6 +193,8 @@ query myProfile {
     canInvite
     displayCurrency
     provenUniqueness
+    lat
+    lon
     location
     locationName
     type
@@ -207,6 +211,8 @@ query myProfile {
         avatarUrl
         location
         locationName
+        lat
+        lon
       }
     }
     verifications {
@@ -581,6 +587,8 @@ query organisations($pagination: PaginationArgs) {
     avatarUrl
     location
     locationName
+    lat
+    lon
   }
 }
 
@@ -606,6 +614,8 @@ query organisationsByAddress($addresses: [String!]!) {
     displayName
     location
     locationName
+    lat
+    lon
     members {
       ... on Organisation {
         id
@@ -859,6 +869,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
         isAdmin
       }
@@ -883,6 +895,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
       }
       ... on MembershipRejected {
@@ -905,6 +919,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
       }
       ... on WelcomeMessage {
@@ -949,6 +965,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
       }
       ... on MemberAdded {
@@ -964,6 +982,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
       }
       ... on SafeVerified {
@@ -976,6 +996,8 @@ query stream($types: [EventType!]!, $safeAddress: String!, $pagination: Paginati
           displayCurrency
           locationName
           location
+          lat
+          lon
         }
       }
       ... on NewUser {
@@ -1080,6 +1102,8 @@ query aggregates($types: [AggregateType!]!, $safeAddress: String!, $filter: Prof
                 avatarUrl
                 locationName
                 location
+                lat
+                lon
               }
             }
             members {

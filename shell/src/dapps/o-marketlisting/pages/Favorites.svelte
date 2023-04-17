@@ -25,7 +25,7 @@ export let routable: Routable;
 
 <MarketlistingFrame runtimeDapp="{runtimeDapp}" routable="{routable}">
   {#if $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]).length == 0}
-    <p>No entries</p>
+    <p>{$_("dapps.o-marketlisting.pages.marketlisting.noentries")}</p>
   {/if}
   {#each $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]) as business}
     <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />

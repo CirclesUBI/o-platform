@@ -39,16 +39,16 @@ const editorContent: { [x: string]: EditorViewContext } = {
     submitButtonText: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.seedPhrase.submitButtonText"),
   },
   selectExistingKey: {
-    title: "PLEASE CHOOSE A KEY",
-    description: `We found the some keys on your device. Please select the one you want to use:`,
-    placeholder: "Recovery Code",
-    submitButtonText: "Use key",
+    title: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.selectExistingKey.title"),
+    description: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.selectExistingKey.description"),
+    placeholder: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.selectExistingKey.placeholder"),
+    submitButtonText: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.selectExistingKey.submitButtonText"),
   },
   unlockPin: {
-    title: "Please enter encryptingPin",
-    description: "Please enter the encryptingPin for your key",
-    placeholder: "Enter Pin",
-    submitButtonText: "Login",
+    title: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.unlockPin.title"),
+    description: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.unlockPin.description"),
+    placeholder: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.unlockPin.placeholder"),
+    submitButtonText: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.editorContent.unlockPin.submitButtonText"),
   },
 };
 
@@ -109,7 +109,7 @@ const processDefinition = (processId: string) =>
           )[0];
           return {
             view: editorContent.unlockPin,
-            label: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.unlockKeyPin.label", { values: { eoaName: eoa.name}}),
+            label: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.unlockKeyPin.label", { values: { eoaName: eoa.name } }),
             submitButtonText: window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.unlockKeyPin.submitButtonText"),
           };
         },
@@ -207,7 +207,7 @@ const processDefinition = (processId: string) =>
               });
 
               if (foundSafes.errors && foundSafes.errors.length) {
-                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage3", { values: { error: JSON.stringify(foundSafes.errors)}});
+                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage3", { values: { error: JSON.stringify(foundSafes.errors) } });
                 context.messages["seedPhrase"] = msg;
                 throw new Error(msg);
               }
@@ -215,7 +215,7 @@ const processDefinition = (processId: string) =>
               context.data.foundSafeAddresses =
                 foundSafes.data.user?.safeAddresses ?? [];
               if (!context.data.foundSafeAddresses.length) {
-                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage4", { values: { accountAddress: account.address}});
+                const msg = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSeedphrase.contextMessage4", { values: { accountAddress: account.address } });
                 context.messages["seedPhrase"] = msg;
                 throw new Error(msg);
               }
@@ -285,11 +285,11 @@ const processDefinition = (processId: string) =>
             context.messages["safeAddress"] = ``;
             context.data.safeAddress = context.data.safeAddress?.trim();
             try {
-                const safeProxy = new GnosisSafeProxy(
-                  RpcGateway.get(),
-                  context.data.safeAddress
-                );
-                context.data.safeOwners = await safeProxy.getOwners();
+              const safeProxy = new GnosisSafeProxy(
+                RpcGateway.get(),
+                context.data.safeAddress
+              );
+              context.data.safeOwners = await safeProxy.getOwners();
               return true;
             } catch (e) {
               if (e.message == "slow_provider") {
@@ -297,7 +297,7 @@ const processDefinition = (processId: string) =>
               }
               context.messages[
                 "safeAddress"
-              ] = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSafeAddress.contextMessage", { values: { contextDataSafeAddress: context.data.safeAddress}});
+              ] = window.o.i18n("dapps.o-passport.processes.identify.connectSafe.connectSafe2.checkSafeAddress.contextMessage", { values: { contextDataSafeAddress: context.data.safeAddress } });
               throw e;
             }
           },

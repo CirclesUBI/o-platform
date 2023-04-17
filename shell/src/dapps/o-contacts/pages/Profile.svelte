@@ -136,7 +136,7 @@ async function setProfile(id: string) {
       <div class="w-full text-center">
         <h1 class="text-3xl uppercase font-heading">
           {#if profile.circlesAddress === $me.circlesAddress}
-            You
+            <Label key="dapps.o-contacts.pages.profile.you" />
           {:else}
             <Label key="dapps.o-contacts.pages.profile.profile" />
           {/if}
