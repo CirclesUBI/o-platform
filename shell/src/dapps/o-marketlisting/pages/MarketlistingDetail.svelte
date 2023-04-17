@@ -213,8 +213,10 @@ async function shareLink() {
     </div>
     <div class="flex justify-between">
       <div class="flex flex-col">
-        <h1 class="mt-3 font-bold font-heading text-heading">{business.name}</h1>
-        <p class="text-black">{business.description ? business.description : ""}</p>
+        <h1 class="mt-3 font-bold break-all font-heading text-heading">{business.name}</h1>
+        {#if business.description}
+          <p class="text-black break-all"><Label text="{business.description}" /></p>
+        {/if}
       </div>
       <div class="mr-12">
         <DetailActionBar actions="{availableActions}" />
@@ -293,7 +295,7 @@ async function shareLink() {
               <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
-                    <div class="text-sm">{businessHour.day}</div>
+                    <div class="text-sm"><Label key="{businessHour.day}" /></div>
                     <div class="text-sm">{@html businessHour.hours[0].length ? businessHour.hours.join(", ") : "<span class='text-alert'>Closed</span>"}</div>
                   </div>
                 {/each}
