@@ -7,6 +7,7 @@ import { me } from "../../../shared/stores/me";
 import { KeyManager } from "../data/keyManager";
 import AccountCard from "../atoms/AccountCard.svelte";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
+import { _ } from "svelte-i18n";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 import { onMount } from "svelte";
 
@@ -48,7 +49,7 @@ onMount(() => {
       truncateMain: true,
     }}">
     <div slot="itemCardEnd">
-      <div class="self-end text-lg sm:text-3xl">UBI</div>
+      <div class="self-end text-lg sm:text-3xl">{$_("dapps.o-passport.pages.account.ubi")}</div>
     </div>
   </ItemCard>
 

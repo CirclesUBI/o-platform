@@ -20,7 +20,7 @@ const externalChat: Link<any, DappState> = {
 const listing: Page<any, ContactsDappState> = {
   routeParts: ["=listing"],
   component: Marketlisting,
-  title: "Market",
+  title: "common.market",
   icon: "marketlisting",
   type: "page",
   navigation: {
@@ -38,7 +38,7 @@ const listing: Page<any, ContactsDappState> = {
 const favorites: Page<any, ContactsDappState> = {
   routeParts: ["=favorites"],
   component: Favorites,
-  title: "Favorites",
+  title: "common.favorites",
   type: "page",
   position: "main",
   icon: "favorite",
@@ -66,7 +66,7 @@ const myStore: Page<any, DappState> = {
   isSystem: true,
   routeParts: ["=mystore", ":circlesAddress"],
   component: MyStore,
-  title: "My Store",
+  title: "common.myStore",
 
   type: "page",
   navigation: {
@@ -89,7 +89,7 @@ export const marketlisting: DappManifest<DappState> = {
   type: "dapp",
   dappId: "market:1",
   icon: "check",
-  title: "Market",
+  title: "common.market",
   routeParts: ["market"],
   defaultRoute: ["listing"],
   tag: Promise.resolve("alpha"),

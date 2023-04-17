@@ -1,5 +1,6 @@
 <script lang="ts">
 import Label from "./Label.svelte";
+import { _ } from "svelte-i18n";
 
 export let data: {
   error: Error;
@@ -31,7 +32,7 @@ $: {
   </div>
   <div class="mt-4">
     <center>
-      <a href="/"><button class="btn btn-primary">Reload Page</button></a>
+      <a href="/"><button class="btn btn-primary">{$_("shared.atoms.error.reloadPage")}</button></a>
     </center>
   </div>
 </div>

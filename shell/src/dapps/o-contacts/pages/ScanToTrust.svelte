@@ -1,19 +1,7 @@
 <script type="ts">
-import {
-  ProfileEvent,
-  Profile,
-  Contact,
-  CommonTrust,
-  CommonTrustQueryVariables,
-  CommonTrustDocument,
-  ContactPoint,
-  ContactDirection,
-  EventType,
-} from "../../../shared/api/data/types";
+import { ProfileEvent, Profile, Contact, CommonTrust, CommonTrustQueryVariables, CommonTrustDocument, ContactPoint, ContactDirection, EventType } from "../../../shared/api/data/types";
 import QrScanner from "qr-scanner";
 import { onDestroy, onMount } from "svelte";
-import { push } from "svelte-spa-router";
-import { showToast } from "../../../shared/toast";
 import Label from "../../../shared/atoms/Label.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 import { me } from "../../../shared/stores/me";
@@ -21,6 +9,7 @@ import { ApiClient } from "../../../shared/apiConnection";
 import { setTrust } from "../../../dapps/o-banking/processes/setTrust";
 import { Environment } from "../../../shared/environment";
 import { ok, err, Result } from "neverthrow";
+import { _ } from "svelte-i18n";
 
 let video: HTMLVideoElement;
 let scanner: QrScanner;
@@ -79,24 +68,19 @@ async function setProfile(id: string) {
 
     if ($me.circlesAddress !== contact.contactAddress) {
       commonTrusts = (
-        await ApiClient.query<CommonTrust[], CommonTrustQueryVariables>(
-          CommonTrustDocument,
-          {
-            safeAddress1: $me.circlesAddress.toLowerCase(),
-            safeAddress2: contact.contactAddress.toLowerCase(),
-          }
-        )
+        await ApiClient.query<CommonTrust[], CommonTrustQueryVariables>(CommonTrustDocument, {
+          safeAddress1: $me.circlesAddress.toLowerCase(),
+          safeAddress2: contact.contactAddress.toLowerCase(),
+        })
       ).filter((o) => o.profile);
     } else {
-      return err("You can't trust yourself, or do you? ;)");
+      return err(window.o.i18n("dapps.o-contacts.pages.scanToTrust.cantTrustYourself"));
     }
 
     profile = contact.contactAddress_Profile;
 
     if (contact.metadata) {
-      const trustMetadata: ContactPoint = contact.metadata.find(
-        (p) => p.name === EventType.CrcTrust
-      );
+      const trustMetadata: ContactPoint = contact.metadata.find((p) => p.name === EventType.CrcTrust);
       let trustIn = 0;
       let trustOut = 0;
 
@@ -111,7 +95,7 @@ async function setProfile(id: string) {
       }
 
       if (trustOut) {
-        return err("You are already trusting this user.");
+        return err(window.o.i18n("dapps.o-contacts.pages.scanToTrust.alreadyTrusting"));
       } else {
         window.o.runProcess(setTrust, {
           trustLimit: 100,
@@ -133,10 +117,7 @@ async function setResult(label, result) {
   label.style.color = "teal";
 
   clearTimeout(label.highlightTimeout);
-  label.highlightTimeout = setTimeout(
-    () => (label.style.color = "inherit"),
-    100
-  );
+  label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
 
   await tryTrust(result.data);
 }
@@ -183,9 +164,7 @@ onMount(() => {
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
   <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading">
-      Scan Profile QR Code to Instant-Trust
-    </h1>
+    <h1 class="text-3xl uppercase font-heading">{$_("dapps.o-contacts.pages.scanToTrust.scanProfileQR")}</h1>
   </div>
   <div class="w-full text-center">
     <span class="break-all text-alert-dark">{statusText}</span>
@@ -197,21 +176,15 @@ onMount(() => {
     </div>
 
     <div class="mt-4">
-      <select
-        id="cam-list"
-        bind:this="{camList}"
-        class="w-full border select input">
-        <option value="environment" selected
-          ><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
-        <option value="user"
-          ><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
+      <select id="cam-list" bind:this="{camList}" class="w-full border select input">
+        <option value="environment" selected><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
+        <option value="user"><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
       </select>
     </div>
 
     <div class="mt-4 text-center">
       <b><Label key="dapps.o-marketplace.pages.scanPurchase.detectedQrCode" /></b>
-      <span id="cam-qr-result" bind:this="{camQrResult}"
-        ><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
+      <span id="cam-qr-result" bind:this="{camQrResult}"><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
     </div>
   </div>
   <!-- <slot name="EditorActionButtons">
@@ -224,9 +197,7 @@ onMount(() => {
   line-height: 0;
 }
 
-:global(#video-container.example-style-1
-    .scan-region-highlight-svg, #video-container.example-style-1
-    .code-outline-highlight) {
+:global(#video-container.example-style-1 .scan-region-highlight-svg, #video-container.example-style-1 .code-outline-highlight) {
   stroke: #64a2f3 !important;
 }
 

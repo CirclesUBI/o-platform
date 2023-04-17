@@ -43,9 +43,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[]) {
   }
 
   if (orderBy != newOrder) {
-    _marketListingData.messages = [
-      "<span class='text-alert'>We couldn't get your Location.</span><br/>Sorting by 'Nearest' will only work if you grant the browser access to your location.",
-    ];
+    _marketListingData.messages = ["<span class='text-info'>We couldn't get your Location.<br/>Sorting by 'Nearest' will only work if you grant the browser access to your location.</span>"];
   } else {
     _marketListingData.messages = [];
   }

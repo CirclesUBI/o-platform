@@ -9,8 +9,7 @@ import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import ProfileSwitcherBar from "./ProfileSwitcherBar.svelte";
 import LangSwitcher from "../atoms/LangSwitcher.svelte";
-import { loadProfile } from "../functions/loadProfile";
-import { me } from "../stores/me";
+import Label from "../atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 
@@ -24,8 +23,6 @@ let categories: {
 
 let actions: JumplistItem[] = [];
 let profiles: JumplistItem[] = [];
-
-let promise;
 let showSwitcher: boolean = false;
 
 onMount(async () => {
@@ -49,45 +46,31 @@ onMount(async () => {
   );
   actions = categories.filter((o) => o.items["action"]).flatMap((o) => o.items["action"]);
   profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);
-
-  promise = await fetchProfiles();
-  // Attach actual Profiles to the object.
 });
-
-async function fetchProfiles() {
-  for (const action of profiles) {
-    if (action.key.startsWith("0x")) {
-      action.profile = (await loadProfile(action.key, $me))?.profile;
-    }
-  }
-  return profiles;
-}
 
 const eventDispatcher = createEventDispatcher();
 </script>
 
-{#if profiles}
+{#if profiles && actions}
   <div class="z-10 flex flex-col flex-1" use:clickOutside on:click_outside="{() => eventDispatcher('clickedOutside')}">
     {#if showSwitcher}
       <div class="w-full p-6">
         <LangSwitcher />
       </div>
     {/if}
+
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading">My Profiles</h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.myprofiles" /></h1>
     </div>
 
     <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
       <div class="">
-        {#await promise}
-          <p>loading Profiles...</p>
-        {:then theProfiles}
-          <ProfileSwitcherBar actions="{theProfiles}" />
-        {/await}
+        <ProfileSwitcherBar actions="{profiles}" />
       </div>
     </div>
+
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading">Quick Actions</h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.quickactions" /></h1>
     </div>
     <div class="py-6">
       <DetailActionBar

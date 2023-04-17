@@ -63,6 +63,7 @@ function addMarker(map: google.maps.Map, place: google.maps.Place, customInfoWin
 
   const marker = new google.maps.Marker({
     map,
+    animation: google.maps.Animation.DROP,
   });
 
   marker.addListener("click", () => {
@@ -81,9 +82,11 @@ function addMarker(map: google.maps.Map, place: google.maps.Place, customInfoWin
   markers.push(marker);
   currentPlaceName = place.name;
   let addressArray = place.formatted_address.split(",");
+
   if (currentPlaceName) {
     addressArray.pop();
   }
+
   currentPlaceAddress = addressArray.join("<br/>");
 
   if (customInfoWindow) {
@@ -124,6 +127,12 @@ function placeChanged(map, place, customInfoWindow = true) {
     map.setZoom(17);
   }
 
+  // Replace Plus code...
+
+  let plusCode = place.address_components.find((o) => o.types[0] === "plus_code")?.long_name;
+
+  place.formatted_address = place.formatted_address.replace(plusCode, "");
+
   placeholder = place.formatted_address;
 
   addMarker(map, place, customInfoWindow);
@@ -148,23 +157,13 @@ function initialise() {
     const geocoderService = new google.maps.Geocoder();
     const placesService = new google.maps.places.PlacesService(map);
 
+    setPlaceByCoords(map.center, geocoderService);
+    // placeChanged(map, placesService.place);
+
     google.maps.event.addListener(map, "click", function (event) {
       if (!event.placeId) {
         // ONLY FIRE THIS IF NO PLACE IS SELECTED. This is important otherwise we will generate unneccessary cost in calling the geocoding api....
-        geocoderService.geocode(
-          {
-            latLng: event.latLng,
-          },
-          function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-              if (results[0]) {
-                placeChanged(map, results[0]);
-              }
-            } else {
-              error.set("Invalid location.");
-            }
-          }
-        );
+        setPlaceByCoords(event.latLng, geocoderService);
       } else {
         // This is triggered when the user clicks on a POI Marker. then we have to get the details from the placesService.
         placesService.getDetails(
@@ -190,7 +189,9 @@ function initialise() {
     autocomplete.bindTo("bounds", map);
 
     // We have to set this manually in this case.
-    infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow({
+      maxWidth: 420,
+    });
     infowindow.setContent(infowindowContent);
 
     autocomplete.addListener("place_changed", () => {
@@ -204,6 +205,23 @@ function initialise() {
 
     dispatch("ready");
   }, 1);
+}
+
+function setPlaceByCoords(latLng, geocoderService) {
+  geocoderService.geocode(
+    {
+      latLng: latLng,
+    },
+    function (results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          placeChanged(map, results[0]);
+        }
+      } else {
+        error.set("Invalid location.");
+      }
+    }
+  );
 }
 </script>
 
@@ -234,6 +252,9 @@ function initialise() {
 </div>
 
 <style>
+:global(.gm-style .gm-style-iw-c) {
+  max-width: 320px !important;
+}
 .infowindowWrapper {
   display: none;
 }

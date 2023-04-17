@@ -9,6 +9,7 @@ import { loadProfile } from "../../../shared/functions/loadProfile";
 import { Currency } from "../../../shared/currency";
 import Label from "../../../shared/atoms/Label.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import { _ } from "svelte-i18n";
 
 export let context: any;
 let _context: any;
@@ -44,15 +45,15 @@ function onkeydown(e: KeyboardEvent) {
       <span class="inline-block text-5xl font-enso {classes}">
         {_context.data.tokens.amount}
       </span>
-      <span class="text-4xl font-enso {classes}">
-        <Icons icon="timeCircle" size="{11}" customClass="inline -mt-3" /></span>
+      <span class="text-4xl font-enso {classes}"> <Icons icon="timeCircle" size="{11}" customClass="inline -mt-3" /></span>
     </div>
 
     <UserImage profile="{profile}" size="{36}" />
 
     <div>
       <span class="mt-4 text-xl">
-        to {profile.displayName}
+        {$_("dapps.o-banking.atoms.transferConfirmation.to")}
+        {profile.displayName}
       </span>
     </div>
     <div class="text-dark-lightest">

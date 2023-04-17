@@ -83,7 +83,7 @@ const processDefinition = (processId: string) =>
                   context.data.decryptionPin
                 );
               } catch (e) {
-                context.messages["decryptionPin"] = "Invalid Pin";
+                context.messages["decryptionPin"] = window.o.i18n("dapps.o-onboarding.processes.unlockKey.unlockKey.invalidPin");
                 throw e;
               }
 
@@ -91,7 +91,7 @@ const processDefinition = (processId: string) =>
                 delete context.data.decryptionPin;
                 delete context.data.privateKey;
                 context.messages["decryptionPin"] =
-                window.o.i18n("dapps.o-onboarding.processes.unlockKey.unlockKey.couldNotDecrypt");
+                  window.o.i18n("dapps.o-onboarding.processes.unlockKey.unlockKey.couldNotDecrypt");
                 throw new Error(context.messages["decryptionPin"]);
               }
 
