@@ -308,8 +308,8 @@ async function shareLink() {
 
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
-        <Icon name="phone" class="w-6 h-6" />
-        <p class="pl-4"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
+        <a href="https://wa.me/{business.phoneNumber}" target="_blank" rel="noreferrer"><Icons icon="whatsapp" customClass="inline -mt-1" size="{6}" /></a>
+        <p class="pl-2"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
 
