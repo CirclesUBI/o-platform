@@ -8,7 +8,7 @@ export let id: string;
 export let selected: string;
 export let dropDownClass: string = "";
 export let isButton: boolean = false;
-export let isShevron: boolean = false;
+export let isChevron: boolean = false;
 export let notFull: boolean = false;
 
 const eventDispatcher = createEventDispatcher();
@@ -26,22 +26,22 @@ function handleOnChange(e) {
 
 <select
   class="{dropDownClass}"
-  class:select="{!isButton && !isShevron}"
-  class:w-full="{!isButton && !isShevron && !notFull}"
-  class:btn="{isButton || isShevron}"
-  class:btn-xs="{isButton || isShevron}"
-  class:btn-circle="{isButton || isShevron}"
+  class:select="{!isButton && !isChevron}"
+  class:w-full="{!isButton && !isChevron && !notFull}"
+  class:btn="{isButton || isChevron}"
+  class:btn-xs="{isButton || isChevron}"
+  class:btn-circle="{isButton || isChevron}"
   class:btn-outline="{isButton}"
   class:selectAsButton="{isButton}"
   class:border-secondary="{isButton}"
-  class:selectAsShevron="{isShevron}"
+  class:selectAsChevron="{isChevron}"
   on:change="{handleOnChange}"
   use:clickOutside
   on:click_outside="{() => eventDispatcher('dropDownClickedOutside')}">
-  <option value="{undefined}" selected>{selected}</option>
+  <option class="text" value="{undefined}" selected>{selected}</option>
 
   {#each items as item}
-    <option value="{item[key]}">{item[value]}</option>
+    <option class="text" value="{item[key]}">{item[value]}</option>
   {/each}
 </select>
 
@@ -57,7 +57,7 @@ function handleOnChange(e) {
   background-position: center;
   background-size: 1rem auto;
 }
-.selectAsShevron {
+.selectAsChevron {
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
