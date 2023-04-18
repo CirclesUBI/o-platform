@@ -11,6 +11,7 @@ import { setupI18n, isLocaleLoaded, locale } from "src/i18n/i18nDictionary";
 
 import LocaleSwitcher from "src/i18n/atoms/LocaleSwitcher.svelte";
 import { Environment } from "../environment";
+import Label from "./Label.svelte";
 
 $: if (!$isLocaleLoaded) {
   setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
@@ -48,14 +49,16 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
       <div class="p-1 xs:p-3 pr-6 xs:pr-12 -mt-8 xs:-mt-2 whitespace-nowrap {cleanRoute ? 'bg-' + cleanRoute : 'bg-cpurple'} navbarHomeElement">
         <img src="/logos/circles.svg" class="w-6 h-6 xs:w-8 xs:h-8" alt="Circles Land" />
 
-        <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading ">
-          <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
-            {@html runtimeDapp ? runtimeDapp.title : "<<No dapp>>"}
-          </a>
+        <span class="ml-2 text-xl text-white uppercase xs:text-4xl font-heading">
+          {#if runtimeDapp}
+            <a href="{dappHomeLink}" alt="{cleanRoute}" class="cursor-pointer">
+              <Label key="{runtimeDapp.title}" />
+            </a>
+          {/if}
         </span>
       </div>
 
-      <div class="self-center pr-3 ">
+      <div class="self-center pr-3">
         <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
 
         <span class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl text-grey-dark">Beta</span>
