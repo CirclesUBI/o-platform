@@ -5,17 +5,11 @@ import { onMount } from "svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { Currency } from "../../../shared/currency";
 
-import {
-  CrcHubTransfer,
-  CrcMinting,
-  Erc20Transfer,
-  EventType, Profile,
-  ProfileEvent, SortOrder
-} from "../../../shared/api/data/types";
+import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent, SortOrder } from "../../../shared/api/data/types";
 
 import Icons from "../../../shared/molecules/Icons.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
-import {MyInbox, unreadEventInbox} from "../../../shared/stores/inbox";
+import { MyInbox, unreadEventInbox } from "../../../shared/stores/inbox";
 
 export let transactionHash: string;
 
@@ -176,16 +170,16 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       {/if} -->
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 font-bold text-left text-2xs ">
+        <div class="mb-1 font-bold text-left text-2xs">
           <Label key="common.date" />
         </div>
         <div class="flex items-center w-full">
-          <div class="text-left ">
+          <div class="text-left">
             <Time timestamp="{new Date(transfer.timestamp)}" format="D. MMMM YYYY HH:mm" />
           </div>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-1">
+      <!-- <div class="flex flex-col w-full space-y-1">
         <div class="mb-1 font-bold text-left text-2xs ">
           <Label key="dapps.o-banking.pages.transactionDetail.fullAmountCrc" />
         </div>
@@ -194,7 +188,7 @@ function openDetail(transfer: ProfileEvent) {
             {Currency.instance().displayAmount(transfer ? (transfer.payload.value ? transfer.payload.value : transfer.payload.flow).toString() : "0", transfer.timestamp, "CRC", null, true)}
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- <div class="flex flex-col w-full space-y-1">
         <div class="mb-1 font-bold text-left text-2xs ">
           <Label key="dapps.o-banking.pages.transactionDetail.amountCircles"  />
@@ -210,7 +204,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div> -->
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 font-bold text-left text-2xs ">
+        <div class="mb-1 font-bold text-left text-2xs">
           <Label key="common.from" />
         </div>
         <div class="flex items-center w-full">
@@ -218,7 +212,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 font-bold text-left text-2xs ">
+        <div class="mb-1 font-bold text-left text-2xs">
           <Label key="common.to" />
         </div>
         <div class="flex items-center w-full">
@@ -226,7 +220,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 font-bold text-left text-2xs ">
+        <div class="mb-1 font-bold text-left text-2xs">
           <Label key="common.block" />
         </div>
         <div class="flex items-center w-full">
@@ -234,7 +228,7 @@ function openDetail(transfer: ProfileEvent) {
         </div>
       </div>
       <div class="flex flex-col w-full space-y-1">
-        <div class="mb-1 font-bold text-left text-2xs ">
+        <div class="mb-1 font-bold text-left text-2xs">
           <Label key="dapps.o-banking.pages.transactionDetail.transactionHash" />
         </div>
         <div class="flex items-center w-full text-primarydark">
