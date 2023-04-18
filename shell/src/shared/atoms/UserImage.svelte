@@ -22,13 +22,18 @@ function linkToProfile(event) {
 }
 $: {
   if (profile) {
-    if ((profile.__typename && profile.__typename == "Profile") || (!profile.__typename && profile.type == "PERSON")) {
+    if ((!profile.type && profile.type == "PERSON") || (profile.__typename && profile.__typename == "Profile")) {
       displayName = profile.displayName;
     } else {
       displayName = profile.firstName ? profile.firstName : "";
       isOrganisation = true;
     }
     displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
+  }
+  if (profile.type && profile.type == "ORGANISATION") {
+    isOrganisation = true;
+  } else if (profile.__typename && profile.__typename == "ORGANISATION") {
+    isOrganisation = true;
   }
 }
 </script>
