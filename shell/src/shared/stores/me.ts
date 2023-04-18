@@ -29,7 +29,6 @@ export const me = {
         sessionInfo = await getSessionInfo();
       }
     }
-    console.log("SO FRESH OIDA", freshSessionInfo.profile);
     return freshSessionInfo.profile;
   },
 };

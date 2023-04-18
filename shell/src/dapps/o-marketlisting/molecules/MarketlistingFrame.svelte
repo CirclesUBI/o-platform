@@ -16,7 +16,6 @@ let geoLocationOptions = {
 let ownLocation: GeolocationPosition = null;
 
 onMount(async () => {
-  console.log("RATHER NOW:", geolocation);
   if (geolocation) {
     marketStore.init(geolocation);
   }
