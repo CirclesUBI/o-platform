@@ -35,7 +35,7 @@ onMount(init);
       <DashboardInvitesWidget />
     {/if}
 
-    <div class="flex flex-col space-y-4">
+    <div class="flex flex-col space-y-4 relative z-0">
       <DashboardColorCard color="passport" link="/passport/profile" blobshape="60% 40% 56% 38% / 99% 50% 90% 57%" icon="passport" title="dapps.o-dashboard.pages.home.passport" />
 
       <DashboardColorCard color="banking" link="/banking/transactions" blobshape="137% 1% 119% 38% / 99% 60% 86% 73%" icon="banking" title="dapps.o-dashboard.pages.home.banking" />
