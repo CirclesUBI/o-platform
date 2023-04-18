@@ -23,7 +23,7 @@ $: {
   if (selected && context.data.maxFlows) {
     const key = selected.toLowerCase();
     if (context.data.maxFlows[key] != "") {
-      maxAmount = convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON()).toFixed(2);
+      maxAmount = Math.floor(convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON())).toFixed(0);
     }
   }
 
