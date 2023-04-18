@@ -422,10 +422,10 @@ const processDefinition = (processId: string) =>
               let formattedMax: string = "0.00";
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] != "") {
                 formattedMax =
-                  convertCirclesToTimeCircles(parseFloat(
+                    Math.floor(convertCirclesToTimeCircles(parseFloat(
                     RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether")
                       .toString()), new Date().toJSON()
-                  ).toFixed(2);
+                  )).toFixed(0);
               }
 
               context.messages["tokens"] = window.o.i18n(

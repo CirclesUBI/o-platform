@@ -132,7 +132,7 @@ async function setProfile(id: string) {
   </div>
 {:else}
   <div class="p-5">
-    <header class="grid overflow-hidden bg-white h-72 ">
+    <header class="grid overflow-hidden bg-white h-72">
       <div class="w-full text-center">
         <h1 class="text-3xl uppercase font-heading">
           {#if profile.circlesAddress === $me.circlesAddress}
@@ -142,7 +142,7 @@ async function setProfile(id: string) {
           {/if}
         </h1>
       </div>
-      <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center ">
+      <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
         <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
@@ -157,7 +157,7 @@ async function setProfile(id: string) {
         <div class="">
           {#if profile}
             {#if trustMessage && profile.circlesAddress !== $me.circlesAddress}
-              <section class="justify-center mb-2 ">
+              <section class="justify-center mb-2">
                 <div class="flex flex-col w-full pt-2 space-y-1">
                   <div class="font-bold text-left text-2xs">
                     {$_("dapps.o-contacts.pages.profile.trust")}
@@ -168,12 +168,12 @@ async function setProfile(id: string) {
                 </div>
               </section>
             {/if}
-            <section class="justify-center mb-2 ">
+            <section class="justify-center mb-2">
               <div class="flex flex-col w-full pt-2 space-y-1">
                 <div class="font-bold text-left text-2xs">
                   {$_("dapps.o-contacts.pages.profile.mutualFriends")}
                 </div>
-                <div class="flex flex-row flex-wrap mt-2 ">
+                <div class="flex flex-row flex-wrap mt-2">
                   {#if commonTrusts.length}
                     {#each commonTrusts as commonTrust}
                       {#if commonTrust.profile}
@@ -189,12 +189,12 @@ async function setProfile(id: string) {
               </div>
             </section>
             {#if profile.memberships && profile.memberships.length}
-              <section class="justify-center mb-2 ">
+              <section class="justify-center mb-2">
                 <div class="flex flex-col w-full pt-2 space-y-1">
                   <div class="font-bold text-left text-2xs">
                     {$_("dapps.o-contacts.pages.profile.memberAt")}
                   </div>
-                  <div class="flex flex-row flex-wrap mt-2 ">
+                  <div class="flex flex-row flex-wrap mt-2">
                     {#each profile.memberships as membership}
                       {#if membership.organisation}
                         <div class="mt-2 mr-2">
@@ -207,12 +207,12 @@ async function setProfile(id: string) {
               </section>
             {/if}
             {#if profile.members && profile.members.length}
-              <section class="justify-center mb-2 ">
+              <section class="justify-center mb-2">
                 <div class="flex flex-col w-full pt-2 space-y-1">
                   <div class="font-bold text-left text-2xs">
                     <Label key="dapps.o-contacts.pages.profile.members" />
                   </div>
-                  <div class="flex flex-row flex-wrap mt-2 ">
+                  <div class="flex flex-row flex-wrap mt-2">
                     {#each profile.members as memberProfile}
                       <div class="mt-2 mr-2">
                         <UserImage profile="{memberProfile}" tooltip="{true}" />
@@ -231,7 +231,7 @@ async function setProfile(id: string) {
                   {$_("dapps.o-contacts.pages.profile.address")}
                 </div>
                 <div class="flex items-center w-full text-sm">
-                  {profile.circlesAddress}
+                  <Label text="{profile.circlesAddress}" truncate="{true}" />
                 </div>
               </div>
             </section>
