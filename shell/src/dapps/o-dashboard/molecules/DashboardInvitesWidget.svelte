@@ -5,7 +5,7 @@ import { me } from "../../../shared/stores/me";
 import { _ } from "svelte-i18n";
 </script>
 
-<section class="relative pb-2 mb-4 bg-white border cardborder ">
+<section class="relative pb-8 mb-4">
   <div class="flex flex-row justify-around mt-4 mb-1 text-center">
     <Button
       context="{{
