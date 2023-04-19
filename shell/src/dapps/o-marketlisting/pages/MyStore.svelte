@@ -196,7 +196,7 @@ function mapRecenter({ place }) {
     </section>
   </div>
 {:else}
-  <div class="p-4 pt-10 pb-20 mx-auto md:w-2/3 xl:w-1/2">
+  <div class="p-4 pt-10 pb-24 mx-auto md:w-2/3 xl:w-1/2">
     <section class="justify-center mb-6 align-middle">
       <div class="flex flex-col justify-around p-4 pt-0 mx-auto -mt-6">
         <h1 class="text-center">{business.name}</h1>
