@@ -10,7 +10,7 @@ let foo = false;
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
   <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading undefined">
+    <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">
       <Label key="dapps.o-dashboard.pages.shareInvitation.shareTitle" />
     </h1>
   </div>
