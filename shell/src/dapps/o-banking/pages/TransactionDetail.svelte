@@ -110,7 +110,7 @@ function openDetail(transfer: ProfileEvent) {
   {#if transfer}
     <div class="flex flex-col items-center self-center w-full m-auto space-y-4 text-center justify-self-center">
       <div class="w-full text-center">
-        <h1 class="text-3xl uppercase font-heading">
+        <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">
           {transfer.direction === "in" ? "received" : "sent"}
         </h1>
       </div>
