@@ -23,9 +23,7 @@ $: {
 
 async function loadSale(id) {
   scanner.stop();
-  statusText = window.o.i18n(
-    "dapps.o-marketplace.pages.scanPurchase.verifyingOrder"
-  );
+  statusText = window.o.i18n("dapps.o-marketplace.pages.scanPurchase.verifyingOrder");
 
   saleEvent = await mySales.findByPickupCode(id);
   if (saleEvent) {
@@ -35,21 +33,14 @@ async function loadSale(id) {
   }
 
   if (!sale) {
-    statusText = window.o.i18n(
-      "dapps.o-marketplace.pages.scanPurchase.invalidOrderCode"
-    );
+    statusText = window.o.i18n("dapps.o-marketplace.pages.scanPurchase.invalidOrderCode");
     startScanner();
     return;
   }
 
   mySales.completeSale(sale.invoice.id).then(function () {
     push(`#/marketplace/my-sales/${sale.invoice.id}`);
-    showToast(
-      "success",
-      window.o.i18n(
-        "dapps.o-marketplace.pages.scanPurchase.purchaseMarkedAsDelivered"
-      )
-    );
+    showToast("success", window.o.i18n("dapps.o-marketplace.pages.scanPurchase.purchaseMarkedAsDelivered"));
     return sale;
   });
 }
@@ -59,10 +50,7 @@ async function setResult(label, result) {
   label.style.color = "teal";
 
   clearTimeout(label.highlightTimeout);
-  label.highlightTimeout = setTimeout(
-    () => (label.style.color = "inherit"),
-    100
-  );
+  label.highlightTimeout = setTimeout(() => (label.style.color = "inherit"), 100);
 
   await loadSale(result.data);
 }
@@ -109,7 +97,7 @@ onMount(() => {
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
   <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading">
+    <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">
       <Label key="dapps.o-marketplace.pages.scanPurchase.scanToHandOut" />
     </h1>
   </div>
@@ -123,21 +111,15 @@ onMount(() => {
     </div>
 
     <div class="mt-4">
-      <select
-        id="cam-list"
-        bind:this="{camList}"
-        class="w-full border select input">
-        <option value="environment" selected
-          ><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
-        <option value="user"
-          ><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
+      <select id="cam-list" bind:this="{camList}" class="w-full border select input">
+        <option value="environment" selected><Label key="dapps.o-marketplace.pages.scanPurchase.cameraDefault" /></option>
+        <option value="user"><Label key="dapps.o-marketplace.pages.scanPurchase.cameraUserFacing" /></option>
       </select>
     </div>
 
     <div class="mt-4 text-center">
       <b><Label key="dapps.o-marketplace.pages.scanPurchase.detectedQrCode" /></b>
-      <span id="cam-qr-result" bind:this="{camQrResult}"
-        ><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
+      <span id="cam-qr-result" bind:this="{camQrResult}"><Label key="dapps.o-marketplace.pages.scanPurchase.none" /></span>
     </div>
   </div>
   <!-- <slot name="EditorActionButtons">
@@ -150,9 +132,7 @@ onMount(() => {
   line-height: 0;
 }
 
-:global(#video-container.example-style-1
-    .scan-region-highlight-svg, #video-container.example-style-1
-    .code-outline-highlight) {
+:global(#video-container.example-style-1 .scan-region-highlight-svg, #video-container.example-style-1 .code-outline-highlight) {
   stroke: #64a2f3 !important;
 }
 

@@ -60,7 +60,7 @@ function onScanFailure(error) {
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
   <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading">
+    <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">
       <Label key="dapps.o-homepage.molecules.scanInvite.heading" />
     </h1>
   </div>

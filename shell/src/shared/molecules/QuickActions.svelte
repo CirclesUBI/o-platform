@@ -60,7 +60,7 @@ const eventDispatcher = createEventDispatcher();
     {/if}
 
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.myprofiles" /></h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading text-heading tracking-normal"><Label key="shared.actionMenu.myprofiles" /></h1>
     </div>
 
     <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
@@ -70,7 +70,7 @@ const eventDispatcher = createEventDispatcher();
     </div>
 
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading"><Label key="shared.actionMenu.quickactions" /></h1>
+      <h1 class="pt-4 text-3xl uppercase font-heading text-heading tracking-normal"><Label key="shared.actionMenu.quickactions" /></h1>
     </div>
     <div class="py-6">
       <DetailActionBar
