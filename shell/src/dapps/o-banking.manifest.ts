@@ -135,7 +135,7 @@ const transferTrigger: Trigger<any, BankingDappState> = {
     });
   },
   title: "common.sendMoney",
-  icon: "cash",
+  icon: "sendmoney",
   type: "trigger",
 };
 
@@ -158,7 +158,7 @@ const transferTriggerRedirect: Trigger<any, BankingDappState> = {
     });
   },
   title: "common.sendMoney",
-  icon: "cash",
+  icon: "sendmoney",
   type: "trigger",
 };
 
