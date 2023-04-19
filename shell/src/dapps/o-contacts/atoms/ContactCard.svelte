@@ -12,6 +12,7 @@ export let contact: Contact;
 let displayName: string;
 let safeAddress: string;
 let message: string;
+let className: string;
 
 onMount(() => {
   displayName = contact.contactAddress_Profile.displayName;
@@ -24,10 +25,13 @@ onMount(() => {
 
   if (trustIn > 0 && trustOut > 0) {
     message += `${$_("dapps.o-contacts.atoms.contactCard.mutualTrust")}`;
+    className = "text-wallet";
   } else if (!trustIn && trustOut > 0) {
     message += `${$_("dapps.o-contacts.atoms.contactCard.trustedByYou")}`;
+    className = "text-contacts";
   } else if (trustIn > 0 && !trustOut) {
     message += `${$_("dapps.o-contacts.atoms.contactCard.isTrustingYou")}`;
+    className = "text-passport";
   } else {
     message += `${$_("dapps.o-contacts.atoms.contactCard.notTrusted")}`;
   }
@@ -47,6 +51,7 @@ function loadDetailPage(path) {
       subTitle: message,
       truncateMain: true,
       mobileTextCutoff: 24,
+      class: className,
     }}">
     <div slot="itemCardEnd">
       <div class="self-end text-lg sm:text-3xl"></div>
