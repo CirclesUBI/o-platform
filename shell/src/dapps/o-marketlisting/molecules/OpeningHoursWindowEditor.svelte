@@ -18,6 +18,7 @@ import { createEventDispatcher, onMount } from "svelte";
 import { OpeningHourWindow } from "../models/openingHourWindow";
 import { HourAndMinute } from "../models/hourAndMinute";
 import { _ } from "svelte-i18n";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let isValid: boolean = true;
 export let openingHourWindow: OpeningHourWindow = {
@@ -189,9 +190,9 @@ function commit() {
   {/if}
   <tr>
     <td colspan="3" align="right">
-      <input type="button" class="btn btn-primary" class:btn-disabled="{!isValid}" value="Save" on:click="{ok}" />
-      <input type="button" class="btn btn-secondary" value="Cancel" on:click="{cancel}" />
-    </td>
+      <button class="btn btn-primary" class:btn-disabled="{!isValid}" on:click="{ok}"><Label key="common.save" /></button>
+
+      <button class="btn btn-secondary" on:click="{cancel}"><Label key="common.cancel" /> </button></td>
   </tr>
 {:else}
   <tr class="cursor-pointer">
