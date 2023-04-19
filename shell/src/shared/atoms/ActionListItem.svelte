@@ -13,7 +13,7 @@ export let customClass: string = "inline";
     <span class="table-cell w-12 h-12 align-middle rounded-full {colorClass} {customClass} bg-light-light">
       <Icons icon="{icon}" customClass="w-{size} h-{size} heroicon smallicon inline" />
     </span>
-    <span class="block w-24 text-xs sm:text-sm mt-1 text-center break-normal {colorClass}">
+    <span class="block w-20 text-xs sm:text-sm mt-1 text-center break-normal {colorClass}">
       {title}
     </span>
   </span>
