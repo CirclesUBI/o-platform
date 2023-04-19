@@ -23,6 +23,7 @@ let isMe: boolean = false;
 let commonTrusts: CommonTrust[] = [];
 let profile: Profile;
 let contact: Contact;
+let className: string;
 
 let detailActions: UserActionItem[];
 
@@ -98,10 +99,13 @@ async function setProfile(id: string) {
 
     if (trustIn > 0 && trustOut > 0) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.mutualTrust")}`;
+      className = "text-wallet";
     } else if (!trustIn && trustOut > 0) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.trustedByYou")}`;
+      className = "text-contacts";
     } else if (trustIn > 0 && !trustOut) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.isTrustingYou")}`;
+      className = "text-passport";
     } else {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.notTrusted")}`;
     }
@@ -153,7 +157,7 @@ async function setProfile(id: string) {
                   <div class="font-bold text-left text-2xs">
                     {$_("dapps.o-contacts.pages.profile.trust")}
                   </div>
-                  <div class="flex flex-wrap content-start">
+                  <div class="flex flex-wrap content-start {className}">
                     {trustMessage}
                   </div>
                 </div>

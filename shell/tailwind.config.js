@@ -119,6 +119,10 @@ module.exports = {
           DEFAULT: "#D82D74",
           light: "#F75F9E",
         },
+        wallet: {
+          DEFAULT: "#F7AB28",
+          light: "#F7AB28",
+        },
         banking: {
           DEFAULT: "#F26240",
           light: "#FF8874",
