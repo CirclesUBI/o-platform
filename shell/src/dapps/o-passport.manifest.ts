@@ -25,7 +25,7 @@ const externalChat: Link<any, DappState> = {
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
-  title: "common.profile",
+  title: "common.passport",
   icon: "myProfile",
   type: "page",
   navigation: {
@@ -122,7 +122,7 @@ let myProfile: Profile = null;
 export const passport: DappManifest<DappState> = {
   type: "dapp",
   dappId: "passport:1",
-  title: "Passport",
+  title: "common.passport",
   icon: "passport",
   routeParts: ["=passport"],
   defaultRoute: ["passport"],
