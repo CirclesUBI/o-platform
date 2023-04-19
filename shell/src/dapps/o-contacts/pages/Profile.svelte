@@ -132,21 +132,12 @@ async function setProfile(id: string) {
   </div>
 {:else}
   <div class="p-5">
-    <header class="grid overflow-hidden bg-white h-72">
-      <div class="w-full text-center">
-        <h1 class="text-3xl uppercase font-heading">
-          {#if profile.circlesAddress === $me.circlesAddress}
-            <Label key="dapps.o-contacts.pages.profile.you" />
-          {:else}
-            <Label key="dapps.o-contacts.pages.profile.profile" />
-          {/if}
-        </h1>
-      </div>
+    <header class="grid overflow-hidden bg-white h-68">
       <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
-        <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
+        <UserImage profile="{profile}" size="{42}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
-          <div class="mt-4 break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
+          <div class="mt-4 text-2xl break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
             {displayName}
           </div>
         {/if}
