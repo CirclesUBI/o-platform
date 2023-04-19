@@ -90,25 +90,26 @@ function createNewOrga() {
 
 {#if profile}
   <div class="flex flex-col px-4 mx-auto mt-8 mb-20 space-y-6 md:w-2/3 xl:w-1/2">
-    <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.qrcodeheading">
-      <div slot="standardHeaderBoxContent">
-        <section class="justify-center">
-          <div class="flex flex-col w-full space-y-2">
-            <div class="text-left ">
-              <Label key="dapps.o-passport.pages.home.qrcode" />
-            </div>
-            <div class="container p-1 pt-2 xs:p-4">
-              <center>
-                {#if profile}
-                  <QrCode value="{profile.circlesAddress}" size="250" />
-                {/if}
-              </center>
-            </div>
-          </div>
-        </section>
-      </div>
-    </StandardHeaderBox>
     {#if profile.__typename == "Profile"}
+      <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.qrcodeheading">
+        <div slot="standardHeaderBoxContent">
+          <section class="justify-center">
+            <div class="flex flex-col w-full space-y-2">
+              <div class="text-left">
+                <Label key="dapps.o-passport.pages.home.qrcode" />
+              </div>
+              <div class="container p-1 pt-2 xs:p-4">
+                <center>
+                  {#if profile}
+                    <QrCode value="{profile.circlesAddress}" size="250" />
+                  {/if}
+                </center>
+              </div>
+            </div>
+          </section>
+        </div>
+      </StandardHeaderBox>
+
       <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.home.myshops">
         <div slot="standardHeaderBoxContent">
           <section class="justify-center">
