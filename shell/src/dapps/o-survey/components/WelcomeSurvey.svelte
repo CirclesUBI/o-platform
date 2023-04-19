@@ -14,11 +14,11 @@ function handleClick() {
       <Label key="dapps.o-homepage.components.survey.title.top" />
     </div>
     <div class="flex items-center justify-center my-5">
-      <img src="/logos/circles.svg" class="w-32 h-32" alt="Circles Land" />
+      <img src="/logos/circles.svg" class="w-32 h-32" alt="CirclesUBI.id" />
     </div>
 
     <div class="ml-2 text-4xl text-white uppercase font-heading">
-      <Label key="dapps.o-homepage.components.survey.title.bottom" />
+      <span class="text-4xl sm:text-5xl">CIRCLES</span><span class="text-2xl sm:text-3xl">UBI.ID</span>
     </div>
   </div>
   <div class="mt-2 text-xl text-center"><Label key="dapps.o-homepage.components.survey.subtitle" /></div>

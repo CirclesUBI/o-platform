@@ -43,7 +43,7 @@ function handleClick(button) {
 <div class="overflow-hidden text-white whitespace-pre-line bg-clip-content font-heading">
   <div class="px-5 py-5 text-center uppercase bg-negative">
     <div class="survey-text">
-      <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />
+      <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />s
     </div>
     <div class="text-primary">
       <Label key="dapps.o-homepage.components.survey.informedConsent.title.middle" />
