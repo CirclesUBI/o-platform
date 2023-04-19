@@ -179,30 +179,6 @@ const options = {
           </div>
         </div>
       </div>
-      <div class="w-full mb-5 text-sm">
-        <Label key="dapps.o-homepage.components.survey.userDataCollection.useCircleAs" />
-        <div class="w-full form-control">
-          <div class="w-full input-group">
-            <DropDown
-              selected="Select your Village"
-              items="{allBaliVillages}"
-              id="village"
-              key="id"
-              value="desa"
-              dropDownClass="grow text-base"
-              on:dropDownChange="{handleOnChange}"
-              notFull="{true}" />
-
-            <span>
-              {#if $villageId.value && $villageId.value !== "undefined"}
-                <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="text-success" /></span>
-              {:else}
-                <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="text-alert" /></span>
-              {/if}
-            </span>
-          </div>
-        </div>
-      </div>
 
       <div class="w-full mb-5 text-sm">
         <Label key="dapps.o-homepage.components.survey.userDataCollection.gender" />
@@ -229,13 +205,38 @@ const options = {
       </div>
 
       <div class="w-full mb-5 text-sm">
+        <Label key="dapps.o-homepage.components.survey.userDataCollection.useCircleAs" />
+        <div class="w-full form-control">
+          <div class="w-full input-group">
+            <DropDown
+              selected="Select your Village"
+              items="{allBaliVillages}"
+              id="village"
+              key="id"
+              value="desa"
+              dropDownClass="grow text-base"
+              on:dropDownChange="{handleOnChange}"
+              notFull="{true}" />
+
+            <span>
+              {#if $villageId.value && $villageId.value !== "undefined"}
+                <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="text-success" /></span>
+              {:else}
+                <span class="text-6xl font-enso"><Icons icon="information-circle" size="{6}" customClass="text-alert" /></span>
+              {/if}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full mb-5 text-sm">
         <Label key="dapps.o-homepage.components.survey.userDataCollection.scanInvite" />
         <div class="w-full form-control">
           <div class="w-full input-group">
             {#if $inviteUrl}
               <span class="text-sm grow text-success">{$_("dapps.o-homepage.components.survey.userDataCollection.inviteValid")}</span>
             {:else}
-              <button class="px-8 overflow-hidden transition-all transform grow btn btn-primary " on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
+              <button class="px-8 overflow-hidden transition-all transform grow btn btn-primary" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
                 {$_("dapps.o-homepage.components.survey.button.scanInviteNow")}
               </button>
             {/if}
@@ -251,7 +252,7 @@ const options = {
       </div>
 
       {#if $error}
-        <p class="mb-2 text-sm text-center text-alert ">{$error}</p>
+        <p class="mb-2 text-sm text-center text-alert">{$error}</p>
       {/if}
 
       {#if !$myForm.valid}

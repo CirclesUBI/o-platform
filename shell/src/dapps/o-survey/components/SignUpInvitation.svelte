@@ -19,7 +19,7 @@ async function handleClick(button) {
     </div>
 
     <div class="ml-2 text-4xl text-white uppercase font-heading">
-      <Label key="dapps.o-homepage.components.survey.title.bottom" />
+      <span class="text-4xl sm:text-5xl">CIRCLES</span><span class="text-2xl sm:text-3xl">UBI.ID</span>
     </div>
   </div>
   <div class="mt-2 text-center"><Label key="dapps.o-homepage.components.survey.subtitle" /></div>
