@@ -79,7 +79,7 @@ async function findContactActions(circlesAddress: string) {
     availableActions.push({
       key: "sendCircles",
       title: window.o.i18n("dapps.common.quickactions.sendMoney"),
-      icon: "",
+      icon: "sendmoney",
       action: () => {},
     });
   }
@@ -123,7 +123,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                   {
                     category: "Banking",
                     key: "transfer",
-                    icon: "cash",
+                    icon: "sendmoney",
                     displayHint: "encouraged",
                     title: window.o.i18n("dapps.common.quickactions.sendMoney"),
                     action: async () => {
@@ -160,7 +160,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                   {
                     category: "Contacts",
                     key: "setTrust",
-                    icon: "shield-check",
+                    icon: "trust",
                     title: window.o.i18n("dapps.common.quickactions.trust"),
                     displayHint: "encouraged",
                     action: async () => {
@@ -182,7 +182,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         actions = actions.concat({
           category: "Contacts",
           key: "setTrust",
-          icon: "shield-check",
+          icon: "trust",
           title: window.o.i18n("dapps.common.quickactions.trust"),
           displayHint: "encouraged",
           action: async () => {

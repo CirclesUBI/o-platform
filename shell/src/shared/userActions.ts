@@ -78,7 +78,7 @@ export class UserActions {
           [
             {
               key: "transfer",
-              icon: "cash",
+              icon: "sendmoney",
               title: window.o.i18n("shared.userActions.sendMoney"),
               action: async () => {
                 window.o.runProcess(transfer, {
@@ -91,40 +91,42 @@ export class UserActions {
           ],
           youTrust && recipientProfile.contactAddress_Profile.type == ProfileType.Person.toString()
             ? [
-              {
-                key: "setTrust",
-                icon: "minus-circle",
-                title: window.o.i18n("shared.userActions.untrust"),
-                colorClass: "text-alert",
-                displayHint: "discouraged",
-                action: async () => {
-                  window.o.runProcess(setTrust, {
-                    trustLimit: 0,
-                    trustReceiver: recipientProfile.contactAddress,
-                    safeAddress: $me.circlesAddress,
-                    hubAddress: Environment.circlesHubAddress,
-                    privateKey: sessionStorage.getItem("circlesKey"),
-                  });
+                {
+                  key: "setTrust",
+                  icon: "minus-circle",
+                  title: window.o.i18n("shared.userActions.untrust"),
+                  colorClass: "text-alert",
+                  displayHint: "discouraged",
+                  action: async () => {
+                    window.o.runProcess(setTrust, {
+                      trustLimit: 0,
+                      trustReceiver: recipientProfile.contactAddress,
+                      safeAddress: $me.circlesAddress,
+                      hubAddress: Environment.circlesHubAddress,
+                      privateKey: sessionStorage.getItem("circlesKey"),
+                    });
+                  },
                 },
-              },
-            ]
-            : recipientProfile.contactAddress_Profile.type == ProfileType.Person.toString() ? [
-              {
-                key: "setTrust",
-                icon: "shield-check",
-                title: window.o.i18n("shared.userActions.trust"),
-                displayHint: "encouraged",
-                action: async () => {
-                  window.o.runProcess(setTrust, {
-                    trustLimit: 100,
-                    trustReceiver: recipientProfile.contactAddress,
-                    safeAddress: $me.circlesAddress,
-                    hubAddress: Environment.circlesHubAddress,
-                    privateKey: sessionStorage.getItem("circlesKey"),
-                  });
+              ]
+            : recipientProfile.contactAddress_Profile.type == ProfileType.Person.toString()
+            ? [
+                {
+                  key: "setTrust",
+                  icon: "trust",
+                  title: window.o.i18n("shared.userActions.trust"),
+                  displayHint: "encouraged",
+                  action: async () => {
+                    window.o.runProcess(setTrust, {
+                      trustLimit: 100,
+                      trustReceiver: recipientProfile.contactAddress,
+                      safeAddress: $me.circlesAddress,
+                      hubAddress: Environment.circlesHubAddress,
+                      privateKey: sessionStorage.getItem("circlesKey"),
+                    });
+                  },
                 },
-              },
-            ] : []
+              ]
+            : []
         );
       }
       /* ORGA */
