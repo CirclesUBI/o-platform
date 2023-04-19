@@ -38,8 +38,6 @@ function handleOnChange(e) {
   on:change="{handleOnChange}"
   use:clickOutside
   on:click_outside="{() => eventDispatcher('dropDownClickedOutside')}">
-  <option class="text" value="{undefined}" selected>{selected}</option>
-
   {#each items as item}
     <option class="text" value="{item[key]}">{item[value]}</option>
   {/each}
