@@ -5,7 +5,8 @@ import { _ } from "svelte-i18n";
 export let data: {
   error: Error;
 };
-
+export let message: string;
+export let allowReload: boolean = false;
 let error: any;
 
 $: {
@@ -20,19 +21,20 @@ $: {
 }
 </script>
 
-<div class="w-full bg-white rounded-lg">
-  <div class="mt-2 mb-2 alert alert-error">
-    <div class="flex-1">
-      <span class="text-white"
-        ><h4 class="pb-2"><strong><Label key="shared.atoms.error.processEncounteredAnError" /></strong></h4>
-        <span>{error?.message}</span>
-      </span>
-      <br />
+<div class="w-full p-4 my-2 text-white rounded-xl bg">
+  <div class="mt-2 mb-2">
+    <div>
+      <div class="text-2xl font-bold text-center text-alert">
+        <Label key="shared.atoms.error.processEncounteredAnError" />
+      </div>
+      <div class="mt-4 font-bold">{error ? error.message : ""}{message ? message : ""}</div>
     </div>
   </div>
-  <div class="mt-4">
-    <center>
-      <a href="/"><button class="btn btn-primary">{$_("shared.atoms.error.reloadPage")}</button></a>
-    </center>
-  </div>
+  {#if allowReload}
+    <div class="mt-4">
+      <center>
+        <a href="/"><button class="btn btn-primary">{$_("shared.atoms.error.reloadPage")}</button></a>
+      </center>
+    </div>
+  {/if}
 </div>
