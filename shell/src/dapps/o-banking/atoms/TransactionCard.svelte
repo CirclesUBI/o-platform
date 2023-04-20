@@ -133,7 +133,7 @@ let textCutoff = isMobile() ? 16 : 42;
       endTextBig: amountTime,
       profileLink: true,
       mobileTextCutoff: 19,
-      endTextBigClass: amountTime.startsWith('-') ? 'text-negative' : undefined,
+      endTextBigClass: amountTime.toString().startsWith('-') ? 'text-negative' : undefined,
     }}">
     <div slot="itemCardBody" class="w-full">
       <div class="flex-col flex-grow">
@@ -146,7 +146,7 @@ let textCutoff = isMobile() ? 16 : 42;
               {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
             </h2>
           </div>
-          <div class="self-end text-right pl-2 text-lg {amountTime.startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">
+          <div class="self-end text-right pl-2 text-lg {amountTime.toString().startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">
             <span>{amountTime}</span>
             <Icons icon="timeCircle" size="{4}" customClass="inline inline-icon " />
           </div>
