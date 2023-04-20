@@ -43,7 +43,7 @@ let textCutoff = isMobile() ? 12 : 35;
   </div>
   <div class="container w-full">
     {#if business.name}
-      <div class="pb-0 pl-2 text-2xl font-bold font-heading text-heading">
+      <div class="pt-1 pb-0 pl-2 text-2xl font-bold tracking-normal font-heading text-heading">
         <Label text="{business.name}" truncate="{true}" />
       </div>
     {/if}
@@ -53,7 +53,7 @@ let textCutoff = isMobile() ? 12 : 35;
       </div>
     {/if}
     {#if business.description}
-      <div class="flex-wrap pt-1 pl-2 text-md">
+      <div class="flex-wrap pl-2 text-black text-md">
         <Label text="{business.description}" truncate="{true}" />
       </div>
     {/if}
