@@ -89,7 +89,7 @@ function SortChange(event) {
     <span class="pl-2">{currentSort}</span>
     <DropDown
       selected="{dropdownItems[0].identifier}"
-      isSorting="{true}"
+      hideDefault="{true}"
       items="{dropdownItems}"
       id="sort"
       key="sortBy"
