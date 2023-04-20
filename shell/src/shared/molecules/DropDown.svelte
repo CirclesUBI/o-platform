@@ -10,7 +10,7 @@ export let dropDownClass: string = "";
 export let isButton: boolean = false;
 export let isChevron: boolean = false;
 export let notFull: boolean = false;
-export let isSorting: boolean = false;
+export let hideDefault: boolean = false;
 
 const eventDispatcher = createEventDispatcher();
 
@@ -39,7 +39,7 @@ function handleOnChange(e) {
   on:change="{handleOnChange}"
   use:clickOutside
   on:click_outside="{() => eventDispatcher('dropDownClickedOutside')}">
-  {#if isSorting}
+  {#if hideDefault}
     {#each items as item}
       <option class="text" value="{item[key]}">{item[value]}</option>
     {/each}
