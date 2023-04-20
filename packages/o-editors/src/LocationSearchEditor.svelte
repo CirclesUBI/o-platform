@@ -89,84 +89,85 @@ const submitHandler = () => {
 };
 </script>
 
-<div class="flex flex-col items-end w-full m-auto text-center form-control justify-self-center sm:w-3/4">
-  {#if _context && _context.data.lat}
-    <div class="w-full mb-8 section-txt h-80" id="map">
-      <div class="map-wrap">
-        <GoogleMapSearch
-          apiKey="{Environment.placesApiKey}"
-          on:recenter="{(e) => mapRecenter(e.detail)}"
-          zoom="{17}"
-          options="{options}"
-          bind:center="{center}"
-          placeholder="{placeholder}" />
+{#if _context}
+  <div class="flex flex-col items-end w-full m-auto text-center form-control justify-self-center sm:w-3/4">
+    {#if _context.data.lat}
+      <div class="w-full mb-8 section-txt h-80" id="map">
+        <div class="map-wrap">
+          <GoogleMapSearch
+            apiKey="{Environment.placesApiKey}"
+            on:recenter="{(e) => mapRecenter(e.detail)}"
+            zoom="{17}"
+            options="{options}"
+            bind:center="{center}"
+            placeholder="{placeholder}" />
+        </div>
       </div>
-    </div>
-  {:else}
-    <Geolocation
-      options="{geoLocationOptions}"
-      watch="{false}"
-      getPosition
-      let:coords
-      let:loading
-      let:success
-      let:error
-      let:notSupported
-      on:position="{(e) => {
-        geolocation = e.detail;
-      }}"
-      on:error="{(e) => {
-        console.log('POS ERROR', e.detail); // GeolocationError
-      }}">
-      {#if notSupported}
-        <Label key="common.googlemaps.locationService.noLocationSupport" />
-      {:else}
-        {#if loading}
-          <div class="w-full text-center">
-            <span class="text-sm text-info">
-              <Label key="common.googlemaps.locationService.loadingLocation" />
-            </span>
-            <center class="mt-4">
-              <LoadingSpinner />
-            </center>
-          </div>
-        {/if}
-        {#if success}
-          <div class="w-full mb-8 section-txt h-80" id="map">
-            <div class="map-wrap">
-              <GoogleMapSearch
-                apiKey="{Environment.placesApiKey}"
-                on:recenter="{(e) => mapRecenter(e.detail)}"
-                zoom="{17}"
-                options="{options}"
-                bind:center="{center}"
-                placeholder="{placeholder}" />
+    {:else}
+      <Geolocation
+        options="{geoLocationOptions}"
+        watch="{false}"
+        getPosition
+        let:coords
+        let:loading
+        let:success
+        let:error
+        let:notSupported
+        on:position="{(e) => {
+          geolocation = e.detail;
+        }}"
+        on:error="{(e) => {
+          console.log('POS ERROR', e.detail); // GeolocationError
+        }}">
+        {#if notSupported}
+          <Label key="common.googlemaps.locationService.noLocationSupport" />
+        {:else}
+          {#if loading}
+            <div class="w-full text-center">
+              <span class="text-sm text-info">
+                <Label key="common.googlemaps.locationService.loadingLocation" />
+              </span>
+              <center class="mt-4">
+                <LoadingSpinner />
+              </center>
             </div>
-          </div>
-        {/if}
-        {#if error}
-          {#if error.code == error.PERMISSION_DENIED}
-            <span class="text-sm text-center text-info">
-              <Label key="common.googlemaps.locationService.locationDenied" />
-            </span>
           {/if}
-
-          <div class="w-full mb-8 section-txt h-80" id="map">
-            <div class="map-wrap">
-              <GoogleMapSearch
-                apiKey="{Environment.placesApiKey}"
-                on:recenter="{(e) => mapRecenter(e.detail)}"
-                zoom="{17}"
-                options="{options}"
-                bind:center="{center}"
-                placeholder="{placeholder}" />
+          {#if success}
+            <div class="w-full mb-8 section-txt h-80" id="map">
+              <div class="map-wrap">
+                <GoogleMapSearch
+                  apiKey="{Environment.placesApiKey}"
+                  on:recenter="{(e) => mapRecenter(e.detail)}"
+                  zoom="{17}"
+                  options="{options}"
+                  bind:center="{center}"
+                  placeholder="{placeholder}" />
+              </div>
             </div>
-          </div>
+          {/if}
+          {#if error}
+            {#if error.code == error.PERMISSION_DENIED}
+              <span class="text-sm text-center text-info">
+                <Label key="common.googlemaps.locationService.locationDenied" />
+              </span>
+            {/if}
+
+            <div class="w-full mb-8 section-txt h-80" id="map">
+              <div class="map-wrap">
+                <GoogleMapSearch
+                  apiKey="{Environment.placesApiKey}"
+                  on:recenter="{(e) => mapRecenter(e.detail)}"
+                  zoom="{17}"
+                  options="{options}"
+                  bind:center="{center}"
+                  placeholder="{placeholder}" />
+              </div>
+            </div>
+          {/if}
         {/if}
-      {/if}
-    </Geolocation>
-  {/if}
-  <!-- 
+      </Geolocation>
+    {/if}
+    <!-- 
   {#if locationAllowed === null}
     Please allow
   {:else if locationAllowed === false}
@@ -199,15 +200,16 @@ const submitHandler = () => {
     {/if}
   {/if} -->
 
-  <!--   
+    <!--   
   {#if context.messages[context.field]}
     <label class="text-right label" for="form-error">
       <span id="form-error" class="label-text-alt text-error">{context.messages[context.field]}</span>
     </label>
   {/if} -->
 
-  <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" isDisabled="{disableSubmit}" />
-</div>
+    <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" isDisabled="{disableSubmit}" />
+  </div>
+{/if}
 
 <style>
 .map-wrap {

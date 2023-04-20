@@ -129,10 +129,11 @@ function placeChanged(map, place, customInfoWindow = true) {
 
   // Replace Plus code...
 
-  let plusCode = place.address_components.find((o) => o.types[0] === "plus_code")?.long_name;
+  if (place.address_components) {
+    let plusCode = place.address_components.find((o) => o.types[0] === "plus_code")?.long_name;
 
-  place.formatted_address = place.formatted_address.replace(plusCode, "");
-
+    place.formatted_address = place.formatted_address.replace(plusCode, "");
+  }
   placeholder = place.formatted_address;
 
   addMarker(map, place, customInfoWindow);
