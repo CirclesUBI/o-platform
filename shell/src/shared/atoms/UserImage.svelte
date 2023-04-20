@@ -6,7 +6,6 @@ import Icons from "../molecules/Icons.svelte";
 
 export let profile: Profile;
 export let size: number = 10;
-export let whiteRing: boolean = false;
 export let transparent: boolean = false;
 export let tooltip: boolean = false;
 export let profileLink: boolean = true;
