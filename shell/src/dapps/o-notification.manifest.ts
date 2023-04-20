@@ -8,7 +8,7 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { DappState } from "./o-passport.manifest";
 
-export class NotificationDappState { }
+export class NotificationDappState {}
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -41,6 +41,7 @@ export const trusts: Page<any, NotificationDappState> = {
   type: "page",
   position: "main",
   routeParts: ["=trusts"],
+  icon: "trust",
   title: "common.trustEvents",
   component: Trusts,
 };
@@ -57,6 +58,7 @@ export const redeemedInvitations: Page<any, NotificationDappState> = {
   position: "main",
   routeParts: ["=invitations"],
   title: "common.invitations",
+  icon: "invitations",
   component: RedeemedInvitations,
 };
 
