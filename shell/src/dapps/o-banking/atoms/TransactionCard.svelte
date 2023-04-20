@@ -5,7 +5,7 @@ import { Currency } from "../../../shared/currency";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import relativeTimeString from "../../../shared/functions/relativeTimeString";
 
-import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
+import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Organisation, Profile, ProfileEvent } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { isMobile } from "../../../shared/functions/isMobile";
@@ -15,12 +15,12 @@ import { unreadEventInbox } from "../../../shared/stores/inbox";
 export let event: ProfileEvent;
 
 let path: any;
-let fromProfile: Profile = <any>{};
-let toProfile: Profile = <any>{};
+let fromProfile: Profile | Organisation = <any>{};
+let toProfile: Profile | Organisation = <any>{};
 let error: string;
 let message: string | undefined = undefined;
 let messageString: string = "";
-let targetProfile: Profile = <any>{};
+let targetProfile: Profile | Organisation = <any>{};
 let amount: string | number = "";
 let amountTime: string | number = "";
 
@@ -47,6 +47,7 @@ $: {
 
   if (event && event.payload?.__typename == "Erc20Transfer") {
     const ercTransfer = event.payload as Erc20Transfer;
+
     fromProfile = ercTransfer.from_profile ?? {
       id: 0,
       firstName: $_("common.circlesLand"),
