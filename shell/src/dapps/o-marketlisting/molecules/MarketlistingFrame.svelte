@@ -87,7 +87,16 @@ function SortChange(event) {
   <div class="py-2 text-left border-2 border-t-0 border-l-0 border-r-0 whitespace-nowrap border-b-marketplace">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
     <span class="pl-2">{currentSort}</span>
-    <DropDown selected="{dropdownItems[0].identifier}" items="{dropdownItems}" id="sort" key="sortBy" isChevron="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{SortChange}" />
+    <DropDown
+      selected="{dropdownItems[0].identifier}"
+      isSorting="{true}"
+      items="{dropdownItems}"
+      id="sort"
+      key="sortBy"
+      isChevron="{true}"
+      value="name"
+      dropDownClass="mt-1"
+      on:dropDownChange="{SortChange}" />
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
   <CategoryFilter on:change="{filterCategoriesChange}" />
