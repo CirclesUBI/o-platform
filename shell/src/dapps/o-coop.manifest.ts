@@ -66,7 +66,8 @@ export const coop: DappManifest<DappState> = {
       if ($me.__typename !== "Organisation" && !$me.memberships) {
         list.push(<JumplistItem>{
           key: "createOrganisation",
-          type: "profile",
+          type: "action",
+          order: 2,
           icon: "plus",
           category: "Coops",
           title: window.o.i18n("dapps.common.quickactions.createOrganization"),

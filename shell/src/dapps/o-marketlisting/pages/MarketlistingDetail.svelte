@@ -238,7 +238,7 @@ async function shareLink() {
         {/if}
       </div>
     </div>
-    <div class="flex justify-start">
+    <div class="flex justify-start pt-4">
       <DetailActionBar actions="{availableActions}" />
     </div>
 

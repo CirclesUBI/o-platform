@@ -1,10 +1,6 @@
 <script lang="ts">
 import Icons from "./Icons.svelte";
 import { createEventDispatcher } from "svelte";
-
-/*
- * Edge Case: if the very first items are both super long, it will break into a new line even before clicking on 'more'
- */
 import ActionListItem from "../atoms/ActionListItem.svelte";
 import { Environment } from "../environment";
 import Label from "../atoms/Label.svelte";
@@ -17,9 +13,6 @@ export let actions: {
 
 const dispatch = createEventDispatcher();
 
-// let showMore = false;
-// let moreItems = undefined;
-
 function handleClick(action) {
   if (action.event) {
     window.o.publishEvent(action.event);
@@ -28,60 +21,24 @@ function handleClick(action) {
     action.action();
   }
 }
-
-$: {
-  // moreItems = actions && actions.length > 2 ? actions.splice(2) : undefined;
-}
 </script>
 
 {#if actions}
-  <div class="flex flex-row flex-wrap items-stretch justify-around mt-2 text-heading">
-    <!-- <ul class="inline-block space-x-8 align-top list-none"> -->
-    {#each actions as action}
-      <ActionListItem icon="{action.icon}" title="{action.title}" colorClass="{action.colorClass}" on:click="{() => handleClick(action)}" />
-    {/each}
-    <!-- </ul> -->
-    {#if Environment.showLanguageSwitcher}
-      <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click="{() => dispatch('siwtchEvent')}">
-        <span>
-          <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-            <Icons icon="settings" size="{8}" customClass="heroicon smallicon inline" />
-          </span>
+  {#each actions as action}
+    <ActionListItem icon="{action.icon}" title="{action.title}" colorClass="{action.colorClass}" on:click="{() => handleClick(action)}" />
+  {/each}
 
-          <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm">
-            <Label key="dapps.common.quickactions.changeLanguage" />
-          </span>
+  {#if Environment.showLanguageSwitcher}
+    <div class="text-center align-top list-none cursor-pointer inline-table text-secondary" role="presentation" on:click="{() => dispatch('siwtchEvent')}">
+      <span>
+        <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
+          <Icons icon="settings" size="{8}" customClass="heroicon smallicon inline" />
         </span>
-      </div>
-    {/if}
-  </div>
+
+        <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm">
+          <Label key="dapps.common.quickactions.changeLanguage" />
+        </span>
+      </span>
+    </div>
+  {/if}
 {/if}
-
-<!-- {#if actions}
-  <div class="flex flex-row flex-wrap items-stretch mt-2 -mr-2 text-dark">
-    {#if showMore}
-      {#each moreItems as action}
-        <ActionListItem
-          icon="{action.icon}"
-          title="{action.title}"
-          colorClass="{action.colorClass}"
-          on:click="{() => handleClick(action)}" />
-      {/each}
-    {/if}
-  </div>
-  <div class="flex flex-row flex-wrap items-stretch -mr-2 text-dark">
-    {#if moreItems}
-      <div on:click="{() => (showMore = !showMore)}">
-        <ActionListItem icon="{showMore ? 'morevertical' : 'more'}" title="" />
-      </div>
-    {/if}
-
-    {#each actions as action}
-      <ActionListItem
-        icon="{action.icon}"
-        title="{action.title}"
-        colorClass="{action.colorClass}"
-        on:click="{() => handleClick(action)}" />
-    {/each}
-  </div>
-{/if} -->

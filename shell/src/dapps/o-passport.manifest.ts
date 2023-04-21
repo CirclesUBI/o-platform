@@ -137,6 +137,7 @@ export const passport: DappManifest<DappState> = {
         <JumplistItem>{
           category: "Passport",
           key: "logout",
+          order: 1,
           type: "action",
           title: window.o.i18n("dapps.common.quickactions.logout"),
           icon: "logout",

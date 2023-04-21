@@ -44,9 +44,22 @@ onMount(async () => {
       };
     })
   );
-  actions = categories.filter((o) => o.items["action"]).flatMap((o) => o.items["action"]);
+  actions = categories
+    .filter((o) => o.items["action"])
+    .flatMap((o) => o.items["action"])
+    .sort(compareOrder);
   profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);
 });
+
+function compareOrder(a, b) {
+  if (a.order < b.order) {
+    return -1;
+  }
+  if (a.order > b.order) {
+    return 1;
+  }
+  return 0;
+}
 
 const eventDispatcher = createEventDispatcher();
 </script>
@@ -60,24 +73,18 @@ const eventDispatcher = createEventDispatcher();
     {/if}
 
     <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading text-heading tracking-normal"><Label key="shared.actionMenu.myprofiles" /></h1>
+      <h1 class="pt-4 text-3xl tracking-normal uppercase font-heading text-heading"><Label key="shared.actionMenu.quickactions" /></h1>
     </div>
-
-    <div class="relative flex-shrink-0 w-full pt-2 space-y-2">
-      <div class="">
+    <div class="inline p-6">
+      <div class="flex flex-row flex-wrap items-stretch mt-2 -mr-2 space-y-4 space-y-reverse justify-evenly justify-items-start">
         <ProfileSwitcherBar actions="{profiles}" />
-      </div>
-    </div>
 
-    <div class="w-full text-center">
-      <h1 class="pt-4 text-3xl uppercase font-heading text-heading tracking-normal"><Label key="shared.actionMenu.quickactions" /></h1>
-    </div>
-    <div class="py-6">
-      <DetailActionBar
-        actions="{actions}"
-        on:siwtchEvent="{() => {
-          showSwitcher = !showSwitcher;
-        }}" />
+        <DetailActionBar
+          actions="{actions}"
+          on:siwtchEvent="{() => {
+            showSwitcher = !showSwitcher;
+          }}" />
+      </div>
     </div>
   </div>
 {/if}
