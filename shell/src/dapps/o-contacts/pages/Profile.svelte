@@ -138,7 +138,7 @@ async function setProfile(id: string) {
   <div class="p-5">
     <header class="grid overflow-hidden bg-white h-68">
       <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
-        <UserImage profile="{profile}" size="{42}" profileLink="{false}" />
+        <UserImage profile="{profile}" size="{48}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
           <div class="mt-4 text-2xl break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
@@ -235,7 +235,7 @@ async function setProfile(id: string) {
       </div>
 
       {#if profile && detailActions && !isMe}
-        <div class="sticky bottom-0 left-0 right-0 w-full pb-5 bg-white">
+        <div class="sticky bottom-0 left-0 right-0 w-full pt-4 pb-5 bg-white">
           <DetailActionBar actions="{detailActions}" />
         </div>
       {/if}

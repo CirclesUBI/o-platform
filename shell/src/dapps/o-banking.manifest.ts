@@ -78,6 +78,7 @@ const profileJumplist: Jumplist<any, BankingDappState> = {
       {
         key: "transfer",
         icon: "sendmoney",
+        order: 3,
         title: window.o.i18n("dapps.common.quickactions.sendMoney"),
         displayHint: "encouraged",
         category: "Banking",

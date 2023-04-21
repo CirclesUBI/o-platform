@@ -8,7 +8,7 @@ export let colorClass: string = "";
 export let customClass: string = "inline";
 </script>
 
-<div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click>
+<div class="h-12 text-center align-top list-none cursor-pointer text-secondary inline-table" role="presentation" on:click>
   <span>
     <span class="table-cell w-12 h-12 align-middle rounded-full {colorClass} {customClass} bg-light-light">
       <Icons icon="{icon}" customClass="w-{size} h-{size} heroicon smallicon inline" />
