@@ -8,6 +8,7 @@ import circlesIcon from "./dropdownItems/CirclesIcon.svelte";
 import xdaiIcon from "./dropdownItems/XdaiIcon.svelte";
 import { RpcGateway } from "../../o-circles/dist/rpcGateway";
 import { convertCirclesToTimeCircles } from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
+import Label from "@o-platform/shell/src/shared/atoms/Label.svelte";
 
 export let context: CurrencyTransferContext;
 
@@ -63,8 +64,10 @@ function onkeydown(e: KeyboardEvent) {
   {#if maxAmount}
     <center
       ><div class="">
-        Maximum transferrable Amount to {context.data.recipientProfile.firstName}: <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold"
-          >{maxAmount}</span>
+        <Label key="dapps.o-banking.processes.transfer.maximumAmount" values="{{ name: context.data.recipientProfile.firstName }}" /><br /><Icons
+          icon="timeCircle"
+          size="{4}"
+          customClass="inline -mt-0.5 pr-0" /><span class="font-bold">{maxAmount}</span>
       </div></center>
   {/if}
   {#if context.messages[context.field]}
