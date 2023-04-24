@@ -124,6 +124,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                     category: "Banking",
                     key: "transfer",
                     icon: "sendmoney",
+                    order: 3,
                     displayHint: "encouraged",
                     title: window.o.i18n("dapps.common.quickactions.sendMoney"),
                     action: async () => {
@@ -142,6 +143,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                     category: "Contacts",
                     key: "setTrust",
                     icon: "minus-circle",
+                    order: 4,
                     title: window.o.i18n("dapps.common.quickactions.untrust"),
                     displayHint: "discouraged",
                     colorClass: "text-alert",
@@ -161,6 +163,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                     category: "Contacts",
                     key: "setTrust",
                     icon: "trust",
+                    order: 4,
                     title: window.o.i18n("dapps.common.quickactions.trust"),
                     displayHint: "encouraged",
                     action: async () => {
@@ -183,6 +186,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
           category: "Contacts",
           key: "setTrust",
           icon: "trust",
+          order: 4,
           title: window.o.i18n("dapps.common.quickactions.trust"),
           displayHint: "encouraged",
           action: async () => {
@@ -200,6 +204,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         category: "Contacts",
         key: "setTrust",
         icon: "trust",
+        order: 4,
         displayHint: "encouraged",
         title: window.o.i18n("dapps.common.quickactions.trustNewFriend"),
         action: async () => {
@@ -215,6 +220,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         category: "Contacts",
         key: "setTrust",
         icon: "qrcode",
+        order: 5,
         title: window.o.i18n("dapps.common.quickactions.scanToTrust"),
         action: async () => {
           push("#/contacts/scanToTrust/");

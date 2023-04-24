@@ -5,6 +5,7 @@ import { createEventDispatcher } from "svelte";
 import { Environment } from "../environment";
 import UserImage from "../atoms/UserImage.svelte";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
+import Label from "../atoms/Label.svelte";
 export let actions: JumplistItem[] = [];
 
 function handleClick(action) {
@@ -18,39 +19,19 @@ function handleClick(action) {
 </script>
 
 {#if actions}
-  <div class="flex flex-row flex-wrap items-stretch justify-around mt-2 -mr-2 text-dark">
-    {#each actions as action}
-      {#if action.profile}
-        <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click="{() => handleClick(action)}">
+  {#each actions as action}
+    {#if action.profile}
+      {#if action.profile.id !== ($me ? $me.id : 0)}
+        <div class="text-center align-top list-none cursor-pointer text-dark inline-table" role="presentation" on:click="{() => handleClick(action)}">
           <center>
             <UserImage profile="{action.profile}" size="{12}" profileLink="{false}" />
           </center>
           <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm">
+            <Label key="shared.molecules.profileSwitcherBar.switchTo" /><br />
             {action.title ? (action.title.length >= 18 ? action.title.slice(0, 18) + "..." : action.title) : ""}
           </span>
         </div>
-      {:else}
-        <div class="text-center align-top list-none cursor-pointer inline-table" role="presentation" on:click="{() => handleClick(action)}">
-          <span>
-            {#if action.icon.startsWith("http") || action.icon.indexOf("/") > -1 || action.icon.startsWith("data:")}
-              <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-                <div class="self-center text-center rounded-full justify-self-center" style="padding: 1px;">
-                  <div class="w-12 h-12 m-auto bg-white rounded-full">
-                    <img class="w-12 h-12 rounded-full" src="{action.icon}" alt="action" />
-                  </div>
-                </div>
-              </span>
-            {:else}
-              <span class="table-cell w-12 h-12 align-middle rounded-full bg-light-light">
-                <Icons icon="{action.icon}" size="{8}" customClass="inline heroicon smallicon" />
-              </span>
-            {/if}
-            <span class="block w-24 mt-1 text-xs text-center break-normal sm:text-sm">
-              {action.title ? (action.title.length >= 18 ? action.title.slice(0, 18) + "..." : action.title) : ""}
-            </span>
-          </span>
-        </div>
       {/if}
-    {/each}
-  </div>
+    {/if}
+  {/each}
 {/if}

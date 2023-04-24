@@ -22,5 +22,6 @@ export interface JumplistItem {
   category?: string;
   event?: PlatformEvent;
   colorClass?: string;
+  order?: number;
   action?: () => void;
 }
