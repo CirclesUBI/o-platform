@@ -4,22 +4,14 @@ import { createEventDispatcher, onMount } from "svelte";
 
 import { dapps } from "../../loader";
 import DetailActionBar from "./DetailActionBar.svelte";
-import { DappManifest } from "@o-platform/o-interfaces/dist/dappManifest";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import { JumplistItem } from "@o-platform/o-interfaces/dist/routables/jumplist";
 import ProfileSwitcherBar from "./ProfileSwitcherBar.svelte";
 import LangSwitcher from "../atoms/LangSwitcher.svelte";
 import Label from "../atoms/Label.svelte";
+import getJumplistItems from "../functions/getJumplistItemsFromManifests";
 
 export let runtimeDapp: RuntimeDapp<any>;
-
-let categories: {
-  manifest: DappManifest<any>;
-  items: {
-    ["action"]: JumplistItem[];
-    ["profile"]: JumplistItem[];
-  };
-}[] = [];
 
 let actions: JumplistItem[] = [];
 let profiles: JumplistItem[] = [];
@@ -27,28 +19,10 @@ let showSwitcher: boolean = false;
 
 onMount(async () => {
   const manifestsWithJumplist = dapps.filter((o) => o.jumplist);
-  categories = await Promise.all(
-    manifestsWithJumplist.map(async (o) => {
-      const jumplistItems = await o.jumplist.items({}, runtimeDapp);
-      return <
-        {
-          manifest: DappManifest<any>;
-          items: {
-            ["action"]: JumplistItem[];
-            ["profile"]: JumplistItem[];
-          };
-        }
-      >{
-        manifest: o,
-        items: jumplistItems.groupBy((c) => c.type ?? "action"),
-      };
-    })
-  );
-  actions = categories
-    .filter((o) => o.items["action"])
-    .flatMap((o) => o.items["action"])
-    .sort(compareOrder);
-  profiles = categories.filter((o) => o.items["profile"]).flatMap((o) => o.items["profile"]);
+
+  const jumplistitems = await getJumplistItems(manifestsWithJumplist, runtimeDapp);
+  actions = jumplistitems && jumplistitems.actions ? jumplistitems.actions : null;
+  profiles = jumplistitems && jumplistitems.profiles ? jumplistitems.profiles : null;
 });
 
 function compareOrder(a, b) {
