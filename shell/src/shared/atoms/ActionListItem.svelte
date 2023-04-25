@@ -8,6 +8,11 @@ export let size: number = 8;
 export let colorClass: string = "";
 export let customClass: string = "inline";
 export let isListItem: boolean = false;
+
+let iconsize: number = size;
+if ($media.small) {
+  iconsize = 6;
+}
 </script>
 
 {#if !isListItem}
@@ -24,10 +29,10 @@ export let isListItem: boolean = false;
 {:else}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <span class="flex content-center justify-start space-x-2 cursor-pointer" on:click>
-    <div class="flex flex-row items-center mt-2 text-lg rounded-full">
+    <div class="flex flex-row items-center mt-2 rounded-full" class:text-lg="{$media.small}" class:text-md="{!$media.small}">
       {#if icon}
         <span class="pl-1 {colorClass} {customClass}">
-          <Icons icon="{icon}" size="{size}" />
+          <Icons icon="{icon}" size="{iconsize}" />
         </span>
       {/if}
       <span class="px-2">

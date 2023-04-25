@@ -17,19 +17,28 @@ let actions: JumplistItem[] = [];
 let jumplistitems;
 
 onMount(async () => {
+  loadJumplist();
+
   window.o.events.subscribe((event: any) => {
     if (event.type !== "shell.routeChanged") return;
-
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
-
-    const manifestsWithJumplist = <DappManifest<any>[]>[runtimeDapp];
-    getJumplistItems(manifestsWithJumplist, runtimeDapp).then((result) => {
-      jumplistitems = result;
-      actions = jumplistitems && jumplistitems.actions ? jumplistitems.actions : null;
-    });
+    loadJumplist();
   });
 });
+
+function loadJumplist() {
+  const manifestsWithJumplist = <DappManifest<any>[]>[runtimeDapp];
+
+  getJumplistItems(manifestsWithJumplist, runtimeDapp)
+    .then((result) => {
+      jumplistitems = result;
+      actions = jumplistitems && jumplistitems.actions ? jumplistitems.actions : null;
+    })
+    .catch((err) => {
+      console.log("ERROR loading Jumplist in time..");
+    });
+}
 
 $: {
   if (runtimeDapp && routable) {
