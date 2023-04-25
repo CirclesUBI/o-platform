@@ -154,7 +154,7 @@ let textCutoff = isMobile() ? 16 : 42;
         <div class="flex flex-row items-center justify-between px-3 -mt-1 text-left">
           <div class="flex-grow leading-none">
             <span class="inline-block text-xs">
-              {messageString ? (messageString.length >= textCutoff + 6 ? messageString.slice(0, textCutoff + 6) + "..." : messageString) : ""}
+              {messageString ? (messageString.length >= textCutoff + 6 ? messageString.slice(0, textCutoff + 16) + "..." : messageString) : ""}
             </span>
           </div>
         </div>
