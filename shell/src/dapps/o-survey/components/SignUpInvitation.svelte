@@ -12,17 +12,17 @@ async function handleClick(button) {
 }
 </script>
 
-<div class="p-1 pr-4 -mt-6 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2 ">
+<div class="p-1 -mt-6 overflow-hidden text-white whitespace-pre-line xs:p-3 xs:-mt-2">
   <div class="flex flex-col items-center justify-center">
     <div class="flex items-center justify-center my-5">
       <img src="/logos/circles.svg" class="w-32 h-32" alt="Circles Land" />
     </div>
 
     <div class="ml-2 text-4xl text-white uppercase font-heading">
-      <Label key="dapps.o-homepage.components.survey.title.bottom" />
+      <span class="text-4xl sm:text-5xl">CIRCLES</span><span class="text-2xl sm:text-3xl">UBI.ID</span>
     </div>
   </div>
-  <div class="mt-2 text-center "><Label key="dapps.o-homepage.components.survey.subtitle" /></div>
+  <div class="mt-2 text-center"><Label key="dapps.o-homepage.components.survey.subtitle" /></div>
   <div class="my-8 text-xl text-center uppercase">
     <div class="ml-2 text-5xl text-white uppercase font-heading">
       <Label key="dapps.o-homepage.components.survey.success" />

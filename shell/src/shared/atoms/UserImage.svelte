@@ -6,7 +6,6 @@ import Icons from "../molecules/Icons.svelte";
 
 export let profile: Profile;
 export let size: number = 10;
-export let whiteRing: boolean = false;
 export let transparent: boolean = false;
 export let tooltip: boolean = false;
 export let profileLink: boolean = true;
@@ -57,7 +56,7 @@ $: {
       </div>
     {/if}
 
-    <div class="self-center text-center rounded-full justify-self-center w-{size}" class:rounded-corners-white-borders="{whiteRing}" style="padding: {size >= 20 ? `4px` : `1px`}">
+    <div class="self-center text-center rounded-full justify-self-center w-{size} " style="padding: {size >= 20 ? `4px` : `1px`}">
       <div class="relative w-{size} h-{size} m-auto" class:bg-white="{!transparent}" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}">
         {#if profile.provenUniqueness}
           <img
@@ -74,7 +73,7 @@ $: {
             class:h-4="{size < 20}" />
         {/if}
         <img
-          class=" w-{size} h-{size}"
+          class=" w-{size} h-{size} rounded-corners-purple-borders"
           class:rounded-full="{!isOrganisation}"
           class:rounded-md="{isOrganisation}"
           src="{profile && profile.avatarUrl ? profile.avatarUrl : profile.circlesAddress ? AvataarGenerator.generate(profile.circlesAddress.toLowerCase()) : AvataarGenerator.default()}"

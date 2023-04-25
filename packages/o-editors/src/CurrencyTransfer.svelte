@@ -2,12 +2,19 @@
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import { CurrencyTransferContext } from "./currencyTransferContext";
 import ProcessNavigation from "./ProcessNavigation.svelte";
-import Icons from "../../../shell/src/shared/molecules/Icons.svelte";
+import Icons from "@o-platform/shell/src/shared/molecules/Icons.svelte";
+import Error from "@o-platform/shell/src/shared/atoms/Error.svelte";
 import circlesIcon from "./dropdownItems/CirclesIcon.svelte";
 import xdaiIcon from "./dropdownItems/XdaiIcon.svelte";
 import { RpcGateway } from "../../o-circles/dist/rpcGateway";
 import { convertCirclesToTimeCircles } from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
-
+import Label from "@o-platform/shell/src/shared/atoms/Label.svelte";
+import { contacts } from "../../../shell/src/shared/stores/contacts";
+import { CommonTrust, Contact, Profile } from "@o-platform/shell/src/shared/api/data/types";
+import UserImage from "@o-platform/shell/src/shared/atoms/UserImage.svelte";
+import { ok, err, Result } from "neverthrow";
+import { onMount } from "svelte";
+import { trustFromContactMetadata } from "@o-platform/shell/src/shared/functions/trustFromContactMetadata";
 export let context: CurrencyTransferContext;
 
 let Icon = circlesIcon;
@@ -16,7 +23,9 @@ let amount: string = context.data && context.data.tokens ? context.data.tokens.a
 let maxAmount: string = "0";
 let selected = context.data.tokens ? context.data.tokens.currency : "crc";
 let selectedCurrency = context.params.currencies.find((o) => o.value === selected);
-
+let contact: Contact;
+let trustMessage: string;
+let trustClassName: string;
 $: selectedCurrency = context.params.currencies.find((o) => o.value === selected);
 
 $: {
@@ -25,12 +34,45 @@ $: {
     if (context.data.maxFlows[key] != "") {
       maxAmount = Math.floor(convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON())).toFixed(0);
     }
+    console.log("DATA", context.data);
   }
 
   if (selectedCurrency && selectedCurrency.value == "crc") {
     Icon = circlesIcon;
   } else if (selectedCurrency && selectedCurrency.value == "xdai") {
     Icon = xdaiIcon;
+  }
+}
+
+onMount(async () => {
+  await setProfile(context.data.recipientProfile.circlesAddress);
+
+  const { trustIn, trustOut } = trustFromContactMetadata(contact);
+
+  if (trustIn > 0 && trustOut > 0) {
+    trustMessage = "dapps.o-contacts.atoms.contactCard.mutualTrust";
+    trustClassName = "text-wallet";
+  } else if (!trustIn && trustOut > 0) {
+    trustMessage = "dapps.o-contacts.atoms.contactCard.trustedByYou";
+    trustClassName = "text-contacts";
+  } else if (trustIn > 0 && !trustOut) {
+    trustMessage = "dapps.o-contacts.atoms.contactCard.isTrustingYou";
+    trustClassName = "text-passport";
+  } else {
+    trustMessage = "dapps.o-contacts.atoms.contactCard.notTrusted";
+  }
+});
+
+async function setProfile(id: string) {
+  try {
+    const c = await contacts.findBySafeAddress(id);
+    if (!c) {
+      console.log("GEHT NED");
+      return;
+    }
+    contact = c;
+  } catch (error) {
+    return err(error);
   }
 }
 
@@ -60,21 +102,21 @@ function onkeydown(e: KeyboardEvent) {
 
 <div>
   {#if maxAmount}
-    <center
-      ><div class="">
-        Maximum transferrable Amount to {context.data.recipientProfile.firstName}: <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold"
-          >{maxAmount}</span>
-      </div></center>
-  {/if}
-  {#if context.messages[context.field]}
-    <div class="mt-2 mb-2 alert alert-error">
-      <div class="flex-1">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-        </svg>
-        <label for="input">{context.messages[context.field]} </label>
+    <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
+      {#if trustMessage}
+        <UserImage profile="{context.data.recipientProfile}" size="{36}" profileLink="{false}" />
+
+        <div class="text-xl break-words">{context.data.recipientProfile.firstName}</div>
+        <div class="{trustClassName} mb-4"><Label key="{trustMessage}" /></div>
+      {/if}
+      <div>
+        <Label key="dapps.o-banking.processes.transfer.maximumAmount" values="{{ name: context.data.recipientProfile.firstName }}" />
+        <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold">{maxAmount}</span>
       </div>
     </div>
+  {/if}
+  {#if context.messages[context.field]}
+    <Error message="{context.messages[context.field]}" />
   {/if}
   <div class="flex flex-row w-full space-x-2">
     <div class="relative w-full mt-1 rounded-md shadow-sm">

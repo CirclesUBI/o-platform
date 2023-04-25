@@ -69,6 +69,7 @@ const processDefinition = (processId: string) =>
         component: TextareaEditor,
         params: {
           view: {
+            maxLength: "250",
             title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.title"),
             description: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.description"),
             placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.placeholder"),
@@ -236,7 +237,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => { },
+            set: (o: any) => {},
           },
         }),
       },

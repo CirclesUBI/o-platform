@@ -5,7 +5,7 @@ import { Currency } from "../../../shared/currency";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import relativeTimeString from "../../../shared/functions/relativeTimeString";
 
-import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Profile, ProfileEvent } from "../../../shared/api/data/types";
+import { CrcHubTransfer, CrcMinting, Erc20Transfer, EventType, Organisation, Profile, ProfileEvent } from "../../../shared/api/data/types";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { isMobile } from "../../../shared/functions/isMobile";
@@ -15,12 +15,12 @@ import { unreadEventInbox } from "../../../shared/stores/inbox";
 export let event: ProfileEvent;
 
 let path: any;
-let fromProfile: Profile = <any>{};
-let toProfile: Profile = <any>{};
+let fromProfile: Profile | Organisation = <any>{};
+let toProfile: Profile | Organisation = <any>{};
 let error: string;
 let message: string | undefined = undefined;
 let messageString: string = "";
-let targetProfile: Profile = <any>{};
+let targetProfile: Profile | Organisation = <any>{};
 let amount: string | number = "";
 let amountTime: string | number = "";
 
@@ -47,6 +47,7 @@ $: {
 
   if (event && event.payload?.__typename == "Erc20Transfer") {
     const ercTransfer = event.payload as Erc20Transfer;
+
     fromProfile = ercTransfer.from_profile ?? {
       id: 0,
       firstName: $_("common.circlesLand"),
@@ -132,7 +133,7 @@ let textCutoff = isMobile() ? 16 : 42;
       endTextBig: amountTime,
       profileLink: true,
       mobileTextCutoff: 19,
-      endTextBigClass: amountTime.startsWith('-') ? 'text-negative' : undefined,
+      endTextBigClass: amountTime.toString().startsWith('-') ? 'text-negative' : undefined,
     }}">
     <div slot="itemCardBody" class="w-full">
       <div class="flex-col flex-grow">
@@ -145,7 +146,7 @@ let textCutoff = isMobile() ? 16 : 42;
               {targetProfile.displayName ? (targetProfile.displayName.length >= textCutoff ? targetProfile.displayName.slice(0, textCutoff) + "..." : targetProfile.displayName) : ""}
             </h2>
           </div>
-          <div class="self-end text-right pl-2 text-lg {amountTime.startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">
+          <div class="self-end text-right pl-2 text-lg {amountTime.toString().startsWith('-') ? 'text-negative' : 'text-positive'} whitespace-nowrap">
             <span>{amountTime}</span>
             <Icons icon="timeCircle" size="{4}" customClass="inline inline-icon " />
           </div>
@@ -153,7 +154,7 @@ let textCutoff = isMobile() ? 16 : 42;
         <div class="flex flex-row items-center justify-between px-3 -mt-1 text-left">
           <div class="flex-grow leading-none">
             <span class="inline-block text-xs">
-              {messageString ? (messageString.length >= textCutoff + 6 ? messageString.slice(0, textCutoff + 6) + "..." : messageString) : ""}
+              {messageString ? (messageString.length >= textCutoff + 6 ? messageString.slice(0, textCutoff + 16) + "..." : messageString) : ""}
             </span>
           </div>
         </div>

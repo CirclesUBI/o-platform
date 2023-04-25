@@ -33,7 +33,7 @@ const externalChat: Link<any, DappState> = {
 const transactions: Page<any, BankingDappState> = {
   routeParts: ["=transactions"],
   component: Transactions,
-  title: "common.transactions",
+  title: "dapps.o-dashboard.pages.home.banking",
   icon: "transactions",
   type: "page",
   navigation: {
@@ -77,7 +77,8 @@ const profileJumplist: Jumplist<any, BankingDappState> = {
     return [
       {
         key: "transfer",
-        icon: "cash",
+        icon: "sendmoney",
+        order: 3,
         title: window.o.i18n("dapps.common.quickactions.sendMoney"),
         displayHint: "encouraged",
         category: "Banking",
@@ -135,7 +136,7 @@ const transferTrigger: Trigger<any, BankingDappState> = {
     });
   },
   title: "common.sendMoney",
-  icon: "cash",
+  icon: "sendmoney",
   type: "trigger",
 };
 
@@ -158,7 +159,7 @@ const transferTriggerRedirect: Trigger<any, BankingDappState> = {
     });
   },
   title: "common.sendMoney",
-  icon: "cash",
+  icon: "sendmoney",
   type: "trigger",
 };
 
@@ -226,7 +227,7 @@ export const banking: DappManifest<BankingDappState> = {
   dappId: "banking:1",
   type: "dapp",
   icon: "banking",
-  title: "Banking",
+  title: "dapps.o-dashboard.pages.home.banking",
   routeParts: ["banking"],
   defaultRoute: ["transactions"],
   tag: Promise.resolve("alpha"),

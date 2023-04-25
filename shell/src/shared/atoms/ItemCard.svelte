@@ -1,6 +1,7 @@
 <script lang="ts">
 import UserImage from "src/shared/atoms/UserImage.svelte";
 import { isMobile } from "../functions/isMobile";
+import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
 
 export let params = {
   imageUrl: null,

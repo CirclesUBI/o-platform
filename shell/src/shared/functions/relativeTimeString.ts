@@ -1,10 +1,13 @@
 import dayjs from "dayjs";
+import "dayjs/locale/en";
+import "dayjs/locale/id";
 
-export default function relativeTimeString(
-  time: string,
-  relativeDaysBase: number,
-  showHours: boolean = false
-) {
+import { Environment } from "../environment";
+
+export default function relativeTimeString(time: string, relativeDaysBase: number, showHours: boolean = false) {
+  const locale: string = Environment.userLanguage.slice(0, 2);
+  dayjs.locale(locale);
+
   if (!time) {
     return null;
   }

@@ -23,6 +23,7 @@ let isMe: boolean = false;
 let commonTrusts: CommonTrust[] = [];
 let profile: Profile;
 let contact: Contact;
+let className: string;
 
 let detailActions: UserActionItem[];
 
@@ -98,10 +99,13 @@ async function setProfile(id: string) {
 
     if (trustIn > 0 && trustOut > 0) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.mutualTrust")}`;
+      className = "text-wallet";
     } else if (!trustIn && trustOut > 0) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.trustedByYou")}`;
+      className = "text-contacts";
     } else if (trustIn > 0 && !trustOut) {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.isTrustingYou")}`;
+      className = "text-passport";
     } else {
       trustMessage = `${$_("dapps.o-contacts.pages.profile.notTrusted")}`;
     }
@@ -132,21 +136,12 @@ async function setProfile(id: string) {
   </div>
 {:else}
   <div class="p-5">
-    <header class="grid overflow-hidden bg-white h-72">
-      <div class="w-full text-center">
-        <h1 class="text-3xl uppercase font-heading">
-          {#if profile.circlesAddress === $me.circlesAddress}
-            <Label key="dapps.o-contacts.pages.profile.you" />
-          {:else}
-            <Label key="dapps.o-contacts.pages.profile.profile" />
-          {/if}
-        </h1>
-      </div>
+    <header class="grid overflow-hidden bg-white h-68">
       <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
-        <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
+        <UserImage profile="{profile}" size="{48}" profileLink="{false}" />
 
         {#if profile && contact.contactAddress}
-          <div class="mt-4 break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
+          <div class="mt-4 text-2xl break-words" class:text-3xl="{!isMobile() && !displayName.startsWith('0x')}" class:text-xs="{displayName.startsWith('0x')}">
             {displayName}
           </div>
         {/if}
@@ -162,7 +157,7 @@ async function setProfile(id: string) {
                   <div class="font-bold text-left text-2xs">
                     {$_("dapps.o-contacts.pages.profile.trust")}
                   </div>
-                  <div class="flex flex-wrap content-start">
+                  <div class="flex flex-wrap content-start {className}">
                     {trustMessage}
                   </div>
                 </div>
@@ -240,7 +235,7 @@ async function setProfile(id: string) {
       </div>
 
       {#if profile && detailActions && !isMe}
-        <div class="sticky bottom-0 left-0 right-0 w-full pb-5 bg-white">
+        <div class="sticky bottom-0 left-0 right-0 w-full pt-4 pb-5 bg-white">
           <DetailActionBar actions="{detailActions}" />
         </div>
       {/if}
