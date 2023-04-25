@@ -20,7 +20,7 @@ const externalChat: Link<any, DappState> = {
 const listing: Page<any, ContactsDappState> = {
   routeParts: ["=listing"],
   component: Marketlisting,
-  title: "common.market",
+  title: "dapps.o-dashboard.pages.home.marketlisting",
   icon: "marketlisting",
   type: "page",
   navigation: {
@@ -89,7 +89,7 @@ export const marketlisting: DappManifest<DappState> = {
   type: "dapp",
   dappId: "market:1",
   icon: "check",
-  title: "common.market",
+  title: "dapps.o-dashboard.pages.home.marketlisting",
   routeParts: ["market"],
   defaultRoute: ["listing"],
   tag: Promise.resolve("alpha"),

@@ -10,6 +10,7 @@ function handleLocaleChange(event) {
   localStorage.setItem("userLanguage", event.target.value);
   Environment.userLanguage = event.target.value;
   dispatch("locale-changed", event.target.value);
+  window.location.reload();
 }
 </script>
 
