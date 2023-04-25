@@ -324,6 +324,7 @@ body {
     padding: 1px;
     border: 1px solid transparent;
     border-radius: 180px;
+    @apply border-secondary;
     @apply bg-secondary;
   }
   .rounded-corners-gray-borders {
