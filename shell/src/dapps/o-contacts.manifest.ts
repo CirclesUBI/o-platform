@@ -30,7 +30,7 @@ const externalChat: Link<any, DappState> = {
 const index: Page<any, DappState> = {
   routeParts: [],
   component: ContactsView,
-  title: "common.contacts",
+  title: "dapps.o-dashboard.pages.home.contacts",
   icon: "friends",
   type: "page",
   navigation: {
@@ -254,7 +254,7 @@ export const contacts: DappManifest<DappState> = {
   type: "dapp",
   dappId: "contacts:1",
   icon: "group",
-  title: "Contacts",
+  title: "dapps.o-dashboard.pages.home.contacts",
   routeParts: ["contacts"],
   defaultRoute: [],
   tag: Promise.resolve("alpha"),

@@ -2,7 +2,6 @@
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import CopyToClipboard from "../../../shared/atoms/CopyClipboard.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { me } from "../../../shared/stores/me";
 import { KeyManager } from "../data/keyManager";
 import AccountCard from "../atoms/AccountCard.svelte";
@@ -12,7 +11,6 @@ import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 import { onMount } from "svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 
 let keyManager: KeyManager | null = null;
 let profile;
@@ -37,7 +35,7 @@ onMount(() => {
 });
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 <div class="px-4 mx-auto mt-8 mb-20 md:w-2/3 xl:w-1/2">
   <ItemCard
     params="{{

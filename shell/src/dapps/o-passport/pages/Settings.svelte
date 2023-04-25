@@ -3,27 +3,16 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 
 import { me } from "../../../shared/stores/me";
 import { DelayedTrigger } from "@o-platform/o-utils/dist/delayedTrigger";
-import { onMount } from "svelte";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { showToast } from "../../../shared/toast";
-import Svelecte, { addFormatter } from "svelecte";
-import { UpsertProfileDocument, DisplayCurrency, WhoamiDocument, WhoamiQueryVariables } from "../../../shared/api/data/types";
+import { UpsertProfileDocument, DisplayCurrency } from "../../../shared/api/data/types";
 import { upsertIdentity } from "../processes/upsertIdentity";
-import { ApiClient } from "../../../shared/apiConnection";
 import Label from "../../../shared/atoms/Label.svelte";
 import { _ } from "svelte-i18n";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
-
-let choices = [
-  { value: DisplayCurrency.Crc, name: "CRC" },
-  { value: DisplayCurrency.Eurs, name: "Euro" },
-  { value: DisplayCurrency.TimeCrc, name: "Time Circles" },
-];
 
 const delayedTrigger = new DelayedTrigger(200, async () => {
   console.log("delayedTrigger");
@@ -55,7 +44,7 @@ function editProfileField(onlyThesePages: string[], dirtyFlags: any = {}) {
 }
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 <div class="mx-auto md:w-2/3 xl:w-1/2">
   <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">

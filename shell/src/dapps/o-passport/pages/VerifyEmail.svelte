@@ -1,9 +1,6 @@
 <script lang="ts">
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
-
-import Label from "../../../shared/atoms/Label.svelte";
 import Icons from "../../../shared/molecules/Icons.svelte";
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
@@ -11,7 +8,6 @@ import { _ } from "svelte-i18n";
 
 export let secret: string = undefined;
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 
 let showButton: boolean = false;
 
@@ -30,7 +26,7 @@ onMount(() => {
 });
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 <div class="mx-auto md:w-2/3 xl:w-1/2">
   <!-- <section class="flex items-center justify-center mx-4 mb-2 -mt-2">
@@ -42,7 +38,7 @@ onMount(() => {
     </Card>
   </section> -->
   <section class="mx-4 mb-2 -mt-2">
-    <div class="flex flex-col w-full px-3 py-2 space-x-2 bg-white rounded-lg shadow-md ">
+    <div class="flex flex-col w-full px-3 py-2 space-x-2 bg-white rounded-lg shadow-md">
       <div class="flex flex-col space-y-2">
         <div class="text-left">
           {#if secret && secret == "success"}
@@ -73,7 +69,7 @@ onMount(() => {
                 on:click="{() => {
                   verify();
                 }}"
-                class="relative btn btn-primary "
+                class="relative btn btn-primary"
                 ><span class="pr-4">{$_("dapps.o-passport.pages.verifyEmail.verifyMyEmailAddress")}</span>
                 <div class="absolute right-2">
                   <Icons icon="buttonrightarrow" />

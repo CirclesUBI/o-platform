@@ -3,7 +3,6 @@ import SimpleHeader from "src/shared/atoms/SimpleHeader.svelte";
 import Card from "src/shared/atoms/Card.svelte";
 import AssetCard from "../atoms/AssetCard.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { me } from "../../../shared/stores/me";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import { KeyManager } from "../../o-passport/data/keyManager";
@@ -16,7 +15,7 @@ import { BN } from "ethereumjs-util";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
+
 let loading: boolean = true;
 
 let xdai = {
@@ -46,9 +45,7 @@ async function updateXdaiBalance() {
   await km.load();
   const eoaBalance = await RpcGateway.get().eth.getBalance(km.torusKeyAddress);
 
-  xdai.balance = Number.parseFloat(
-    Web3.utils.fromWei(new BN(safeBalance).add(new BN(eoaBalance)).toString(), "ether")
-  ).toFixed(2);
+  xdai.balance = Number.parseFloat(Web3.utils.fromWei(new BN(safeBalance).add(new BN(eoaBalance)).toString(), "ether")).toFixed(2);
 }
 
 $: {
@@ -58,8 +55,7 @@ $: {
   circles.balance = displayCirclesAmount(
     circles.details.reduce((p, c) => p.add(new BN(c.token_balance)), new BN("0")).toString(),
     null,
-    ($me && $me.displayTimeCircles !== undefined ? $me.displayTimeCircles : true) ||
-      ($me && $me.displayTimeCircles !== undefined ? $me.displayTimeCircles : true) === undefined
+    ($me && $me.displayTimeCircles !== undefined ? $me.displayTimeCircles : true) || ($me && $me.displayTimeCircles !== undefined ? $me.displayTimeCircles : true) === undefined
   );
   circles.variety = circles.details.length;
 
@@ -86,10 +82,8 @@ $: {
 
   erc20DisplayBalances = erc20DisplayBalances
     .sort((a, b) => {
-      const bnA =
-        a.token_symbol == "EURS" ? new BN(a.token_balance).mul(new BN("1000000000000000000")) : new BN(a.token_balance);
-      const bnB =
-        b.token_symbol == "EURS" ? new BN(b.token_balance).mul(new BN("1000000000000000000")) : new BN(b.token_balance);
+      const bnA = a.token_symbol == "EURS" ? new BN(a.token_balance).mul(new BN("1000000000000000000")) : new BN(a.token_balance);
+      const bnB = b.token_symbol == "EURS" ? new BN(b.token_balance).mul(new BN("1000000000000000000")) : new BN(b.token_balance);
       return bnA.gt(bnB) ? -1 : bnA.lt(bnB) ? 1 : 0;
     })
     .map((o) => {
@@ -101,9 +95,7 @@ $: {
       } else {
         return {
           ...o,
-          token_balance: (o.token_balance = parseFloat(
-            RpcGateway.get().utils.fromWei(o.token_balance, "ether")
-          ).toFixed(2)),
+          token_balance: (o.token_balance = parseFloat(RpcGateway.get().utils.fromWei(o.token_balance, "ether")).toFixed(2)),
         };
       }
     });
@@ -118,11 +110,10 @@ $: {
 loading = false;
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
-
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 <div class="px-4 mx-auto mt-8 md:w-2/3 xl:w-1/2">
   {#if loading}
-    <section class="flex items-center justify-center mb-2 ">
+    <section class="flex items-center justify-center mb-2">
       <Card>
         <div class="flex flex-col items-start">
           <div><Label key="dapps.o-banking.pages.assets.loadingTokens" /></div>
@@ -131,13 +122,7 @@ loading = false;
     </section>
   {:else}
     {#each [circles, xdai] as token}
-      <AssetCard
-        symbol="{token.symbol}"
-        title="{token.title}"
-        balance="{token.balance}"
-        variety="{token.variety}"
-        description="{token.description}"
-        details="{token.details}" />
+      <AssetCard symbol="{token.symbol}" title="{token.title}" balance="{token.balance}" variety="{token.variety}" description="{token.description}" details="{token.details}" />
     {/each}
 
     <!-- all other ERC20s -->
