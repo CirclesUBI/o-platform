@@ -14,6 +14,7 @@ export let routable: RuntimeDapp<any>;
 
 let navigation = [];
 let actions: JumplistItem[] = [];
+let jumplistitems;
 
 onMount(async () => {
   window.o.events.subscribe((event: any) => {
@@ -21,11 +22,13 @@ onMount(async () => {
 
     runtimeDapp = event.runtimeDapp;
     routable = event.routable;
-  });
 
-  const manifestsWithJumplist = <DappManifest<any>[]>[runtimeDapp];
-  const jumplistitems = await getJumplistItems(manifestsWithJumplist, runtimeDapp);
-  actions = jumplistitems && jumplistitems.actions ? jumplistitems.actions : null;
+    const manifestsWithJumplist = <DappManifest<any>[]>[runtimeDapp];
+    getJumplistItems(manifestsWithJumplist, runtimeDapp).then((result) => {
+      jumplistitems = result;
+      actions = jumplistitems && jumplistitems.actions ? jumplistitems.actions : null;
+    });
+  });
 });
 
 $: {
