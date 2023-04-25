@@ -3,14 +3,12 @@ import { me } from "../../../shared/stores/me";
 import { onMount } from "svelte";
 
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { Capability, CapabilityType } from "../../../shared/api/data/types";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import DashboardInvitesWidget from "../molecules/DashboardInvitesWidget.svelte";
 import DashboardColorCard from "../atoms/DashboardColorCard.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 export let capabilities: Capability[] | undefined = [];
 
 $: me;
@@ -28,7 +26,7 @@ const init = async () => {
 onMount(init);
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 <div class="mx-auto md:w-2/3 xl:w-1/2">
   <div class="m-4 mt-4 mb-40">
     {#if $me && $me.__typename === "Profile" && capabilities && capabilities.find((o) => o.type === CapabilityType.Invite)}

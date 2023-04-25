@@ -7,9 +7,9 @@ import { push } from "svelte-spa-router";
 
 import { SvelteToast } from "../molecules/Toast";
 
-import { setupI18n, isLocaleLoaded, locale } from "src/i18n/i18nDictionary";
+import { setupI18n, isLocaleLoaded, locale } from "../../i18n/i18nDictionary";
 
-import LocaleSwitcher from "src/i18n/atoms/LocaleSwitcher.svelte";
+import LocaleSwitcher from "../../i18n/atoms/LocaleSwitcher.svelte";
 import { Environment } from "../environment";
 import Label from "./Label.svelte";
 

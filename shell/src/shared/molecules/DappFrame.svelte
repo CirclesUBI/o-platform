@@ -32,8 +32,8 @@ import { goToPreviouslyDesiredRouteIfExisting } from "../../dapps/o-onboarding/p
 import { Trigger } from "@o-platform/o-interfaces/dist/routables/trigger";
 import { Stopped } from "@o-platform/o-process/dist/events/stopped";
 import { Environment } from "../environment";
-import {MyInbox, unreadEventInbox} from "../stores/inbox";
-import {FollowTrustWorker} from "../../App.svelte";
+import { MyInbox, unreadEventInbox } from "../stores/inbox";
+import { FollowTrustWorker } from "../../App.svelte";
 
 export let params: {
   dappId: string;
@@ -335,27 +335,26 @@ function setNav(navArgs: GenerateNavManifestArgs) {
 }
 
 function handleNotificationEvent(event: NotificationEvent) {
-    if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
-        assetBalances.update();
-    } else if (event.type == EventType.CrcTrust) {
-        contacts.findBySafeAddress(event.to, true);
-        contacts.findBySafeAddress(event.from, true);
-        FollowTrustWorker.reset();
-    } else if (event.type == EventType.MembershipAccepted) {
-        contacts.findBySafeAddress(event.to, true);
-        contacts.findBySafeAddress(event.from, true);
-    }
-    MyInbox.update({
-        type: event.type,
-        transaction_hash: event.transaction_hash,
-    });
+  if (event.type == EventType.CrcMinting || event.type == EventType.CrcHubTransfer) {
+    assetBalances.update();
+  } else if (event.type == EventType.CrcTrust) {
+    contacts.findBySafeAddress(event.to, true);
+    contacts.findBySafeAddress(event.from, true);
+    FollowTrustWorker.reset();
+  } else if (event.type == EventType.MembershipAccepted) {
+    contacts.findBySafeAddress(event.to, true);
+    contacts.findBySafeAddress(event.from, true);
+  }
+  MyInbox.update({
+    type: event.type,
+    transaction_hash: event.transaction_hash,
+  });
 
-    unreadEventInbox.findSingleItemFallback([event.type], event.transaction_hash).then((e) => {
-        setNav({
-            ...currentNavArgs,
-
-        });
+  unreadEventInbox.findSingleItemFallback([event.type], event.transaction_hash).then((e) => {
+    setNav({
+      ...currentNavArgs,
     });
+  });
 }
 
 /**
@@ -386,7 +385,7 @@ async function init() {
     centerContainsProcess: false,
     centerIsOpen: false,
     rightIsOpen: false,
-    leftIsOpen: false
+    leftIsOpen: false,
   });
 
   if (!identityChecked && !dapp.anonymous) {
@@ -511,7 +510,6 @@ async function onCloseModal() {
 
   setNav({
     ...preModalNavArgs,
-
   });
   window.scrollTo(0, _scrollY);
 }
@@ -1150,5 +1148,4 @@ async function hideCenter() {
   pageBackgroundClass="{routable?.pageBackgroundClass ? routable.pageBackgroundClass : null}"
   on:clickedOutside="{() => {
     onRoot();
-  }}"
-  sliderPages="{[]}" />
+  }}" />

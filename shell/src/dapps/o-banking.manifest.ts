@@ -33,7 +33,7 @@ const externalChat: Link<any, DappState> = {
 const transactions: Page<any, BankingDappState> = {
   routeParts: ["=transactions"],
   component: Transactions,
-  title: "common.banking",
+  title: "dapps.o-dashboard.pages.home.banking",
   icon: "transactions",
   type: "page",
   navigation: {
@@ -227,7 +227,7 @@ export const banking: DappManifest<BankingDappState> = {
   dappId: "banking:1",
   type: "dapp",
   icon: "banking",
-  title: "common.banking",
+  title: "dapps.o-dashboard.pages.home.banking",
   routeParts: ["banking"],
   defaultRoute: ["transactions"],
   tag: Promise.resolve("alpha"),

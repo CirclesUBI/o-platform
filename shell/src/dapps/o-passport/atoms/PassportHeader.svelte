@@ -6,14 +6,13 @@ import TopNav from "../../../shared/atoms/TopNav.svelte";
 import PageHeader from "../../../shared/atoms/PageHeader.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { Profile, Organisation } from "../../../shared/api/data/types";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import Icons from "../../../shared/molecules/Icons.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
+
 let profile: Profile | Organisation;
 let displayName: string;
 
@@ -60,7 +59,7 @@ function editProfileField(onlyThesePages: string[]) {
 }
 </script>
 
-<TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<TopNav runtimeDapp="{runtimeDapp}" />
 
 <PageHeader heightClass="  h-60 sm:h-80" color="bg-passport" largeHeader="{true}">
   <div class="m-auto mb-2 w-28 sm:mb-4" role="presentation" on:click="{() => editProfileField(['file', 'avatarUrl'])}">
