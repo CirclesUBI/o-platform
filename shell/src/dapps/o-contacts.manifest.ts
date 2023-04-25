@@ -30,7 +30,7 @@ const externalChat: Link<any, DappState> = {
 const index: Page<any, DappState> = {
   routeParts: [],
   component: ContactsView,
-  title: "common.contacts",
+  title: "dapps.o-dashboard.pages.home.contacts",
   icon: "friends",
   type: "page",
   navigation: {
@@ -79,7 +79,7 @@ async function findContactActions(circlesAddress: string) {
     availableActions.push({
       key: "sendCircles",
       title: window.o.i18n("dapps.common.quickactions.sendMoney"),
-      icon: "",
+      icon: "sendmoney",
       action: () => {},
     });
   }
@@ -123,7 +123,8 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                   {
                     category: "Banking",
                     key: "transfer",
-                    icon: "cash",
+                    icon: "sendmoney",
+                    order: 3,
                     displayHint: "encouraged",
                     title: window.o.i18n("dapps.common.quickactions.sendMoney"),
                     action: async () => {
@@ -142,6 +143,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                     category: "Contacts",
                     key: "setTrust",
                     icon: "minus-circle",
+                    order: 4,
                     title: window.o.i18n("dapps.common.quickactions.untrust"),
                     displayHint: "discouraged",
                     colorClass: "text-alert",
@@ -160,7 +162,8 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
                   {
                     category: "Contacts",
                     key: "setTrust",
-                    icon: "shield-check",
+                    icon: "trust",
+                    order: 4,
                     title: window.o.i18n("dapps.common.quickactions.trust"),
                     displayHint: "encouraged",
                     action: async () => {
@@ -182,7 +185,8 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         actions = actions.concat({
           category: "Contacts",
           key: "setTrust",
-          icon: "shield-check",
+          icon: "trust",
+          order: 4,
           title: window.o.i18n("dapps.common.quickactions.trust"),
           displayHint: "encouraged",
           action: async () => {
@@ -200,6 +204,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         category: "Contacts",
         key: "setTrust",
         icon: "trust",
+        order: 4,
         displayHint: "encouraged",
         title: window.o.i18n("dapps.common.quickactions.trustNewFriend"),
         action: async () => {
@@ -215,6 +220,7 @@ const profileJumplist: Jumplist<any, ContactsDappState> = {
         category: "Contacts",
         key: "setTrust",
         icon: "qrcode",
+        order: 5,
         title: window.o.i18n("dapps.common.quickactions.scanToTrust"),
         action: async () => {
           push("#/contacts/scanToTrust/");
@@ -248,7 +254,7 @@ export const contacts: DappManifest<DappState> = {
   type: "dapp",
   dappId: "contacts:1",
   icon: "group",
-  title: "Contacts",
+  title: "dapps.o-dashboard.pages.home.contacts",
   routeParts: ["contacts"],
   defaultRoute: [],
   tag: Promise.resolve("alpha"),

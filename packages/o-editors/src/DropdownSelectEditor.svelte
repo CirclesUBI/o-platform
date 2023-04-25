@@ -7,7 +7,8 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
-import { error } from "xstate/lib/actions";
+
+import Error from "../../../shell/src/shared/atoms/Error.svelte";
 import { Profile } from "@o-platform/shell/src/shared/api/data/types";
 import { me } from "@o-platform/shell/src/shared/stores/me";
 
@@ -121,6 +122,9 @@ function toggleInputView() {
 
 {#if field}
   <div class="flex flex-col items-end form-control justify-self-center">
+    {#if context.messages[context.field]}
+      <Error message="{context.messages[context.field]}" />
+    {/if}
     {#if errorMessage}
       <div class="mt-2 mb-2 alert alert-error">
         <div class="flex-1">
@@ -190,11 +194,6 @@ function toggleInputView() {
         </div>
       {/if}
     </div>
-    {#if context.messages[context.field]}
-      <label class="text-right label" for="form-error">
-        <span id="form-error" class="label-text-alt text-error">{context.messages[context.field]}</span>
-      </label>
-    {/if}
   </div>
 {/if}
 

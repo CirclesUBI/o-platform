@@ -1,7 +1,6 @@
 <script lang="ts">
-import SimpleHeader from "src/shared/atoms/SimpleHeader.svelte";
+import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import ContactCard from "../atoms/ContactCard.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 
@@ -12,7 +11,6 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 
 type DisplayContact = Contact & { trustIn: number; trustOut: number };
 
@@ -46,12 +44,12 @@ function sortAlphabetically(a, b) {
 }
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 <div class="px-4 mx-auto mt-8 mb-20 md:w-2/3 xl:w-1/2">
   {#if !displayContacts}
-    <section class="flex items-center justify-center mb-2 ">
-      <div class="flex items-center w-full p-4 space-x-2 bg-white shadow ">
+    <section class="flex items-center justify-center mb-2">
+      <div class="flex items-center w-full p-4 space-x-2 bg-white shadow">
         <div class="flex flex-col items-start">
           <div><Label key="dapps.o-contacts.pages.contacts.loadingContacts" /></div>
         </div>
@@ -63,7 +61,7 @@ function sortAlphabetically(a, b) {
       <ContactCard contact="{contact}" />
     {/each}
     {#if displayContacts.length === 0}
-      <section class="flex items-center justify-center mb-2 ">
+      <section class="flex items-center justify-center mb-2">
         <div class="flex items-center w-full p-4 space-x-2 bg-white rounded-lg shadow">
           <div class="flex flex-col items-start text-center">
             <div><Label key="dapps.o-contacts.pages.contacts.noEntries" /></div>

@@ -164,7 +164,7 @@ onMount(() => {
 
 <section class="flex flex-col items-center justify-center p-6 space-y-4">
   <div class="w-full text-center">
-    <h1 class="text-3xl uppercase font-heading">{$_("dapps.o-contacts.pages.scanToTrust.scanProfileQR")}</h1>
+    <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">{$_("dapps.o-contacts.pages.scanToTrust.scanProfileQR")}</h1>
   </div>
   <div class="w-full text-center">
     <span class="break-all text-alert-dark">{statusText}</span>

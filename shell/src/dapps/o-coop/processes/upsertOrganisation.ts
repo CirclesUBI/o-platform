@@ -53,7 +53,10 @@ const processDefinition = (processId: string) =>
             submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.submitButtonText"),
           },
         },
-        dataSchema: yup.string().required(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.enterOrganisationName")),
+        dataSchema: yup
+          .string()
+          .required(window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.enterOrganisationName"))
+          .max(40, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.name.maximumChars")),
         navigation: {
           next: "#description",
         },
@@ -63,13 +66,14 @@ const processDefinition = (processId: string) =>
         component: TextareaEditor,
         params: {
           view: {
+            maxLength: "250",
             title: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.title"),
             description: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.description"),
             placeholder: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.placeholder"),
             submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.submitButtonText"),
           },
         },
-        dataSchema: yup.string().nullable().notRequired().max(150, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")),
+        dataSchema: yup.string().nullable().notRequired().max(250, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")),
         navigation: {
           next: "#location",
           canSkip: () => false,

@@ -1,15 +1,13 @@
 <script lang="ts">
 import { me } from "../../../shared/stores/me";
-import TopNav from "src/shared/atoms/TopNav.svelte";
-import PageHeader from "src/shared/atoms/PageHeader.svelte";
+import TopNav from "../../../shared/atoms/TopNav.svelte";
+import PageHeader from "../../../shared/atoms/PageHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 $: me;
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 let name: string = "";
 
 $: {
@@ -19,7 +17,7 @@ $: {
 }
 </script>
 
-<TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<TopNav runtimeDapp="{runtimeDapp}" />
 
 <PageHeader heightClass="h-28">
   <div class="self-center flex-grow text-center justify-self-start">

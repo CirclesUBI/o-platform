@@ -97,7 +97,7 @@ let prev_filterText;
 let prev_isFocused;
 let prev_filteredItems;
 let displayableSelectedValue = null;
-let buttonDisabled = "";
+let buttonDisabled = "disabled";
 async function resetFilter() {
   await tick();
   filterText = "";
@@ -222,6 +222,7 @@ $: {
     _filteredItems = JSON.parse(originalItemsClone);
     _items = JSON.parse(originalItemsClone);
   } else {
+    buttonDisabled = "disabled";
     _filteredItems = _items
       ? _items.filter((item) => {
           let keepItem = true;
@@ -285,10 +286,7 @@ beforeUpdate(() => {
   }
 
   if (!isMulti && selectedValue && prev_selectedValue !== selectedValue) {
-    if (
-      !prev_selectedValue ||
-      JSON.stringify(selectedValue[optionIdentifier]) !== JSON.stringify(prev_selectedValue[optionIdentifier])
-    ) {
+    if (!prev_selectedValue || JSON.stringify(selectedValue[optionIdentifier]) !== JSON.stringify(prev_selectedValue[optionIdentifier])) {
       dispatch("select", selectedValue);
     }
   }
@@ -409,13 +407,7 @@ function findItem(selection) {
 // Updates the list of results //
 function updateSelectedValueDisplay(items) {
   if (!items || items.length === 0 || items.some((item) => typeof item !== "object")) return;
-  if (
-    !selectedValue ||
-    (isMulti
-      ? selectedValue.some((selection) => !selection || !selection[optionIdentifier])
-      : !selectedValue[optionIdentifier])
-  )
-    return;
+  if (!selectedValue || (isMulti ? selectedValue.some((selection) => !selection || !selection[optionIdentifier]) : !selectedValue[optionIdentifier])) return;
 
   if (Array.isArray(selectedValue)) {
     selectedValue = selectedValue.map((selection) => findItem(selection) || selection);
@@ -627,7 +619,7 @@ async function loadList() {
 
     if (detail) {
       const item = Object.assign({}, detail);
-
+      buttonDisabled = "";
       if (!item.isGroupHeader || item.isSelectable) {
         if (isMulti) {
           selectedValue = selectedValue ? selectedValue.concat([item]) : [item];

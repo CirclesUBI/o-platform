@@ -25,7 +25,7 @@ const externalChat: Link<any, DappState> = {
 const index: Page<any, DappState> = {
   routeParts: ["=profile"],
   component: Home,
-  title: "common.profile",
+  title: "dapps.o-dashboard.pages.home.passport",
   icon: "myProfile",
   type: "page",
   navigation: {
@@ -122,7 +122,7 @@ let myProfile: Profile = null;
 export const passport: DappManifest<DappState> = {
   type: "dapp",
   dappId: "passport:1",
-  title: "Passport",
+  title: "dapps.o-dashboard.pages.home.passport",
   icon: "passport",
   routeParts: ["=passport"],
   defaultRoute: ["passport"],
@@ -137,6 +137,7 @@ export const passport: DappManifest<DappState> = {
         <JumplistItem>{
           category: "Passport",
           key: "logout",
+          order: 1,
           type: "action",
           title: window.o.i18n("dapps.common.quickactions.logout"),
           icon: "logout",

@@ -87,11 +87,11 @@ let promise = getJumplist();
   </div>
 {:else}
   <div class="p-5">
-    <header class="grid overflow-hidden bg-white h-72 ">
+    <header class="grid overflow-hidden bg-white h-72">
       <div class="w-full text-center">
-        <h1 class="text-3xl uppercase font-heading"><Label key="dapps.o-coop.pages.organisationDetail.profile" /></h1>
+        <h1 class="text-3xl uppercase font-heading text-heading tracking-normal"><Label key="dapps.o-coop.pages.organisationDetail.profile" /></h1>
       </div>
-      <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center ">
+      <div class="flex flex-col items-center self-center w-full m-auto text-center justify-self-center">
         <UserImage profile="{profile}" size="{36}" profileLink="{false}" />
 
         {#if profile && profile.circlesAddress}
@@ -106,7 +106,7 @@ let promise = getJumplist();
         <div class="">
           {#if profile && profile.circlesAddress}
             {#if profile.trustsYou}
-              <section class="justify-center mb-2 ">
+              <section class="justify-center mb-2">
                 <div class="flex flex-col w-full pt-2 space-y-1">
                   <div class="text-left text-2xs text-dark-lightest">
                     <Label key="dapps.o-coop.pages.organisationDetail.trust" />
@@ -120,7 +120,7 @@ let promise = getJumplist();
               </section>
             {/if}
 
-            <section class="justify-center mb-2 ">
+            <section class="justify-center mb-2">
               <div class="flex flex-col w-full pt-2 space-y-1">
                 <div class="text-left text-2xs text-dark-lightest">
                   <Label key="dapps.o-coop.pages.organisationDetail.description" />
@@ -129,9 +129,7 @@ let promise = getJumplist();
                 <div class="flex items-center w-full text-lg">
                   {#if profile && profile.description}{profile.description}{/if}
                   {#if isEditable}
-                    <button
-                      class="link link-primary text-primary text-2xs"
-                      on:click="{() => editProfile({ dream: true })}">
+                    <button class="link link-primary text-primary text-2xs" on:click="{() => editProfile({ dream: true })}">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
                         <path
                           d="M13.586 3.586a2 2 0 112.828

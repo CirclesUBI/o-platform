@@ -27,6 +27,7 @@ let visible: boolean = false;
 let link: string;
 let showShareOptions: boolean = false;
 let mapHeight = "16em";
+let nextEventTimeString: string = "";
 
 const mapOptions = {
   zoomControl: true,
@@ -128,6 +129,19 @@ onMount(async () => {
 
     if (hours[currentDateIndex].hours) {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
+
+      // Determine the next time the shop closes or opens
+      if (isOpenNow) {
+        let nextTimes = hours[currentDateIndex].hours[0].split("-");
+        nextEventTimeString = ` - ${$_("dapps.o-marketlisting.pages.marketListingDetail.closes")} ${nextTimes[1]}`;
+      } else {
+        let nextEntry = hours.find((entry, index) => index > currentDateIndex && entry.hours[0] !== "");
+        if (nextEntry == undefined) {
+          nextEntry = hours.find((entry, index) => index >= 0 && entry.hours[0] !== "");
+        }
+        let nextTimes = nextEntry.hours[0].split("-");
+        nextEventTimeString = ` - ${$_("dapps.o-marketlisting.pages.marketListingDetail.opens")} ${$_(nextEntry.day)} ${nextTimes[0]}`;
+      }
     } else {
       noData = true;
     }
@@ -135,7 +149,7 @@ onMount(async () => {
     if (!isMe) {
       availableActions.push({
         key: "transfer",
-        icon: "cash",
+        icon: "sendmoney",
         title: window.o.i18n("shared.userActions.sendMoney"),
         action: async () => {
           window.o.runProcess(transfer, {
@@ -163,11 +177,13 @@ function checkIsOpenNow(timesArray) {
   let open = false;
 
   if (timesArray) {
-    timesArray.forEach(function (times) {
+    timesArray.forEach(function (times, index) {
       if (open) {
         return true;
       }
+
       times = times.split("-");
+
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
@@ -213,61 +229,18 @@ async function shareLink() {
     </div>
     <div class="flex justify-between">
       <div class="flex flex-col">
-        <h1 class="mt-3 font-bold break-all font-heading text-heading">{business.name}</h1>
+        <div class="mb-0 text-4xl font-bold tracking-normal break-all font-heading text-heading">{business.name}</div>
+        <div class="flex flex-row w-full pt-0 mt-0 text-xl text-grey font-heading">
+          {business.businessCategory ? business.businessCategory : ""}
+        </div>
         {#if business.description}
-          <p class="text-black break-all"><Label text="{business.description}" /></p>
+          <p class="mt-2 text-black break-all"><Label text="{business.description}" /></p>
         {/if}
       </div>
-      <div class="mr-12">
-        <DetailActionBar actions="{availableActions}" />
-      </div>
     </div>
-
-    <div class="flex flex-row w-full mt-3">
-      <p class="flex-grow text-xl text-grey font-heading">
-        {business.businessCategory ? business.businessCategory : ""}
-      </p>
+    <div class="flex justify-start pt-4">
+      <DetailActionBar actions="{availableActions}" />
     </div>
-
-    {#if !showShareOptions}
-      <button
-        class="mt-3 text-base rounded-full font-heading btn btn-outline btn-sm"
-        on:click="{() => {
-          showShareOptions = !showShareOptions;
-        }}">
-        <span><Icons icon="share" customClass="w-4 h-4" /></span>
-        <p class="pl-1">Share</p>
-      </button>
-    {/if}
-
-    {#if showShareOptions}
-      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-3">
-        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
-          <CopyClipboard text="{link}" let:copy>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div on:click="{copy}">
-              <Icon name="link" class="self-center inline w-10 h-10 p-2 heroicon smallicon" />
-            </div>
-          </CopyClipboard>
-        </div>
-
-        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
-          <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
-            <Icon name="mail" class="inline w-10 h-10 p-2 heroicon smallicon" />
-          </a>
-        </div>
-        <div class="-mt-1 text-center cursor-pointer whatsapp">
-          <a href="https://wa.me/?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
-            <Icons icon="whatsapp" customClass="inline" size="{12}" />
-          </a>
-        </div>
-        <div class="text-center cursor-pointer telegram">
-          <a href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
-            <Icons icon="telegram" customClass="inline" size="{10}" />
-          </a>
-        </div>
-      </div>
-    {/if}
 
     {#if !noData}
       <div class="flex pt-4 mt-4 text-black border-t-2">
@@ -279,9 +252,19 @@ async function shareLink() {
               visible = !visible;
             }}">
             <div>
-              <Label key="dapps.o-marketplace.molecules.checkoutDelivery.openingHours" />
-              <span
-                >{@html isOpenNow ? "<span class='text-success'>Open</span>" : "<span class='text-alert'>Closed</span>"}
+              <Icon name="clock" class="inline w-5 h-5 -mt-1 -ml-1" />
+              <span>
+                {#if isOpenNow}
+                  <span class="text-success">
+                    <Label key="common.open" />
+                  </span>
+                {:else}
+                  <span class="text-alert">
+                    <Label key="common.closed" />
+                  </span>
+                {/if}
+                {nextEventTimeString}
+
                 {#if visible}
                   <Icon name="chevron-up" class="inline w-5 h-5 -mt-1 -ml-1" />
                 {:else}
@@ -324,6 +307,47 @@ async function shareLink() {
           placeName="{business.name}" />
       {/if}
     </div>
+    {#if !showShareOptions}
+      <div class="flex flex-row justify-center w-full mt-3 mb-3">
+        <button
+          class="mt-3 text-base rounded-full font-heading btn btn-outline btn-sm"
+          on:click="{() => {
+            showShareOptions = !showShareOptions;
+          }}">
+          <span><Icons icon="share" customClass="w-4 h-4" /></span>
+          <p class="pl-1">Share</p>
+        </button>
+      </div>
+    {/if}
+
+    {#if showShareOptions}
+      <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-6 mb-3">
+        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
+          <CopyClipboard text="{link}" let:copy>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div on:click="{copy}">
+              <Icon name="link" class="self-center inline w-10 h-10 p-2 heroicon smallicon" />
+            </div>
+          </CopyClipboard>
+        </div>
+
+        <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
+          <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+            <Icon name="mail" class="inline w-10 h-10 p-2 heroicon smallicon" />
+          </a>
+        </div>
+        <div class="-mt-1 text-center cursor-pointer whatsapp">
+          <a href="https://wa.me/?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+            <Icons icon="whatsapp" customClass="inline" size="{12}" />
+          </a>
+        </div>
+        <div class="text-center cursor-pointer telegram">
+          <a href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+            <Icons icon="telegram" customClass="inline" size="{10}" />
+          </a>
+        </div>
+      </div>
+    {/if}
   {:else}
     <p>{$_("dapps.o-marketlisting.pages.marketListingDetail.loadingDetails")}</p>
   {/if}

@@ -1,17 +1,15 @@
 <script lang="ts">
 import TopNav from "../atoms/TopNav.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import { _ } from "svelte-i18n";
 import Label from "../atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 </script>
 
-<div class="flex flex-col overflow-hidden ">
+<div class="flex flex-col overflow-hidden">
   <main class="h-screen overflow-hidden">
-    <TopNav runtimeDapp="{runtimeDapp}" routable="{routable}" />
+    <TopNav runtimeDapp="{runtimeDapp}" />
 
     <div class="flex items-center justify-center w-full min-h-screen bg-gray-100">
       <div class="flex flex-col text-gray-700 lg:flex-row lg:space-x-16 lg:space-x-reverse">
