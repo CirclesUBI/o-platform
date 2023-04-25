@@ -19,8 +19,8 @@ const eventDispatcher = createEventDispatcher();
 export let layout: RuntimeLayout;
 export let navigation: NavigationManifest;
 export let pageBackgroundClass: string = null;
-export let isSurveyPage: boolean;
-export let isNotFoundPage: boolean;
+export let isSurveyPage: boolean = false;
+export let isNotFoundPage: boolean = false;
 
 $: {
   const url = window.location.href;
@@ -162,7 +162,7 @@ function onkeydown(e: KeyboardEvent) {
     {/await}
   {/if}
   {#if navigation && !isSurveyPage}
-    <NextNav navigation="{navigation}" runtimeDapp="{layout.main.runtimeDapp}" isNotFoundPage="{isNotFoundPage}" />
+    <NextNav navigation="{navigation}" isNotFoundPage="{isNotFoundPage}" />
   {/if}
 
   {#if layout.dialogs.center && layout.dialogs.center.isOpen}

@@ -1,7 +1,5 @@
 <script lang="ts">
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
-
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import TreeView from "./TreeView.svelte";
 import EditorView from "./EditorView.svelte";
@@ -20,7 +18,6 @@ import { Environment } from "../../../shared/environment";
 import { CTreeNode } from "../classes/treenode";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 
 let keyFilter: string = "";
 let stringFilter: string = "";
@@ -62,31 +59,20 @@ async function getPaginatedStrings(pagination_key: string, searchKey: string, la
   i18nData = i18nData.concat(queryResult);
 }
 
-async function getPaginatedStringsToUpdate(
-  pagination_key: string,
-  searchKey: string,
-  lang: string,
-  searchString: string
-) {
-  let queryResult = await ApiClient.query<I18n[], QueryGetPaginatedStringsToUpdateArgs>(
-    GetPaginatedStringsToUpdateDocument,
-    {
-      key: searchKey,
-      pagination_key: pagination_key,
-      lang: lang,
-      value: generateSearchPattern(searchString),
-    }
-  );
+async function getPaginatedStringsToUpdate(pagination_key: string, searchKey: string, lang: string, searchString: string) {
+  let queryResult = await ApiClient.query<I18n[], QueryGetPaginatedStringsToUpdateArgs>(GetPaginatedStringsToUpdateDocument, {
+    key: searchKey,
+    pagination_key: pagination_key,
+    lang: lang,
+    value: generateSearchPattern(searchString),
+  });
   i18nData = i18nData.concat(queryResult);
 }
 
 async function getTreeData(userLanguage: string) {
-  const queryResult = await ApiClient.query<I18n[], QueryGetAllStringsByMaxVersionAndLangArgs>(
-    GetAllStringsByMaxVersionAndLangDocument,
-    {
-      lang: userLanguage,
-    }
-  );
+  const queryResult = await ApiClient.query<I18n[], QueryGetAllStringsByMaxVersionAndLangArgs>(GetAllStringsByMaxVersionAndLangDocument, {
+    lang: userLanguage,
+  });
   treeData = queryResult;
   return queryResult;
 }
@@ -100,19 +86,16 @@ async function createTree(rootData: I18n[]): Promise<CTreeNode> {
 }
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 <section class="p-6 inline-grid grid-cols-4 w-full min-h-[85vh] mb-[10vh]">
-  <div class="h-full bg-blue-900 bg-opacity-50 col-span-1">
+  <div class="h-full col-span-1 bg-blue-900 bg-opacity-50">
     <TreeView
       searchString="{stringFilter}"
       language="{userLanguage}"
       displayedTree="{displayedTree}"
       on:showStrings="{(event) => {
-        if (
-          !keyFilter.split('.').includes(event.detail.searchKey.split('.')[0]) ||
-          keyFilter !== event.detail.searchKey
-        ) {
+        if (!keyFilter.split('.').includes(event.detail.searchKey.split('.')[0]) || keyFilter !== event.detail.searchKey) {
           i18nData = [];
         }
         keyFilter = event.detail.searchKey;
@@ -125,10 +108,7 @@ async function createTree(rootData: I18n[]): Promise<CTreeNode> {
         getPaginatedStrings('', event.detail.keyFilter, userLanguage, '');
       }}"
       on:getStringsToUpdate="{(event) => {
-        if (
-          !keyFilter.split('.').includes(event.detail.searchKey.split('.')[0]) ||
-          keyFilter !== event.detail.searchKey
-        ) {
+        if (!keyFilter.split('.').includes(event.detail.searchKey.split('.')[0]) || keyFilter !== event.detail.searchKey) {
           i18nData = [];
         }
         keyFilter = event.detail.searchKey;

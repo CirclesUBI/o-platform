@@ -1,38 +1,31 @@
 <script lang="ts">
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
-import { Routable } from "@o-platform/o-interfaces/dist/routable";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import Label from "../../../shared/atoms/Label.svelte";
 import OpeningHours from "../molecules/OpeningHoursEditor.svelte";
 import StandardHeaderBox from "../../../shared/atoms/StandardHeaderBox.svelte";
-
 import { BusinessCategory, Businesses, UpsertOrganisationDocument, UpsertOrganisationMutation, UpsertOrganisationMutationVariables } from "../../../shared/api/data/types";
-
 import { onMount } from "svelte";
 import { Environment } from "../../../shared/environment";
 import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
 import { ApiClient } from "../../../shared/apiConnection";
-
 import { setupI18n, isLocaleLoaded, _ } from "src/i18n/i18nDictionary";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
 import { showToast } from "../../../shared/toast";
-
 import Center from "../../../shared/layouts/Center.svelte";
 import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelte";
 import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
-import { myLocation } from "../../../shared/stores/myLocation";
 
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import GoogleMapSearch from "../../../shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 import Geolocation from "svelte-geolocation";
 
 export let runtimeDapp: RuntimeDapp<any>;
-export let routable: Routable;
 export let circlesAddress: string;
 
 export let business: Businesses;
@@ -187,7 +180,7 @@ function mapRecenter({ place }) {
 }
 </script>
 
-<SimpleHeader runtimeDapp="{runtimeDapp}" routable="{routable}" />
+<SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 {#if !business}
   <div class="pb-20 mx-auto md:w-2/3 xl:w-1/2">
