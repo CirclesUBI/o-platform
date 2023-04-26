@@ -16,9 +16,9 @@ function handleLocaleChange(event) {
 
 <div class="text-base locale-selector">
   <div class="">
-    <select class="relative -top-3 sm:-top-1 select select-sm" value="{value}" on:change="{handleLocaleChange}">
-      <option value="en">en</option>
-      <option value="id">id</option>
+    <select class="relative bg-transparent -top-3 sm:-top-1 select select-xs text-grey-dark" value="{value}" on:change="{handleLocaleChange}">
+      <option value="en">EN</option>
+      <option value="id">ID</option>
     </select>
   </div>
 </div>
