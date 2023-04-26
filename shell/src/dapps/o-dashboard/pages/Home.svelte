@@ -28,7 +28,7 @@ onMount(init);
 
 <SimpleHeader runtimeDapp="{runtimeDapp}" />
 <div class="mx-auto md:w-2/3 xl:w-1/2">
-  <div class="m-4 mt-4 mb-40">
+  <div class="m-4 mt-4 mb-40 xs:mt-12">
     {#if $me && $me.__typename === "Profile" && capabilities && capabilities.find((o) => o.type === CapabilityType.Invite)}
       <DashboardInvitesWidget />
     {/if}
