@@ -1,6 +1,7 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import ItemCard from "../../../shared/atoms/ItemCard.svelte";
+import { _ } from "../../../i18n/i18nDictionary";
 
 export let symbol: string;
 export let title: string;
@@ -13,19 +14,11 @@ let varietyDetail;
 
 $: {
   pictureUrl = symbol;
-  varietyDetail =
-    variety == 0 || variety == 1
-      ? title
-      : variety
-      ? variety + " different " + title
-      : "";
+  varietyDetail = variety == 0 || variety == 1 ? title : variety ? variety + $_("dapps.banking.atoms.assetCard.different") + title : "";
 }
 </script>
 
-<div
-  role="presentation"
-  on:click="{() => push(`#/banking/assets/${symbol}`)}"
-  class="cursor-pointer">
+<div role="presentation" on:click="{() => push(`#/banking/assets/${symbol}`)}" class="cursor-pointer">
   <ItemCard
     params="{{
       edgeless: false,

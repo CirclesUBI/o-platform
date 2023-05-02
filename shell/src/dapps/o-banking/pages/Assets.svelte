@@ -13,6 +13,7 @@ import ItemCard from "../../../shared/atoms/ItemCard.svelte";
 import { assetBalances } from "../../../shared/stores/assetsBalances";
 import { BN } from "ethereumjs-util";
 import Label from "../../../shared/atoms/Label.svelte";
+import { _ } from "../../../i18n/i18nDictionary";
 
 export let runtimeDapp: RuntimeDapp<any>;
 
@@ -32,7 +33,7 @@ let circles = {
   icon: "",
   balance: "ß",
   variety: 0,
-  title: "TimeCircles",
+  title: $_("common.timeCircles"),
   description: "1 Circle = 1€",
   details: [],
 };

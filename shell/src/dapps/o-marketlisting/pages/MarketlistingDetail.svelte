@@ -234,7 +234,7 @@ async function shareLink() {
           {business.businessCategory ? business.businessCategory : ""}
         </div>
         {#if business.description}
-          <p class="mt-2 text-black break-all"><Label text="{business.description}" /></p>
+          <p class="mt-2 text-black break-word"><Label text="{business.description}" /></p>
         {/if}
       </div>
     </div>
@@ -315,7 +315,7 @@ async function shareLink() {
             showShareOptions = !showShareOptions;
           }}">
           <span><Icons icon="share" customClass="w-4 h-4" /></span>
-          <p class="pl-1">Share</p>
+          <p class="pl-1"><Label key="common.share" /></p>
         </button>
       </div>
     {/if}
