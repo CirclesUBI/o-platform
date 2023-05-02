@@ -20,10 +20,21 @@ import ImageUpload from "../../../shared/molecules/ImageUpload/ImageUpload.svelt
 import { uploadFile } from "../../../shared/api/uploadFile";
 import { useMachine } from "@xstate/svelte";
 import { Readable } from "svelte/store";
-
+import { form, field } from "svelte-forms";
+import { required, max } from "svelte-forms/validators";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import GoogleMapSearch from "../../../shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 import Geolocation from "svelte-geolocation";
+
+const name = field("name", "", [required(), max(50)], {
+  validateOnChange: true,
+});
+
+const description = field("description", "", [required(), max(250)], {
+  validateOnChange: true,
+});
+
+const myForm = form(name, description);
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let circlesAddress: string;
@@ -63,6 +74,8 @@ const mapOptions = {
 
 let center = {};
 
+myForm.validate();
+
 onMount(async () => {
   center = { lat: -8.670458, lng: 115.212631 };
 
@@ -83,7 +96,8 @@ onMount(async () => {
   business = businesses.allBusinesses[0];
   if (business) {
     week = OpeningHourWeek.parseOpeningHours(business);
-    console.log("BUSIN:", business);
+    $description.value = business.description;
+    $name.value = business.name;
   }
 });
 
@@ -96,7 +110,7 @@ async function save() {
       organisation: {
         id: business.id <= 0 ? 0 : business.id,
         circlesAddress: business.circlesAddress,
-        firstName: business.name,
+        firstName: $name.value,
         location: business.location,
         locationName: business.locationName,
         lat: business.lat,
@@ -109,7 +123,7 @@ async function save() {
         businessHoursFriday: business.businessHoursFriday,
         businessHoursSaturday: business.businessHoursSaturday,
         businessHoursSunday: business.businessHoursSunday,
-        description: business.description,
+        description: $description.value,
         phoneNumber: business.phoneNumber,
         businessCategoryId: business.businessCategoryId,
       },
@@ -220,16 +234,28 @@ function mapRecenter({ place }) {
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.name" />
                   <div class="flex mt-2">
-                    <input class="w-full input input-bordered" bind:value="{business.name}" type="text" />
+                    <input class="w-full input input-bordered" bind:value="{$name.value}" type="text" />
                   </div>
+                  {#if $myForm.hasError("name.max")}
+                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameMaxLength" /></div>
+                  {/if}
+                  {#if $myForm.hasError("name.required")}
+                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameRequired" /></div>
+                  {/if}
                 </div>
               </div>
               <div class="flex flex-col">
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.description" />
                   <div class="flex mt-2">
-                    <textarea class="w-full textarea textarea-bordered" bind:value="{business.description}"></textarea>
+                    <textarea class="w-full textarea textarea-bordered" bind:value="{$description.value}"></textarea>
                   </div>
+                  {#if $myForm.hasError("description.max")}
+                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionMaxLength" /></div>
+                  {/if}
+                  {#if $myForm.hasError("description.required")}
+                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionRequired" /></div>
+                  {/if}
                 </div>
               </div>
             </div>
@@ -389,7 +415,10 @@ function mapRecenter({ place }) {
         {#if error}
           <span class="text-sm text-center text-alert">{error}</span>
         {/if}
-        <button class="btn btn-primary" on:click="{() => save()}"><Label key="common.save" /></button>
+        {#if !$myForm.valid}
+          <div class="text-sm text-center text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.correctErrorsAbove" /></div>
+        {/if}
+        <button class="btn btn-primary" disabled="{!$myForm.valid}" on:click="{() => save()}"><Label key="common.save" /></button>
       </div>
     </section>
   </div>
