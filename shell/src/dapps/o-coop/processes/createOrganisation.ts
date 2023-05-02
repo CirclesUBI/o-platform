@@ -76,7 +76,7 @@ const processDefinition = (processId: string) =>
             submitButtonText: window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.submitButtonText"),
           },
         },
-        dataSchema: yup.string().nullable().notRequired().max(150, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")),
+        dataSchema: yup.string().nullable().notRequired().max(250, window.o.i18n("dapps.o-coop.processes.createOrganisations.createOrganisationContext.description.maximumChars")),
         navigation: {
           next: "#location",
           canSkip: () => false,
