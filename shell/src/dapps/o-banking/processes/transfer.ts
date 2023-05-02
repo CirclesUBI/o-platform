@@ -1,7 +1,7 @@
 import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
 import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
 import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
-import {createMachine} from "xstate";
+import { createMachine } from "xstate";
 import { prompt } from "@o-platform/o-process/dist/states/prompt";
 import CurrencyTransfer from "@o-platform/o-editors/src/CurrencyTransfer.svelte";
 import { ipc } from "@o-platform/o-process/dist/triggers/ipc";
@@ -17,13 +17,9 @@ import { promptCirclesSafe } from "../../../shared/api/promptCirclesSafe";
 import { SetTrustContext } from "./setTrust";
 import { loadProfileByProfileId } from "../../../shared/api/loadProfileByProfileId";
 import { loadProfileBySafeAddress } from "../../../shared/api/loadProfileBySafeAddress";
-
 import { me } from "../../../shared/stores/me";
-import {DirectPathDocument, Profile, QueryDirectPathArgs} from "../../../shared/api/data/types";
-import {
-  convertCirclesToTimeCircles,
-  convertTimeCirclesToCircles
-} from "../../../shared/functions/displayCirclesAmount";
+import { DirectPathDocument, Profile, QueryDirectPathArgs } from "../../../shared/api/data/types";
+import { convertCirclesToTimeCircles, convertTimeCirclesToCircles } from "../../../shared/functions/displayCirclesAmount";
 import { TransactionReceipt } from "web3-core";
 import TransferSummary from "../atoms/TransferSummary.svelte";
 import TransferConfirmation from "../atoms/TransferConfirmation.svelte";
@@ -86,9 +82,7 @@ const editorContent: { [x: string]: EditorViewContext } = {
     title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipientSafeAddress.title"),
     description: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipientSafeAddress.description"),
     placeholder: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipientSafeAddress.placeholder"),
-    submitButtonText: window.o.i18n(
-      "dapps.o-banking.processes.transfer.editorContent.recipientSafeAddress.submitButtonText"
-    ),
+    submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipientSafeAddress.submitButtonText"),
   },
   currency: {
     title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.currency.title"),
@@ -140,9 +134,7 @@ const processDefinition = (processId: string) =>
 
               const hasSender = web3.utils.isAddress(context.data.safeAddress);
               const hasRecipient = web3.utils.isAddress(context.data.recipientAddress);
-              const amount = new BN(
-                !context.data.tokens?.amount ? "0" : web3.utils.toWei(context.data.tokens?.amount?.toString(), "ether")
-              );
+              const amount = new BN(!context.data.tokens?.amount ? "0" : web3.utils.toWei(context.data.tokens?.amount?.toString(), "ether"));
               const hasAmount = amount.gt(new BN("0"));
               //const isXdai = context.data.tokens?.currency == "xdai";
 
@@ -175,13 +167,9 @@ const processDefinition = (processId: string) =>
             title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipient.title"),
             description: "",
             placeholder: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipient.placeholder"),
-            submitButtonText: window.o.i18n(
-              "dapps.o-banking.processes.transfer.editorContent.recipient.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipient.submitButtonText"),
           }),
-          placeholder: (editorContent.recipient.placeholder = window.o.i18n(
-            "dapps.o-banking.processes.transfer.editorContent.recipient.placeholder"
-          )),
+          placeholder: (editorContent.recipient.placeholder = window.o.i18n("dapps.o-banking.processes.transfer.editorContent.recipient.placeholder")),
           submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.recipientAddress.submitButtonText"),
         },
         navigation: {
@@ -224,10 +212,10 @@ const processDefinition = (processId: string) =>
         invoke: {
           id: "getMaxFlow",
           src: async (context) => {
-            let flow:any = {
-              isValid: false
+            let flow: any = {
+              isValid: false,
             };
-            let amount = "0"
+            let amount = "0";
 
             /*
             let tries = 0;
@@ -244,7 +232,6 @@ const processDefinition = (processId: string) =>
               }
               tries++;
             }*/
-
 
             flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
               from: context.data.safeAddress,
@@ -300,16 +287,12 @@ const processDefinition = (processId: string) =>
           view: (editorContent.currency = {
             title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.currency.title"),
             description: "",
-            submitButtonText: window.o.i18n(
-              "dapps.o-banking.processes.transfer.editorContent.currency.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.currency.submitButtonText"),
           }),
           currencies: [
             {
               value: "crc",
-              label: (strings.currencyCircles = window.o.i18n(
-                "dapps.o-banking.processes.transfer.strings.currencyCircles"
-              )),
+              label: (strings.currencyCircles = window.o.i18n("dapps.o-banking.processes.transfer.strings.currencyCircles")),
               __typename: "Currency",
             },
             {
@@ -348,10 +331,7 @@ const processDefinition = (processId: string) =>
               throw new Error(window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.invoke"));
             }
 
-            const amount = new Currency().convertTimeCirclesToCircles(
-              Number.parseFloat(context.data.tokens.amount),
-              null
-            );
+            const amount = new Currency().convertTimeCirclesToCircles(Number.parseFloat(context.data.tokens.amount), null);
 
             const circlesValueInWei = RpcGateway.get()
               .utils.toWei(amount.toString() ?? "0", "ether")
@@ -366,15 +346,18 @@ const processDefinition = (processId: string) =>
             // context.data.maxFlows["crc"] = flow.flow;
             context.data.transitivePath = flow;
           },
-          onDone: [{
-            target: "#checkAmount",
-            cond: (context) => (<any>context?.data?.transitivePath).isValid
-          }, {
-            target: "#tokens",
-            actions: (context) => {
-              context.messages["tokens"] = window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.tryWithSmallerAmount");
-            }
-          }],
+          onDone: [
+            {
+              target: "#checkAmount",
+              cond: (context) => (<any>context?.data?.transitivePath).isValid,
+            },
+            {
+              target: "#tokens",
+              actions: (context) => {
+                context.messages["tokens"] = window.o.i18n("dapps.o-banking.processes.transfer.findTransferPath.tryWithSmallerAmount");
+              },
+            },
+          ],
           onError: "#error",
         },
       },
@@ -388,13 +371,7 @@ const processDefinition = (processId: string) =>
               const maxFlowInWei = new BN(context.data.maxFlows[context.data.tokens.currency.toLowerCase()]);
               console.log("maxFlowInWei", maxFlowInWei);
 
-              const amount =
-                context.data.tokens.currency == "crc"
-                  ? convertTimeCirclesToCircles(
-                      Number.parseFloat(context.data.tokens.amount),
-                      null
-                    ).toString()
-                  : context.data.tokens.amount;
+              const amount = context.data.tokens.currency == "crc" ? convertTimeCirclesToCircles(Number.parseFloat(context.data.tokens.amount), null).toString() : context.data.tokens.amount;
 
               const circlesValueInWei = new BN(
                 RpcGateway.get()
@@ -403,9 +380,7 @@ const processDefinition = (processId: string) =>
               );
 
               if (maxFlowInWei.lt(circlesValueInWei) || context.data.transitivePath.transfers.length == 0) {
-                console.log(
-                  `The max flow is smaller than the entered value (${circlesValueInWei}). Max flow: ${maxFlowInWei}`
-                );
+                console.log(`The max flow is smaller than the entered value (${circlesValueInWei}). Max flow: ${maxFlowInWei}`);
               }
 
               return maxFlowInWei.gte(circlesValueInWei) && context.data.transitivePath.transfers.length != 0;
@@ -421,17 +396,15 @@ const processDefinition = (processId: string) =>
 
               let formattedMax: string = "0.00";
               if (context.data.maxFlows[context.data.tokens.currency.toLowerCase()] != "") {
-                formattedMax =
-                    Math.floor(convertCirclesToTimeCircles(parseFloat(
-                    RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether")
-                      .toString()), new Date().toJSON()
-                  )).toFixed(0);
+                formattedMax = Math.floor(
+                  convertCirclesToTimeCircles(
+                    parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[context.data.tokens.currency.toLowerCase()], "ether").toString()),
+                    new Date().toJSON()
+                  )
+                ).toFixed(0);
               }
 
-              context.messages["tokens"] = window.o.i18n(
-                "dapps.o-banking.processes.transfer.checkAmount.contextMessages",
-                { values: { formattedMax: formattedMax } }
-              );
+              context.messages["tokens"] = window.o.i18n("dapps.o-banking.processes.transfer.checkAmount.contextMessages", { values: { formattedMax: formattedMax } });
             },
             target: "#tokens",
           },
@@ -444,9 +417,7 @@ const processDefinition = (processId: string) =>
           view: (editorContent.message = {
             title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.message.title"),
             description: "",
-            submitButtonText: window.o.i18n(
-              "dapps.o-banking.processes.transfer.editorContent.message.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.message.submitButtonText"),
           }),
           maxLength: "100",
         },
@@ -463,13 +434,9 @@ const processDefinition = (processId: string) =>
           view: (editorContent.confirm = {
             title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.confirm.title"),
             description: "",
-            submitButtonText: window.o.i18n(
-              "dapps.o-banking.processes.transfer.editorContent.confirm.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.confirm.submitButtonText"),
           }),
-          submitButtonText: (editorContent.confirm.submitButtonText = window.o.i18n(
-            "dapps.o-banking.processes.transfer.editorContent.confirm.submitButtonText"
-          )),
+          submitButtonText: (editorContent.confirm.submitButtonText = window.o.i18n("dapps.o-banking.processes.transfer.editorContent.confirm.submitButtonText")),
           html: () => "",
         },
         navigation: {
@@ -502,7 +469,7 @@ const processDefinition = (processId: string) =>
         entry: () => {
           window.o.publishEvent(<PlatformEvent>{
             type: "shell.progress",
-            message: `Sending Circles ..`,
+            message: window.o.i18n("dapps.o-banking.processes.transfer.sendingCircles"),
           });
         },
         invoke: {
@@ -575,9 +542,7 @@ const processDefinition = (processId: string) =>
           view: (editorContent.success = {
             title: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.success.title"),
             description: "",
-            submitButtonText: window.o.i18n(
-              "dapps.o-banking.processes.transfer.editorContent.success.submitButtonText"
-            ),
+            submitButtonText: window.o.i18n("dapps.o-banking.processes.transfer.editorContent.success.submitButtonText"),
           }),
           html: () => "",
           hideNav: false,
