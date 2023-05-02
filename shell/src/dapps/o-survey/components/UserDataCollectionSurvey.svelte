@@ -160,7 +160,7 @@ const options = {
           <div class="w-full input-group">
             <Flatpickr options="{options}" bind:value="{$dateOfBirth.value}" element="#my-picker">
               <div class="w-full flatpickr" id="my-picker">
-                <input type="text" class="w-full text-base rounded-lg input" placeholder="Select Date.." data-input />
+                <input type="text" class="w-full text-base rounded-lg input" placeholder="{$_('dapps.o-homepage.components.survey.userDataCollection.selectDate')}" data-input />
 
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <a class="input-button" title="clear" data-clear>
@@ -185,7 +185,7 @@ const options = {
         <div class="w-full form-control">
           <div class="w-full input-group">
             <DropDown
-              selected="Select gender"
+              selected="{$_('dapps.o-homepage.components.survey.userDataCollection.selectGender')}"
               items="{genderOfUserData}"
               id="gender"
               key="id"
@@ -209,7 +209,7 @@ const options = {
         <div class="w-full form-control">
           <div class="w-full input-group">
             <DropDown
-              selected="Select your Village"
+              selected="{$_('dapps.o-homepage.components.survey.userDataCollection.selectVillage')}"
               items="{allBaliVillages}"
               id="village"
               key="id"
