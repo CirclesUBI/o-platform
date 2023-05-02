@@ -30,8 +30,7 @@ let now = new Date();
       <span class="inline-block text-5xl font-enso {classes}">
         {_context.data.tokens.amount}
       </span>
-      <span class="text-4xl font-enso {classes}">
-        <Icons icon="timeCircle" size="{11}" customClass="inline -mt-3" /></span>
+      <span class="text-4xl font-enso {classes}"> <Icons icon="timeCircle" size="{11}" customClass="inline -mt-3" /></span>
     </div>
 
     <UserImage profile="{profile}" size="{36}" />
@@ -41,7 +40,7 @@ let now = new Date();
         to {profile.displayName}
       </span>
     </div>
-    <div class="text-dark-lightest">
+    <div class="break-all text-dark-lightest">
       {_context.data.message ? _context.data.message : ""}
     </div>
 
@@ -51,7 +50,7 @@ let now = new Date();
       </div>
 
       <div class="flex items-center w-full">
-        <div class="text-left ">
+        <div class="text-left">
           <Time timestamp="{now}" format="D. MMMM YYYY HH:mm" />
         </div>
       </div>
