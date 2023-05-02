@@ -21,7 +21,7 @@ import { poppedScrollPosition, scrollToTop, scrollToBottom, scrollToPosition, po
 import { SvelteComponentDev } from "svelte/internal";
 import Label from "../../atoms/Label.svelte";
 import GenericEventCard from "../../../dapps/o-notifications/atoms/GenericEventCard.svelte";
-import {PagedEventQuery} from "../../stores/pagedEventQuery";
+import { PagedEventQuery } from "../../stores/pagedEventQuery";
 
 export let views: EventListViewMap = {};
 export let reverse: boolean = false;
@@ -131,7 +131,7 @@ const handleChange = async (e) => {
   <div bind:this="{lastElement}"></div>
 {/if}
 {#if isLoading}
-  <section class="flex items-center justify-center mb-2 ">
+  <section class="flex items-center justify-center mb-2">
     <div class="flex items-center w-full p-4 space-x-2 bg-white border rounded-xl border-bordergray">
       <div class="flex flex-col items-start text-center">
         <div><Label key="shared.molecules.lists.eventList.loading" /></div>
@@ -139,12 +139,12 @@ const handleChange = async (e) => {
     </div>
   </section>
 {/if}
-{#if eventsWithViews && eventsWithViews.length === 0 && !isLoading}
-  <section class="flex items-center justify-center mb-2 ">
+<!-- {#if eventsWithViews && eventsWithViews.length === 0 && !isLoading}
+  <section class="flex items-center justify-center mb-2">
     <div class="flex items-center w-full p-4 space-x-2 bg-white border rounded-xl border-bordergray">
       <div class="flex flex-col items-start text-center">
-        <div>No entries</div>
+        <div><Label key="shared.molecules.lists.eventlist.noEntries" /></div>
       </div>
     </div>
   </section>
-{/if}
+{/if} -->

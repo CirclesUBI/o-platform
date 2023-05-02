@@ -7,8 +7,8 @@ import { onMount } from "svelte";
 import Item from "./DropdownSelectItem.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
-
-import Error from "../../../shell/src/shared/atoms/Error.svelte";
+import { _ } from "@o-platform/shell/src/i18n/i18nDictionary";
+import Error from "@o-platform/shell/src/shared/atoms/Error.svelte";
 import { Profile } from "@o-platform/shell/src/shared/api/data/types";
 import { me } from "@o-platform/shell/src/shared/stores/me";
 
@@ -42,7 +42,7 @@ onMount(async () => {
     $me = o;
   });
   unsub();
-  if (!$me) throw new Error(window.o.i18n("shared.userActions.errors.couldNotLoadYourProfile"));
+  if (!$me) throw new Error($_("shared.userActions.errors.couldNotLoadYourProfile"));
 
   field = normalizePromptField(context.field);
   const currentKey = field.get(context);
@@ -80,7 +80,7 @@ export function handleClear() {
 
 function submitHandler() {
   if (context?.data?.safeAddress === context?.params.getKey(selected)) {
-    errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
+    errorMessage = $_("dapps.common.cannotSendToYourself");
   } else {
     errorMessage = "";
     const event = new Continue();
@@ -93,7 +93,7 @@ function submitHandler() {
 
 const submitSafeAddressInput = () => {
   if (context.data?.recipientAddress === context.data?.safeAddress) {
-    errorMessage = window.o.i18n("dapps.common.cannotSendToYourself");
+    errorMessage = $_("dapps.common.cannotSendToYourself");
   } else {
     errorMessage = "";
     const answer = new Continue();
@@ -190,7 +190,7 @@ function toggleInputView() {
           style="z-index: 999999999999; right: 5.5rem; bottom: 0.2rem;"
           role="presentation"
           on:click="{toggleInputView}">
-          {showSafeAddressInput ? "Click to search for Circles Profile" : "Click to enter Circles Safe Address"}
+          {showSafeAddressInput ? $_("dapps.o-banking.transfer.clickToSearchProfile") : $_("dapps.o-banking.transfer.clickToEnterSafeAddress")}
         </div>
       {/if}
     </div>

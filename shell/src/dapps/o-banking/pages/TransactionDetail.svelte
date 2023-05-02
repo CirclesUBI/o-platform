@@ -110,8 +110,12 @@ function openDetail(transfer: ProfileEvent) {
   {#if transfer}
     <div class="flex flex-col items-center self-center w-full m-auto space-y-4 text-center justify-self-center">
       <div class="w-full text-center">
-        <h1 class="text-3xl uppercase font-heading text-heading tracking-normal">
-          {transfer.direction === "in" ? "received" : "sent"}
+        <h1 class="text-3xl tracking-normal uppercase font-heading text-heading">
+          {#if transfer.direction === "in"}
+            <Label key="dapps.banking.pages.transationDetail.received" />
+          {:else}
+            <Label key="dapps.banking.pages.transationDetail.sent" />
+          {/if}
         </h1>
       </div>
       <div>
