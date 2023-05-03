@@ -231,7 +231,9 @@ async function shareLink() {
       <div class="flex flex-col">
         <div class="mb-0 text-4xl font-bold tracking-normal break-all font-heading text-heading">{business.name}</div>
         <div class="flex flex-row w-full pt-0 mt-0 text-xl text-grey font-heading">
-          {business.businessCategory ? business.businessCategory : ""}
+          {#if business.businessCategory}
+            <Label key="{business.businessCategory}" />
+          {/if}
         </div>
         {#if business.description}
           <p class="mt-2 text-black break-word"><Label text="{business.description}" /></p>
