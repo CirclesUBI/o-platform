@@ -1,6 +1,7 @@
 <script lang="ts">
 import { createEventDispatcher } from "svelte";
 import { clickOutside } from "./../functions/clickOutside";
+import Label from "../atoms/Label.svelte";
 export let items: any;
 export let key: string;
 export let value: string;
@@ -11,6 +12,7 @@ export let isButton: boolean = false;
 export let isChevron: boolean = false;
 export let notFull: boolean = false;
 export let hideDefault: boolean = false;
+export let i18nKeys: boolean = false;
 
 const eventDispatcher = createEventDispatcher();
 
@@ -41,13 +43,25 @@ function handleOnChange(e) {
   on:click_outside="{() => eventDispatcher('dropDownClickedOutside')}">
   {#if hideDefault}
     {#each items as item}
-      <option class="text" value="{item[key]}">{item[value]}</option>
+      {#if i18nKeys}
+        <option class="text" value="{item[key]}"><Label key="{item[value]}" /></option>
+      {:else}
+        <option class="text" value="{item[key]}">{item[value]}</option>
+      {/if}
     {/each}
   {:else}
-    <option class="text" value="{undefined}" selected>{selected}</option>
+    {#if i18nKeys}
+      <option class="text" value="{undefined}" selected><Label key="{selected}" /></option>
+    {:else}
+      <option class="text" value="{undefined}" selected>{selected}</option>
+    {/if}
 
     {#each items as item}
-      <option class="text" value="{item[key]}">{item[value]}</option>
+      {#if i18nKeys}
+        <option class="text" value="{item[key]}"><Label key="{item[value]}" /></option>
+      {:else}
+        <option class="text" value="{item[key]}">{item[value]}</option>
+      {/if}
     {/each}
   {/if}
 </select>

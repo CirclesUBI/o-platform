@@ -11,7 +11,7 @@ import LoadingSpinner from "../../../shared/atoms/LoadingSpinner.svelte";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { OpeningHourWeek } from "../models/openingHourWeek";
 import { ApiClient } from "../../../shared/apiConnection";
-import { setupI18n, isLocaleLoaded, _ } from "src/i18n/i18nDictionary";
+import { _ } from "../../../i18n/i18nDictionary";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
 import { push } from "svelte-spa-router";
 import { showToast } from "../../../shared/toast";
@@ -80,6 +80,7 @@ onMount(async () => {
   center = { lat: -8.670458, lng: 115.212631 };
 
   allCategories = (await Environment.api.allBusinessCategories()).allBusinessCategories;
+
   allCategoriesLookup = allCategories.toLookup(
     (o) => o.id,
     (o) => o
@@ -371,12 +372,12 @@ function mapRecenter({ place }) {
                       items="{allCategories}"
                       id="filters"
                       key="id"
+                      i18nKeys="{true}"
                       value="name"
                       dropDownClass="mt-1 select input w-full"
                       on:dropDownChange="{(event) => {
                         const selectedItems = event.detail;
-                        business.businessCategoryId = parseInt(selectedItems?.value);
-                        business.businessCategory = allCategoriesLookup[selectedItems?.value];
+                        business.businessCategoryId = parseInt(selectedItems.value);
                       }}" />
                   {/if}
                 </div>
@@ -397,21 +398,7 @@ function mapRecenter({ place }) {
             </div>
           </div>
         </StandardHeaderBox>
-        <!-- <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.owners">
-          <div slot="standardHeaderBoxContent">
-            <div class="flex flex-col space-y-2">
-              <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm">
-                  {#if ownerProfiles}
-                    {#each ownerProfiles as ownerProfile}
-                      {ownerProfile.firstName}
-                    {/each}
-                  {/if}
-                </div>
-              </div>
-            </div>
-          </div>
-        </StandardHeaderBox> -->
+
         {#if error}
           <span class="text-sm text-center text-alert">{error}</span>
         {/if}

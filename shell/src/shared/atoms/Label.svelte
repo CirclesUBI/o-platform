@@ -1,5 +1,5 @@
 <script lang="ts">
-import { setupI18n, isLocaleLoaded, _ } from "src/i18n/i18nDictionary";
+import { setupI18n, isLocaleLoaded, _ } from "../../i18n/i18nDictionary";
 import { get } from "svelte/store";
 const i18nString = get(_);
 
