@@ -4,7 +4,7 @@ import { onMount, onDestroy } from "svelte";
 import { Environment } from "../../../shared/environment";
 import { SurveyDataDocument, BaliVillage } from "../../../shared/api/data/types";
 import Label from "../../../shared/atoms/Label.svelte";
-import { GenderOfUser } from "../../../shared/models/GenderOfUser.model";
+
 import { _ } from "svelte-i18n";
 import { push } from "svelte-spa-router";
 import DropDown from "../../../shared/molecules/DropDown.svelte";
@@ -17,7 +17,24 @@ import Flatpickr from "svelte-flatpickr";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
 
-const genderOfUserData = GenderOfUser;
+interface GenderOfUser {
+  id: string;
+  name: string;
+}
+const genderOfUserData: GenderOfUser[] = [
+  {
+    id: "male",
+    name: $_("dapps.o-homepage.components.survey.gender.male"),
+  },
+  {
+    id: "female",
+    name: $_("dapps.o-homepage.components.survey.gender.female"),
+  },
+  {
+    id: "refusal",
+    name: $_("dapps.o-homepage.components.survey.gender.noSay"),
+  },
+];
 
 const surveySessionId = generateLongId();
 sessionStorage.removeItem("SurveyComplete");
