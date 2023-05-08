@@ -7,7 +7,12 @@ async function handleClick(button) {
   if (button === "back") {
     push("#/survey/page/3");
   } else if (button === "submit") {
-    window.location = sessionStorage.getItem("inviteUrl");
+    const inviteUrl = sessionStorage.getItem("inviteUrl");
+    if (inviteUrl == "/") {
+      window.runInitMachine();
+    } else {
+      window.location = sessionStorage.getItem("inviteUrl");
+    }
   }
 }
 </script>
@@ -39,8 +44,8 @@ async function handleClick(button) {
       <button class="relative px-8 mt-6 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('back')}">
         {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
     {:else}
-      <a href="{sessionStorage.getItem('inviteUrl')}" class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
-        {$_("dapps.o-homepage.components.survey.button.signUpNow")}</a>
+      <button class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
+        {$_("dapps.o-homepage.components.survey.button.signUpNow")}</button>
     {/if}
   </div>
 </div>
