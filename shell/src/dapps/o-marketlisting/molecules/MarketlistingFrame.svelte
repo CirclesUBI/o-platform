@@ -51,11 +51,11 @@ let dropdownItems = [
 
 type SortedByTypes = "Most popular" | "Nearest" | "Newest" | "Oldest" | "Alphabetical";
 let sortedBy: SortedByTypes = "Most popular";
-let currentSort: string = dropdownItems.find((o) => o.identifier == $marketStore.orderBy).name;
+let currentSort = dropdownItems.find((o) => o.identifier == $marketStore.orderBy);
 
 $: {
   if (geolocation) {
-    if (currentSort == QueryAllBusinessesOrderOptions.Nearest) {
+    if (currentSort.identifier == QueryAllBusinessesOrderOptions.Nearest) {
       ownLocation = geolocation;
       marketStore.init(geolocation);
       marketStore.reload(QueryAllBusinessesOrderOptions.Nearest, $marketFilterStore);
@@ -69,7 +69,7 @@ function filterCategoriesChange() {
 
 function SortChange(event) {
   marketStore.reload(event.detail.value, $marketFilterStore);
-  currentSort = dropdownItems.find((o) => o.identifier == event.detail.value).name;
+  currentSort = dropdownItems.find((o) => o.identifier == event.detail.value);
 }
 </script>
 
@@ -86,7 +86,7 @@ function SortChange(event) {
 <section class="justify-center p-4 pt-0 mx-auto text-base align-middle">
   <div class="py-2 text-left border-2 border-t-0 border-l-0 border-r-0 whitespace-nowrap border-b-marketplace">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
-    <span class="pl-2">{currentSort}</span>
+    <span class="pl-2">{currentSort.name}</span>
     <DropDown
       selected="{dropdownItems[0].identifier}"
       hideDefault="{true}"
@@ -105,6 +105,7 @@ function SortChange(event) {
     {#if $marketStore.messages.length > 0}
       {#each $marketStore.messages as message}
         <p>{@html message}</p>
+        ssss
       {/each}
     {/if}
     <slot />

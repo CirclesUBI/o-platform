@@ -44,7 +44,7 @@ onMount(() => {
       noShadow: true,
       title: $me.displayName,
       subTitle: `${window.o.i18n('dapps.o-passport.pages.account.subTitle')}`,
-      truncateMain: true,
+      mobileTextCutoff: 22,
     }}">
     <div slot="itemCardEnd">
       <div class="self-end text-lg sm:text-3xl">{$_("dapps.o-passport.pages.account.ubi")}</div>
