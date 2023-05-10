@@ -56,7 +56,7 @@ function onkeydown(e: KeyboardEvent) {
         {profile.displayName}
       </span>
     </div>
-    <div class="text-dark-lightest">
+    <div class="break-all text-dark-lightest">
       {_context.data.message ? _context.data.message : ""}
     </div>
     <div class="flex flex-col w-full space-y-1">
@@ -65,7 +65,7 @@ function onkeydown(e: KeyboardEvent) {
       </div>
 
       <div class="flex items-center w-full">
-        <div class="text-left ">
+        <div class="text-left">
           <Time timestamp="{now}" format="D. MMMM YYYY HH:mm" />
         </div>
       </div>
