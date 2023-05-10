@@ -44,7 +44,7 @@ async function handleClick(button) {
       <button class="relative px-8 mt-6 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('back')}">
         {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
     {:else}
-      <button class="relative px-16 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
+      <button class="relative px-8 overflow-hidden transition-all transform btn btn-primary" on:click="{() => handleClick('submit')}">
         {$_("dapps.o-homepage.components.survey.button.signUpNow")}</button>
     {/if}
   </div>
