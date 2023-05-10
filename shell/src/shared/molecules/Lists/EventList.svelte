@@ -121,7 +121,7 @@ const handleChange = async (e) => {
   <div use:inview="{{}}" on:change="{handleChange}"></div>
 {/if}
 {#if store}
-  {#each eventsWithViews as eventWithView (eventWithView.event.transaction_hash ?? eventWithView.event.timestamp)}
+  {#each eventsWithViews as eventWithView (!eventWithView.event.transaction_hash ? eventWithView.event.timestamp : (eventWithView.event.transaction_hash + eventWithView.event.type))}
     <svelte:component this="{eventWithView.component}" event="{eventWithView.event}" />
 
     {#if store && !reverse && eventWithView.i > events.length - 25}
