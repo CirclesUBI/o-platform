@@ -78,7 +78,8 @@ if (
   !process.env.OPENLOGIN_CLIENT_ID ||
   !process.env.HERE_API_KEY ||
   !process.env.PLACES_API_KEY ||
-  !process.env.I18N_FILE_URL_TEMPLATE
+  !process.env.I18N_FILE_URL_TEMPLATE ||
+  !process.env.DEFAULT_APP_LANGUAGE
 ) {
   console.log("");
   console.error("Error: All above mandatory (!) environment variables must be set.");
@@ -223,6 +224,15 @@ module.exports = {
         options: {
           search: "__API_ENDPOINT__",
           replace: __API_ENDPOINT__,
+          flags: "g",
+        },
+      },
+      {
+        test: /\.ts|\.svelte$/,
+        loader: "string-replace-loader",
+        options: {
+          search: "__DEFAULT_APP_LANGUAGE__",
+          replace: __DEFAULT_APP_LANGUAGE__,
           flags: "g",
         },
       },
