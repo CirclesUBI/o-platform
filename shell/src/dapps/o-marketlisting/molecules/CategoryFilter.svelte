@@ -47,7 +47,16 @@ function handleRemoveFilter(filterId) {
       </div>
     {/each}
     <div class="inline">
-      <DropDown selected="add Filter" items="{allCategories}" id="filters" key="id" isButton="{true}" value="name" dropDownClass="mt-1" on:dropDownChange="{handleOnChange}" />
+      <DropDown
+        selected="add Filter"
+        items="{allCategories}"
+        id="filters"
+        key="id"
+        isButton="{true}"
+        i18nKeys="{true}"
+        value="name"
+        dropDownClass="mt-1"
+        on:dropDownChange="{handleOnChange}" />
     </div>
   </div>
 {/if}

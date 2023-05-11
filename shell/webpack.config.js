@@ -33,6 +33,7 @@ const __OPENLOGIN_CLIENT_ID__ = process.env.OPENLOGIN_CLIENT_ID;
 const __HERE_API_KEY__ = process.env.HERE_API_KEY;
 const __PLACES_API_KEY__ = process.env.PLACES_API_KEY;
 const __I18N_FILE_URL_TEMPLATE__ = process.env.I18N_FILE_URL_TEMPLATE;
+const __DEFAULT_APP_LANGUAGE__ = process.env.DEFAULT_APP_LANGUAGE;
 
 const __USE_MOCKS__ = process.env.USE_MOCKS ? "true" : "false";
 const __SHOW_LANGUAGE_SWITCHER__ = process.env.SHOW_LANGUAGE_SWITCHER ? "true" : "false";
@@ -64,6 +65,7 @@ console.log("   - Minimizes the bundle when 'true'.");
 console.log("?: USE_MOCKS:", __USE_MOCKS__);
 console.log("?: SHOW_LANGUAGE_SWITCHER:", __SHOW_LANGUAGE_SWITCHER__);
 console.log("!: I18N_FILE_URL_TEMPLATE:", __I18N_FILE_URL_TEMPLATE__);
+console.log("!: DEFAULT_APP_LANGUAGE:", __DEFAULT_APP_LANGUAGE__);
 
 if (
   !process.env.API_ENDPOINT ||
@@ -76,7 +78,8 @@ if (
   !process.env.OPENLOGIN_CLIENT_ID ||
   !process.env.HERE_API_KEY ||
   !process.env.PLACES_API_KEY ||
-  !process.env.I18N_FILE_URL_TEMPLATE
+  !process.env.I18N_FILE_URL_TEMPLATE ||
+  !process.env.DEFAULT_APP_LANGUAGE
 ) {
   console.log("");
   console.error("Error: All above mandatory (!) environment variables must be set.");
@@ -221,6 +224,15 @@ module.exports = {
         options: {
           search: "__API_ENDPOINT__",
           replace: __API_ENDPOINT__,
+          flags: "g",
+        },
+      },
+      {
+        test: /\.ts|\.svelte$/,
+        loader: "string-replace-loader",
+        options: {
+          search: "__DEFAULT_APP_LANGUAGE__",
+          replace: __DEFAULT_APP_LANGUAGE__,
           flags: "g",
         },
       },
