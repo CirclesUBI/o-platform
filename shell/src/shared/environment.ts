@@ -79,9 +79,6 @@ export class Environment {
   }
 
   public static get userLanguage(): string {
-    // if (!this.showLanguageSwitcher)
-    //   return "en";
-
     if (localStorage.getItem("userLanguage")) {
       return localStorage.getItem("userLanguage");
     } else {
