@@ -118,34 +118,47 @@ module.exports = {
         passport: {
           DEFAULT: "#D82D74",
           light: "#F75F9E",
+          contrast: "#FFFFFF",
         },
         wallet: {
           DEFAULT: "#F7AB28",
           light: "#F7AB28",
+          contrast: "#FFFFFF",
         },
         banking: {
           DEFAULT: "#F26240",
           light: "#FF8874",
+          contrast: "#FFFFFF",
         },
         contacts: {
           DEFAULT: "#3CC1CA",
           light: "#49D7DC",
+          contrast: "#414042",
         },
         marketplace: {
           DEFAULT: "#70BD9E",
           light: "#89D4BA",
+          contrast: "#414042",
         },
         market: {
           DEFAULT: "#70BD9E",
           light: "#89D4BA",
+          contrast: "#414042",
         },
         notifications: {
           DEFAULT: "#5B1E63",
           light: "#5B1E63",
+          contrast: "#414042",
         },
         home: {
           DEFAULT: "#5B1E63",
           light: "#785A8A",
+          contrast: "#414042",
+        },
+        survey: {
+          DEFAULT: "#5B1E63",
+          light: "#785A8A",
+          contrast: "#FFFFFF",
         },
         cpurple: {
           DEFAULT: "#5B1E63",
