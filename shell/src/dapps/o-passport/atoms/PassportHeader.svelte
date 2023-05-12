@@ -10,6 +10,7 @@ import { Profile, Organisation } from "../../../shared/api/data/types";
 import { upsertOrganisation } from "../../o-coop/processes/upsertOrganisation";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import Icons from "../../../shared/molecules/Icons.svelte";
+import Label from "../../../shared/atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
 
@@ -79,7 +80,7 @@ function editProfileField(onlyThesePages: string[]) {
         <Icons icon="pencil" customClass=" absolute inline w-4 h-4 heroicon smallicon text-primary -mt-1 ml-1" />
       </div>
     {:else}
-      <div class="relative mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}">Where do you live?</div>
+      <div class="mt-1 text-sm text-center cursor-pointer" role="presentation" on:click="{() => editProfileField(['location'])}"><Label key="dapps.o-passport.header.whereDoYouLive" /></div>
     {/if}
   {/if}
 </PageHeader>
