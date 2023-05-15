@@ -21,7 +21,7 @@ function linkToProfile(event) {
 }
 $: {
   if (profile) {
-    if ((!profile.type && profile.type == "PERSON") || (profile.__typename && profile.__typename == "Profile")) {
+    if ((profile.type && profile.type == "PERSON") || (profile.__typename && profile.__typename == "Profile")) {
       displayName = profile.displayName;
     } else {
       displayName = profile.firstName ? profile.firstName : "";
