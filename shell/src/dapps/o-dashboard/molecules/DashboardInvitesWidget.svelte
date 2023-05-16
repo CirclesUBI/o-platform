@@ -1,7 +1,6 @@
 <script lang="ts">
 import { push } from "svelte-spa-router";
 import Button from "../../../shared/atoms/button/Button.svelte";
-import { me } from "../../../shared/stores/me";
 import { _ } from "svelte-i18n";
 </script>
 
