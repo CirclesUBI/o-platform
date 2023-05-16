@@ -64,9 +64,5 @@ onMount(async () => {
         </a>
       </div>
     </div>
-  {:else}
-    <div class="w-full text-center">
-      <span class="text-alert"><Label key="dapps.o-dashboard.pages.shareInvitation.shareRefused" /></span>
-    </div>
   {/if}
 </section>
