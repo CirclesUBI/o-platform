@@ -3,20 +3,29 @@ import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
 import { RuntimeDapp } from "@o-platform/o-interfaces/dist/runtimeDapp";
 import ContactCard from "../atoms/ContactCard.svelte";
 import { contacts } from "../../../shared/stores/contacts";
-
+import { me } from "../../../shared/stores/me";
+import DashboardInvitesWidget from "../../o-dashboard/molecules/DashboardInvitesWidget.svelte";
 import { onMount } from "svelte";
-import { Contact } from "../../../shared/api/data/types";
+import { Capability, CapabilityType, Contact } from "../../../shared/api/data/types";
 import { trustFromContactMetadata } from "../../../shared/functions/trustFromContactMetadata";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
+export let capabilities: Capability[] | undefined = [];
+$: me;
+
+const init = async () => {
+  const sessionInfo = await me.getSessionInfo();
+  capabilities = sessionInfo.capabilities;
+};
 
 type DisplayContact = Contact & { trustIn: number; trustOut: number };
 
 let displayContacts: Contact[];
 
 onMount(() => {
+  init();
   return contacts.subscribe((c: Contact[]) => {
     console.log("Contacts changed.");
     displayContacts = (c ?? [])
@@ -47,6 +56,9 @@ function sortAlphabetically(a, b) {
 <SimpleHeader runtimeDapp="{runtimeDapp}" />
 
 <div class="px-4 mx-auto mt-8 mb-20 md:w-2/3 xl:w-1/2">
+  {#if $me && capabilities && capabilities.find((o) => o.type === CapabilityType.Invite)}
+    <DashboardInvitesWidget />
+  {/if}
   {#if !displayContacts}
     <section class="flex items-center justify-center mb-2">
       <div class="flex items-center w-full p-4 space-x-2 bg-white shadow">
