@@ -124,14 +124,14 @@ jobs:
 
           - name: "Upload screenshots as test artefacts"
             uses: actions/upload-artifact@v3
-            if: success() || failure()
+            if: '!cancelled()'
             with:
                 name: screenshots
                 path: o-platform-cypress/cypress/screenshots
 
           - name: "Upload videos as test artefacts"
             uses: actions/upload-artifact@v3
-            if: success() || failure()
+            if: '!cancelled()'
             with:
                 name: videos
                 path: o-platform-cypress/cypress/videos
