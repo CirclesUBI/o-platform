@@ -120,7 +120,7 @@ jobs:
                     static-content"
           - name: "Run end to end tests"
             run: "cd land-local/modes/from-source ;\
-                  docker compose run cypress-tests"
+                  docker compose run --no-deps cypress-tests"
 
           - name: "Upload screenshots as test artefacts"
             uses: actions/upload-artifact@v3
