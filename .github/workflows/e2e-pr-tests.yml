@@ -107,4 +107,16 @@ jobs:
                     static-content"
           - name: "Run end to end tests"
             run: "cd land-local/modes/from-source ;\
-                  docker compose up cypress-tests"
+                  docker compose run cypress-tests"
+
+          - name: "Upload screenshots as test artefacts"
+            uses: actions/upload-artifact@v3
+            with:
+                name: screenshots
+                path: o-platform-cypress/cypress/screenshots
+
+          - name: "Upload videos as test artefacts"
+            uses: actions/upload-artifact@v3
+            with:
+                name: videos
+                path: o-platform-cypress/cypress/videos
