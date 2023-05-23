@@ -59,7 +59,24 @@ jobs:
                 repository: CirclesUBI/land-local
                 path: land-local
 
-          - name: "Set up deterministic Circles environment"
+          - name: "Build deterministic Circles environment"
+            run: "cd land-local/modes/from-source ;\
+                    docker compose build \
+                    indexer-db-init \
+                    api-db \
+                    api-db-init \
+                    api-server \
+                    blockchain-indexer \
+                    ganache \
+                    ganache-init \
+                    other-blockchain-user \
+                    pathfinder2-updater \
+                    pathfinder2 \
+                    pathfinder-proxy \
+                    frontend \
+                    caddy \
+                    cypress-tests"
+          - name: "Run deterministic Circles environment"
             run: "cd land-local/modes/from-source ;\
                   docker compose up -d \
                     indexer-db \
