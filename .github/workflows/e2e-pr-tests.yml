@@ -77,57 +77,57 @@ jobs:
           - name: Pull images
             run: |
               cd land-local/modes/from-source
-              docker compose pull \
-                indexer-db \
-                minio \
-                minio-init \
+              docker compose pull     \
+                indexer-db            \
+                minio                 \
+                minio-init            \
                 static-content
 
           - name: Build o-platform image
             run: |
               cd land-local/modes/from-source
-              docker compose build \
+              docker compose build    \
                 frontend
 
           - name: Build other images
             run: |
               cd land-local/modes/from-source
-              docker compose build \
-                indexer-db-init \
-                api-db \
-                api-db-init \
-                api-server \
-                blockchain-indexer \
-                ganache \
-                ganache-init \
+              docker compose build    \
+                indexer-db-init       \
+                api-db                \
+                api-db-init           \
+                api-server            \
+                blockchain-indexer    \
+                ganache               \
+                ganache-init          \
                 other-blockchain-user \
-                pathfinder2-updater \
-                pathfinder2 \
-                pathfinder-proxy \
-                frontend \
-                caddy \
+                pathfinder2-updater   \
+                pathfinder2           \
+                pathfinder-proxy      \
+                frontend              \
+                caddy                 \
                 cypress-tests
 
           - name: Run deterministic Circles environment
             run: |
               cd land-local/modes/from-source
-              docker compose up -d \
-                indexer-db \
-                indexer-db-init \
-                api-db \
-                api-db-init \
-                api-server \
-                blockchain-indexer \
-                ganache \
-                ganache-init \
+              docker compose up -d    \
+                indexer-db            \
+                indexer-db-init       \
+                api-db                \
+                api-db-init           \
+                api-server            \
+                blockchain-indexer    \
+                ganache               \
+                ganache-init          \
                 other-blockchain-user \
-                pathfinder2-updater \
-                pathfinder2 \
-                pathfinder-proxy \
-                frontend \
-                minio \
-                minio-init \
-                caddy \
+                pathfinder2-updater   \
+                pathfinder2           \
+                pathfinder-proxy      \
+                frontend              \
+                minio                 \
+                minio-init            \
+                caddy                 \
                 static-content
 
           - name: Run end to end tests
