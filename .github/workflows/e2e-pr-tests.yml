@@ -12,7 +12,10 @@ jobs:
 
         steps:
 
-          - run: "dig o-platform.circlesubi.localhost"
+          - name: Install mkcert
+            run: |
+              sudo apt-get update
+              sudo apt-get install libnss3-tools mkcert
 
           - name: Checkout o-platform
             uses: actions/checkout@v3
@@ -61,6 +64,9 @@ jobs:
                 repository: CirclesUBI/land-local
                 path: land-local
 
+          - name: "Build temporary CA + certificates"
+            run: "cd land-local && ./install-ca.sh"
+
           - name: "Build deterministic Circles environment"
             run: "cd land-local/modes/from-source ;\
                     docker compose build \
@@ -78,6 +84,7 @@ jobs:
                     frontend \
                     caddy \
                     cypress-tests"
+
           - name: "Run deterministic Circles environment"
             run: "cd land-local/modes/from-source ;\
                   docker compose up -d \
