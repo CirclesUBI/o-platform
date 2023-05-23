@@ -12,6 +12,8 @@ jobs:
 
         steps:
 
+          - run: "dig o-platform.circlesubi.localhost"
+
           - name: Checkout o-platform
             uses: actions/checkout@v3
             with:
