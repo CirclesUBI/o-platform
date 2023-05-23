@@ -71,10 +71,10 @@ jobs:
                 repository: CirclesUBI/land-local
                 path: land-local
 
-          - name: "Build temporary CA + certificates"
+          - name: Build temporary CA + certificates
             run: "cd land-local && ./install-ca.sh"
 
-          - name: "Pull images"
+          - name: Pull images
             run: |
               cd land-local/modes/from-source
               docker compose pull \
@@ -83,13 +83,13 @@ jobs:
                 minio-init \
                 static-content
 
-          - name: "Build o-platform image"
+          - name: Build o-platform image
             run: |
               cd land-local/modes/from-source
               docker compose build \
                 frontend
 
-          - name: "Build other images"
+          - name: Build other images
             run: |
               cd land-local/modes/from-source
               docker compose build \
@@ -108,7 +108,7 @@ jobs:
                 caddy \
                 cypress-tests
 
-          - name: "Run deterministic Circles environment"
+          - name: Run deterministic Circles environment
             run: |
               cd land-local/modes/from-source
               docker compose up -d \
@@ -130,19 +130,19 @@ jobs:
                 caddy \
                 static-content
 
-          - name: "Run end to end tests"
+          - name: Run end to end tests
             run: |
               cd land-local/modes/from-source
               docker compose run --no-deps cypress-tests
 
-          - name: "Upload screenshots as test artefacts"
+          - name: Upload screenshots as test artefacts
             uses: actions/upload-artifact@v3
             if: '!cancelled()'
             with:
                 name: screenshots
                 path: o-platform-cypress/cypress/screenshots
 
-          - name: "Upload videos as test artefacts"
+          - name: Upload videos as test artefacts
             uses: actions/upload-artifact@v3
             if: '!cancelled()'
             with:
