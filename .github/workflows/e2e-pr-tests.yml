@@ -46,11 +46,11 @@ jobs:
                 repository: CirclesUBI/pathfinder-proxy
                 path: pathfinder-proxy
 
-          - name: Checkout cypress-tests
+          - name: Checkout o-platform-cypress
             uses: actions/checkout@v3
             with:
-                repository: CirclesUBI/cypress-tests
-                path: cypress-tests
+                repository: CirclesUBI/o-platform-cypress
+                path: o-platform-cypress
 
           - name: Checkout land-local
             uses: actions/checkout@v3
