@@ -59,7 +59,8 @@ jobs:
                 repository: CirclesUBI/land-local
                 path: land-local
 
-          - run: "cd land-local/modes/from-source ;\
+          - name: "Set up deterministic Circles environment"
+            run: "cd land-local/modes/from-source ;\
                   docker compose up -d \
                     indexer-db \
                     indexer-db-init \
@@ -77,6 +78,7 @@ jobs:
                     minio \
                     minio-init \
                     caddy \
-                    static-content
-                    ;\
+                    static-content"
+          - name: "Run end to end tests"
+            run: "cd land-local/modes/from-source ;\
                   docker compose up cypress-tests"
