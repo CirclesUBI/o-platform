@@ -1,0 +1,63 @@
+---
+name: "E2E suite"
+
+on:
+    workflow_dispatch: {}
+
+jobs:
+    build-container-image:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+          - name: Checkout o-platform
+            uses: actions/checkout@v3
+            with:
+                path: o-platform
+
+          - name: Checkout api-server
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/api-server
+                path: api-server
+
+          - name: Checkout blockchain-indexer
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/blockchain-indexer
+                path: blockchain-indexer
+
+          - name: Checkout pathfinder2
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder2
+                path: pathfinder2
+
+          - name: Checkout pathfinder2-updater
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder2-updater
+                path: pathfinder2-updater
+
+          - name: Checkout pathfinder-proxy
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder-proxy
+                path: pathfinder-proxy
+
+          - name: Checkout cypress-tests
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/cypress-tests
+                path: cypress-tests
+
+          - name: Checkout land-local
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/land-local
+                path: land-local
+
+          - run: "cd land-local/modes/from-source"
+          - run: "docker compose up -d"
+          - run: "docker compose logs cypress-tests"
