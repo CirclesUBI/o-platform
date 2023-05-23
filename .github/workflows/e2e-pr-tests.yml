@@ -67,7 +67,15 @@ jobs:
           - name: "Build temporary CA + certificates"
             run: "cd land-local && ./install-ca.sh"
 
-          - name: "Build deterministic Circles environment"
+          - name: "Pull images"
+            run: "cd land-local/modes/from-source ;\
+                    docker compose pull \
+                    indexer-db \
+                    minio \
+                    minio-init \
+                    static-content"
+
+          - name: "Build images"
             run: "cd land-local/modes/from-source ;\
                     docker compose build \
                     indexer-db-init \
