@@ -75,7 +75,12 @@ jobs:
                     minio-init \
                     static-content"
 
-          - name: "Build images"
+          - name: "Build o-platform image"
+            run: "cd land-local/modes/from-source ;\
+                    docker compose build \
+                    frontend"
+
+          - name: "Build other images"
             run: "cd land-local/modes/from-source ;\
                     docker compose build \
                     indexer-db-init \
