@@ -58,8 +58,7 @@ jobs:
             with:
                 repository: CirclesUBI/land-local
                 path: land-local
-
-          - run: "cd land-local/modes/from-source"
-          - run: "pwd ; env ; ls -lan"
-          - run: "docker compose up -d"
-          - run: "docker compose logs cypress-tests"
+          - run: "ls ..  ; ls . ; ls */"
+          - run: "cd land-local/modes/from-source ;\
+                  docker compose up -d ;\
+                  docker compose logs cypress-tests"
