@@ -16,7 +16,7 @@ cd shell
 npm run dev
 ```
 
-Build & Run with local self-signed Certificate:
+Build & Run with local self-signed certificate:
 
 ```shell
 cd o-platfrom
