@@ -14,7 +14,8 @@
     ]
   },
   "scripts": {
-    "test": "lerna run test --stream"
+    "test": "lerna run test --stream",
+    "hello": "echo 'hello world'"
   },
   "devDependencies": {
     "@krowten/svelte-heroicons": "^0.0.6",
