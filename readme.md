@@ -24,7 +24,6 @@ cd o-platfrom
 
 cd shell
 npm run dev
-
 ```
 
 ## Building blocks
