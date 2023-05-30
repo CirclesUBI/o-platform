@@ -42,7 +42,7 @@ function handleRemoveFilter(filterId) {
     <div class="text-base"><Label key="dapps.o-marketlisting.molecules.categoryfilter.filter" /></div>
     {#each $marketFilterStore as filterId}
       <div class="text-xs badge badge-outline">
-        {allCategoriesLookup[filterId].name}
+        <Label key="{allCategoriesLookup[filterId].name}" />
         <button class="pl-2 cursor-pointer text-cpurple" on:click="{handleRemoveFilter(filterId)}"><Icons icon="closex" size="{2}" /></button>
       </div>
     {/each}
