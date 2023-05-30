@@ -1,0 +1,150 @@
+---
+name: "E2E suite"
+
+on:
+    workflow_dispatch: {}
+    pull_request:
+        branches:
+          - dev
+          - next
+          - main
+        types:
+          - review_requested
+
+jobs:
+    test-run:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+
+          - name: Install mkcert
+            run: |
+              sudo apt-get update
+              sudo apt-get install libnss3-tools mkcert
+
+          - name: Checkout o-platform
+            uses: actions/checkout@v3
+            with:
+                path: o-platform
+
+          - name: Checkout api-server
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/api-server
+                path: api-server
+
+          - name: Checkout blockchain-indexer
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/blockchain-indexer
+                path: blockchain-indexer
+
+          - name: Checkout pathfinder2
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder2
+                path: pathfinder2
+
+          - name: Checkout pathfinder2-updater
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder2-updater
+                path: pathfinder2-updater
+
+          - name: Checkout pathfinder-proxy
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/pathfinder-proxy
+                path: pathfinder-proxy
+
+          - name: Checkout o-platform-cypress
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/o-platform-cypress
+                path: o-platform-cypress
+
+          - name: Checkout land-local
+            uses: actions/checkout@v3
+            with:
+                repository: CirclesUBI/land-local
+                path: land-local
+
+          - name: Build temporary CA + certificates
+            run: "cd land-local && ./install-ca.sh"
+
+          - name: Pull images
+            run: |
+              cd land-local/modes/from-source
+              docker compose pull     \
+                indexer-db            \
+                minio                 \
+                minio-init            \
+                static-content
+
+          - name: Build o-platform image
+            run: |
+              cd land-local/modes/from-source
+              docker compose build    \
+                frontend
+
+          - name: Build other images
+            run: |
+              cd land-local/modes/from-source
+              docker compose build    \
+                indexer-db-init       \
+                api-db                \
+                api-db-init           \
+                api-server            \
+                blockchain-indexer    \
+                ganache               \
+                ganache-init          \
+                other-blockchain-user \
+                pathfinder2-updater   \
+                pathfinder2           \
+                pathfinder-proxy      \
+                frontend              \
+                caddy                 \
+                cypress-tests
+
+          - name: Run deterministic Circles environment
+            run: |
+              cd land-local/modes/from-source
+              docker compose up -d    \
+                indexer-db            \
+                indexer-db-init       \
+                api-db                \
+                api-db-init           \
+                api-server            \
+                blockchain-indexer    \
+                ganache               \
+                ganache-init          \
+                other-blockchain-user \
+                pathfinder2-updater   \
+                pathfinder2           \
+                pathfinder-proxy      \
+                frontend              \
+                minio                 \
+                minio-init            \
+                caddy                 \
+                static-content
+
+          - name: Run end to end tests
+            run: |
+              cd land-local/modes/from-source
+              docker compose run --no-deps cypress-tests
+
+          - name: Upload screenshots as test artefacts
+            uses: actions/upload-artifact@v3
+            if: '!cancelled()'
+            with:
+                name: screenshots
+                path: o-platform-cypress/cypress/screenshots
+
+          - name: Upload videos as test artefacts
+            uses: actions/upload-artifact@v3
+            if: '!cancelled()'
+            with:
+                name: videos
+                path: o-platform-cypress/cypress/videos

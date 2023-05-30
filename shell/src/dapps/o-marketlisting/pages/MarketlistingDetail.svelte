@@ -139,8 +139,10 @@ onMount(async () => {
         if (nextEntry == undefined) {
           nextEntry = hours.find((entry, index) => index >= 0 && entry.hours[0] !== "");
         }
-        let nextTimes = nextEntry.hours[0].split("-");
-        nextEventTimeString = ` - ${$_("dapps.o-marketlisting.pages.marketListingDetail.opens")} ${$_(nextEntry.day)} ${nextTimes[0]}`;
+        if (nextEntry) {
+          let nextTimes = nextEntry.hours[0].split("-");
+          nextEventTimeString = ` - ${$_("dapps.o-marketlisting.pages.marketListingDetail.opens")} ${$_(nextEntry.day)} ${nextTimes[0]}`;
+        }
       }
     } else {
       noData = true;

@@ -1,4 +1,5 @@
 <script>
+import UserImage from "@o-platform/shell/src/shared/atoms/UserImage.svelte";
 export let item = undefined;
 export const itemType = "profile";
 export let isFirst = false;
@@ -18,6 +19,7 @@ $: {
   }
   itemClasses = classes.join(" ");
 }
+console.log("ITEM", item);
 </script>
 
 <section class="flex mb-4 mr-1 items-center justify-center border rounded-lg shadow-sm customItem {itemClasses}">
@@ -25,7 +27,7 @@ $: {
     <div class="text-center">
       <div class="inline-flex">
         <div class="w-10 h-10 m-auto rounded-full">
-          <img class="rounded-full" src="{item.avatarUrl ? item.avatarUrl : '/images/market/city.png'}" alt="user-icon" />
+          <UserImage profile="{item}" size="{10}" />
         </div>
       </div>
     </div>
