@@ -1339,6 +1339,7 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     businessHoursSunday
     businessCategoryId
     businessCategory
+    cursor
   }
 }
 

@@ -74,6 +74,7 @@ function onkeydown(e: KeyboardEvent) {
   <div class="absolute flex flex-row w-full min-h-screen overflow-auto {pageBackgroundClass ? pageBackgroundClass : 'bg-dappbackground'}">
     <main id="main" class="relative w-full overflow-hidden">
       <div
+        id="mainContent"
         class="flex flex-row w-full mainContent"
         class:mb-16="{layout.dialogs.center && !layout.dialogs.center.isOpen && dapp === 'homepage:1'}"
         class:blur="{layout.dialogs.center && layout.dialogs.center.isOpen}">

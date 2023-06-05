@@ -105,7 +105,6 @@ function SortChange(event) {
     {#if $marketStore.messages.length > 0}
       {#each $marketStore.messages as message}
         <p>{@html message}</p>
-        ssss
       {/each}
     {/if}
     <slot />
