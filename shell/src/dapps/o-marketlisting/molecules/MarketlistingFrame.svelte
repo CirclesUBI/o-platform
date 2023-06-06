@@ -14,6 +14,7 @@ let geoLocationOptions = {
   enableHighAccuracy: true,
 };
 let ownLocation: GeolocationPosition = null;
+let searchString: string = "";
 
 onMount(async () => {
   if (geolocation) {
@@ -63,6 +64,18 @@ $: {
   }
 }
 
+function searchStringChange() {
+  if (searchString !== "") {
+    if (searchString.length > 2) {
+      console.log("STRIN:", searchString);
+      marketStore.search(searchString);
+    } else {
+      marketStore.resetSearch();
+    }
+  } else {
+    marketStore.reload($marketStore.orderBy, $marketFilterStore);
+  }
+}
 function filterCategoriesChange() {
   marketStore.reload($marketStore.orderBy, $marketFilterStore);
 }
@@ -97,6 +110,9 @@ function SortChange(event) {
       value="name"
       dropDownClass="mt-1"
       on:dropDownChange="{SortChange}" />
+
+    <input type="text" class="input input-sm" placeholder="Search" bind:value="{searchString}" on:input="{searchStringChange}" />
+
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
   <CategoryFilter on:change="{filterCategoriesChange}" />

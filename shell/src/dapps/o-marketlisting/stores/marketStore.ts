@@ -8,6 +8,7 @@ export type MarketListingData = {
   filter?: number[];
   messages: string[];
   cursor: number;
+  searchString?: string;
 };
 
 let ownLocation: GeolocationPosition;
@@ -17,6 +18,10 @@ function marketStore() {
     subscribe: (subscriber: Subscriber<MarketListingData>) => _marketStore.subscribe(subscriber),
     reload: reload,
     fetchNext: fetchNext,
+    search: search,
+    resetSearch() {
+      _marketListingData.searchString = null;
+    },
     init(location: GeolocationPosition) {
       ownLocation = location;
     },
@@ -37,9 +42,19 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
   return function stop() {};
 });
 
+function search(searchString: string) {
+  if (!searchString) {
+    _marketListingData.searchString = null;
+    return;
+  }
+  _marketListingData.searchString = searchString;
+  reload(_marketListingData.orderBy, _marketListingData.filter, null, false);
+}
+
 function fetchNext() {
   const value = get(_marketStore);
   const cursor: number = value.businesses.at(-1).cursor;
+  console.log("SESES", _marketListingData.searchString);
 
   if (_marketListingData.cursor == cursor) {
     return false;
@@ -68,7 +83,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
         orderBy: newOrder,
       },
       cursor: cursor,
-      limit: 4,
+      limit: 8,
       ...(ownLocation
         ? {
             ownCoordinates: {
@@ -81,6 +96,13 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
         ? {
             where: {
               inCategories: filter,
+            },
+          }
+        : {}),
+      ...(_marketListingData.searchString
+        ? {
+            where: {
+              searchString: _marketListingData.searchString,
             },
           }
         : {}),
