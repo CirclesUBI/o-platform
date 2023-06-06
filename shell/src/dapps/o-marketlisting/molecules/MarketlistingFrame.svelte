@@ -14,6 +14,7 @@ let geoLocationOptions = {
   enableHighAccuracy: true,
 };
 let ownLocation: GeolocationPosition = null;
+let searchString: string = "";
 
 onMount(async () => {
   if (geolocation) {
@@ -63,6 +64,19 @@ $: {
   }
 }
 
+function searchStringChange() {
+  if (searchString !== "") {
+    if (searchString.length > 2) {
+      console.log("STRIN:", searchString);
+      marketStore.search(searchString);
+    } else {
+      marketStore.resetSearch();
+    }
+  } else {
+    marketStore.resetSearch();
+    marketStore.reload($marketStore.orderBy, $marketFilterStore);
+  }
+}
 function filterCategoriesChange() {
   marketStore.reload($marketStore.orderBy, $marketFilterStore);
 }
@@ -84,7 +98,7 @@ function SortChange(event) {
     console.log('POS ERROR', e.detail); // GeolocationError
   }}" />
 <section class="justify-center p-4 pt-0 mx-auto text-base align-middle">
-  <div class="py-2 text-left border-2 border-t-0 border-l-0 border-r-0 whitespace-nowrap border-b-marketplace">
+  <div class="flex flex-row py-2 text-left border-2 border-t-0 border-l-0 border-r-0 whitespace-nowrap border-b-marketplace">
     <Label key="dapps.o-marketlisting.molecules.marketlistingframe.sortby" />
     <span class="pl-2">{currentSort.name}</span>
     <DropDown
@@ -97,6 +111,15 @@ function SortChange(event) {
       value="name"
       dropDownClass="mt-1"
       on:dropDownChange="{SortChange}" />
+    <div class="flex flex-col items-end flex-grow">
+      <input
+        type="text"
+        class="justify-self-end input input-sm"
+        placeholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
+        bind:value="{searchString}"
+        on:input="{searchStringChange}" />
+    </div>
+
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
   </div>
   <CategoryFilter on:change="{filterCategoriesChange}" />
@@ -105,7 +128,6 @@ function SortChange(event) {
     {#if $marketStore.messages.length > 0}
       {#each $marketStore.messages as message}
         <p>{@html message}</p>
-        ssss
       {/each}
     {/if}
     <slot />
