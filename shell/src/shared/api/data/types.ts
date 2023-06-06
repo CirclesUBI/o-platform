@@ -69,6 +69,9 @@ export type BusinessCategory = {
 export type Businesses = {
   __typename?: 'Businesses';
   id: Scalars['Int'];
+  cursor: Scalars['Int'];
+  favoriteCount?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['Date'];
   circlesAddress: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -1134,6 +1137,7 @@ export type QueryAllBusinessesArgs = {
 export type QueryAllBusinessesConditions = {
   inCategories?: Maybe<Array<Scalars['Int']>>;
   inCirclesAddress?: Maybe<Array<Scalars['String']>>;
+  searchString?: Maybe<Scalars['String']>;
 };
 
 export type QueryAllBusinessesOrder = {
@@ -1153,6 +1157,8 @@ export type QueryAllBusinessesParameters = {
   where?: Maybe<QueryAllBusinessesConditions>;
   order?: Maybe<QueryAllBusinessesOrder>;
   ownCoordinates?: Maybe<Geolocation>;
+  limit?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['Int']>;
 };
 
 export type QueryProfileInput = {
@@ -2762,7 +2768,7 @@ export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
+    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory' | 'cursor'>
   )> }
 );
 
@@ -4503,6 +4509,7 @@ export const AllBusinessesDocument = gql`
     businessHoursSunday
     businessCategoryId
     businessCategory
+    cursor
   }
 }
     `;

@@ -1,4 +1,4 @@
-import { readable, Subscriber } from "svelte/store";
+import { get, readable, Subscriber } from "svelte/store";
 import { AllBusinessesDocument, Businesses, QueryAllBusinessesOrderOptions } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
 
@@ -7,6 +7,8 @@ export type MarketListingData = {
   orderBy: QueryAllBusinessesOrderOptions;
   filter?: number[];
   messages: string[];
+  cursor: number;
+  searchString?: string;
 };
 
 let ownLocation: GeolocationPosition;
@@ -15,7 +17,11 @@ function marketStore() {
   return {
     subscribe: (subscriber: Subscriber<MarketListingData>) => _marketStore.subscribe(subscriber),
     reload: reload,
-
+    fetchNext: fetchNext,
+    search: search,
+    resetSearch() {
+      _marketListingData.searchString = null;
+    },
     init(location: GeolocationPosition) {
       ownLocation = location;
     },
@@ -26,6 +32,7 @@ const initial = {
   businesses: [],
   orderBy: QueryAllBusinessesOrderOptions.Nearest,
   messages: [],
+  cursor: 0,
 };
 
 const _marketStore = readable<MarketListingData>(initial, function start(set) {
@@ -35,7 +42,29 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
   return function stop() {};
 });
 
-function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[]) {
+function search(searchString: string) {
+  if (!searchString) {
+    _marketListingData.searchString = null;
+    return;
+  }
+  _marketListingData.searchString = searchString;
+  reload(_marketListingData.orderBy, _marketListingData.filter, null, false);
+}
+
+function fetchNext() {
+  const value = get(_marketStore);
+  const cursor: number = value.businesses.at(-1).cursor;
+  console.log("SESES", _marketListingData.searchString);
+
+  if (_marketListingData.cursor == cursor) {
+    return false;
+  }
+
+  reload(_marketListingData.orderBy, _marketListingData.filter, cursor, true);
+  return true;
+}
+
+function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], cursor: number = 0, append: boolean = false) {
   const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest ? orderBy : !ownLocation ? QueryAllBusinessesOrderOptions.Newest : QueryAllBusinessesOrderOptions.Nearest;
 
   if (filter?.length === 0) {
@@ -53,6 +82,8 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[]) {
       order: {
         orderBy: newOrder,
       },
+      cursor: cursor,
+      limit: 8,
       ...(ownLocation
         ? {
             ownCoordinates: {
@@ -68,11 +99,23 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[]) {
             },
           }
         : {}),
+      ...(_marketListingData.searchString
+        ? {
+            where: {
+              searchString: _marketListingData.searchString,
+            },
+          }
+        : {}),
     },
   }).then((businesses) => {
+    _marketListingData.cursor = cursor;
     _marketListingData.orderBy = orderBy;
     _marketListingData.filter = filter;
-    _marketListingData.businesses = businesses;
+    if (append) {
+      _marketListingData.businesses = [..._marketListingData.businesses, ...businesses];
+    } else {
+      _marketListingData.businesses = businesses;
+    }
     _set(_marketListingData);
   });
 }
