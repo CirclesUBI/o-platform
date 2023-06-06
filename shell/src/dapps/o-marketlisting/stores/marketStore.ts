@@ -40,9 +40,13 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
 function fetchNext() {
   const value = get(_marketStore);
   const cursor: number = value.businesses.at(-1).cursor;
-  console.log("cursor", cursor);
-  console.log("val", value.businesses);
+
+  if (_marketListingData.cursor == cursor) {
+    return false;
+  }
+
   reload(_marketListingData.orderBy, _marketListingData.filter, cursor, true);
+  return true;
 }
 
 function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], cursor: number = 0, append: boolean = false) {
@@ -64,7 +68,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
         orderBy: newOrder,
       },
       cursor: cursor,
-      limit: 2,
+      limit: 4,
       ...(ownLocation
         ? {
             ownCoordinates: {
@@ -82,6 +86,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
         : {}),
     },
   }).then((businesses) => {
+    _marketListingData.cursor = cursor;
     _marketListingData.orderBy = orderBy;
     _marketListingData.filter = filter;
     if (append) {
