@@ -112,7 +112,12 @@ function SortChange(event) {
       dropDownClass="mt-1"
       on:dropDownChange="{SortChange}" />
     <div class="flex flex-col items-end flex-grow">
-      <input type="text" class="justify-self-end input input-sm" placeholder="Search" bind:value="{searchString}" on:input="{searchStringChange}" />
+      <input
+        type="text"
+        class="justify-self-end input input-sm"
+        placeholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
+        bind:value="{searchString}"
+        on:input="{searchStringChange}" />
     </div>
 
     <!-- <span class=""><Icons icon="chevron-down" size="{4}" customClass="inline" /></span> -->
