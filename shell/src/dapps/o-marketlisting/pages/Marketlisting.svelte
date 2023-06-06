@@ -16,7 +16,7 @@ let endOfList: boolean = false;
 marketStore.subscribe((items) => {
   entries = items;
   console.log("marketstore data has changed. endoflist:", endOfList);
-  // endOfList = false;
+  endOfList = false;
 });
 
 const fetchData = async () => {
