@@ -10,8 +10,14 @@ import { infiniteScroll } from "../../../shared/functions/infiniteScroll";
 
 export let runtimeDapp: RuntimeDapp<any>;
 let loading = false;
-let entries = [];
+let entries: any = [];
 let endOfList: boolean = false;
+
+marketStore.subscribe((items) => {
+  entries = items;
+  console.log("marketstore data has changed. endoflist:", endOfList);
+  // endOfList = false;
+});
 
 const fetchData = async () => {
   try {
@@ -33,7 +39,7 @@ const load = () => {
   }
 };
 
-$: $marketStore.businesses, (endOfList = false);
+// $: $marketStore.businesses, (endOfList = false);
 
 $: {
   if (elementRef) {
@@ -52,7 +58,7 @@ $: {
     <main>
       {#if entries}
         <div class="grid grid-cols-2 businessList">
-          {#each $marketStore.businesses as business}
+          {#each entries.businesses as business}
             <div>
               <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
             </div>
