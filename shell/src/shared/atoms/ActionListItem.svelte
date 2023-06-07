@@ -22,7 +22,8 @@ if ($media.small) {
         <Icons icon="{icon}" customClass="w-{size} h-{size} heroicon smallicon inline" />
       </span>
       <span class="block w-20 text-xs sm:text-sm mt-1 text-center break-normal {colorClass}">
-        {title}
+        <Label key="{title}" />
+        <!-- {title} -->
       </span>
     </span>
   </div>
