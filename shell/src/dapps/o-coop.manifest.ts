@@ -70,7 +70,7 @@ export const coop: DappManifest<DappState> = {
           order: 2,
           icon: "plus",
           category: "Coops",
-          title: window.o.i18n("dapps.common.quickactions.createOrganization"),
+          title: "dapps.common.quickactions.createOrganization",
           action: async () => {
             window.o.runProcess(
               createOrganisation,
@@ -109,7 +109,7 @@ export const coop: DappManifest<DappState> = {
       //     key: "addMember",
       //     type: "action",
       //     icon: "plus",
-      //     title: window.o.i18n("dapps.common.quickactions.addMember"),
+      //     title: "dapps.common.quickactions.addMember",
       //     action: async () => {
       //       window.o.runProcess(
       //         addMember,
@@ -126,7 +126,7 @@ export const coop: DappManifest<DappState> = {
       //     key: "addOwner",
       //     type: "action",
       //     icon: "plus",
-      //     title: window.o.i18n("dapps.common.quickactions.addOwner"),
+      //     title: "dapps.common.quickactions.addOwner",
       //     action: async () => {
       //       window.o.runProcess(
       //         addOwner,
