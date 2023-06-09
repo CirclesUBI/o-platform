@@ -34,7 +34,11 @@ const description = field("description", "", [required(), max(250)], {
   validateOnChange: true,
 });
 
-const myForm = form(name, description);
+const category = field("category", null, [required()], {
+  validateOnChange: true,
+});
+
+const myForm = form(name, description, category);
 
 export let runtimeDapp: RuntimeDapp<any>;
 export let circlesAddress: string;
@@ -99,6 +103,7 @@ onMount(async () => {
     week = OpeningHourWeek.parseOpeningHours(business);
     $description.value = business.description;
     $name.value = business.name;
+    $category.value = business.businessCategoryId;
   }
 });
 
@@ -378,9 +383,13 @@ function mapRecenter({ place }) {
                       on:dropDownChange="{(event) => {
                         const selectedItems = event.detail;
                         business.businessCategoryId = parseInt(selectedItems.value);
+                        $category.value = business.businessCategoryId;
                       }}" />
                   {/if}
                 </div>
+                {#if $myForm.hasError("category.required")}
+                  <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.categoryRequired" /></div>
+                {/if}
               </div>
             </div>
             <div class="flex flex-col mb-5 text-sm">
