@@ -54,7 +54,6 @@ function search(searchString: string) {
 function fetchNext() {
   const value = get(_marketStore);
   const cursor: number = value.businesses.at(-1).cursor;
-  console.log("SESES", _marketListingData.searchString);
 
   if (_marketListingData.cursor == cursor) {
     return false;
