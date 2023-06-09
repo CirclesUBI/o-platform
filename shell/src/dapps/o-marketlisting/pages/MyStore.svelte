@@ -390,7 +390,6 @@ function mapRecenter({ place }) {
 
                     <div class="flex flex-row w-full space-x-2 wrapper">
                       <CountrySelect
-                        
                         selectedCountry="{selectedCountry}"
                         searchTextPlaceholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
                         on:change="{(e) => (selectedCountry = e.detail.option)}" />
