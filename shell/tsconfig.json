@@ -5,7 +5,7 @@
   "compilerOptions": {
     "importsNotUsedAsValues": "remove",
     "types": ["svelte"],
-    "target": "ES2017" // "ES3" (default), "ES5", "ES6"/"ES2015", "ES2016", "ES2017" or "ESNext".
+    "target": "es2022" // "ES3" (default), "ES5", "ES6"/"ES2015", "ES2016", "ES2017" or "ESNext".
   },
   "tasks": [
     {

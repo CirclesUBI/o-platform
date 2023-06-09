@@ -267,22 +267,19 @@ mutation surveyData($surveyData: SurveyDataInput!) {
 }
 
 mutation getNonceForEoa($signature: String!) {
-  getNonce(data: {signature: $signature}) {
+  getNonce(data: { signature: $signature }) {
     nonce
   }
 }
 
-mutation getNonceForSafe($signature: String!
-                         $safeAddress: String!) {
-  getNonce(data: {signature: $signature, address: $safeAddress}) {
+mutation getNonceForSafe($signature: String!, $safeAddress: String!) {
+  getNonce(data: { signature: $signature, address: $safeAddress }) {
     nonce
   }
 }
 
 mutation sendSignedTransaction($signedTransaction: String!) {
-  sendSignedTransaction(data: {
-    signedTransaction: $signedTransaction
-  }) {
+  sendSignedTransaction(data: { signedTransaction: $signedTransaction }) {
     transactionHash
   }
 }
