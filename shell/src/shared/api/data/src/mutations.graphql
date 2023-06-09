@@ -78,7 +78,7 @@ mutation redeemClaimedInvitation {
   redeemClaimedInvitation {
     success
     error
-    transactionHash
+    jobHash
   }
 }
 
