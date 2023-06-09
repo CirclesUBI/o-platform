@@ -26,6 +26,20 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import GoogleMapSearch from "../../../shared/molecules/GoogleMaps/GoogleMapSearch.svelte";
 import Geolocation from "svelte-geolocation";
 
+import CountrySelect from "../../../shared/molecules/CountrySelect/CountrySelect.svelte";
+import { TelInput, normalizedCountries } from "svelte-tel-input";
+import type { DetailedValue, CountryCode, E164Number, CountrySelectEvents } from "svelte-tel-input/types";
+import "../../../../../node_modules/flag-icons/css/flag-icons.min.css";
+
+// Any Country Code Alpha-2 (ISO 3166)
+let selectedCountry: CountryCode | null = "ID";
+
+let value: E164Number | null = "+62301234567";
+
+let valid = true;
+
+let detailedValue: DetailedValue | null = null;
+
 const name = field("name", "", [required(), max(50)], {
   validateOnChange: true,
 });
@@ -80,6 +94,8 @@ let center = {};
 
 myForm.validate();
 
+$: isValid = detailedValue?.isValid ?? false;
+
 onMount(async () => {
   center = { lat: -8.670458, lng: 115.212631 };
 
@@ -99,11 +115,14 @@ onMount(async () => {
   });
 
   business = businesses.allBusinesses[0];
+
   if (business) {
     week = OpeningHourWeek.parseOpeningHours(business);
     $description.value = business.description;
     $name.value = business.name;
     $category.value = business.businessCategoryId;
+    value = business.phoneNumber;
+    console.log("ASDASD", business.phoneNumber);
   }
 });
 
@@ -130,7 +149,7 @@ async function save() {
         businessHoursSaturday: business.businessHoursSaturday,
         businessHoursSunday: business.businessHoursSunday,
         description: $description.value,
-        phoneNumber: business.phoneNumber,
+        phoneNumber: value,
         businessCategoryId: business.businessCategoryId,
       },
     });
@@ -356,8 +375,39 @@ function mapRecenter({ place }) {
               <div class="flex flex-col">
                 <div class="flex flex-col mb-5 text-sm">
                   <Label key="dapps.o-passport.pages.upsertOrganization.phone" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" />
+
+                  <div class="w-full mt-2">
+                    <!-- <div class="flex flex-row w-full space-x-2 wrapper">
+                      <CountrySelect
+                        value="{business.phoneNumber}"
+                        selectedCountry="{selectedCountry}"
+                        searchTextPlaceholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
+                        on:change="{(e) => console.log('EE', e)}" />
+                      <div class="flex-grow">
+                        <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" />
+                      </div>
+                    </div> -->
+
+                    <div class="flex flex-row w-full space-x-2 wrapper">
+                      <CountrySelect
+                        
+                        selectedCountry="{selectedCountry}"
+                        searchTextPlaceholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
+                        on:change="{(e) => (selectedCountry = e.detail.option)}" />
+                      <div class="flex-grow">
+                        <TelInput
+                          bind:country="{selectedCountry}"
+                          bind:value="{value}"
+                          bind:valid="{valid}"
+                          bind:detailedValue="{detailedValue}"
+                          placeholder="enter your phone number"
+                          class="basic-tel-input w-full input input-bordered {value !== '' && !isValid && 'invalid'}" />
+                      </div>
+                    </div>
+                    {#if value !== "" && !isValid}
+                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.validPhoneNumber" /></div>
+                    {/if}
+                    <!-- <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" /> -->
                   </div>
                 </div>
               </div>
@@ -429,5 +479,23 @@ function mapRecenter({ place }) {
 .map-wrap {
   width: 100%;
   height: 300px;
+}
+
+.wrapper :global(.basic-tel-input) {
+  padding-left: 12px;
+  padding-right: 12px;
+
+  outline: none;
+}
+
+.wrapper :global(.country-select) {
+  padding-left: 12px;
+  padding-right: 12px;
+
+  outline: none;
+}
+
+.wrapper :global(.invalid) {
+  border-color: red;
 }
 </style>
