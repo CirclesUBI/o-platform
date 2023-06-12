@@ -1,16 +1,14 @@
 {
   "private": true,
   "name": "o-platform",
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
   "workspaces": {
     "packages": [
       "packages/*",
       "dapps/*",
       "shell"
-    ],
-    "nohoist": [
-      "**/svelte",
-      "**/apollo",
-      "**/svelte-apollo"
     ]
   },
   "scripts": {
@@ -18,12 +16,11 @@
   },
   "devDependencies": {
     "@krowten/svelte-heroicons": "^0.0.6",
+    "prettier": "^2.5.1",
     "prisma": "2.18.0",
     "svelte-check": "^2.9.1",
     "svelte-paginate": "^0.0.1",
-    "typescript": "^4.4.4",
-    "yarn": "^1.22.19",
-    "prettier": "^2.5.1"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@prisma/client": "^2.18.0",
@@ -35,5 +32,6 @@
     "web3": "^1.8.0",
     "xstate": "^4.33.6"
   },
-  "version": "8.0.0"
+  "version": "8.0.0",
+  "packageManager": "yarn@3.6.0"
 }
