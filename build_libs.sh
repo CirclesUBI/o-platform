@@ -9,6 +9,9 @@ cp -f ./shell/public/index.template.html ./shell/public/index.html
 sed -i.bak "$search_replace" ./shell/public/index.html
 rm -f ./shell/public/index.html.bak
 
+echo "making sure we are using the correct version of yarn.."
+npx yarn set version 3.x || exit
+
 echo "Installing build dependencies .."
 npx --no-install yarn || exit
 
