@@ -93,6 +93,7 @@ const mapOptions = {
 let center = {};
 
 myForm.validate();
+let isValid: boolean = true;
 
 $: isValid = detailedValue?.isValid ?? false;
 
