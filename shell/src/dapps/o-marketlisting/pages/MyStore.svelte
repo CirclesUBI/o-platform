@@ -401,11 +401,11 @@ function mapRecenter({ place }) {
                           bind:valid="{valid}"
                           bind:detailedValue="{detailedValue}"
                           placeholder="enter your phone number"
-                          class="basic-tel-input w-full input input-bordered {value !== '' && !isValid && 'invalid'}" />
+                          class="w-full basic-tel-input input input-bordered " />
                       </div>
                     </div>
                     {#if value !== "" && !isValid}
-                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.validPhoneNumber" /></div>
+                      <div class="text-sm text-right text-info"><Label key="dapps.o-marketlisting.pages.mystore.error.validPhoneNumber" /></div>
                     {/if}
                     <!-- <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" /> -->
                   </div>
