@@ -53,9 +53,9 @@ function search(searchString: string) {
 
 function fetchNext() {
   const value = get(_marketStore);
-  const cursor: number = value.businesses.at(-1).cursor;
+  const cursor: number = value.businesses.at(-1)?.cursor || 0;
 
-  if (_marketListingData.cursor == cursor) {
+  if (_marketListingData.businesses.length > 0 && _marketListingData.cursor == cursor) {
     return false;
   }
 
