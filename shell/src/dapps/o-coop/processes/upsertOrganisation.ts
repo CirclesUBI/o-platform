@@ -26,6 +26,7 @@ export type CreateOrganisationContextData = {
   organisationSafeProxy: GnosisSafeProxy;
   location: any;
   locationName: string;
+  phoneNumber: string;
   lat: number;
   lon: number;
 };
@@ -136,6 +137,7 @@ const processDefinition = (processId: string) =>
                   lat: context.data.location.lat,
                   lon: context.data.location.lng,
                   locationName: context.data.location.address,
+                  phoneNumber: context.data.phoneNumber,
                 },
               },
             });
