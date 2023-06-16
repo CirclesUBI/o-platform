@@ -38,7 +38,7 @@ const initial = {
 const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
 
-  reload(_marketListingData.orderBy, _marketListingData.filter);
+  // reload(_marketListingData.orderBy, _marketListingData.filter);
   return function stop() {};
 });
 
@@ -117,6 +117,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
     }
     _set(_marketListingData);
   });
+  console.log("Store Data Loaded");
 }
 
 let _set: (marketListingData: MarketListingData) => void;

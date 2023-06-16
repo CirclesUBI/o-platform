@@ -26,7 +26,6 @@ $: {
   }
 }
 
-console.log("Cleanroute:", runtimeDapp);
 if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
   cleanRoute = runtimeDapp.routeParts[0].replace("=", "");
   textColor = `text-${cleanRoute}-contrast`;
