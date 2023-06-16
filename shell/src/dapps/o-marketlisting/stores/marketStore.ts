@@ -38,7 +38,7 @@ const initial = {
 const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
 
-  // reload(_marketListingData.orderBy, _marketListingData.filter);
+  reload(_marketListingData.orderBy, _marketListingData.filter);
   return function stop() {};
 });
 
@@ -65,6 +65,7 @@ function fetchNext() {
 
 function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], cursor: number = 0, append: boolean = false) {
   const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest ? orderBy : !ownLocation ? QueryAllBusinessesOrderOptions.Newest : QueryAllBusinessesOrderOptions.Nearest;
+  console.log("ORDER: ", newOrder);
 
   if (filter?.length === 0) {
     filter = undefined;
