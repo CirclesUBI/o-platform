@@ -21,15 +21,15 @@ export let routable: Routable;
   <h1 class="text-5xl">
     <Label key="dapps.o-marketplace.pages.favorites.title" />
   </h1>
-</div>
 
-<MarketlistingFrame runtimeDapp="{runtimeDapp}" routable="{routable}">
-  {#if $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]).length == 0}
-    <p>{$_("dapps.o-marketlisting.pages.marketlisting.noentries")}</p>
-  {/if}
-  <div class="grid grid-cols-2">
-    {#each $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]) as business}
-      <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
-    {/each}
-  </div>
-</MarketlistingFrame>
+  <MarketlistingFrame runtimeDapp="{runtimeDapp}" routable="{routable}">
+    {#if $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]).length == 0}
+      <p>{$_("dapps.o-marketlisting.pages.marketlisting.noentries")}</p>
+    {/if}
+    <div class="grid grid-cols-2">
+      {#each $marketStore.businesses.filter((o) => $marketFavoritesStore[o.circlesAddress]) as business}
+        <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
+      {/each}
+    </div>
+  </MarketlistingFrame>
+</div>
