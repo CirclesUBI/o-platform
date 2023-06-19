@@ -127,7 +127,7 @@ function createNewOrga() {
                   </div>
                 {/each}
               {:else}
-                <div class="container p-1 pt-2 text-center xs:p-4">
+                <div class="p-1 pt-2 text-center xs:p-4">
                   <button class="btn btn-primary btn-sm" on:click="{createNewOrga}">{$_("dapps.o-passport.pages.home.addNewShop")}</button>
                 </div>
               {/if}
@@ -140,7 +140,7 @@ function createNewOrga() {
         <div slot="standardHeaderBoxContent">
           <section class="justify-center">
             <div class="flex flex-col w-full space-y-2">
-              <div class="container p-1 pt-2 xs:p-4">
+              <div class="p-1 pt-2 xs:p-4">
                 <center>
                   <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
                 </center>
