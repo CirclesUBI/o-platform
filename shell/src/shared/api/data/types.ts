@@ -2769,7 +2769,7 @@ export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory'>
+    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory' | 'cursor'>
   )> }
 );
 
@@ -4510,6 +4510,7 @@ export const AllBusinessesDocument = gql`
     businessHoursSunday
     businessCategoryId
     businessCategory
+    cursor
   }
 }
     `;
