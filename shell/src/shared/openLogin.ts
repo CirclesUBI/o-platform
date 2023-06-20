@@ -1,43 +1,47 @@
-import OpenLogin, {OpenloginUserInfo} from "@toruslabs/openlogin";
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
-import {Environment} from "./environment";
+import { getED25519Key } from "@toruslabs/openlogin-ed25519";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import * as bs58 from "bs58";
+import OpenLogin from "@toruslabs/openlogin";
+import { LoginParams, LOGIN_PROVIDER, LOGIN_PROVIDER_TYPE, UX_MODE, UX_MODE_TYPE, OPENLOGIN_NETWORK, OPENLOGIN_NETWORK_TYPE } from "@toruslabs/openlogin-utils";
+import loginConfig from "./loginConfig";
+import { Environment } from "./environment";
 
-let openLogin: OpenLogin;
+export type OpenloginUserInfo = {
+  email?: string;
+  name?: string;
+  profileImage?: string;
+  aggregateVerifier: string;
+  verifier: string;
+  verifierId: string;
+  typeOfLogin: LOGIN_PROVIDER_TYPE;
+};
 
-export type GetOpenLoginResult = OpenLogin|{login(args:any):{privKey:string}, getUserInfo():{userInfo:any}, logout():Promise<void>};
+let loading: boolean = false;
+let privKey: string = "";
+let ethereumPrivateKeyProvider: EthereumPrivateKeyProvider | null = null;
+let selectedLoginProvider: LOGIN_PROVIDER_TYPE = LOGIN_PROVIDER.GOOGLE;
+let login_hint: string = "";
+let isWhiteLabelEnabled: boolean = false;
+let selectedUxMode: UX_MODE_TYPE = UX_MODE.REDIRECT;
+let selectedOpenloginNetwork: OPENLOGIN_NETWORK_TYPE = OPENLOGIN_NETWORK.TESTNET;
 
-export async function getOpenLogin(): Promise<GetOpenLoginResult> {
-  if (Environment.useMockLogin)
-  {
-    return <GetOpenLoginResult>{
-      async login(params: any): Promise<{ privKey: string }> {
-        const acc = RpcGateway.get().eth.accounts.create();
-        return {
-          privKey: acc.privateKey
-        };
-      },
-      async getUserInfo(): Promise<OpenloginUserInfo> {
-        return {
-          email: "email@some.hostname.of.some.mailserver.somewhere",
-          name: "Oauth profile name",
-          typeOfLogin: "google",
-          profileImage: "https://some.url.to.somewhere",
-          aggregateVerifier: "not-verified",
-          verifier: "not-verified",
-          verifierId: "not-verified"
-        }
-      }
-    };
-  }
+// const openlogin = this.openloginInstance;
+// await openlogin.init();
+// if (openlogin.privKey) {
+//   this.privKey = openlogin.privKey;
+//   await this.setProvider(this.privKey);
+// }
 
-  if (!openLogin) {
-    openLogin = new OpenLogin({
-      clientId: Environment.openLoginClientId,
-      network: "mainnet",
-      uxMode: "popup", // default is redirect , popup mode is also supported
-    });
-    await openLogin.init();
-  }
-
-  return openLogin;
+export async function getOpenLogin(): Promise<OpenLogin> {
+  const currentClientId = Environment.openLoginClientId;
+  const op = new OpenLogin({
+    clientId: currentClientId,
+    network: selectedOpenloginNetwork,
+    uxMode: selectedUxMode,
+    whiteLabel: {},
+    // loginConfig: loginConfig,
+    // sdkUrl: "https://staging.openlogin.com",
+  });
+  op.init();
+  return op;
 }
