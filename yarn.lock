@@ -3430,17 +3430,17 @@ __metadata:
   linkType: hard
 
 "@toruslabs/eccrypto@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@toruslabs/eccrypto@npm:2.0.0"
+  version: 2.2.1
+  resolution: "@toruslabs/eccrypto@npm:2.2.1"
   dependencies:
     elliptic: ^6.5.4
-  checksum: e110f59d8dcda20f995619280c3bb4f41d54620ace9f06444882bf48b918cd2c0d77506e6b71d8b2a5f2fa864e667624ac4e896e324f0841b5c99b223b40e4be
+  checksum: c2feda44a626b2640a29cf1a041a92c45cf3b203ac88a5d18966de802de6083119744c7ba54ace275293dbe7cf804723b52ad5a71f40dc48b270756c34e30082
   languageName: node
   linkType: hard
 
 "@toruslabs/http-helpers@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "@toruslabs/http-helpers@npm:3.3.0"
+  version: 3.4.0
+  resolution: "@toruslabs/http-helpers@npm:3.4.0"
   dependencies:
     lodash.merge: ^4.6.2
     loglevel: ^1.8.1
@@ -3450,7 +3450,7 @@ __metadata:
   peerDependenciesMeta:
     "@sentry/types":
       optional: true
-  checksum: 47a63028f61fc73e8b8badd78a55df7c92fa62a5bddda75f410a3bd91bbd4f4567468691a64277b2a30b3def5e7636ebc142f64524fe15a6963632a0f298f8dd
+  checksum: c25a4e3b55efa5606236a18aab1b3198055e83c405b138f90b86d2d1fac2b4768a65d61647c230860479129acfceca5d753476ad2965291b7843d3c15d8c53e6
   languageName: node
   linkType: hard
 
