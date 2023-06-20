@@ -5,6 +5,8 @@ import { Link } from "@o-platform/o-interfaces/dist/routables/link";
 import Terms from "./o-homepage/pages/Terms.svelte";
 import Privacy from "./o-homepage/pages/Privacy.svelte";
 import NotFound from "./o-homepage/pages/NotFound.svelte";
+import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
+import { logout } from "./o-passport/processes/logout";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -37,6 +39,19 @@ const index: Page<any, DappState> = {
   title: "<span class='text-2xl sm:text-3xl'>CIRCLES</span><span class='text-xl sm:text-2xl'>UBI.ID</span>",
   icon: "homeSidemenu",
   type: "page",
+  navigation: {
+    rightSlot: {
+      component: ListComponent,
+      props: {
+        icon: "exit",
+        backgroundColorClass: "transparent",
+        action: () => {
+          window.o.runProcess(logout, {});
+          location.reload();
+        },
+      },
+    },
+  },
 };
 
 const invite: Page<{ inviteCode: string }, DappState> = {
