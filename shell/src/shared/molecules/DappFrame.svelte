@@ -309,6 +309,7 @@ function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { 
 
 function setNav(navArgs: GenerateNavManifestArgs) {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : navigation.rightSlot;
 
   if (navArgs.centerIsOpen && !preModalNavArgs) {
     preModalNavArgs = currentNavArgs;
@@ -323,6 +324,13 @@ function setNav(navArgs: GenerateNavManifestArgs) {
     args = {
       ...args,
       leftSlotOverride: leftSlotOverride,
+    };
+  }
+
+  if (rightSlotOverride) {
+    args = {
+      ...args,
+      rightSlotOverride: rightSlotOverride,
     };
   }
 
@@ -379,9 +387,11 @@ function initSession(session: SessionInfo) {
 
 async function init() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
 
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     centerContainsProcess: false,
     centerIsOpen: false,
     rightIsOpen: false,
@@ -440,8 +450,10 @@ function onOpenNavigation() {
     },
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
 
@@ -458,8 +470,10 @@ function onCloseNavigation() {
     isOpen: false,
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
 
@@ -604,9 +618,10 @@ function onProcessContinued() {
 function onProcessCanGoBack() {
   // log("onProcessCanGoBack()");
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -619,9 +634,10 @@ function onProcessCanGoBack() {
 function onProcessCanSkip() {
   // log("onProcessCanSkip()");
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -899,6 +915,9 @@ async function handleUrlChanged() {
   if (routable.type == "page" && routable.navigation?.leftSlot) {
     navArgs.leftSlotOverride = routable.navigation.leftSlot;
   }
+  if (routable.type == "page" && routable.navigation?.rightSlot) {
+    navArgs.rightSlotOverride = routable.navigation.rightSlot;
+  }
   // log(
   //   `handleUrlChanged() - Found routable: ${routable.title} (type: ${routable.type})`
   // );
@@ -994,8 +1013,10 @@ function showModalProcess(processId?: string) {
     { process }
   );
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -1090,8 +1111,10 @@ function showMainPage(runtimeDapp: RuntimeDapp<any>, routable: Page<any, any>, p
     },
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     ...currentNavArgs,
     centerIsOpen: false,
     centerContainsProcess: false,
