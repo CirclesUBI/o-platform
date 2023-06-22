@@ -58,7 +58,7 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent> {
     const { subscribe, set, update } = writable<ProfileEvent[]>([], (set) => {
       if (!this._isInitialized) {
         this._profileChangedSubscription = me.subscribe(async ($me) => {
-          if (this._isInitialized) {
+          if (this._isInitialized && $me) {
             this.reset();
             await this.next();
           }
