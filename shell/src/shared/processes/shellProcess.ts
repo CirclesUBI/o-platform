@@ -54,6 +54,7 @@ const processDefinition = () => {
           id: childProcessId,
           src: (context) => {
             const sm = context.childProcessDefinition.stateMachine(childProcessId);
+            console.log(`Running child process ${processId}: `, sm);
             // console.log(`invoking child process: ${sm.id}`)
             return <any>sm; // TODO: Fix 'any'
           },
