@@ -79,7 +79,7 @@ const processDefinition = (processId: string) =>
             );
 
             const apiClient = await window.o.apiClient.client.subscribeToResult();
-            console.log("APICLIE", apiClient);
+
             const result = await apiClient.mutate({
               mutation: LogoutDocument,
             });

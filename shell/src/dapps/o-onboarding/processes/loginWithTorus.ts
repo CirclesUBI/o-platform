@@ -18,8 +18,7 @@ import { FindInvitationCreatorDocument, Profile, QueryFindInvitationCreatorArgs 
 import { ApiClient } from "../../../shared/apiConnection";
 import { AvataarGenerator } from "../../../shared/avataarGenerator";
 import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
-// import { getUserInfo } from "@toruslabs/openlogin";
-// import { getUserInfo } from "../../../shared/openLogin";
+
 import { Environment } from "../../../shared/environment";
 
 export type LoginWithTorusContextData = {
