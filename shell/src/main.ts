@@ -124,7 +124,7 @@ window.o = <any>{
     },
     async run<TContext>(definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>) {
       const processId = Generate.randomHexString(8);
-      console.log(`Starting process (id: ${processId}) with definition:`, definition);
+      console.log(`Starting process (id: ${processId}) with definition:`, definition, definition.stateMachine("debug"));
 
       const machine = (<any>definition).stateMachine(LoadingIndicator, Success, ErrorIndicator);
       const machineOptions = {
