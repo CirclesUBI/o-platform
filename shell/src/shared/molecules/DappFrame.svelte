@@ -308,8 +308,8 @@ function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { 
 }
 
 function setNav(navArgs: GenerateNavManifestArgs) {
-  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
-  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : navigation.rightSlot;
+  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation?.leftSlot;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : navigation?.rightSlot;
 
   if (navArgs.centerIsOpen && !preModalNavArgs) {
     preModalNavArgs = currentNavArgs;
@@ -336,9 +336,6 @@ function setNav(navArgs: GenerateNavManifestArgs) {
 
   navigation = generateNavManifest(args, null);
 
-  if (dapp.dappId == "events:1") {
-    navigation = null;
-  }
   currentNavArgs = args;
 }
 
@@ -438,7 +435,7 @@ function onOpenNavigation() {
       ...layout.dialogs,
       left: {
         isOpen: true,
-        component: dapp.dappId == "events:1" ? null : NavigationList,
+        component: NavigationList,
         routable: routable,
         runtimeDapp: runtimeDapp,
         params: {
@@ -966,7 +963,7 @@ async function handleUrlChanged() {
     }
   }
 
-  if (!navigation && dapp.dappId != "events:1") {
+  if (!navigation) {
     navigation = generateNavManifest(navArgs, null);
   }
 
@@ -974,7 +971,6 @@ async function handleUrlChanged() {
     sessionInfo?.isLoggedOn &&
     sessionInfo?.hasProfile &&
     dapp?.dappId != "homepage:1" &&
-    dapp?.dappId != "events:1" &&
     $me?.__typename == "Person" &&
     !$me?.askedForEmailAddress &&
     !sessionStorage.getItem("askedForEmailAddress") &&
