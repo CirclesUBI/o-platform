@@ -116,6 +116,9 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
   async next() : Promise<boolean> {
     let $me:Profile;
     me.subscribe(m => $me = m)();
+    if (!$me) {
+      return;
+    }
     const args = <QueryEventsArgs>{
       safeAddress: $me.circlesAddress,
       types: this.eventTypes,
