@@ -4,7 +4,7 @@ import { Environment } from "./environment";
 
 let openLogin: OpenLogin;
 
-export type GetOpenLoginResult = OpenLogin | { login(args: any): { privKey: string }; getUserInfo(): { userInfo: any }; logout(): Promise<void> };
+export type GetOpenLoginResult = OpenLogin | { login(args: any): { privKey: string }; logout(): Promise<void>; getUserInfo(): { userInfo: any }; logout(): Promise<void> };
 
 export async function getOpenLogin(): Promise<GetOpenLoginResult> {
   if (Environment.useMockLogin) {
@@ -15,6 +15,7 @@ export async function getOpenLogin(): Promise<GetOpenLoginResult> {
           privKey: acc.privateKey,
         };
       },
+      async logout(): Promise<void> {},
       async getUserInfo(): Promise<OpenloginUserInfo> {
         return {
           email: "email@some.hostname.of.some.mailserver.somewhere",
