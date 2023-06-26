@@ -2,11 +2,13 @@ import { WhiteLabelData } from "@toruslabs/openlogin-utils";
 
 export default {
   name: "Circles Login",
-  url: "http://localhost:8080",
-  logoDark: "https://images.web3auth.io/example-hello.svg", // dark logo for light background
-  logoLight: "https://images.web3auth.io/example-hello-light.svg", // light logo for dark background
-  dark: true,
+  url: "https://app.circlesubi.id",
+  logoDark: "https://app.circlesubi.id/logos/circles.svg", // dark logo for light background
+  logoLight: "https://app.circlesubi.id/logos/circles.svg", // light logo for dark background
+  dark: false,
+  defaultLanguage: "id",
   theme: {
-    primary: "#888888",
+    primary: "#E5E7E9",
+    gray: "#333333",
   },
 } as WhiteLabelData;

@@ -189,30 +189,30 @@ const processDefinition = (processId: string) =>
           invoke: {
             src: async (context) => {
               const mockProfile = Environment.getTestProfile(context.data.useMockProfileIndex);
-              // const openLogin = <GetOpenLoginResult>{
-              //   async login(params: any): Promise<{ privKey: string }> {
-              //     return {
-              //       privKey: mockProfile.privateKey,
-              //     };
-              //   },
-              //   // async getUserInfo(): Promise<OpenloginUserInfo> {
-              //   //   delete mockProfile.privateKey;
-              //   //   return mockProfile;
-              //   // },
-              // };
-              // const privateKey = await openLogin.login({
-              //   loginProvider: "google",
-              //   extraLoginOptions: {
-              //     prompt: "select_account",
-              //     display: "touch",
-              //   },
-              // });
+              const openLogin = <any>{
+                async login(params: any): Promise<{ privKey: string }> {
+                  return {
+                    privKey: mockProfile.privateKey,
+                  };
+                },
+                async getUserInfo(): Promise<any> {
+                  delete mockProfile.privateKey;
+                  return mockProfile;
+                },
+              };
+              const privateKey = await openLogin.login({
+                loginProvider: "google",
+                extraLoginOptions: {
+                  prompt: "select_account",
+                  display: "touch",
+                },
+              });
 
-              // const userInfo = await openLogin.getUserInfo();
-              // return {
-              //   privateKey: privateKey.privKey,
-              //   userInfo: userInfo,
-              // };
+              const userInfo = await openLogin.getUserInfo();
+              return {
+                privateKey: privateKey.privKey,
+                userInfo: userInfo,
+              };
             },
             onDone: {
               actions: "assignPrivateKeyAndUserInfoToContext",
