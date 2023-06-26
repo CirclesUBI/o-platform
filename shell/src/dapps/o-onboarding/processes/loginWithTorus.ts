@@ -208,11 +208,11 @@ const processDefinition = (processId: string) =>
                 },
               });
 
-              const userInfo = await openLogin.getUserInfo();
-              return {
-                privateKey: privateKey.privKey,
-                userInfo: userInfo,
-              };
+              // const userInfo = await openLogin.getUserInfo();
+              // return {
+              //   privateKey: privateKey.privKey,
+              //   userInfo: userInfo,
+              // };
             },
             onDone: {
               actions: "assignPrivateKeyAndUserInfoToContext",
