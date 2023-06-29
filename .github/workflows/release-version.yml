@@ -20,6 +20,9 @@ jobs:
       - name: Detect and tag new version
         uses: salsify/action-detect-and-tag-new-version@v2
         id: check-version
+        with:
+          version-command: |
+            node -p 'require("./shell/package.json").version'
       - name: Release new tag
         uses: ncipollo/release-action@v1
         if: steps.check-version.outputs.previous-version != steps.check-version.outputs.current-version
@@ -28,6 +31,7 @@ jobs:
           generateReleaseNotes: true
           tag: ${{ steps.check-version.outputs.tag }}
           updateOnlyUnreleased: true
+  # TODO: Integrate Container Build
   # call-build-container:
   #   name: Build tagged Container image
   #   needs: ["tag-release"]
