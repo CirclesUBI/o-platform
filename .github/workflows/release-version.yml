@@ -20,9 +20,6 @@ jobs:
       - name: Detect and tag new version
         uses: salsify/action-detect-and-tag-new-version@v2
         id: check-version
-        with:
-          version-command: |
-            cat shell/package.json
       - name: Release new tag
         uses: ncipollo/release-action@v1
         if: steps.check-version.outputs.previous-version != steps.check-version.outputs.current-version
