@@ -76,7 +76,7 @@ $: {
           class=" w-{size} h-{size} rounded-corners-purple-borders"
           class:rounded-full="{!isOrganisation}"
           class:rounded-md="{isOrganisation}"
-          src="{profile && profile.avatarUrl ? profile.avatarUrl : profile.circlesAddress ? AvataarGenerator.generate(profile.circlesAddress.toLowerCase()) : AvataarGenerator.default()}"
+          src="{profile.avatarUrl}"
           alt="{displayName}" />
       </div>
     </div>
