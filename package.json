@@ -32,6 +32,6 @@
     "web3": "^1.8.0",
     "xstate": "^4.33.6"
   },
-  "version": "8.0.0",
+  "version": "8.0.1",
   "packageManager": "yarn@3.6.0"
 }
