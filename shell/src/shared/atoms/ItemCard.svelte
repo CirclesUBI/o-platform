@@ -1,11 +1,7 @@
 <script lang="ts">
 import UserImage from "src/shared/atoms/UserImage.svelte";
 import { isMobile } from "../functions/isMobile";
-import jazzicon from "@metamask/jazzicon";
 import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
-import { outerHTML } from "../functions/outerHtml";
-
-let noAvatar = jazzicon(50, Math.round(Math.random() * 10));
 
 export let params = {
   imageUrl: null,
@@ -61,8 +57,6 @@ function cardAction() {
               <img class="rounded-full" src="{params.imageUrl}" alt="{params.imageAlt ? params.imageAlt : params.title}" />
             </span>
           </div>
-        {:else}
-          {@html outerHTML(noAvatar)}
         {/if}
       </div>
     </slot>
