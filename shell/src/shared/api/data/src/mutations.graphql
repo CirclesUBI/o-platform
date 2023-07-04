@@ -176,6 +176,7 @@ mutation upsertProfile(
     locationName
     lat
     lon
+    isShopDisabled
     memberships {
       isAdmin
       organisation {
@@ -187,6 +188,7 @@ mutation upsertProfile(
         firstName
         description
         avatarUrl
+        isShopDisabled
       }
     }
     verifications {
@@ -221,6 +223,7 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       locationName
       lat
       lon
+      isShopDisabled
     }
   }
 }

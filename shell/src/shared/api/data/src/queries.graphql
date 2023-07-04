@@ -34,6 +34,7 @@ query init {
       lat
       lon
       type
+      isShopDisabled
       memberships {
         isAdmin
         organisation {
@@ -45,6 +46,7 @@ query init {
           firstName
           description
           avatarUrl
+          isShopDisabled
         }
       }
       verifications {
@@ -215,6 +217,7 @@ query myProfile {
         locationName
         lat
         lon
+        isShopDisabled
       }
     }
     verifications {
@@ -258,6 +261,7 @@ query profiles($id: [Int!]!) {
         firstName
         description
         avatarUrl
+        isShopDisabled
       }
     }
     verifications {
@@ -369,6 +373,7 @@ query profilesByCirclesAddress($circlesAddresses: [String!]!) {
         firstName
         description
         avatarUrl
+        isShopDisabled
       }
     }
     verifications {
@@ -547,6 +552,7 @@ query profileBySafeAddress($safeAddress: String!) {
         firstName
         description
         avatarUrl
+        isShopDisabled
       }
     }
     verifications {
@@ -623,6 +629,7 @@ query organisationsByAddress($addresses: [String!]!) {
     locationName
     lat
     lon
+    isShopDisabled
     members {
       ... on Organisation {
         id
@@ -1340,6 +1347,7 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     businessCategoryId
     businessCategory
     cursor
+    isShopDisabled
   }
 }
 
