@@ -64,6 +64,7 @@ const _me = readable<Profile | null>(null, function start(set) {
           memberships: [],
           verifications: [],
           circlesTokenAddress: "",
+          isShopDisabled: null,
           __typename: "Profile",
         };
         localStorage.setItem("me", JSON.stringify(notMe));

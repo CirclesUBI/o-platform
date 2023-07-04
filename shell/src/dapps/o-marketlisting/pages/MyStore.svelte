@@ -111,6 +111,7 @@ onMount(async () => {
     queryParams: {
       where: {
         inCirclesAddress: [circlesAddress.toLowerCase()],
+        inactive: true,
       },
     },
   });
@@ -123,7 +124,6 @@ onMount(async () => {
     $name.value = business.name;
     $category.value = business.businessCategoryId;
     value = business.phoneNumber;
-    console.log("ASDASD", business.phoneNumber);
   }
 });
 
@@ -152,6 +152,7 @@ async function save() {
         description: $description.value,
         phoneNumber: value,
         businessCategoryId: business.businessCategoryId,
+        isShopDisabled: business.isShopDisabled,
       },
     });
 
@@ -235,150 +236,181 @@ function mapRecenter({ place }) {
         <h1 class="text-center">{business.name}</h1>
       </div>
     </section>
-    <pre></pre>
+
     <section class="justify-left">
       <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
-        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
+        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.enableDisable">
           <div slot="standardHeaderBoxContent">
             <div class="flex flex-col space-y-2">
               <div class="flex flex-col">
                 <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.picture" />
-                  <div class="flex justify-center w-full mt-2" role="presentation" on:click="{() => imageEditor(false)}">
-                    <UserImage
-                      profile="{{
-                        circlesAddress: business.circlesAddress,
-                        avatarUrl: business.picture,
-                      }}"
-                      size="{36}"
-                      editable="{true}"
-                      profileLink="{false}" />
+                  <!-- <div class="mx-10 my-5 uppercase">
+                    <input id="enable" type="radio" class="mr-2 radio" bind:group="{business.isShopDisabled}" name="isShopDisabled" value="{false}" />
+                    <label for="enable" class="cursor-pointer">
+                      <Label key="dapps.o-passport.pages.upsertOrganization.enableShop" />
+                    </label>
+                    <input id="disable" type="radio" class="mr-2 radio" bind:group="{business.isShopDisabled}" name="isShopDisabled" value="{true}" />
+                    <label for="disable" class="cursor-pointer">
+                      <Label key="dapps.o-passport.pages.upsertOrganization.disableShop" />
+                    </label>
+                  </div> -->
+                  <div class="flex flex-row justify-between">
+                    <div class="flex flex-row mt-2">
+                      <input id="enable" type="radio" bind:group="{business.isShopDisabled}" name="isShopDisabled" class="radio radio-primary" value="{false}" />
+                      <label for="enable" class="mt-1 ml-2 cursor-pointer">Enable Shop</label>
+                    </div>
+                    <div class="flex flex-row mt-2">
+                      <input id="disable" type="radio" bind:group="{business.isShopDisabled}" name="isShopDisabled" class="radio radio-primary" value="{true}" />
+                      <label for="disable" class="mt-1 ml-2 cursor-pointer">Disable Shop</label>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.name" />
-                  <div class="flex mt-2">
-                    <input class="w-full input input-bordered" bind:value="{$name.value}" type="text" />
-                  </div>
-                  {#if $myForm.hasError("name.max")}
-                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameMaxLength" /></div>
-                  {/if}
-                  {#if $myForm.hasError("name.required")}
-                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameRequired" /></div>
-                  {/if}
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.description" />
-                  <div class="flex mt-2">
-                    <textarea class="w-full textarea textarea-bordered" bind:value="{$description.value}"></textarea>
-                  </div>
-                  {#if $myForm.hasError("description.max")}
-                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionMaxLength" /></div>
-                  {/if}
-                  {#if $myForm.hasError("description.required")}
-                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionRequired" /></div>
-                  {/if}
                 </div>
               </div>
             </div>
           </div>
         </StandardHeaderBox>
-        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.contactInformation">
-          <div slot="standardHeaderBoxContent">
-            <div class="flex flex-col space-y-2">
-              <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.location" />
-                  <div class="flex mt-2">
-                    {#if business && business.lat}
-                      <div class="w-full mb-8 section-txt h-80" id="map">
-                        <div class="map-wrap">
-                          <GoogleMapSearch
-                            apiKey="{Environment.placesApiKey}"
-                            on:recenter="{(e) => mapRecenter(e.detail)}"
-                            zoom="{17}"
-                            options="{mapOptions}"
-                            placeholder="{business.locationName ? business.locationName : null}"
-                            bind:center="{center}" />
-                        </div>
-                      </div>
-                    {:else}
-                      <Geolocation
-                        options="{geoLocationOptions}"
-                        watch="{false}"
-                        getPosition
-                        let:coords
-                        let:loading
-                        let:success
-                        let:error
-                        let:notSupported
-                        on:position="{(e) => {
-                          geolocation = e.detail;
+        {#if business.isShopDisabled == false}
+          <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
+            <div slot="standardHeaderBoxContent">
+              <div class="flex flex-col space-y-2">
+                <div class="flex flex-col">
+                  <div class="flex flex-col mb-5 text-sm">
+                    <Label key="dapps.o-passport.pages.upsertOrganization.picture" />
+                    <div class="flex justify-center w-full mt-2" role="presentation" on:click="{() => imageEditor(false)}">
+                      <UserImage
+                        profile="{{
+                          circlesAddress: business.circlesAddress,
+                          avatarUrl: business.picture,
                         }}"
-                        on:error="{(e) => {
-                          console.log('POS ERROR', e.detail); // GeolocationError
-                        }}">
-                        {#if notSupported}
-                          <Label key="common.googlemaps.locationService.noLocationSupport" />
-                        {:else}
-                          {#if loading}
-                            <div class="w-full text-center">
-                              <span class="text-sm text-info">
-                                <Label key="common.googlemaps.locationService.loadingLocation" />
-                              </span>
-                              <center class="mt-4">
-                                <LoadingSpinner />
-                              </center>
-                            </div>
-                          {/if}
-                          {#if success}
-                            <div class="w-full mb-8 section-txt h-80" id="map">
-                              <div class="map-wrap">
-                                <GoogleMapSearch
-                                  apiKey="{Environment.placesApiKey}"
-                                  on:recenter="{(e) => mapRecenter(e.detail)}"
-                                  zoom="{17}"
-                                  options="{mapOptions}"
-                                  placeholder="{business.locationName ? business.locationName : null}"
-                                  bind:center="{center}" />
-                              </div>
-                            </div>
-                          {/if}
-                          {#if error}
-                            {#if error.code == error.PERMISSION_DENIED}
-                              <span class="text-sm text-center text-info">
-                                <Label key="common.googlemaps.locationService.locationDenied" />
-                              </span>
-                            {/if}
-
-                            <div class="w-full mb-8 section-txt h-80" id="map">
-                              <div class="map-wrap">
-                                <GoogleMapSearch
-                                  apiKey="{Environment.placesApiKey}"
-                                  on:recenter="{(e) => mapRecenter(e.detail)}"
-                                  zoom="{17}"
-                                  options="{mapOptions}"
-                                  placeholder="{business.locationName ? business.locationName : null}"
-                                  bind:center="{center}" />
-                              </div>
-                            </div>
-                          {/if}
-                        {/if}
-                      </Geolocation>
+                        size="{36}"
+                        editable="{true}"
+                        profileLink="{false}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex flex-col mb-5 text-sm">
+                    <Label key="dapps.o-passport.pages.upsertOrganization.name" />
+                    <div class="flex mt-2">
+                      <input class="w-full input input-bordered" bind:value="{$name.value}" type="text" />
+                    </div>
+                    {#if $myForm.hasError("name.max")}
+                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameMaxLength" /></div>
+                    {/if}
+                    {#if $myForm.hasError("name.required")}
+                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.nameRequired" /></div>
+                    {/if}
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex flex-col mb-5 text-sm">
+                    <Label key="dapps.o-passport.pages.upsertOrganization.description" />
+                    <div class="flex mt-2">
+                      <textarea class="w-full textarea textarea-bordered" bind:value="{$description.value}"></textarea>
+                    </div>
+                    {#if $myForm.hasError("description.max")}
+                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionMaxLength" /></div>
+                    {/if}
+                    {#if $myForm.hasError("description.required")}
+                      <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.descriptionRequired" /></div>
                     {/if}
                   </div>
                 </div>
               </div>
-              <div class="flex flex-col">
-                <div class="flex flex-col mb-5 text-sm">
-                  <Label key="dapps.o-passport.pages.upsertOrganization.phone" />
+            </div>
+          </StandardHeaderBox>
+          <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.contactInformation">
+            <div slot="standardHeaderBoxContent">
+              <div class="flex flex-col space-y-2">
+                <div class="flex flex-col">
+                  <div class="flex flex-col mb-5 text-sm">
+                    <Label key="dapps.o-passport.pages.upsertOrganization.location" />
+                    <div class="flex mt-2">
+                      {#if business && business.lat}
+                        <div class="w-full mb-8 section-txt h-80" id="map">
+                          <div class="map-wrap">
+                            <GoogleMapSearch
+                              apiKey="{Environment.placesApiKey}"
+                              on:recenter="{(e) => mapRecenter(e.detail)}"
+                              zoom="{17}"
+                              options="{mapOptions}"
+                              placeholder="{business.locationName ? business.locationName : null}"
+                              bind:center="{center}" />
+                          </div>
+                        </div>
+                      {:else}
+                        <Geolocation
+                          options="{geoLocationOptions}"
+                          watch="{false}"
+                          getPosition
+                          let:coords
+                          let:loading
+                          let:success
+                          let:error
+                          let:notSupported
+                          on:position="{(e) => {
+                            geolocation = e.detail;
+                          }}"
+                          on:error="{(e) => {
+                            console.log('POS ERROR', e.detail); // GeolocationError
+                          }}">
+                          {#if notSupported}
+                            <Label key="common.googlemaps.locationService.noLocationSupport" />
+                          {:else}
+                            {#if loading}
+                              <div class="w-full text-center">
+                                <span class="text-sm text-info">
+                                  <Label key="common.googlemaps.locationService.loadingLocation" />
+                                </span>
+                                <center class="mt-4">
+                                  <LoadingSpinner />
+                                </center>
+                              </div>
+                            {/if}
+                            {#if success}
+                              <div class="w-full mb-8 section-txt h-80" id="map">
+                                <div class="map-wrap">
+                                  <GoogleMapSearch
+                                    apiKey="{Environment.placesApiKey}"
+                                    on:recenter="{(e) => mapRecenter(e.detail)}"
+                                    zoom="{17}"
+                                    options="{mapOptions}"
+                                    placeholder="{business.locationName ? business.locationName : null}"
+                                    bind:center="{center}" />
+                                </div>
+                              </div>
+                            {/if}
+                            {#if error}
+                              {#if error.code == error.PERMISSION_DENIED}
+                                <span class="text-sm text-center text-info">
+                                  <Label key="common.googlemaps.locationService.locationDenied" />
+                                </span>
+                              {/if}
 
-                  <div class="w-full mt-2">
-                    <!-- <div class="flex flex-row w-full space-x-2 wrapper">
+                              <div class="w-full mb-8 section-txt h-80" id="map">
+                                <div class="map-wrap">
+                                  <GoogleMapSearch
+                                    apiKey="{Environment.placesApiKey}"
+                                    on:recenter="{(e) => mapRecenter(e.detail)}"
+                                    zoom="{17}"
+                                    options="{mapOptions}"
+                                    placeholder="{business.locationName ? business.locationName : null}"
+                                    bind:center="{center}" />
+                                </div>
+                              </div>
+                            {/if}
+                          {/if}
+                        </Geolocation>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex flex-col mb-5 text-sm">
+                    <Label key="dapps.o-passport.pages.upsertOrganization.phone" />
+
+                    <div class="w-full mt-2">
+                      <!-- <div class="flex flex-row w-full space-x-2 wrapper">
                       <CountrySelect
                         value="{business.phoneNumber}"
                         selectedCountry="{selectedCountry}"
@@ -389,75 +421,75 @@ function mapRecenter({ place }) {
                       </div>
                     </div> -->
 
-                    <div class="flex flex-row w-full space-x-2 wrapper">
-                      <CountrySelect
-                        selectedCountry="{selectedCountry}"
-                        searchTextPlaceholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
-                        on:change="{(e) => (selectedCountry = e.detail.option)}" />
-                      <div class="flex-grow">
-                        <TelInput
-                          bind:country="{selectedCountry}"
-                          bind:value="{value}"
-                          bind:valid="{valid}"
-                          bind:detailedValue="{detailedValue}"
-                          placeholder="enter your phone number"
-                          class="w-full basic-tel-input input input-bordered " />
+                      <div class="flex flex-row w-full space-x-2 wrapper">
+                        <CountrySelect
+                          selectedCountry="{selectedCountry}"
+                          searchTextPlaceholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
+                          on:change="{(e) => (selectedCountry = e.detail.option)}" />
+                        <div class="flex-grow">
+                          <TelInput
+                            bind:country="{selectedCountry}"
+                            bind:value="{value}"
+                            bind:valid="{valid}"
+                            bind:detailedValue="{detailedValue}"
+                            placeholder="enter your phone number"
+                            class="w-full basic-tel-input input input-bordered " />
+                        </div>
                       </div>
+                      {#if value !== "" && !isValid}
+                        <div class="text-sm text-right text-info"><Label key="dapps.o-marketlisting.pages.mystore.error.validPhoneNumber" /></div>
+                      {/if}
+                      <!-- <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" /> -->
                     </div>
-                    {#if value !== "" && !isValid}
-                      <div class="text-sm text-right text-info"><Label key="dapps.o-marketlisting.pages.mystore.error.validPhoneNumber" /></div>
-                    {/if}
-                    <!-- <input class="w-full input input-bordered" bind:value="{business.phoneNumber}" type="text" /> -->
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </StandardHeaderBox>
+          </StandardHeaderBox>
 
-        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.business">
-          <div slot="standardHeaderBoxContent">
-            <div class="flex flex-col">
-              <div class="flex flex-col mb-5 text-sm">
-                <Label key="dapps.o-passport.pages.upsertOrganization.category" />
-                <div class="flex mt-2">
-                  {#if allCategories}
-                    <DropDown
-                      selected="{business.businessCategory ? business.businessCategory : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
-                      items="{allCategories}"
-                      id="filters"
-                      key="id"
-                      i18nKeys="{true}"
-                      value="name"
-                      dropDownClass="mt-1 select input w-full"
-                      on:dropDownChange="{(event) => {
-                        const selectedItems = event.detail;
-                        business.businessCategoryId = parseInt(selectedItems.value);
-                        $category.value = business.businessCategoryId;
-                      }}" />
+          <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.business">
+            <div slot="standardHeaderBoxContent">
+              <div class="flex flex-col">
+                <div class="flex flex-col mb-5 text-sm">
+                  <Label key="dapps.o-passport.pages.upsertOrganization.category" />
+                  <div class="flex mt-2">
+                    {#if allCategories}
+                      <DropDown
+                        selected="{business.businessCategory ? business.businessCategory : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
+                        items="{allCategories}"
+                        id="filters"
+                        key="id"
+                        i18nKeys="{true}"
+                        value="name"
+                        dropDownClass="mt-1 select input w-full"
+                        on:dropDownChange="{(event) => {
+                          const selectedItems = event.detail;
+                          business.businessCategoryId = parseInt(selectedItems.value);
+                          $category.value = business.businessCategoryId;
+                        }}" />
+                    {/if}
+                  </div>
+                  {#if $myForm.hasError("category.required")}
+                    <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.categoryRequired" /></div>
                   {/if}
                 </div>
-                {#if $myForm.hasError("category.required")}
-                  <div class="text-sm text-right text-alert"><Label key="dapps.o-marketlisting.pages.mystore.error.categoryRequired" /></div>
-                {/if}
+              </div>
+              <div class="flex flex-col mb-5 text-sm">
+                <Label key="dapps.o-passport.pages.upsertOrganization.businessHours" />
+                <div class="flex mt-2">
+                  <OpeningHours
+                    week="{week}"
+                    on:change="{() => {
+                      business = {
+                        ...business,
+                        ...(week?.serializeWeek() ?? {}),
+                      };
+                    }}" />
+                </div>
               </div>
             </div>
-            <div class="flex flex-col mb-5 text-sm">
-              <Label key="dapps.o-passport.pages.upsertOrganization.businessHours" />
-              <div class="flex mt-2">
-                <OpeningHours
-                  week="{week}"
-                  on:change="{() => {
-                    business = {
-                      ...business,
-                      ...(week?.serializeWeek() ?? {}),
-                    };
-                  }}" />
-              </div>
-            </div>
-          </div>
-        </StandardHeaderBox>
-
+          </StandardHeaderBox>
+        {/if}
         {#if error}
           <span class="text-sm text-center text-alert">{error}</span>
         {/if}
