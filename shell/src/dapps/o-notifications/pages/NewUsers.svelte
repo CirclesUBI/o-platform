@@ -15,7 +15,7 @@ let inbox = new MyInbox(SortOrder.Desc, 20, [EventType.NewUser]);
 <SimpleHeader runtimeDapp="{runtimeDapp}" />
 <div class="bg-notifications" style="visibility: hidden"></div>
 <div class="px-4 mx-auto mt-5 mb-20 -mt-3 md:w-2/3 xl:w-1/2">
-  <h1>{$_("dapps.o-notifications.pages.newUsers.newUsers")}</h1>
+  <h1 class="mb-3">{$_("dapps.o-notifications.pages.newUsers.newUsers")}</h1>
   <EventList
     store="{inbox}"
     views="{{

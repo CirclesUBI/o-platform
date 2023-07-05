@@ -51,7 +51,7 @@ function handleOnChange(e) {
     {/each}
   {:else}
     {#if i18nKeys}
-      <option class="text" value="{undefined}" selected><Label key="{selected}" /></option>
+      <option class="text" value="{undefined}" selected><Label key="{selected.toString()}" /></option>
     {:else}
       <option class="text" value="{undefined}" selected>{selected}</option>
     {/if}
