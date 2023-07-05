@@ -16,8 +16,6 @@ let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 
-console.log("dacian", size);
-
 switch (size) {
   case 12:
     sizeInPixels = 48;

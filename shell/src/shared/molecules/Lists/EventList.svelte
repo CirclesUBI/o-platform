@@ -121,7 +121,7 @@ const handleChange = async (e) => {
   <div use:inview="{{}}" on:change="{handleChange}"></div>
 {/if}
 {#if store}
-  {#each eventsWithViews as eventWithView (!eventWithView.event.transaction_hash ? eventWithView.event.timestamp : (eventWithView.event.transaction_hash + eventWithView.event.type))}
+  {#each eventsWithViews as eventWithView (!eventWithView.event.transaction_hash ? eventWithView.event.timestamp : eventWithView.event.transaction_hash + eventWithView.event.type)}
     <svelte:component this="{eventWithView.component}" event="{eventWithView.event}" />
 
     {#if store && !reverse && eventWithView.i > events.length - 25}
@@ -139,7 +139,7 @@ const handleChange = async (e) => {
     </div>
   </section>
 {/if}
-<!-- {#if eventsWithViews && eventsWithViews.length === 0 && !isLoading}
+{#if eventsWithViews && eventsWithViews.length === 0 && !isLoading}
   <section class="flex items-center justify-center mb-2">
     <div class="flex items-center w-full p-4 space-x-2 bg-white border rounded-xl border-bordergray">
       <div class="flex flex-col items-start text-center">
@@ -147,4 +147,4 @@ const handleChange = async (e) => {
       </div>
     </div>
   </section>
-{/if} -->
+{/if}
