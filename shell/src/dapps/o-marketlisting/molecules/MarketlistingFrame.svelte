@@ -114,7 +114,7 @@ function SortChange(event) {
     <div class="flex flex-col items-end flex-grow">
       <input
         type="text"
-        class="w-full justify-self-end input input-sm"
+        class="w-full sm:w-2/5 justify-self-end input input-sm"
         placeholder="{$_('dapps.o-marketlisting.molecules.marketlistingframe.search')}"
         bind:value="{searchString}"
         on:input="{searchStringChange}" />

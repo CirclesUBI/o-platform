@@ -1,0 +1,42 @@
+name: Detect and tag new version of o-platform
+
+on:
+  push:
+    branches:
+      - "dev"
+
+jobs:
+  tag-release:
+    name: Tag and release a new new version
+    runs-on: ubuntu-latest
+    outputs:
+      previous-version: ${{ steps.check-version.outputs.previous-version }}
+      current-version: ${{ steps.check-version.outputs.current-version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Detect and tag new version
+        uses: salsify/action-detect-and-tag-new-version@v2
+        id: check-version
+        with:
+          version-command: |
+            node -p 'require("./shell/package.json").version'
+      - name: Release new tag
+        uses: ncipollo/release-action@v1
+        if: steps.check-version.outputs.previous-version != steps.check-version.outputs.current-version
+        with:
+          allowUpdates: true
+          generateReleaseNotes: true
+          tag: ${{ steps.check-version.outputs.tag }}
+          updateOnlyUnreleased: true
+  # TODO: Integrate Container Build
+  # call-build-container:
+  #   name: Build tagged Container image
+  #   needs: ["tag-release"]
+  #   uses: ./.github/workflows/build-container.yml
+  #   if: needs.tag-release.outputs.previous-version != needs.tag-release.outputs.current-version
+  #   with:
+  #     client_ref: "refs/tags/v${{ needs.tag-release.outputs.current-version }}"
+  #   secrets: inherit
