@@ -16,6 +16,7 @@ import UserImage from "../../../shared/atoms/UserImage.svelte";
 import { push } from "svelte-spa-router";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { _ } from "svelte-i18n";
+import Icons from "../../../shared/molecules/Icons.svelte";
 
 let name;
 let profile: Profile;
@@ -33,6 +34,7 @@ onMount(() => {
   } else {
     profile = undefined;
   }
+
   if (profile && profile.memberships) {
     businesses = profile.memberships.reduce(function (result, option) {
       if (option.isAdmin === true) {
@@ -142,7 +144,20 @@ function createNewOrga() {
             <div class="flex flex-col w-full space-y-2">
               <div class="p-1 pt-2 xs:p-4">
                 <center>
-                  <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
+                  <div class="flex flex-col space-y-2">
+                    <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
+                    <!-- {#if profile.isShopDisabled}
+                      <div class="flex flex-row justify-center space-x-2">
+                        <span class="text-6xl font-enso"><Icons icon="x-circle" size="{6}" customClass="text-alert" /></span>
+                        <span class="text-alert"><Label key="dapps.o-passport.pages.home.shopDisabled" /></span>
+                      </div>
+                    {:else}
+                      <div class="flex flex-row justify-center space-x-2">
+                        <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="text-success" /></span>
+                        <span class="text-success"><Label key="dapps.o-passport.pages.home.shopEnabled" /></span>
+                      </div>
+                    {/if} -->
+                  </div>
                 </center>
               </div>
             </div>

@@ -111,6 +111,7 @@ onMount(async () => {
     queryParams: {
       where: {
         inCirclesAddress: [circlesAddress.toLowerCase()],
+        showDisabledShops: true,
       },
     },
   });
@@ -123,7 +124,6 @@ onMount(async () => {
     $name.value = business.name;
     $category.value = business.businessCategoryId;
     value = business.phoneNumber;
-    console.log("ASDASD", business.phoneNumber);
   }
 });
 
@@ -152,6 +152,7 @@ async function save() {
         description: $description.value,
         phoneNumber: value,
         businessCategoryId: business.businessCategoryId,
+        shopEnabled: business.shopEnabled,
       },
     });
 
@@ -235,9 +236,40 @@ function mapRecenter({ place }) {
         <h1 class="text-center">{business.name}</h1>
       </div>
     </section>
-    <pre></pre>
+
     <section class="justify-left">
       <div class="flex flex-col -mt-6 space-y-6 overflow-hidden whitespace-pre-line xs:p-3 xs:-mt-2">
+        <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.enableDisable">
+          <div slot="standardHeaderBoxContent">
+            <div class="flex flex-col space-y-2">
+              <div class="flex flex-col">
+                <div class="flex flex-col mb-5 text-sm">
+                  <!-- <div class="mx-10 my-5 uppercase">
+                    <input id="enable" type="radio" class="mr-2 radio" bind:group="{business.shopEnabled}" name="shopEnabled" value="{false}" />
+                    <label for="enable" class="cursor-pointer">
+                      <Label key="dapps.o-passport.pages.upsertOrganization.enableShop" />
+                    </label>
+                    <input id="disable" type="radio" class="mr-2 radio" bind:group="{business.shopEnabled}" name="shopEnabled" value="{true}" />
+                    <label for="disable" class="cursor-pointer">
+                      <Label key="dapps.o-passport.pages.upsertOrganization.disableShop" />
+                    </label>
+                  </div> -->
+                  <div class="flex flex-row justify-between">
+                    <div class="flex flex-row mt-2">
+                      <input id="enable" type="radio" bind:group="{business.shopEnabled}" name="shopEnabled" class="radio radio-primary" value="{true}" />
+                      <label for="enable" class="mt-1 ml-2 cursor-pointer"><Label key="dapps.o-passport.pages.upsertOrganization.enableShop" /></label>
+                    </div>
+                    <div class="flex flex-row mt-2">
+                      <input id="disable" type="radio" bind:group="{business.shopEnabled}" name="shopEnabled" class="radio radio-primary" value="{false}" />
+                      <label for="disable" class="mt-1 ml-2 cursor-pointer"><Label key="dapps.o-passport.pages.upsertOrganization.disableShop" /></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </StandardHeaderBox>
+
         <StandardHeaderBox headerTextStringKey="dapps.o-passport.pages.upsertOrganization.generalInformation">
           <div slot="standardHeaderBoxContent">
             <div class="flex flex-col space-y-2">
