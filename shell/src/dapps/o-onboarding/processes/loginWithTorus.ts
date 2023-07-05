@@ -189,6 +189,7 @@ const processDefinition = (processId: string) =>
           invoke: {
             src: async (context) => {
               const mockProfile = Environment.getTestProfile(context.data.useMockProfileIndex);
+              console.log("MOCKPF", mockProfile);
               const openLogin = <any>{
                 async login(params: any): Promise<{ privKey: string }> {
                   return {
@@ -208,11 +209,11 @@ const processDefinition = (processId: string) =>
                 },
               });
 
-              // const userInfo = await openLogin.getUserInfo();
-              // return {
-              //   privateKey: privateKey.privKey,
-              //   userInfo: userInfo,
-              // };
+              const userInfo = await openLogin.getUserInfo();
+              return {
+                privateKey: privateKey.privKey,
+                userInfo: userInfo,
+              };
             },
             onDone: {
               actions: "assignPrivateKeyAndUserInfoToContext",
