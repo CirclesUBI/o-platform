@@ -64,7 +64,6 @@ const _me = readable<Profile | null>(null, function start(set) {
           memberships: [],
           verifications: [],
           circlesTokenAddress: "",
-          isShopDisabled: null,
           __typename: "Profile",
         };
         localStorage.setItem("me", JSON.stringify(notMe));
@@ -74,7 +73,6 @@ const _me = readable<Profile | null>(null, function start(set) {
       if (event.type == "shell.authenticated" && event.profile) {
         sessionInfo = event.sessionInfo;
         set(event.profile);
-        console.log("me.ts new $me: ", event.profile);
         localStorage.setItem("me", JSON.stringify(event.profile));
       }
     }

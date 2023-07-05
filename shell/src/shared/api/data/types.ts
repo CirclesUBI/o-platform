@@ -90,7 +90,7 @@ export type Businesses = {
   lon?: Maybe<Scalars['Float']>;
   businessCategory?: Maybe<Scalars['String']>;
   businessCategoryId?: Maybe<Scalars['Int']>;
-  isShopDisabled?: Maybe<Scalars['Boolean']>;
+  shopEnabled?: Maybe<Scalars['Boolean']>;
 };
 
 export type Capability = {
@@ -761,7 +761,7 @@ export type Organisation = {
   locationName?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
-  isShopDisabled?: Maybe<Scalars['Boolean']>;
+  shopEnabled?: Maybe<Scalars['Boolean']>;
 };
 
 export type OrganisationCreated = IEventPayload & {
@@ -822,7 +822,7 @@ export type Profile = {
   lon?: Maybe<Scalars['Float']>;
   category?: Maybe<BusinessCategory>;
   surveyDataSessionId?: Maybe<Scalars['String']>;
-  isShopDisabled?: Maybe<Scalars['Boolean']>;
+  shopEnabled?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1141,7 +1141,7 @@ export type QueryAllBusinessesConditions = {
   inCategories?: Maybe<Array<Scalars['Int']>>;
   inCirclesAddress?: Maybe<Array<Scalars['String']>>;
   searchString?: Maybe<Scalars['String']>;
-  inactive?: Maybe<Scalars['Boolean']>;
+  showDisabledShops?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryAllBusinessesOrder = {
@@ -1416,7 +1416,7 @@ export type UpsertOrganisationInput = {
   businessHoursSaturday?: Maybe<Scalars['String']>;
   businessHoursSunday?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
-  isShopDisabled?: Maybe<Scalars['Boolean']>;
+  shopEnabled?: Maybe<Scalars['Boolean']>;
 };
 
 export type UpsertProfileInput = {
@@ -1708,13 +1708,13 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location' | 'locationName' | 'lat' | 'lon' | 'isShopDisabled'>
+    & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'gender' | 'location' | 'locationName' | 'lat' | 'lon'>
     & { memberships?: Maybe<Array<(
       { __typename?: 'Membership' }
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'isShopDisabled'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
@@ -1739,7 +1739,7 @@ export type UpsertOrganisationMutation = (
     & Pick<CreateOrganisationResult, 'success' | 'error'>
     & { organisation?: Maybe<(
       { __typename?: 'Organisation' }
-      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'firstName' | 'location' | 'locationName' | 'lat' | 'lon' | 'isShopDisabled'>
+      & Pick<Organisation, 'id' | 'avatarMimeType' | 'avatarUrl' | 'circlesAddress' | 'circlesSafeOwner' | 'createdAt' | 'description' | 'firstName' | 'location' | 'locationName' | 'lat' | 'lon' | 'shopEnabled'>
     )> }
   ) }
 );
@@ -1897,13 +1897,13 @@ export type InitQuery = (
       & Pick<Capability, 'type'>
     )>, profile?: Maybe<(
       { __typename?: 'Profile' }
-      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'type' | 'isShopDisabled' | 'canInvite' | 'circlesTokenAddress'>
+      & Pick<Profile, 'id' | 'circlesAddress' | 'displayCurrency' | 'circlesSafeOwner' | 'invitationLink' | 'successorOfCirclesAddress' | 'displayName' | 'firstName' | 'lastName' | 'emailAddress' | 'askedForEmailAddress' | 'dream' | 'country' | 'avatarUrl' | 'avatarCid' | 'avatarMimeType' | 'newsletter' | 'displayTimeCircles' | 'provenUniqueness' | 'location' | 'locationName' | 'lat' | 'lon' | 'type' | 'canInvite' | 'circlesTokenAddress'>
       & { memberships?: Maybe<Array<(
         { __typename?: 'Membership' }
         & Pick<Membership, 'isAdmin'>
         & { organisation: (
           { __typename?: 'Organisation' }
-          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'isShopDisabled'>
+          & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
         ) }
       )>>, verifications?: Maybe<Array<(
         { __typename?: 'Verification' }
@@ -2041,7 +2041,7 @@ export type MyProfileQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'location' | 'locationName' | 'lat' | 'lon' | 'isShopDisabled'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'location' | 'locationName' | 'lat' | 'lon'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
@@ -2069,7 +2069,7 @@ export type ProfilesQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'isShopDisabled'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
@@ -2140,7 +2140,7 @@ export type ProfilesByCirclesAddressQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'isShopDisabled'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
@@ -2238,7 +2238,7 @@ export type ProfileBySafeAddressQuery = (
       & Pick<Membership, 'isAdmin'>
       & { organisation: (
         { __typename?: 'Organisation' }
-        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl' | 'isShopDisabled'>
+        & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'displayName' | 'circlesSafeOwner' | 'firstName' | 'description' | 'avatarUrl'>
       ) }
     )>>, verifications?: Maybe<Array<(
       { __typename?: 'Verification' }
@@ -2304,7 +2304,7 @@ export type OrganisationsByAddressQuery = (
   { __typename?: 'Query' }
   & { organisationsByAddress: Array<(
     { __typename?: 'Organisation' }
-    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'avatarUrl' | 'displayName' | 'location' | 'locationName' | 'lat' | 'lon' | 'isShopDisabled'>
+    & Pick<Organisation, 'id' | 'circlesAddress' | 'displayCurrency' | 'createdAt' | 'firstName' | 'avatarUrl' | 'displayName' | 'location' | 'locationName' | 'lat' | 'lon' | 'shopEnabled'>
     & { members?: Maybe<Array<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'id' | 'successorOfCirclesAddress' | 'circlesSafeOwner' | 'circlesAddress' | 'displayCurrency' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName' | 'dream' | 'provenUniqueness' | 'type'>
@@ -2773,7 +2773,7 @@ export type AllBusinessesQuery = (
   { __typename?: 'Query' }
   & { allBusinesses: Array<(
     { __typename?: 'Businesses' }
-    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory' | 'cursor' | 'isShopDisabled'>
+    & Pick<Businesses, 'id' | 'circlesAddress' | 'name' | 'description' | 'picture' | 'phoneNumber' | 'location' | 'locationName' | 'lat' | 'lon' | 'businessHoursMonday' | 'businessHoursTuesday' | 'businessHoursWednesday' | 'businessHoursThursday' | 'businessHoursFriday' | 'businessHoursSaturday' | 'businessHoursSunday' | 'businessCategoryId' | 'businessCategory' | 'cursor' | 'shopEnabled'>
   )> }
 );
 
@@ -2995,7 +2995,6 @@ export const UpsertProfileDocument = gql`
     locationName
     lat
     lon
-    isShopDisabled
     memberships {
       isAdmin
       organisation {
@@ -3007,7 +3006,6 @@ export const UpsertProfileDocument = gql`
         firstName
         description
         avatarUrl
-        isShopDisabled
       }
     }
     verifications {
@@ -3043,7 +3041,7 @@ export const UpsertOrganisationDocument = gql`
       locationName
       lat
       lon
-      isShopDisabled
+      shopEnabled
     }
   }
 }
@@ -3166,7 +3164,6 @@ export const InitDocument = gql`
       lat
       lon
       type
-      isShopDisabled
       memberships {
         isAdmin
         organisation {
@@ -3178,7 +3175,6 @@ export const InitDocument = gql`
           firstName
           description
           avatarUrl
-          isShopDisabled
         }
       }
       verifications {
@@ -3354,7 +3350,6 @@ export const MyProfileDocument = gql`
         locationName
         lat
         lon
-        isShopDisabled
       }
     }
     verifications {
@@ -3399,7 +3394,6 @@ export const ProfilesDocument = gql`
         firstName
         description
         avatarUrl
-        isShopDisabled
       }
     }
     verifications {
@@ -3514,7 +3508,6 @@ export const ProfilesByCirclesAddressDocument = gql`
         firstName
         description
         avatarUrl
-        isShopDisabled
       }
     }
     verifications {
@@ -3697,7 +3690,6 @@ export const ProfileBySafeAddressDocument = gql`
         firstName
         description
         avatarUrl
-        isShopDisabled
       }
     }
     verifications {
@@ -3775,7 +3767,7 @@ export const OrganisationsByAddressDocument = gql`
     locationName
     lat
     lon
-    isShopDisabled
+    shopEnabled
     members {
       ... on Organisation {
         id
@@ -4525,7 +4517,7 @@ export const AllBusinessesDocument = gql`
     businessCategoryId
     businessCategory
     cursor
-    isShopDisabled
+    shopEnabled
   }
 }
     `;
