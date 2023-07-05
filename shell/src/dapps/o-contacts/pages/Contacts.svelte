@@ -60,7 +60,7 @@ function sortAlphabetically(a, b) {
     <DashboardInvitesWidget />
   {/if}
   {#if !displayContacts}
-    <section class="flex items-center justify-center mb-2">
+    <section class="flex items-center justify-center mb-2 mt-4">
       <div class="flex items-center w-full p-4 space-x-2 bg-white shadow">
         <div class="flex flex-col items-start">
           <div><Label key="dapps.o-contacts.pages.contacts.loadingContacts" /></div>
@@ -72,14 +72,14 @@ function sortAlphabetically(a, b) {
     {#each displayContacts as contact (contact.contactAddress + contact.trustIn + contact.trustOut)}
       <ContactCard contact="{contact}" />
     {/each}
-    <!-- {#if displayContacts.length === 0}
-      <section class="flex items-center justify-center mb-2">
+    {#if displayContacts.length === 0}
+      <section class="flex items-center justify-center mb-2 mt-4">
         <div class="flex items-center w-full p-4 space-x-2 bg-white rounded-lg shadow">
           <div class="flex flex-col items-start text-center">
             <div><Label key="dapps.o-contacts.pages.contacts.noEntries" /></div>
           </div>
         </div>
       </section>
-    {/if} -->
+    {/if}
   {/if}
 </div>

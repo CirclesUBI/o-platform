@@ -39,7 +39,7 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
 
   reload(_marketListingData.orderBy, _marketListingData.filter);
-  return function stop() {};
+  return function stop() { };
 });
 
 function search(searchString: string) {
@@ -72,7 +72,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
   }
 
   if (orderBy != newOrder) {
-    _marketListingData.messages = ["<span class='text-info'>We couldn't get your Location.<br/>Sorting by 'Nearest' will only work if you grant the browser access to your location.</span>"];
+    _marketListingData.messages = ["<span class='text-info'>" + window.o.i18n('dapps.o-marketlisting.stores.marketStore.couldntGetLocation') + "<br/>" + window.o.i18n('dapps.o-marketlisting.stores.marketStore.couldntGetLocationDetails') + "</span>"];
   } else {
     _marketListingData.messages = [];
   }
@@ -86,25 +86,25 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
       limit: 8,
       ...(ownLocation
         ? {
-            ownCoordinates: {
-              lat: ownLocation.coords.latitude,
-              lon: ownLocation.coords.longitude,
-            },
-          }
+          ownCoordinates: {
+            lat: ownLocation.coords.latitude,
+            lon: ownLocation.coords.longitude,
+          },
+        }
         : {}),
       ...(filter
         ? {
-            where: {
-              inCategories: filter,
-            },
-          }
+          where: {
+            inCategories: filter,
+          },
+        }
         : {}),
       ...(_marketListingData.searchString
         ? {
-            where: {
-              searchString: _marketListingData.searchString,
-            },
-          }
+          where: {
+            searchString: _marketListingData.searchString,
+          },
+        }
         : {}),
     },
   }).then((businesses) => {
