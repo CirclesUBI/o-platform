@@ -16,5 +16,6 @@ shell/public/bundle.1.js
 yarn.lock
 .yarn/cache/
 .env.*
-
+shell/src/shared/api/data/types.ts .yarn/install-state.gz
 shell/public/COMMITTISH
+

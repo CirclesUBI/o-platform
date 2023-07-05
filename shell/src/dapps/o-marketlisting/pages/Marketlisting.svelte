@@ -6,20 +6,23 @@ import { marketFavoritesStore } from "../stores/marketFavoritesStore";
 import marketStore from "../stores/marketStore";
 import MarketlistingFrame from "../molecules/MarketlistingFrame.svelte";
 import SimpleHeader from "../../../shared/atoms/SimpleHeader.svelte";
-import { infiniteScroll } from "../../../shared/functions/infiniteScroll";
+import IntersectionObserver from "../../../shared/molecules/IntersectionObserver.svelte";
+import { onMount } from "svelte";
 
 export let runtimeDapp: RuntimeDapp<any>;
-let loading = false;
-let entries: any = [];
+let loading = true;
 let endOfList: boolean = false;
 
-marketStore.subscribe((items) => {
-  entries = items;
-  console.log("marketstore data has changed. endoflist:", endOfList);
-  endOfList = false;
+let element;
+let intersecting = false;
+
+onMount(async () => {
+  loading = false;
+  intersecting = false;
 });
 
 const fetchData = async () => {
+  console.log("Fetching...");
   try {
     loading = true;
     endOfList = !(await marketStore.fetchNext());
@@ -29,23 +32,14 @@ const fetchData = async () => {
   }
 };
 
-let elementRef = null;
-
-const load = () => {
-  if (!endOfList) {
+const load = async () => {
+  console.log("In view");
+  if (!endOfList && !loading) {
     setTimeout(() => {
       fetchData();
     }, 300);
   }
 };
-
-// $: $marketStore.businesses, (endOfList = false);
-
-$: {
-  if (elementRef) {
-    infiniteScroll({ fetch: load, element: elementRef });
-  }
-}
 </script>
 
 <div style="visibility: hidden;" class="bg-market"></div>
@@ -55,19 +49,23 @@ $: {
   <img src="images/market-banner.svg" alt="Marketplace" class="w-full" />
 
   <MarketlistingFrame>
-    <main>
-      {#if entries}
-        <div class="grid grid-cols-2 businessList">
-          {#each entries.businesses as business}
-            <div>
-              <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
-            </div>
-          {/each}
-          {#if loading === false}
-            <div bind:this="{elementRef}"><!--intersection observer element--></div>
-          {/if}
+    <div class="grid grid-cols-2 businessList">
+      {#each $marketStore.businesses as business}
+        <div>
+          <BusinessCard on:toggleFavorite="{(e) => marketFavoritesStore.toggleFavorite(e.detail)}" business="{business}" />
         </div>
-      {/if}
-    </main>
+      {/each}
+
+      <IntersectionObserver
+        element="{element}"
+        bind:intersecting="{intersecting}"
+        on:intersect="{(e) => {
+          if ($marketStore.businesses.at(-1)?.cursor !== undefined) {
+            load();
+          }
+        }}">
+        <div bind:this="{element}"></div>
+      </IntersectionObserver>
+    </div>
   </MarketlistingFrame>
 </div>

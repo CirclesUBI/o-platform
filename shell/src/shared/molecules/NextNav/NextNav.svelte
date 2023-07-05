@@ -33,7 +33,7 @@ export let isNotFoundPage: boolean = false;
       on:actionButton="{() => {
         navigation.navPill.center.props.action();
       }}"
-      navigation={navigation}
+      navigation="{navigation}"
       props="{navigation.navPill}" />
   {/if}
   {#if navigation.loginPill && !isNotFoundPage}
@@ -42,6 +42,22 @@ export let isNotFoundPage: boolean = false;
         navigation.loginPill.props.action();
       }}"
       props="{navigation.loginPill}" />
+  {/if}
+
+  {#if navigation.rightSlot}
+    <div class="grid grid-cols-2 mr-4 place-items-end">
+      <div></div>
+
+      <div
+        class="flex items-center justify-center w-12 h-12 ml-4 {navigation.rightSlot.props.backgroundColorClass
+          ? 'bg-' + navigation.rightSlot.props.backgroundColorClass
+          : 'bg-white'} rounded-full cursor-pointer"
+        class:text-white="{navigation.rightSlot.props.backgroundColorClass}"
+        role="presentation"
+        on:click="{navigation.rightSlot.props.action}">
+        <svelte:component this="{navigation.rightSlot.component}" {...navigation.rightSlot.props} on:menuButton />
+      </div>
+    </div>
   {/if}
   {#if isNotFoundPage}
     <div class="home-icon-container">

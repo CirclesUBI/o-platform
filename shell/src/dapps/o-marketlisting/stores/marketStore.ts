@@ -39,7 +39,7 @@ const _marketStore = readable<MarketListingData>(initial, function start(set) {
   _set = set;
 
   reload(_marketListingData.orderBy, _marketListingData.filter);
-  return function stop() {};
+  return function stop() { };
 });
 
 function search(searchString: string) {
@@ -53,9 +53,9 @@ function search(searchString: string) {
 
 function fetchNext() {
   const value = get(_marketStore);
-  const cursor: number = value.businesses.at(-1).cursor;
+  const cursor: number = value.businesses.at(-1)?.cursor || 0;
 
-  if (_marketListingData.cursor == cursor) {
+  if (_marketListingData.businesses.length > 0 && _marketListingData.cursor == cursor) {
     return false;
   }
 
@@ -65,13 +65,14 @@ function fetchNext() {
 
 function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], cursor: number = 0, append: boolean = false) {
   const newOrder = orderBy != QueryAllBusinessesOrderOptions.Nearest ? orderBy : !ownLocation ? QueryAllBusinessesOrderOptions.Newest : QueryAllBusinessesOrderOptions.Nearest;
+  console.log("ORDER: ", newOrder);
 
   if (filter?.length === 0) {
     filter = undefined;
   }
 
   if (orderBy != newOrder) {
-    _marketListingData.messages = ["<span class='text-info'>We couldn't get your Location.<br/>Sorting by 'Nearest' will only work if you grant the browser access to your location.</span>"];
+    _marketListingData.messages = ["<span class='text-info'>" + window.o.i18n('dapps.o-marketlisting.stores.marketStore.couldntGetLocation') + "<br/>" + window.o.i18n('dapps.o-marketlisting.stores.marketStore.couldntGetLocationDetails') + "</span>"];
   } else {
     _marketListingData.messages = [];
   }
@@ -85,25 +86,25 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
       limit: 8,
       ...(ownLocation
         ? {
-            ownCoordinates: {
-              lat: ownLocation.coords.latitude,
-              lon: ownLocation.coords.longitude,
-            },
-          }
+          ownCoordinates: {
+            lat: ownLocation.coords.latitude,
+            lon: ownLocation.coords.longitude,
+          },
+        }
         : {}),
       ...(filter
         ? {
-            where: {
-              inCategories: filter,
-            },
-          }
+          where: {
+            inCategories: filter,
+          },
+        }
         : {}),
       ...(_marketListingData.searchString
         ? {
-            where: {
-              searchString: _marketListingData.searchString,
-            },
-          }
+          where: {
+            searchString: _marketListingData.searchString,
+          },
+        }
         : {}),
     },
   }).then((businesses) => {
@@ -117,6 +118,7 @@ function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], curs
     }
     _set(_marketListingData);
   });
+  console.log("Store Data Loaded");
 }
 
 let _set: (marketListingData: MarketListingData) => void;
