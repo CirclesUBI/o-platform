@@ -60,9 +60,7 @@ const computeSizes = () => {
       naturalWidth: imgEl.naturalWidth,
       naturalHeight: imgEl.naturalHeight,
     };
-    cropperSize = cropSize
-      ? cropSize
-      : helpers.getCropSize(imgEl.width, imgEl.height, aspect);
+    cropperSize = cropSize ? cropSize : helpers.getCropSize(imgEl.width, imgEl.height, aspect);
   }
   if (containerEl) {
     containerRect = containerEl.getBoundingClientRect();
@@ -124,14 +122,7 @@ const onDrag = ({ x, y }) => {
       y: dragStartCrop.y + offsetY,
     };
 
-    crop = restrictPosition
-      ? helpers.restrictPosition(
-          requestedPosition,
-          imageSize,
-          cropperSize,
-          zoom
-        )
-      : requestedPosition;
+    crop = restrictPosition ? helpers.restrictPosition(requestedPosition, imageSize, cropperSize, zoom) : requestedPosition;
   });
 };
 
@@ -192,26 +183,14 @@ const setNewZoom = (newZoom, point) => {
     x: zoomTarget.x * zoom - zoomPoint.x,
     y: zoomTarget.y * zoom - zoomPoint.y,
   };
-  crop = restrictPosition
-    ? helpers.restrictPosition(requestedPosition, imageSize, cropperSize, zoom)
-    : requestedPosition;
+  crop = restrictPosition ? helpers.restrictPosition(requestedPosition, imageSize, cropperSize, zoom) : requestedPosition;
 };
 
 const emitCropData = () => {
   if (!cropperSize || cropperSize.width === 0) return;
   // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/svelte-easy-crop/issues/6)
-  const position = restrictPosition
-    ? helpers.restrictPosition(crop, imageSize, cropperSize, zoom)
-    : crop;
-  const { croppedAreaPercentages, croppedAreaPixels } =
-    helpers.computeCroppedArea(
-      position,
-      imageSize,
-      cropperSize,
-      getAspect(),
-      zoom,
-      restrictPosition
-    );
+  const position = restrictPosition ? helpers.restrictPosition(crop, imageSize, cropperSize, zoom) : crop;
+  const { croppedAreaPercentages, croppedAreaPixels } = helpers.computeCroppedArea(position, imageSize, cropperSize, getAspect(), zoom, restrictPosition);
 
   dispatch("cropcomplete", {
     percent: croppedAreaPercentages,
@@ -222,9 +201,7 @@ const emitCropData = () => {
 // ------ Reactive statement ------
 //when aspect changes, we reset the cropperSize
 $: if (imgEl) {
-  cropperSize = cropSize
-    ? cropSize
-    : helpers.getCropSize(imgEl.width, imgEl.height, aspect);
+  cropperSize = cropSize ? cropSize : helpers.getCropSize(imgEl.width, imgEl.height, aspect);
 }
 
 // when zoom changes, we recompute the cropped area
@@ -246,22 +223,9 @@ $: zoom && emitCropData();
   on:gesturestart|preventDefault
   on:gesturechange|preventDefault
   data-testid="container">
-  <img
-    bind:this="{imgEl}"
-    class="image"
-    src="{image}"
-    on:load="{onImgLoad}"
-    alt=""
-    style="transform: translate({crop.x}px, {crop.y}px) scale({zoom});"
-    crossorigin="{crossOrigin}" />
+  <img bind:this="{imgEl}" class="image" src="{image}" on:load="{onImgLoad}" alt="" style="transform: translate({crop.x}px, {crop.y}px) scale({zoom});" crossorigin="{crossOrigin}" />
   {#if cropperSize}
-    <div
-      class="cropperArea"
-      class:round="{cropShape === 'round'}"
-      class:grid="{showGrid}"
-      style="width: {cropperSize.width}px; height: {cropperSize.height}px;"
-      data-testid="cropper">
-    </div>
+    <div class="cropperArea" class:round="{cropShape === 'round'}" class:grid="{showGrid}" style="width: {cropperSize.width}px; height: {cropperSize.height}px;" data-testid="cropper"></div>
   {/if}
 </div>
 
