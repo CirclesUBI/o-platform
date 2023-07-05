@@ -146,7 +146,7 @@ function createNewOrga() {
                 <center>
                   <div class="flex flex-col space-y-2">
                     <a href="#/market/mystore/{profile.circlesAddress}" class="text-center"><button class="btn btn-primary">{$_("dapps.o-passport.pages.home.editShop")}</button></a>
-                    {#if profile.isShopDisabled}
+                    <!-- {#if profile.isShopDisabled}
                       <div class="flex flex-row justify-center space-x-2">
                         <span class="text-6xl font-enso"><Icons icon="x-circle" size="{6}" customClass="text-alert" /></span>
                         <span class="text-alert"><Label key="dapps.o-passport.pages.home.shopDisabled" /></span>
@@ -156,7 +156,7 @@ function createNewOrga() {
                         <span class="text-6xl font-enso"><Icons icon="check-circle" size="{6}" customClass="text-success" /></span>
                         <span class="text-success"><Label key="dapps.o-passport.pages.home.shopEnabled" /></span>
                       </div>
-                    {/if}
+                    {/if} -->
                   </div>
                 </center>
               </div>
