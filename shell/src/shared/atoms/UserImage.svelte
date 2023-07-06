@@ -16,18 +16,7 @@ let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 
-switch (size) {
-  case 12:
-    sizeInPixels = 48;
-    break;
-  case 15:
-    sizeInPixels = 54;
-    break;
-  case 28:
-    sizeInPixels = 112;
-    break;
-}
-let noAvatar = jazzicon(sizeInPixels, Math.round(Math.random() * 10));
+let noAvatar = jazzicon(size === 15 ? 54 : size * 4, parseInt(profile.circlesAddress));
 
 function linkToProfile(event) {
   if (profileLink) {
@@ -88,7 +77,7 @@ $: {
             class:w-4="{size < 20}"
             class:h-4="{size < 20}" />
         {/if}
-        {#if profile && profile.avatarUrl}
+        {#if profile.avatarUrl}
           <img
             class=" w-{size} h-{size} rounded-corners-purple-borders"
             class:rounded-full="{!isOrganisation}"
