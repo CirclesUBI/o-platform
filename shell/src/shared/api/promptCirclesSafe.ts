@@ -149,7 +149,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
                         ...o,
                         circlesAddress: o.circlesAddress,
                         type: o.type,
-                        avatarUrl: o.avatarUrl ? o.avatarUrl : AvataarGenerator.generate(o.circlesAddress),
+                        avatarUrl: o.avatarUrl ? o.avatarUrl : null,
                       };
                     })
                     .reverse()
