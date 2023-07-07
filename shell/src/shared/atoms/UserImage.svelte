@@ -1,5 +1,4 @@
 <script lang="ts">
-import { AvataarGenerator } from "../avataarGenerator";
 import { push } from "svelte-spa-router";
 import { Profile, Organisation } from "../api/data/types";
 import Icons from "../molecules/Icons.svelte";
