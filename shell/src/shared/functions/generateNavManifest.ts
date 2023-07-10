@@ -10,6 +10,7 @@ export type GenerateNavManifestArgs = {
   leftIsOpen: boolean;
   centerIsOpen: boolean;
   centerContainsProcess: boolean;
+  rightSlotOverride?: NavigationElement;
   rightIsOpen: boolean;
   notificationCount?: number;
   canGoBack?: boolean;
@@ -17,22 +18,39 @@ export type GenerateNavManifestArgs = {
   showLogin?: boolean;
   hideFooterGradient?: boolean;
 };
-
-function applyOverrides(leftStatic: any, leftSlotOverride: NavigationElement) {
-  const left = leftStatic;
-  if (leftSlotOverride && leftSlotOverride.props) {
+let params = {
+  leftStatic: <any>null,
+  leftSlotOverride: <NavigationElement>null,
+  rightStatic: <any>null,
+  rightSlotOverride: <NavigationElement>null,
+};
+function applyOverrides(params) {
+  const left = params.leftStatic;
+  if (params.leftSlotOverride && params.leftSlotOverride.props) {
     left.props = {
       ...left.props,
-      ...leftSlotOverride.props,
+      ...params.leftSlotOverride.props,
     };
   }
-  return left;
+
+  const right = params.rightStatic;
+  if (params.rightSlotOverride && params.rightSlotOverride.props) {
+    right.props = {
+      ...right.props,
+      ...params.rightSlotOverride.props,
+    };
+  }
+  return {
+    left: left,
+    right: right,
+  };
 }
 
-const homeNavManifest = (leftSlotOverride?: NavigationElement) => {
-  const left = applyOverrides(
-    {
+const homeNavManifest = (leftSlotOverride?: NavigationElement, rightSlotOverride?: NavigationElement) => {
+  const left = applyOverrides({
+    leftStatic: {
       component: LinkComponent,
+
       props: {
         icon: "menu",
         action: () =>
@@ -41,10 +59,29 @@ const homeNavManifest = (leftSlotOverride?: NavigationElement) => {
           }),
       },
     },
-    leftSlotOverride
-  );
+
+    leftSlotOverride: leftSlotOverride,
+  });
+
+  const right = applyOverrides({
+    rightStatic: {
+      component: LinkComponent,
+
+      props: {
+        icon: "menu",
+        action: () =>
+          window.o.publishEvent({
+            type: "shell.openNavigation",
+          }),
+      },
+    },
+
+    rightSlotOverride: rightSlotOverride,
+  });
+
   return {
-    leftSlot: left,
+    leftSlot: left.left,
+    rightSlot: right.right,
     loginPill: {
       component: ActionButtonComponent,
       props: {
@@ -55,13 +92,15 @@ const homeNavManifest = (leftSlotOverride?: NavigationElement) => {
           }),
       },
     },
-    rightSlot: null,
   };
 };
 
-const defaultNavManifest: (leftSlotOverride?: NavigationElement) => NavigationManifest = (leftSlotOverride?: NavigationElement) => {
-  const left = applyOverrides(
-    {
+const defaultNavManifest: (leftSlotOverride?: NavigationElement, rightSlotOverride?: NavigationElement) => NavigationManifest = (
+  leftSlotOverride?: NavigationElement,
+  rightSlotOverride?: NavigationElement
+) => {
+  const left = applyOverrides({
+    leftStatic: {
       component: LinkComponent,
       props: {
         icon: "menu",
@@ -71,11 +110,13 @@ const defaultNavManifest: (leftSlotOverride?: NavigationElement) => NavigationMa
           }),
       },
     },
-    leftSlotOverride
-  );
+
+    leftSlotOverride: leftSlotOverride,
+  });
 
   return {
-    leftSlot: left,
+    leftSlot: left.left,
+    rightSlot: null,
     navPill: {
       left: {
         component: ListComponent,
@@ -108,7 +149,6 @@ const defaultNavManifest: (leftSlotOverride?: NavigationElement) => NavigationMa
         },
       },
     },
-    rightSlot: null,
   };
 };
 
@@ -147,9 +187,9 @@ export function generateNavManifest(args: GenerateNavManifestArgs, prompt: Promp
   unsub();
 
   if (args.showLogin) {
-    newManifest = homeNavManifest(args.leftSlotOverride);
+    newManifest = homeNavManifest(args.leftSlotOverride, args.rightSlotOverride);
   } else {
-    newManifest = defaultNavManifest(args.leftSlotOverride);
+    newManifest = defaultNavManifest(args.leftSlotOverride, args.rightSlotOverride);
   }
   if (args.leftIsOpen || args.rightIsOpen) {
     if (small) {
@@ -159,7 +199,7 @@ export function generateNavManifest(args: GenerateNavManifestArgs, prompt: Promp
 
     if (args.leftIsOpen) {
       // Remove right too
-      delete newManifest.rightSlot;
+      // delete newManifest.rightSlot;
       newManifest.leftSlot.props.icon = "x";
       newManifest.leftSlot.props.action = () => window.o.publishEvent({ type: "shell.closeNavigation" });
       // if (small) {

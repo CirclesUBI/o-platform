@@ -9,6 +9,8 @@ import { normalizePromptField } from "@o-platform/o-process/dist/states/prompt";
 import Cropper from "svelte-easy-crop";
 import Resizer from "react-image-file-resizer";
 import { UserActions, UserActionItem } from "../../../shell/src/shared/userActions";
+import { t } from "xstate";
+import { _ } from "@o-platform/shell/src/i18n/i18nDictionary";
 
 let userActions: UserActionItem[] = [];
 
@@ -19,7 +21,7 @@ let crop = { x: 0, y: 0 };
 let zoom = 1;
 let aspect = 1;
 
-let cropShape = "round";
+let cropShape = context.data.__typename === "Profile" ? "round" : "rect";
 let pixelCrop, croppedImage;
 let files = {
   accepted: [],
@@ -40,7 +42,7 @@ $: {
       {
         key: "remove",
         icon: "remove",
-        title: "Remove Picture",
+        title: "dapps.common.removePicture",
         displayHint: "discouraged",
         action: async () => {
           reset();
@@ -49,7 +51,7 @@ $: {
       {
         key: "submit",
         icon: "",
-        title: "Submit",
+        title: "dapps.common.submit",
         displayHint: "encouraged",
         action: async () => {
           submit();
@@ -107,9 +109,7 @@ function previewCrop(e) {
   pixelCrop = e.detail.pixels;
   const { x, y, width } = e.detail.pixels;
   const scale = 200 / width;
-  profilePicture.style = `margin: ${-y * scale}px 0 0 ${-x * scale}px; width: ${
-    profilePicture.naturalWidth * scale
-  }px;`;
+  profilePicture.style = `margin: ${-y * scale}px 0 0 ${-x * scale}px; width: ${profilePicture.naturalWidth * scale}px;`;
 }
 
 function reset() {
@@ -142,14 +142,9 @@ async function submit() {
   <div class="w-full h-full">
     {#if !image}
       <Dropzone on:drop="{handleFilesSelect}" multiple="{false}" accept="image/png,image/jpeg,image/jpg">
-        <div class="flex justify-center px-6 pt-5 pb-6 mt-1 ">
+        <div class="flex justify-center px-6 pt-5 pb-6 mt-1">
           <div class="space-y-1 text-center">
-            <svg
-              class="w-12 h-12 mx-auto text-gray-400"
-              stroke="currentColor"
-              fill="none"
-              viewBox="0 0 48 48"
-              aria-hidden="true">
+            <svg class="w-12 h-12 mx-auto text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
               <path
                 d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
                 stroke-width="2"
@@ -160,9 +155,9 @@ async function submit() {
               <label
                 for="file-upload"
                 class="relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                <span>Upload a file</span>
+                <span>{$_("dapps.common.uploadAFile")}</span>
               </label>
-              <p class="pl-1">or drag and drop</p>
+              <p class="pl-1">{$_("dapps.common.orDragDrop")}</p>
             </div>
             <p class="text-xs text-gray-500">PNG, JPG, GIF</p>
             <p class="text-error">{uploadMessage}</p>
@@ -171,7 +166,7 @@ async function submit() {
       </Dropzone>
     {:else}
       <div style="position: relative; width: 100%; height: 300px;">
-        <Cropper image="{image}" bind:crop bind:zoom bind:aspect bind:cropShape on:cropcomplete="{previewCrop}" />
+        <Cropper image="{image}" bind:crop="{crop}" bind:zoom="{zoom}" bind:aspect="{aspect}" bind:cropShape="{cropShape}" on:cropcomplete="{previewCrop}" />
       </div>
 
       <!-- we need this, otherwise the zoom doesnt work. though it needs to stay hidden. -->
