@@ -283,7 +283,7 @@ async function shareLink() {
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
                     <div class="text-sm"><Label key="{businessHour.day}" /></div>
-                    <div class="text-sm">{@html businessHour.hours[0].length ? businessHour.hours.join(", ") : "<span class='text-alert'>Closed</span>"}</div>
+                    <div class="text-sm">{@html businessHour.hours[0].length ? businessHour.hours.join(", ") : "<span class='text-alert'>" + window.o.i18n("common.closed") + "</span>"}</div>
                   </div>
                 {/each}
               </div>
@@ -336,17 +336,17 @@ async function shareLink() {
         </div>
 
         <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
-          <a href="mailto:?subject=Invitation%20to%20Circlesland&body=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+          <a href="mailto:?subject=Invitation%20to%20Circlesland&body={window.o.i18n('dapps.o-marketlisting.pages.marketListingDetail.shareMarket')} {link}" target="_blank" rel="noreferrer">
             <Icon name="mail" class="inline w-10 h-10 p-2 heroicon smallicon" />
           </a>
         </div>
         <div class="-mt-1 text-center cursor-pointer whatsapp">
-          <a href="https://wa.me/?text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+          <a href="https://wa.me/?text={window.o.i18n('dapps.o-marketlisting.pages.marketListingDetail.shareMarket')} {link}" target="_blank" rel="noreferrer">
             <Icons icon="whatsapp" customClass="inline" size="{12}" />
           </a>
         </div>
         <div class="text-center cursor-pointer telegram">
-          <a href="https://telegram.me/share/url?url={link}&text=Hey, i'd like to show you this cool market. Check it out: {link}" target="_blank" rel="noreferrer">
+          <a href="https://telegram.me/share/url?url={link}&text={window.o.i18n('dapps.o-marketlisting.pages.marketListingDetail.shareMarket')} {link}" target="_blank" rel="noreferrer">
             <Icons icon="telegram" customClass="inline" size="{10}" />
           </a>
         </div>

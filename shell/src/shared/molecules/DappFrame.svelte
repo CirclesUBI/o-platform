@@ -308,7 +308,8 @@ function findNextRoute(previousRuntimeDapp: RuntimeDapp<any>, root: { params: { 
 }
 
 function setNav(navArgs: GenerateNavManifestArgs) {
-  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation.leftSlot;
+  const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : navigation?.leftSlot;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : navigation?.rightSlot;
 
   if (navArgs.centerIsOpen && !preModalNavArgs) {
     preModalNavArgs = currentNavArgs;
@@ -326,11 +327,15 @@ function setNav(navArgs: GenerateNavManifestArgs) {
     };
   }
 
+  if (rightSlotOverride) {
+    args = {
+      ...args,
+      rightSlotOverride: rightSlotOverride,
+    };
+  }
+
   navigation = generateNavManifest(args, null);
 
-  if (dapp.dappId == "events:1") {
-    navigation = null;
-  }
   currentNavArgs = args;
 }
 
@@ -379,9 +384,11 @@ function initSession(session: SessionInfo) {
 
 async function init() {
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
 
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     centerContainsProcess: false,
     centerIsOpen: false,
     rightIsOpen: false,
@@ -428,7 +435,7 @@ function onOpenNavigation() {
       ...layout.dialogs,
       left: {
         isOpen: true,
-        component: dapp.dappId == "events:1" ? null : NavigationList,
+        component: NavigationList,
         routable: routable,
         runtimeDapp: runtimeDapp,
         params: {
@@ -440,8 +447,10 @@ function onOpenNavigation() {
     },
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     leftIsOpen: true,
     rightIsOpen: false,
 
@@ -458,8 +467,10 @@ function onCloseNavigation() {
     isOpen: false,
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     leftIsOpen: false,
     rightIsOpen: false,
 
@@ -604,9 +615,10 @@ function onProcessContinued() {
 function onProcessCanGoBack() {
   // log("onProcessCanGoBack()");
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -619,9 +631,10 @@ function onProcessCanGoBack() {
 function onProcessCanSkip() {
   // log("onProcessCanSkip()");
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
-
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -899,6 +912,9 @@ async function handleUrlChanged() {
   if (routable.type == "page" && routable.navigation?.leftSlot) {
     navArgs.leftSlotOverride = routable.navigation.leftSlot;
   }
+  if (routable.type == "page" && routable.navigation?.rightSlot) {
+    navArgs.rightSlotOverride = routable.navigation.rightSlot;
+  }
   // log(
   //   `handleUrlChanged() - Found routable: ${routable.title} (type: ${routable.type})`
   // );
@@ -947,7 +963,7 @@ async function handleUrlChanged() {
     }
   }
 
-  if (!navigation && dapp.dappId != "events:1") {
+  if (!navigation) {
     navigation = generateNavManifest(navArgs, null);
   }
 
@@ -955,7 +971,6 @@ async function handleUrlChanged() {
     sessionInfo?.isLoggedOn &&
     sessionInfo?.hasProfile &&
     dapp?.dappId != "homepage:1" &&
-    dapp?.dappId != "events:1" &&
     $me?.__typename == "Person" &&
     !$me?.askedForEmailAddress &&
     !sessionStorage.getItem("askedForEmailAddress") &&
@@ -994,8 +1009,10 @@ function showModalProcess(processId?: string) {
     { process }
   );
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     centerIsOpen: true,
     centerContainsProcess: true,
     leftIsOpen: false,
@@ -1090,8 +1107,10 @@ function showMainPage(runtimeDapp: RuntimeDapp<any>, routable: Page<any, any>, p
     },
   };
   const leftSlotOverride = routable?.type === "page" ? routable.navigation?.leftSlot : undefined;
+  const rightSlotOverride = routable?.type === "page" ? routable.navigation?.rightSlot : undefined;
   setNav({
     leftSlotOverride: leftSlotOverride,
+    rightSlotOverride: rightSlotOverride,
     ...currentNavArgs,
     centerIsOpen: false,
     centerContainsProcess: false,

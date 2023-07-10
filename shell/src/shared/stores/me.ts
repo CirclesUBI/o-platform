@@ -73,7 +73,6 @@ const _me = readable<Profile | null>(null, function start(set) {
       if (event.type == "shell.authenticated" && event.profile) {
         sessionInfo = event.sessionInfo;
         set(event.profile);
-        console.log("me.ts new $me: ", event.profile);
         localStorage.setItem("me", JSON.stringify(event.profile));
       }
     }

@@ -14,7 +14,7 @@ function clickHandler() {
 <div class="h-12 col-start-2 place-self-center">
   <div class="flex flex-row">
     <div
-      class="flex justify-center flex-shrink-0 w-20 -mr-8 rounded-l-full cursor-pointer text-primary h-11"
+      class="flex justify-center flex-shrink-0 w-24 -mr-8 rounded-l-full cursor-pointer text-primary h-11"
       class:bg-cpurple="{props && props.left}"
       role="presentation"
       on:click="{clickHandler}">
@@ -40,7 +40,7 @@ function clickHandler() {
     </div>
 
     <div
-      class="flex justify-center flex-shrink-0 w-20 -ml-8 rounded-r-full cursor-pointer h-11 "
+      class="flex justify-center flex-shrink-0 w-20 -ml-8 rounded-r-full cursor-pointer h-11"
       class:bg-cpurple="{props && props.right}"
       role="presentation"
       on:click="{props.right ? props.right.props.action : null}">
