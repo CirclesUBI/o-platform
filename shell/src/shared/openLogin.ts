@@ -1,25 +1,14 @@
-import OpenLogin from "openlogin";
-import { LOGIN_PROVIDER_TYPE, UX_MODE, UX_MODE_TYPE, OPENLOGIN_NETWORK, OPENLOGIN_NETWORK_TYPE } from "@toruslabs/openlogin-utils";
-import loginConfig from "./loginConfig";
-import { Environment } from "./environment";
-import whitelabel from "./torusWhiteLabel";
+import OpenLogin, { OpenloginUserInfo } from "@toruslabs/openlogin";
 import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
-export type OpenloginUserInfo = {
-  email?: string;
-  name?: string;
-  profileImage?: string;
-  aggregateVerifier: string;
-  verifier: string;
-  verifierId: string;
-  typeOfLogin: LOGIN_PROVIDER_TYPE;
-};
+import { Environment } from "./environment";
 
-let selectedUxMode: UX_MODE_TYPE = UX_MODE.POPUP;
-let selectedOpenloginNetwork: OPENLOGIN_NETWORK_TYPE = OPENLOGIN_NETWORK.MAINNET;
+let openLogin: OpenLogin;
 
-export async function getOpenLogin(): Promise<OpenLogin> {
+export type GetOpenLoginResult = OpenLogin | { login(args: any): { privKey: string }; getUserInfo(): { userInfo: any }; logout(): Promise<void> };
+
+export async function getOpenLogin(): Promise<GetOpenLoginResult> {
   if (Environment.useMockLogin) {
-    return <any>{
+    return <GetOpenLoginResult>{
       async login(params: any): Promise<{ privKey: string }> {
         const acc = RpcGateway.get().eth.accounts.create();
         return {
@@ -40,14 +29,14 @@ export async function getOpenLogin(): Promise<OpenLogin> {
     };
   }
 
-  const currentClientId = Environment.openLoginClientId;
-  const op = new OpenLogin({
-    clientId: currentClientId,
-    network: selectedOpenloginNetwork,
-    uxMode: selectedUxMode,
-    // loginConfig: loginConfig,
-    whiteLabel: whitelabel,
-  });
-  op.init();
-  return op;
+  if (!openLogin) {
+    openLogin = new OpenLogin({
+      clientId: Environment.openLoginClientId,
+      network: "mainnet",
+      uxMode: "popup", // default is redirect , popup mode is also supported
+    });
+    await openLogin.init();
+  }
+
+  return openLogin;
 }
