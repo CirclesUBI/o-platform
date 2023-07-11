@@ -3280,7 +3280,7 @@ __metadata:
     "@sentry/browser": ^7.38.0
     "@sentry/tracing": ^7.38.0
     "@tailwindcss/typography": ^0.5.7
-    "@toruslabs/openlogin": ^4.5.4
+    "@toruslabs/openlogin": ^3.2.1
     "@toruslabs/openlogin-ed25519": ^4.2.0
     "@toruslabs/openlogin-utils": ^4.5.1
     "@tsconfig/svelte": ^2.0.1
