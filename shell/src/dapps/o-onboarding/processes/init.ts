@@ -251,7 +251,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
                     });
                     window.o.publishEvent(<any>{
                       type: "shell.progress",
-                      message: "Starting your session ..",
+                      message: window.o.i18n("dapps.o-passport.processes.identify.acquireSession.acquireSession2.acquireSession.message"),
                     });
                   },
                 ],
@@ -577,14 +577,14 @@ export const initMachine = createMachine<InitContext, InitEvent>(
           const profile = await loadProfile();
           ctx.profile = <any>(ctx.profile
             ? {
-                ...ctx.profile,
-                successorOfCirclesAddress: profile.successorOfCirclesAddress,
-                circlesAddress: profile.circlesAddress,
-              }
+              ...ctx.profile,
+              successorOfCirclesAddress: profile.successorOfCirclesAddress,
+              circlesAddress: profile.circlesAddress,
+            }
             : {
-                successorOfCirclesAddress: profile.successorOfCirclesAddress,
-                circlesAddress: profile.circlesAddress,
-              });
+              successorOfCirclesAddress: profile.successorOfCirclesAddress,
+              circlesAddress: profile.circlesAddress,
+            });
 
           if (profile?.circlesAddress) {
             callback({
@@ -622,7 +622,7 @@ export const initMachine = createMachine<InitContext, InitEvent>(
       signupForUbi: (ctx) => async (callback) => {
         window.o.publishEvent(<any>{
           type: "shell.progress",
-          message: "Retrieving your first UBI  ..",
+          message: window.o.i18n("dapps.o-passport.processes.identify.retrievingYourFirstUBI"),
         });
         const hub = new CirclesHub(RpcGateway.get(), Environment.circlesHubAddress);
         const privateKey = sessionStorage.getItem("circlesKey");
