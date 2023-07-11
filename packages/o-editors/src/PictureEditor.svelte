@@ -42,7 +42,7 @@ $: {
       {
         key: "remove",
         icon: "remove",
-        title: "dapps.common.removePicture",
+        title: $_("dapps.common.removePicture"),
         displayHint: "discouraged",
         action: async () => {
           reset();
@@ -51,7 +51,7 @@ $: {
       {
         key: "submit",
         icon: "",
-        title: "dapps.common.submit",
+        title: $_("dapps.common.submit"),
         displayHint: "encouraged",
         action: async () => {
           submit();
