@@ -1,6 +1,7 @@
 import { EoaData, ProfileData, RegistrationData, SafeData, UbiData } from "./initEvent";
 import { ClaimedInvitation, Profile, ProfileEvent, SafeInfo, SessionInfo } from "../../../shared/api/data/types";
-import type { OpenloginUserInfo } from "../../../shared/openLogin";
+
+import { OpenloginUserInfo } from "@toruslabs/openlogin";
 
 export type InitContext = {
   localStorageSchemaVersion: 1;
