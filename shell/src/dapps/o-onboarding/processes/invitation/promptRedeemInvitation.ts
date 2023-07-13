@@ -110,7 +110,12 @@ const processDefinition = (processId: string) =>
         id: "waitUntilRedeemed",
         invoke: {
           src: async () => {
-            await new Promise(async (resolve, reject) => {
+            const timeout = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(null);
+                }, 1000 * 10);
+            });
+            const waiter = new Promise(async (resolve) => {
               const apiClient = await window.o.apiClient.client.subscribeToResult();
               const observable = apiClient.subscribe({
                 query: EventsDocument,
@@ -130,6 +135,8 @@ const processDefinition = (processId: string) =>
               };
               subscription = observable.subscribe(subscriptionHandler);
             });
+
+            await Promise.any([timeout, waiter]);
           },
           onDone: "#checkIfRedeemed",
         },
