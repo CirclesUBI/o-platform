@@ -113,7 +113,7 @@ const processDefinition = (processId: string) =>
             const timeout = new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(null);
-                }, 1000 * 10);
+                }, 1000 * 3);
             });
             const waiter = new Promise(async (resolve) => {
               const apiClient = await window.o.apiClient.client.subscribeToResult();
