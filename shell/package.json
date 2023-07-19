@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "Daniel Janz, Thorsten Schau & Samuel Andert (Basic Income Lab GmbH)",
   "license": "AGPL-3.0-or-later",
+  "description": "CirclesUBI Indonesia web app",
   "scripts": {
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
