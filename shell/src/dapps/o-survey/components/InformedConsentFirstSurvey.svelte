@@ -78,12 +78,15 @@ function handleClick(button) {
     {/if}
     <div class="flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
-        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning" on:click="{() => handleClick('back')}">
+        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning text-lg" on:click="{() => handleClick('back')}">
           {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
       </div>
       <div>
         {#if $myForm.dirty}
-          <button class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick('next')}" disabled="{!$myForm.valid}">
+          <button
+            class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple text-lg"
+            on:click="{() => handleClick('next')}"
+            disabled="{!$myForm.valid}">
             {$_("dapps.o-homepage.components.survey.button.next")}</button>
         {/if}
       </div>
