@@ -1,10 +1,11 @@
-# shell-dapp-starter template
+# Circles platform (o platform)
 
 ## Quickstart
 
+Checkout
+
 ```shell
-# Checkout
-git clone https://github.com/circlesland/o-platform.git
+git clone https://github.com/CirclesUBI/o-platform.git
 
 # Build
 cd o-platform
@@ -13,14 +14,16 @@ cd o-platform
 # Run
 cd shell
 npm run dev
+```
 
-#Build & Run with local self-signed Certificate:
+Build & Run with local self-signed certificate:
+
+```shell
 cd o-platfrom
-./buildlocal.shrink-0
+./buildlocal.sh
 
 cd shell
-npm run devs
-
+npm run dev
 ```
 
 ## Building blocks
