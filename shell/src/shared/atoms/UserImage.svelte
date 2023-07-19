@@ -4,6 +4,7 @@ import { Profile, Organisation } from "../api/data/types";
 import Icons from "../molecules/Icons.svelte";
 import jazzicon from "@metamask/jazzicon";
 import { outerHTML } from "../functions/outerHtml";
+import Web3 from "web3";
 
 export let profile: Profile;
 export let size: number = 10;
@@ -15,7 +16,8 @@ let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 
-let noAvatar = jazzicon(size === 15 ? 54 : size * 4, parseInt(profile.circlesAddress));
+const seed = Web3.utils.hexToNumber(profile.circlesAddress.slice(0, 15));
+let noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
 
 function linkToProfile(event) {
   if (profileLink) {
