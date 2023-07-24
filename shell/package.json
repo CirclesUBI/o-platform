@@ -1,8 +1,9 @@
 {
   "name": "@o-platform/shell",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "author": "Daniel Janz, Thorsten Schau & Samuel Andert (Basic Income Lab GmbH)",
   "license": "AGPL-3.0-or-later",
+  "description": "CirclesUBI Indonesia web app",
   "scripts": {
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
@@ -25,7 +26,7 @@
     "@o-platform/o-utils": "0.1.0",
     "@sentry/browser": "^7.38.0",
     "@sentry/tracing": "^7.38.0",
-    "@toruslabs/openlogin": "^4.5.4",
+    "@toruslabs/openlogin": "^3.2.1",
     "@toruslabs/openlogin-ed25519": "^4.2.0",
     "@toruslabs/openlogin-utils": "^4.5.1",
     "@web3auth/ethereum-provider": "^5.1.1",
