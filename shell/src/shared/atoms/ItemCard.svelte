@@ -45,19 +45,7 @@ function cardAction() {
   <div class="flex items-center w-full space-x-2 bg-white border cardborder" class:p-3="{!params.edgeless}">
     <slot name="itemCardStart">
       <div class="">
-        {#if params.imageProfile.avatarUrl}
-          <UserImage profile="{params.imageProfile}" size="{12}" profileLink="{params.profileLink}" />
-        {:else if params.imageUrl}
-          <div class="m-auto rounded-full w-11 h-11 sm:w-12 sm:h-12">
-            <span
-              role="presentation"
-              on:click="{(e) => {
-                if (params.imageAction) params.imageAction(e);
-              }}">
-              <img class="rounded-full" src="{params.imageUrl}" alt="{params.imageAlt ? params.imageAlt : params.title}" />
-            </span>
-          </div>
-        {/if}
+        <UserImage profile="{params.imageProfile}" size="{12}" profileLink="{params.profileLink}" />
       </div>
     </slot>
     <slot name="itemCardBody">

@@ -623,6 +623,7 @@ query organisationsByAddress($addresses: [String!]!) {
     locationName
     lat
     lon
+    shopEnabled
     members {
       ... on Organisation {
         id
@@ -1340,6 +1341,7 @@ query allBusinesses($queryParams: QueryAllBusinessesParameters) {
     businessCategoryId
     businessCategory
     cursor
+    shopEnabled
   }
 }
 

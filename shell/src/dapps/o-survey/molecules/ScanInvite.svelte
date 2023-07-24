@@ -73,7 +73,7 @@ function onScanFailure(error) {
     </div>
   </div>
   <button class="btn btn-primary" on:click="{() => window.o.publishEvent({ type: 'shell.requestCloseModal' })}">
-    <Label key="common.close" />
+    <Label key="shared.molecules.processNav.close" />
   </button>
 </section>
 

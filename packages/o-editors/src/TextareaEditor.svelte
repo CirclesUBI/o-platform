@@ -12,15 +12,11 @@ let length;
 
 $: {
   _context = context;
-  length = _context.data[context.field]
-    ? _context.data[context.field].length
-    : 0;
+  length = _context.data[context.field] ? _context.data[context.field].length : 0;
 }
 
 let inputField: any;
-let maxlength: string = context.params.view.maxLength
-  ? context.params.view.maxLength
-  : "500";
+let maxlength: string = context.params.view.maxLength ? context.params.view.maxLength : "500";
 
 const submitHandler = () => {
   const answer = new Continue();
@@ -57,12 +53,7 @@ onMount(() => {
       <CopyToClipboard text="{_context.data[context.field]}" let:copy>
         <div role="presentation" on:click="{copy}" class="text-sm text-gray-500">
           Copy to Clipboard
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="inline w-4 h-4 stroke-current text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 stroke-current text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -79,17 +70,8 @@ onMount(() => {
   {#if context.messages[context.field]}
     <div class="mt-2 mb-2 alert alert-error">
       <div class="flex-1">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          class="w-6 h-6 mx-2 stroke-current">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-          ></path>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
         </svg>
         <label for="input">{context.messages[context.field]} </label>
       </div>
@@ -112,9 +94,9 @@ onMount(() => {
     on:change="{validateFormatting}"></textarea>
   {#if !context.params.hideCharacterCount}
     <p class="relative right-0 text-right text-2xs top-2">
-      {length}/{maxlength} Characters. {length > maxlength
-        ? "Oops, please enter a maximum of " + maxlength + " characters."
-        : ""}
+      {length}/{maxlength}
+      {window.o.i18n("common.characters")}
+      {length > maxlength ? "Oops, please enter a maximum of " + maxlength + " characters." : ""}
     </p>
   {/if}
 

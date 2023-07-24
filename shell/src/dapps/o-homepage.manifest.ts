@@ -7,6 +7,7 @@ import Privacy from "./o-homepage/pages/Privacy.svelte";
 import NotFound from "./o-homepage/pages/NotFound.svelte";
 import ListComponent from "../shared/molecules/NextNav/Components/List.svelte";
 import { logout } from "./o-passport/processes/logout";
+import { push } from "svelte-spa-router";
 
 const externalChat: Link<any, DappState> = {
   type: "link",
@@ -46,8 +47,7 @@ const index: Page<any, DappState> = {
         icon: "exit",
         backgroundColorClass: "transparent",
         action: () => {
-          window.o.runProcess(logout, {});
-          location.reload();
+          push("#/passport/actions/logout");
         },
       },
     },

@@ -1,10 +1,10 @@
 <script lang="ts">
-import { AvataarGenerator } from "../avataarGenerator";
 import { push } from "svelte-spa-router";
 import { Profile, Organisation } from "../api/data/types";
 import Icons from "../molecules/Icons.svelte";
 import jazzicon from "@metamask/jazzicon";
 import { outerHTML } from "../functions/outerHtml";
+import Web3 from "web3";
 
 export let profile: Profile;
 export let size: number = 10;
@@ -16,20 +16,8 @@ let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 
-console.log("dacian", size);
-
-switch (size) {
-  case 12:
-    sizeInPixels = 48;
-    break;
-  case 15:
-    sizeInPixels = 54;
-    break;
-  case 28:
-    sizeInPixels = 112;
-    break;
-}
-let noAvatar = jazzicon(sizeInPixels, Math.round(Math.random() * 10));
+const seed = Web3.utils.hexToNumber(profile.circlesAddress.slice(0, 15));
+let noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
 
 function linkToProfile(event) {
   if (profileLink) {
@@ -90,7 +78,7 @@ $: {
             class:w-4="{size < 20}"
             class:h-4="{size < 20}" />
         {/if}
-        {#if profile && profile.avatarUrl}
+        {#if profile.avatarUrl}
           <img
             class=" w-{size} h-{size} rounded-corners-purple-borders"
             class:rounded-full="{!isOrganisation}"

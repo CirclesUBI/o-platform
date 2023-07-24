@@ -48,7 +48,7 @@ function handleRemoveFilter(filterId) {
     {/each}
     <div class="inline">
       <DropDown
-        selected="add Filter"
+        selected="dapps.o-marketlisting.molecules.categoryfilter.addFilter"
         items="{allCategories}"
         id="filters"
         key="id"

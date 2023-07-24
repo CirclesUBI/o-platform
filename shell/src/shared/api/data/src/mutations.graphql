@@ -221,6 +221,7 @@ mutation upsertOrganisation($organisation: UpsertOrganisationInput!) {
       locationName
       lat
       lon
+      shopEnabled
     }
   }
 }

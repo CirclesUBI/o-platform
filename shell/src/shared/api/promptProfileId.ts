@@ -8,13 +8,12 @@ import {
 import DropdownSelectEditor from "@o-platform/o-editors/src/DropdownSelectEditor.svelte";
 import DropDownProfile from "@o-platform/o-editors/src/dropdownItems/DropDownProfile.svelte";
 import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
-import { AvataarGenerator } from "../avataarGenerator";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
 import {
   Profile, ProfileByIdDocument, ProfileByIdQueryVariables,
   ProfilesByNameDocument, ProfilesByNameQueryVariables,
 } from "./data/types";
-import {ApiClient} from "../apiConnection";
+import { ApiClient } from "../apiConnection";
 
 export function promptProfileId<
   TContext extends ProcessContext<any>,
@@ -34,13 +33,13 @@ export function promptProfileId<
     previous?: string;
     canGoBack?: (
       context: ProcessContext<TContext>,
-      event: { type: string; [x: string]: any }
+      event: { type: string;[x: string]: any }
     ) => boolean;
     next?: string;
     skip?: string;
     canSkip?: (
       context: ProcessContext<TContext>,
-      event: { type: string; [x: string]: any }
+      event: { type: string;[x: string]: any }
     ) => boolean;
   };
 }) {
@@ -74,17 +73,17 @@ export function promptProfileId<
           });
           return result && result.length > 0
             ? result
-                .filter((o) => o.circlesAddress)
-                .map((o) => {
-                  return {
-                    ...o,
-                    circlesAddress: o.circlesAddress,
-                    avatarUrl: o.avatarUrl
-                      ? o.avatarUrl
-                      : AvataarGenerator.generate(o.circlesAddress),
-                  };
-                })
-                .reverse()
+              .filter((o) => o.circlesAddress)
+              .map((o) => {
+                return {
+                  ...o,
+                  circlesAddress: o.circlesAddress,
+                  avatarUrl: o.avatarUrl
+                    ? o.avatarUrl
+                    : null,
+                };
+              })
+              .reverse()
             : [];
         },
       },

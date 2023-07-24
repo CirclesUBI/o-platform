@@ -3,25 +3,27 @@ import {
   EventType,
   PaginationArgs,
   Profile,
-  ProfileEvent, ProfileEventFilter, QueryEventsArgs,
+  ProfileEvent,
+  ProfileEventFilter,
+  QueryEventsArgs,
   SortOrder,
-  StreamDocument
+  StreamDocument,
 } from "../api/data/types";
 import { writable } from "svelte/store";
 import { me } from "./me";
 import { Environment } from "../environment";
 
 export type PagedEventQueryIndexEntry = {
-  indexName: string,
-  indexKey: string
-}
+  indexName: string;
+  indexKey: string;
+};
 
 export interface ObjectCache<T> {
   findByPrimaryKey(type: string, primaryKey: string): Promise<T | undefined>;
   findByIndexKey(type: string, indexName: string, indexKey: string): T[];
 }
 
-export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
+export abstract class PagedEventQuery implements ObjectCache<ProfileEvent> {
   readonly eventTypes: EventType[];
   readonly sortOrder: SortOrder;
   readonly pageSize: number;
@@ -63,33 +65,31 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     this.filter = filter;
     this._onDestroy = onDestroy;
 
-    const { subscribe, set, update } = writable<ProfileEvent[]>(
-      [], (set) => {
-        if (!this._isInitialized) {
-          this._profileChangedSubscription = me.subscribe(async $me => {
-            if (this._isInitialized && $me) {
-              this.reset();
-              await this.next();
-            }
-          });
+    const { subscribe, set, update } = writable<ProfileEvent[]>([], (set) => {
+      if (!this._isInitialized) {
+        this._profileChangedSubscription = me.subscribe(async ($me) => {
+          if (this._isInitialized) {
+            this.reset();
+            await this.next();
+          }
+        });
 
-          this.next().then(result => {
-            if (result) {
-              console.log(`Initial loading complete. More data available.`)
-            } else {
-              console.log(`Initial loading complete. All loaded.`)
-            }
-            this._isInitialized = true;
-            this.refresh();
-          });
-        }
-
-        return () => {
-          this._profileChangedSubscription();
-          this._onDestroy?.call(this);
-        }
+        this.next().then((result) => {
+          if (result) {
+            console.log(`Initial loading complete. More data available.`);
+          } else {
+            console.log(`Initial loading complete. All loaded.`);
+          }
+          this._isInitialized = true;
+          this.refresh();
+        });
       }
-    );
+
+      return () => {
+        this._profileChangedSubscription();
+        this._onDestroy?.call(this);
+      };
+    });
     this._subscribe = subscribe;
     this._set = set;
 
@@ -106,9 +106,7 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     this._pagination = {
       order: this.sortOrder,
       limit: this.pageSize,
-      continueAt: this.sortOrder == SortOrder.Desc
-        ? Environment.endOfTime.toJSON()
-        : Environment.beginningOfTime.toJSON()
+      continueAt: this.sortOrder == SortOrder.Desc ? Environment.endOfTime.toJSON() : Environment.beginningOfTime.toJSON(),
     };
     this.refresh();
   }
@@ -133,7 +131,11 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     });
 
     if (nextPageQueryResult.errors) {
-      throw new Error(window.o.i18n("shared.stores.transactions.errors.couldNotLoadData", { values: { error: JSON.stringify(nextPageQueryResult.errors) } }));
+      throw new Error(
+        window.o.i18n("shared.stores.transactions.errors.couldNotLoadData", {
+          values: { error: JSON.stringify(nextPageQueryResult.errors) },
+        })
+      );
     }
 
     let nextPage: ProfileEvent[] = nextPageQueryResult.data.events;
@@ -162,22 +164,18 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     let eventList = Object.values(this._primaryCache).sort((a, b) => {
       const _a = new Date(a.timestamp).getTime();
       const _b = new Date(b.timestamp).getTime();
-      return _a > _b
-        ? -1
-        : _a < _b
-          ? 1
-          : 0;
+      return _a > _b ? -1 : _a < _b ? 1 : 0;
     });
 
     if (this.filter?.unreadOnly) {
-      eventList = eventList.filter(e => e.unread);
+      eventList = eventList.filter((e) => e.unread);
     }
 
     this._set({
       events: eventList,
       metadata: {
-        itemAdded: newItem
-      }
+        itemAdded: newItem,
+      },
     });
 
     return eventList.length;
@@ -187,11 +185,9 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     const primaryKey = `${e.type}_${this.getPrimaryKey(e.payload)}`;
     this._primaryCache[primaryKey] = e;
 
-    this.getIndexedValues(e).forEach(o => {
+    this.getIndexedValues(e).forEach((o) => {
       const indexKey = `${e.type}_${o.indexName}_${o.indexKey}`;
-      this._indexCache[indexKey] = this._indexCache[indexKey]
-        ? this._indexCache[indexKey].concat([primaryKey])
-        : [primaryKey];
+      this._indexCache[indexKey] = this._indexCache[indexKey] ? this._indexCache[indexKey].concat([primaryKey]) : [primaryKey];
     });
   }
 
@@ -216,9 +212,9 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent>{
     if (!entries) {
       return [];
     }
-    const result = entries.map(o => this._primaryCache[o]);
+    const result = entries.map((o) => this._primaryCache[o]);
     if (this.filter?.unreadOnly) {
-      return result.filter(o => o?.unread);
+      return result.filter((o) => o?.unread);
     }
     return result;
   }

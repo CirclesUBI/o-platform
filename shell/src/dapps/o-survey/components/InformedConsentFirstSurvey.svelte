@@ -43,7 +43,7 @@ function handleClick(button) {
 <div class="overflow-hidden text-white whitespace-pre-line bg-clip-content font-heading">
   <div class="px-5 py-5 text-center uppercase bg-negative">
     <div class="survey-text">
-      <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />s
+      <Label key="dapps.o-homepage.components.survey.informedConsent.title.top" />
     </div>
     <div class="text-primary">
       <Label key="dapps.o-homepage.components.survey.informedConsent.title.middle" />
@@ -78,12 +78,15 @@ function handleClick(button) {
     {/if}
     <div class="flex flex-row justify-around mt-10 mb-5 text-center">
       <div>
-        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning" on:click="{() => handleClick('back')}">
+        <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning text-lg" on:click="{() => handleClick('back')}">
           {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
       </div>
       <div>
         {#if $myForm.dirty}
-          <button class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick('next')}" disabled="{!$myForm.valid}">
+          <button
+            class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple text-lg"
+            on:click="{() => handleClick('next')}"
+            disabled="{!$myForm.valid}">
             {$_("dapps.o-homepage.components.survey.button.next")}</button>
         {/if}
       </div>
