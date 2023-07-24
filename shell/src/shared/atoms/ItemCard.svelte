@@ -45,7 +45,7 @@ function cardAction() {
   <div class="flex items-center w-full space-x-2 bg-white border cardborder" class:p-3="{!params.edgeless}">
     <slot name="itemCardStart">
       <div class="">
-        <UserImage profile="{params.imageProfile}" size="{12}" profileLink="{params.profileLink}" />
+        <UserImage profile="{params}" image="{params.imageUrl}" size="{12}" profileLink="{params.profileLink}" />
       </div>
     </slot>
     <slot name="itemCardBody">
