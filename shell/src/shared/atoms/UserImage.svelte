@@ -18,7 +18,7 @@ let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 let noAvatar;
 
-if (!image) {
+if (!image && !profile.avatarUrl) {
   const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 15));
   noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
 }
