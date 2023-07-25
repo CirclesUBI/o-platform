@@ -12,12 +12,16 @@ export let transparent: boolean = false;
 export let tooltip: boolean = false;
 export let profileLink: boolean = true;
 export let editable: boolean = false;
+export let image: string = "";
 let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
+let noAvatar;
 
-const seed = Web3.utils.hexToNumber(profile.circlesAddress.slice(0, 15));
-let noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
+if (!image && !profile.avatarUrl) {
+  const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 15));
+  noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
+}
 
 function linkToProfile(event) {
   if (profileLink) {
@@ -78,12 +82,12 @@ $: {
             class:w-4="{size < 20}"
             class:h-4="{size < 20}" />
         {/if}
-        {#if profile.avatarUrl}
+        {#if profile.avatarUrl || image}
           <img
             class=" w-{size} h-{size} rounded-corners-purple-borders"
             class:rounded-full="{!isOrganisation}"
             class:rounded-md="{isOrganisation}"
-            src="{profile.avatarUrl}"
+            src="{profile.avatarUrl || image}"
             alt="{displayName}" />
         {:else}
           <div class=" w-{size} h-{size} no-avatar-container" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}" class:dashboard-avatar="{size === 15}">
