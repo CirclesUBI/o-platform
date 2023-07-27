@@ -22,32 +22,11 @@ import {ApiConnection} from "./shared/apiConnection";
 import {Stopped} from "@o-platform/o-process/dist/events/stopped";
 import {Environment} from "./shared/environment";
 import {IShell} from "./iShell";
-import * as Sentry from "@sentry/browser";
-import {BrowserTracing} from "@sentry/tracing";
 import * as bip39 from "bip39";
-import posthog from 'posthog-js'
 
 const i18nString = get(_);
 
 setupI18n({ withLocale: Environment.userLanguage.slice(0, 2) });
-
-Sentry.init({
-  dsn: "https://42e2eed7fcd94a3f86fa2ca4ffa7bd70@o4504719125905408.ingest.sentry.io/4504719127740416",
-  integrations: [new BrowserTracing(), new Sentry.Replay()],
-
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 1.0,
-  // If the entire session is not sampled, use the below sample rate to sample
-  // sessions when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-});
-
 
 dayjs.extend(relativeTime);
 RpcGateway.setup(Environment.xdaiRpcGatewayUrl);
@@ -111,7 +90,6 @@ const runningProcesses: {
 
 
 window.o = <any>{
-  posthog: Environment.apiEndpointUrl.indexOf("localhost") == -1 ? posthog.init(Environment.posthogId, { api_host: Environment.posthogUrl }) : undefined,
   bip39: {
     mnemonicToSeed: (mnemonic: string) => bip39.mnemonicToSeed(mnemonic),
     mnemonicToEntropy: (mnemonic: string) => bip39.mnemonicToEntropy(mnemonic),
