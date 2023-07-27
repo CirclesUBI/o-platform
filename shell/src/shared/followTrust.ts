@@ -5,8 +5,6 @@ import { fSetTrust } from "../dapps/o-banking/processes/setTrust";
 import { Environment } from "./environment";
 import { get } from 'svelte/store'
 
-const $me = get(me)
-
 export class FollowTrust {
   static readonly shortIntervalInMilliseconds = 6000;
   static readonly longIntervalInMilliseconds = 1000 * 60 * 5;
