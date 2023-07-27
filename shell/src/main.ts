@@ -1,29 +1,29 @@
-import {RpcGateway} from "@o-platform/o-circles/dist/rpcGateway";
+import { RpcGateway } from "@o-platform/o-circles/dist/rpcGateway";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import {_, setupI18n} from "./i18n/i18nDictionary";
-import {get} from "svelte/store";
-import {ProcessDefinition} from "@o-platform/o-process/dist/interfaces/processManifest";
-import {ProcessContext} from "@o-platform/o-process/dist/interfaces/processContext";
-import {Generate} from "@o-platform/o-utils/dist/generate";
+import { _, setupI18n } from "./i18n/i18nDictionary";
+import { get } from "svelte/store";
+import { ProcessDefinition } from "@o-platform/o-process/dist/interfaces/processManifest";
+import { ProcessContext } from "@o-platform/o-process/dist/interfaces/processContext";
+import { Generate } from "@o-platform/o-utils/dist/generate";
 import * as LoadingIndicator from "./shared/atoms/LoadingIndicator.svelte";
 import Success from "./shared/atoms/Success.svelte";
 import ErrorIndicator from "./shared/atoms/Error.svelte";
-import {useMachine} from "@xstate/svelte";
-import {Subject, Subscription} from "rxjs";
-import {ProcessEvent} from "@o-platform/o-process/dist/interfaces/processEvent";
-import {AnyEventObject} from "xstate";
-import {Bubble} from "@o-platform/o-process/dist/events/bubble";
-import {PlatformEvent} from "@o-platform/o-events/dist/platformEvent";
-import {Process} from "@o-platform/o-process/dist/interfaces/process";
-import {Sinker} from "@o-platform/o-process/dist/events/sinker";
-import {shellEvents} from "./shared/shellEvents";
-import {ApiConnection} from "./shared/apiConnection";
-import {Stopped} from "@o-platform/o-process/dist/events/stopped";
-import {Environment} from "./shared/environment";
-import {IShell} from "./iShell";
+import { useMachine } from "@xstate/svelte";
+import { Subject, Subscription } from "rxjs";
+import { ProcessEvent } from "@o-platform/o-process/dist/interfaces/processEvent";
+import { AnyEventObject } from "xstate";
+import { Bubble } from "@o-platform/o-process/dist/events/bubble";
+import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
+import { Process } from "@o-platform/o-process/dist/interfaces/process";
+import { Sinker } from "@o-platform/o-process/dist/events/sinker";
+import { shellEvents } from "./shared/shellEvents";
+import { ApiConnection } from "./shared/apiConnection";
+import { Stopped } from "@o-platform/o-process/dist/events/stopped";
+import { Environment } from "./shared/environment";
+import { IShell } from "./iShell";
 import * as Sentry from "@sentry/browser";
-import {BrowserTracing} from "@sentry/tracing";
+import { BrowserTracing } from "@sentry/tracing";
 import * as bip39 from "bip39";
 import posthog from 'posthog-js'
 
@@ -124,7 +124,7 @@ window.o = <any>{
     },
     async run<TContext>(definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext<any>) => Promise<TContext>) {
       const processId = Generate.randomHexString(8);
-      console.log(`Starting process (id: ${processId}) with definition:`, definition, definition.stateMachine("debug"));
+      // console.log(`Starting process (id: ${processId}) with definition:`, definition);
 
       const machine = (<any>definition).stateMachine(LoadingIndicator, Success, ErrorIndicator);
       const machineOptions = {
