@@ -61,32 +61,40 @@ $: {
 }
 
 onMount(async () => {
-  allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
-  let firstVillage = 0;
-  allBaliVillagesLookup = allBaliVillages.toLookup(
-    (o) => {
-      if (firstVillage === undefined) {
-        firstVillage = o.id;
-      }
-      return o.id;
-    },
-    (o) => o
-  );
+  if (sessionStorage.getItem("surveyConsentPage2") === "true") {
+    allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
+    let firstVillage = 0;
+    allBaliVillagesLookup = allBaliVillages.toLookup(
+      (o) => {
+        if (firstVillage === undefined) {
+          firstVillage = o.id;
+        }
+        return o.id;
+      },
+      (o) => o
+    );
 
-  fetch(Environment.apiEndpointUrl + "/validateinvite", {
-    credentials: "include",
-  })
-    .then((data) => {
-      if (data.status == 204) {
-      }
-      if (data.status == 200) {
-        $inviteUrl = "/";
-        sessionStorage.setItem("inviteUrl", "/");
-      }
+    fetch(Environment.apiEndpointUrl + "/validateinvite", {
+      credentials: "include",
     })
-    .catch((error) => {
-      console.log("Error getting Invite Status:", error);
-    });
+      .then((data) => {
+        if (data.status == 204) {
+        }
+        if (data.status == 200) {
+          $inviteUrl = "/";
+          sessionStorage.setItem("inviteUrl", "/");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting Invite Status:", error);
+      });
+  } else {
+    if (sessionStorage.getItem("surveyConsentPage1") === "true") {
+      push("#/survey/page/2");
+    } else {
+      push("#/survey/page/1");
+    }
+  }
 });
 
 const getNetworkErrors = (error) => error.networkError.response.json().then((e) => e.errors.map((e) => e.message).join(","));
