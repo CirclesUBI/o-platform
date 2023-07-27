@@ -8,7 +8,7 @@ import {getMainDefinition} from 'apollo-utilities';
 import {DocumentNode, OperationDefinitionNode} from "graphql/language/ast";
 import {
     AggregatesDocument,
-    AggregateType, ProfileAggregate,
+    AggregateType, CreateTagInput, ProfileAggregate,
     ProfileAggregateFilter,
     QueryAggregatesArgs
 } from "./api/data/types";
