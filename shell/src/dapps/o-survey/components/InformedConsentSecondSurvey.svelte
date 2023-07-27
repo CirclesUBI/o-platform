@@ -19,9 +19,13 @@ const myForm = form(exchange, dataCollect, onlyFromFriends);
 myForm.validate();
 
 onMount(() => {
-  $exchange.value = $surveyConsents.exchangeConsent;
-  $dataCollect.value = $surveyConsents.dataCollectConsent;
-  $onlyFromFriends.value = $surveyConsents.onlyFromFriends;
+  if (sessionStorage.getItem("surveyConsentPage1") === "true") {
+    $exchange.value = $surveyConsents.exchangeConsent;
+    $dataCollect.value = $surveyConsents.dataCollectConsent;
+    $onlyFromFriends.value = $surveyConsents.onlyFromFriends;
+  } else {
+    push("#/survey/page/1");
+  }
 });
 
 function handleClick(button) {
