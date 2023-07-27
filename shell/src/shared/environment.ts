@@ -70,14 +70,6 @@ export class Environment {
     return "__HERE_API_KEY__";
   }
 
-  public static get posthogId(): string {
-    return "phc_Mss3qel6SM45x6jVDUBcr3AMEKbmWcmcpqM5Dtl9Gn";
-  }
-
-  public static get posthogUrl(): string {
-    return "https://eu.posthog.com";
-  }
-
   public static get userLanguage(): string {
     if (localStorage.getItem("userLanguage")) {
       return localStorage.getItem("userLanguage");
