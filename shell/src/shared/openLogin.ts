@@ -15,7 +15,7 @@ export async function getOpenLogin(): Promise<GetOpenLoginResult> {
           privKey: acc.privateKey,
         };
       },
-      async logout(): Promise<void> { },
+      // async logout(): Promise<void> { },
       async getUserInfo(): Promise<OpenloginUserInfo> {
         return {
           email: "email@some.hostname.of.some.mailserver.somewhere",
