@@ -103,7 +103,7 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent> {
 
   async next(): Promise<boolean> {
     let $me: Profile;
-    me.subscribe((m) => ($me = m))();
+    me.subscribe(m => $me = m)();
     if (!$me?.id) {
       return;
     }
