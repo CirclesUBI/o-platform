@@ -13,7 +13,7 @@ import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte"
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import { getOpenLogin } from "../../../shared/openLogin";
+import { Web3Auth } from "../../../shared/web3AuthNoModal";
 import { FindInvitationCreatorDocument, Profile, QueryFindInvitationCreatorArgs } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
 import { AvataarGenerator } from "../../../shared/avataarGenerator";
@@ -52,6 +52,13 @@ let loginOptions = [
     target: "#apple",
     class: "btn btn-outline",
     icon: "apple",
+  },
+  {
+    key: "facebook",
+    label: window.o.i18n("dapps.o-onboarding.processes.loginWithTorus.loginOptions.facebook.label"),
+    target: "#facebook",
+    class: "btn btn-outline",
+    icon: "facebook",
   },
 ];
 
@@ -119,12 +126,12 @@ const processDefinition = (processId: string) =>
                 context.data.accountAddress = accAddress;
               } else {
                 // Init open login
-                await getOpenLogin();
+                new Web3Auth();
               }
             },
             onDone: [
               {
-                cond: (context) => context.data.useMockProfileIndex !== undefined,
+                cond: (context) => Environment.useMockLogin === true,
                 target: "useMockProfile",
               },
               {
@@ -188,28 +195,11 @@ const processDefinition = (processId: string) =>
           ],
           invoke: {
             src: async (context) => {
-              const mockProfile = Environment.getTestProfile(context.data.useMockProfileIndex);
-              console.log("MOCKPF", mockProfile);
-              const openLogin = <any>{
-                async login(params: any): Promise<{ privKey: string }> {
-                  return {
-                    privKey: mockProfile.privateKey,
-                  };
-                },
-                async getUserInfo(): Promise<any> {
-                  delete mockProfile.privateKey;
-                  return mockProfile;
-                },
-              };
-              const privateKey = await openLogin.login({
-                loginProvider: "google",
-                extraLoginOptions: {
-                  prompt: "select_account",
-                  display: "touch",
-                },
-              });
-
-              const userInfo = await openLogin.getUserInfo();
+              const webauth = new Web3Auth();
+              await webauth.init();
+              await webauth.login("mock", context.data.useMockProfileIndex);
+              const privateKey = await webauth.getPrivateKey();
+              const userInfo = await webauth.getUserInfo(context.data.useMockProfileIndex);
               return {
                 privateKey: privateKey.privKey,
                 userInfo: userInfo,
@@ -248,16 +238,11 @@ const processDefinition = (processId: string) =>
           ],
           invoke: {
             src: async (context) => {
-              const openLogin = await getOpenLogin();
-              const privateKey = await openLogin.login({
-                loginProvider: "google",
-                extraLoginOptions: {
-                  prompt: "select_account",
-                  display: "touch",
-                },
-              });
-
-              const userInfo = await openLogin.getUserInfo();
+              const webauth = new Web3Auth();
+              await webauth.init();
+              await webauth.login("google");
+              const privateKey = await webauth.getPrivateKey();
+              const userInfo = await webauth.getUserInfo();
               return {
                 privateKey: privateKey.privKey,
                 userInfo: userInfo,
@@ -296,13 +281,15 @@ const processDefinition = (processId: string) =>
           ],
           invoke: {
             src: async (context) => {
-              const openLogin = await getOpenLogin();
-              const privateKey = await openLogin.login({
-                loginProvider: "apple",
-              });
+              const webauth = new Web3Auth();
+              await webauth.init();
+              await webauth.login("apple");
+              const privateKey = await webauth.getPrivateKey();
+              const userInfo = await webauth.getUserInfo();
+
               return {
                 privateKey: privateKey.privKey,
-                userInfo: await openLogin.getUserInfo(),
+                userInfo: userInfo,
               };
             },
 
@@ -328,13 +315,15 @@ const processDefinition = (processId: string) =>
           id: "facebook",
           invoke: {
             src: async (context) => {
-              const openLogin = await getOpenLogin();
-              const privateKey = await openLogin.login({
-                loginProvider: "facebook",
-              });
+              const webauth = new Web3Auth();
+              await webauth.init();
+              await webauth.login("facebook");
+              const privateKey = await webauth.getPrivateKey();
+              const userInfo = await webauth.getUserInfo();
+
               return {
                 privateKey: privateKey.privKey,
-                userInfo: await openLogin.getUserInfo(),
+                userInfo: userInfo,
               };
             },
             onDone: {
