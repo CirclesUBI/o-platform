@@ -6,8 +6,9 @@ import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import { push } from "svelte-spa-router";
 import { LogoutDocument } from "../../../shared/api/data/types";
-import { getOpenLogin } from "../../../shared/openLogin";
+
 import ErrorView from "../../../shared/atoms/Error.svelte";
+import { Web3Auth } from "../../../shared/web3AuthNoModal";
 
 export type LogoutContextData = {
   successAction: (data: LogoutContextData) => void;
@@ -42,8 +43,7 @@ const processDefinition = (processId: string) =>
         id: "logout",
         invoke: {
           src: async (context) => {
-            const openLogin = await getOpenLogin();
-
+            const webauth = new Web3Auth();
             sessionStorage.removeItem("circlesKey");
             sessionStorage.removeItem("SurveySessionId");
             sessionStorage.removeItem("inviteUrl");
@@ -83,7 +83,9 @@ const processDefinition = (processId: string) =>
             const result = await apiClient.mutate({
               mutation: LogoutDocument,
             });
-            await openLogin.logout();
+
+            await webauth.init();
+            await webauth.logout();
 
             return result.data.logout.success;
           },
