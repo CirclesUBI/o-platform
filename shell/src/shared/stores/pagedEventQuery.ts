@@ -1,14 +1,4 @@
-import {
-  EventPayload,
-  EventType,
-  PaginationArgs,
-  Profile,
-  ProfileEvent,
-  ProfileEventFilter,
-  QueryEventsArgs,
-  SortOrder,
-  StreamDocument,
-} from "../api/data/types";
+import { EventPayload, EventType, PaginationArgs, Profile, ProfileEvent, ProfileEventFilter, QueryEventsArgs, SortOrder, StreamDocument } from "../api/data/types";
 import { writable } from "svelte/store";
 import { me } from "./me";
 import { Environment } from "../environment";
