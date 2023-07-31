@@ -3,6 +3,7 @@ import { me } from "./stores/me";
 import { ApiClient } from "./apiConnection";
 import { fSetTrust } from "../dapps/o-banking/processes/setTrust";
 import { Environment } from "./environment";
+import { get } from 'svelte/store'
 
 export class FollowTrust {
   static readonly shortIntervalInMilliseconds = 6000;
@@ -12,7 +13,7 @@ export class FollowTrust {
   private intervalHandle: any;
   private isWorking = false;
 
-  constructor() {}
+  constructor() { }
 
   reset() {
     this.stop();
@@ -25,7 +26,9 @@ export class FollowTrust {
 
     this.intervalHandle = setInterval(() => {
       // console.log(`FollowTrust is running. (isWorking: ${this.isWorking})`);
-      if (this.isWorking) {
+      const $me = get(me)
+
+      if (this.isWorking || !$me?.id) {
         return;
       }
       this.followTrust()

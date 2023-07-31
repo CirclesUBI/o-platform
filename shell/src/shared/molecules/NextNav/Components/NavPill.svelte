@@ -14,7 +14,7 @@ function clickHandler() {
 <div class="h-12 col-start-2 place-self-center">
   <div class="flex flex-row">
     <div
-      class="flex justify-center flex-shrink-0 w-24 -mr-8 rounded-l-full cursor-pointer text-primary h-11"
+      class="flex justify-center flex-shrink-0 w-24 -mr-11 rounded-l-full cursor-pointer text-primary h-11"
       class:bg-cpurple="{props && props.left}"
       role="presentation"
       on:click="{clickHandler}">
@@ -26,7 +26,7 @@ function clickHandler() {
             <div class="absolute right-0.5 w-full text-center top-1.5 text-secondary font-heading">{$unreadEventInbox.events.length}</div>
           </div>
         {:else}
-          <div class="flex flex-col self-center justify-center h-full mr-3">
+          <div class="flex flex-col self-center justify-center h-full mr-5">
             <svelte:component this="{props.left.component}" {...props.left.props} on:menuButton />
           </div>
         {/if}

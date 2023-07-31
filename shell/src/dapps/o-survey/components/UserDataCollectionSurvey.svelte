@@ -61,32 +61,40 @@ $: {
 }
 
 onMount(async () => {
-  allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
-  let firstVillage = 0;
-  allBaliVillagesLookup = allBaliVillages.toLookup(
-    (o) => {
-      if (firstVillage === undefined) {
-        firstVillage = o.id;
-      }
-      return o.id;
-    },
-    (o) => o
-  );
+  if (sessionStorage.getItem("surveyConsentPage2") === "true") {
+    allBaliVillages = (await Environment.api.allBaliVillages()).allBaliVillages;
+    let firstVillage = 0;
+    allBaliVillagesLookup = allBaliVillages.toLookup(
+      (o) => {
+        if (firstVillage === undefined) {
+          firstVillage = o.id;
+        }
+        return o.id;
+      },
+      (o) => o
+    );
 
-  fetch(Environment.apiEndpointUrl + "/validateinvite", {
-    credentials: "include",
-  })
-    .then((data) => {
-      if (data.status == 204) {
-      }
-      if (data.status == 200) {
-        $inviteUrl = "/";
-        sessionStorage.setItem("inviteUrl", "/");
-      }
+    fetch(Environment.apiEndpointUrl + "/validateinvite", {
+      credentials: "include",
     })
-    .catch((error) => {
-      console.log("Error getting Invite Status:", error);
-    });
+      .then((data) => {
+        if (data.status == 204) {
+        }
+        if (data.status == 200) {
+          $inviteUrl = "/";
+          sessionStorage.setItem("inviteUrl", "/");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting Invite Status:", error);
+      });
+  } else {
+    if (sessionStorage.getItem("surveyConsentPage1") === "true") {
+      push("#/survey/page/2");
+    } else {
+      push("#/survey/page/1");
+    }
+  }
 });
 
 const getNetworkErrors = (error) => error.networkError.response.json().then((e) => e.errors.map((e) => e.message).join(","));
@@ -253,7 +261,7 @@ const options = {
             {#if $inviteUrl}
               <span class="text-sm grow text-success">{$_("dapps.o-homepage.components.survey.userDataCollection.inviteValid")}</span>
             {:else}
-              <button class="px-8 overflow-hidden transition-all transform grow btn btn-primary" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
+              <button class="px-8 overflow-hidden transition-all transform grow btn btn-primary text-lg" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
                 {$_("dapps.o-homepage.components.survey.button.scanInviteNow")}
               </button>
             {/if}
@@ -279,12 +287,15 @@ const options = {
       {/if}
       <div class="flex flex-row justify-between w-full pr-4 mt-10 mb-5 text-center">
         <div>
-          <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning" on:click="{() => handleClick('back')}">
+          <button class="relative px-8 overflow-hidden transition-all transform btn bg-cpurple border-warning text-warning text-lg" on:click="{() => handleClick('back')}">
             {$_("dapps.o-homepage.components.survey.button.goBack")}</button>
         </div>
         <div>
           {#if $myForm.dirty}
-            <button class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple" on:click="{() => handleClick('next')}" disabled="{!$myForm.valid}">
+            <button
+              class="relative px-8 overflow-hidden transition-all transform btn btn-primary bg-primary text-cpurple text-lg"
+              on:click="{() => handleClick('next')}"
+              disabled="{!$myForm.valid}">
               {$_("dapps.o-homepage.components.survey.button.next")}</button>
           {/if}
         </div>
