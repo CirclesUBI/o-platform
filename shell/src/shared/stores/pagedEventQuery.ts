@@ -1,14 +1,4 @@
-import {
-  EventPayload,
-  EventType,
-  PaginationArgs,
-  Profile,
-  ProfileEvent,
-  ProfileEventFilter,
-  QueryEventsArgs,
-  SortOrder,
-  StreamDocument,
-} from "../api/data/types";
+import { EventPayload, EventType, PaginationArgs, Profile, ProfileEvent, ProfileEventFilter, QueryEventsArgs, SortOrder, StreamDocument } from "../api/data/types";
 import { writable } from "svelte/store";
 import { me } from "./me";
 import { Environment } from "../environment";
@@ -113,15 +103,10 @@ export abstract class PagedEventQuery implements ObjectCache<ProfileEvent> {
 
   async next(): Promise<boolean> {
     let $me: Profile;
-    me.subscribe((m) => ($me = m))();
-
-    // Possible Solution for avoiding thrown an Error here when the user is not logged in
-    // const sessionInfo = await me.getSessionInfo(true);
-    // if (!sessionInfo.isLoggedOn) {
-    //   console.log("NO SESSION, BAILING");
-    //   return false;
-    // }
-
+    me.subscribe(m => $me = m)();
+    if (!$me?.id) {
+      return;
+    }
     const args = <QueryEventsArgs>{
       safeAddress: $me.circlesAddress,
       types: this.eventTypes,

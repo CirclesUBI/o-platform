@@ -16,6 +16,10 @@ let geoLocationOptions = {
 let ownLocation: GeolocationPosition = null;
 let searchString: string = "";
 
+onMount(() => {
+  marketStore.resetSearch();
+});
+
 onMount(async () => {
   if (geolocation) {
     marketStore.init(geolocation);
