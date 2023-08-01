@@ -1,7 +1,8 @@
 <script lang="ts">
-import UserImage from "src/shared/atoms/UserImage.svelte";
 import { isMobile } from "../functions/isMobile";
 import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
+import AssetImage from "./AssetImage.svelte";
+import UserImage from "./UserImage.svelte";
 
 export let params = {
   imageUrl: null,
@@ -44,9 +45,11 @@ function cardAction() {
 <section role="presentation" on:click="{() => cardAction()}" class:mb-3="{!params.inline}" class="{params.class ? params.class : ''}">
   <div class="flex items-center w-full space-x-2 bg-white border cardborder" class:p-3="{!params.edgeless}">
     <slot name="itemCardStart">
-      <div class="">
-        <UserImage profile="{params}" image="{params.imageUrl}" size="{12}" profileLink="{params.profileLink}" />
-      </div>
+      {#if params.imageUrl}
+        <AssetImage image="{params.imageUrl}" size="{12}" />
+      {:else}
+        <UserImage profile="{params}" size="{12}" profileLink="{params.profileLink}" />
+      {/if}
     </slot>
     <slot name="itemCardBody">
       <div class="flex-col flex-grow">
