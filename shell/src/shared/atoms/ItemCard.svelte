@@ -40,8 +40,6 @@ function cardAction() {
     params.action();
   }
 }
-
-console.log("DACIAB", params);
 </script>
 
 <section role="presentation" on:click="{() => cardAction()}" class:mb-3="{!params.inline}" class="{params.class ? params.class : ''}">
