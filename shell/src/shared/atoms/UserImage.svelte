@@ -18,29 +18,23 @@ let isOrganisation: boolean = false;
 let sizeInPixels = 0;
 let noAvatar;
 
-if (!profile.avatarUrl && !profile.imageProfile?.avatarUrl) {
+if (!profile.avatarUrl) {
   const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 15));
   noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
 }
 
 function linkToProfile(event) {
   if (profileLink) {
-    if (profile.circlesAddress) {
-      push(`#/contacts/profile/${profile.circlesAddress}`);
-      event.stopPropagation();
-    } else if (profile.imageProfile.circlesAddress) {
-      push(`#/contacts/profile/${profile.imageProfile.circlesAddress}`);
-      event.stopPropagation();
-    }
+    push(`#/contacts/profile/${profile.circlesAddress}`);
+    event.stopPropagation();
   }
 }
-
 $: {
   if (profile) {
-    if ((profile.type && profile.type == "PERSON") || (profile.__typename && profile.__typename == "Profile") || profile.imageProfile?.type == "PERSON") {
-      displayName = profile.displayName || profile.imageProfile?.displayName;
+    if ((profile.type && profile.type == "PERSON") || (profile.__typename && profile.__typename == "Profile")) {
+      displayName = profile.displayName;
     } else {
-      displayName = profile.firstName ? profile.firstName : profile.imageProfile?.firstName ? profile.imageProfile?.firstName : "";
+      displayName = profile.firstName ? profile.firstName : "";
       isOrganisation = true;
     }
     displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
@@ -48,8 +42,6 @@ $: {
   if (profile?.type && profile?.type == "ORGANISATION") {
     isOrganisation = true;
   } else if (profile.__typename && profile.__typename == "ORGANISATION") {
-    isOrganisation = true;
-  } else if (profile.imageProfile?.type == "ORGANISATION") {
     isOrganisation = true;
   }
 }
@@ -90,12 +82,12 @@ $: {
             class:w-4="{size < 20}"
             class:h-4="{size < 20}" />
         {/if}
-        {#if profile.avatarUrl || profile.imageProfile?.avatarUrl}
+        {#if profile.avatarUrl}
           <img
             class=" w-{size} h-{size} rounded-corners-purple-borders"
             class:rounded-full="{!isOrganisation}"
             class:rounded-md="{isOrganisation}"
-            src="{profile.avatarUrl || profile.imageProfile?.avatarUrl}"
+            src="{profile.avatarUrl}"
             alt="{displayName}" />
         {:else}
           <div class=" w-{size} h-{size} no-avatar-container" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}" class:dashboard-avatar="{size === 15}">
