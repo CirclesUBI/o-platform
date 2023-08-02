@@ -40,6 +40,8 @@ function cardAction() {
     params.action();
   }
 }
+
+console.log("DACIAB", params);
 </script>
 
 <section role="presentation" on:click="{() => cardAction()}" class:mb-3="{!params.inline}" class="{params.class ? params.class : ''}">
@@ -48,7 +50,7 @@ function cardAction() {
       {#if params.imageUrl}
         <AssetImage image="{params.imageUrl}" size="{12}" />
       {:else}
-        <UserImage profile="{params}" size="{12}" profileLink="{params.profileLink}" />
+        <UserImage profile="{params.imageProfile}" size="{12}" profileLink="{params.profileLink}" />
       {/if}
     </slot>
     <slot name="itemCardBody">
