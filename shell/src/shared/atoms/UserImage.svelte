@@ -6,7 +6,7 @@ import jazzicon from "@metamask/jazzicon";
 import { outerHTML } from "../functions/outerHtml";
 import Web3 from "web3";
 
-export let profile;
+export let profile: Profile;
 export let size: number = 10;
 export let transparent: boolean = false;
 export let tooltip: boolean = false;
