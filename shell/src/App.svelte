@@ -4,7 +4,7 @@
   const followTrust: FollowTrust = new FollowTrust();
   followTrust.start();
 
-  export const FollowTrustWorker = followTrust;followTrust
+  export const FollowTrustWorker = followTrust;
 </script>
 <script lang="ts">
 import "./shared/css/tailwind.css";
