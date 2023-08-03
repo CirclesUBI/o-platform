@@ -18,6 +18,8 @@ import DetailActionBar from "../../../shared/molecules/DetailActionBar.svelte";
 import { me } from "../../../shared/stores/me";
 import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
+import { contacts } from "../../../shared/stores/contacts";
+import UserImage from "../../../shared/atoms/UserImage.svelte";
 
 export let circlesAddress: string;
 
@@ -52,6 +54,7 @@ let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 let isMe: boolean;
+let shopOwner;
 
 onMount(async () => {
   detailActions = [];
@@ -66,13 +69,16 @@ onMount(async () => {
 
   shareLink();
 
-  return marketStore.subscribe((data) => {
+  return marketStore.subscribe(async (data) => {
     if (!data || data.businesses.length == 0) {
       return;
     }
 
     business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
     if (!business) return;
+
+    const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
+    shopOwner = shopOwnerData.contactAddress_Profile.members;
 
     const currentDateIndex = new Date().getDay();
     const businessHours = [
@@ -292,11 +298,30 @@ async function shareLink() {
         </div>
       </div>
     {/if}
-
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <a href="https://wa.me/{business.phoneNumber}" target="_blank" rel="noreferrer"><Icons icon="whatsapp" customClass="inline -mt-1" size="{6}" /></a>
         <p class="pl-2"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
+      </div>
+    {/if}
+
+    {#if shopOwner && shopOwner.length}
+      <div class="flex pt-4 mt-4 text-default border-t-2">
+        <section class="justify-center mb-2">
+          <div class="flex flex-col w-full pt-2 space-y-1">
+            <div class="font-bold text-left text-default text-2xs">
+              <Label key="dapps.o-contacts.pages.profile.members" />
+            </div>
+            <div class="flex flex-row flex-wrap mt-2">
+              {#each shopOwner as shopOwnerProfile}
+                <div class="mt-2 mr-2 flex items-center">
+                  <UserImage profile="{shopOwnerProfile}" />
+                  <div class="ml-3">{shopOwnerProfile.displayName}</div>
+                </div>
+              {/each}
+            </div>
+          </div>
+        </section>
       </div>
     {/if}
 

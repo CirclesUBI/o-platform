@@ -136,7 +136,7 @@ const processDefinition = (processId: string) =>
         navigation: {
           next: "#location",
           previous: "#lastName",
-          canSkip: () => true,
+          canSkip: () => false,
         },
       }),
 
@@ -212,7 +212,7 @@ const processDefinition = (processId: string) =>
           field: {
             name: "",
             get: () => undefined,
-            set: (o: any) => {},
+            set: (o: any) => { },
           },
         }),
       },

@@ -4,18 +4,24 @@ import { Profile, Organisation } from "../api/data/types";
 import Icons from "../molecules/Icons.svelte";
 import jazzicon from "@metamask/jazzicon";
 import { outerHTML } from "../functions/outerHtml";
+import Web3 from "web3";
 
-export let profile: Profile;
+export let profile;
 export let size: number = 10;
 export let transparent: boolean = false;
 export let tooltip: boolean = false;
 export let profileLink: boolean = true;
 export let editable: boolean = false;
+
 let displayName: string = "";
 let isOrganisation: boolean = false;
 let sizeInPixels = 0;
+let noAvatar;
 
-let noAvatar = jazzicon(size === 15 ? 54 : size * 4, parseInt(profile.circlesAddress));
+if (!profile.avatarUrl) {
+  const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 15));
+  noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
+}
 
 function linkToProfile(event) {
   if (profileLink) {
@@ -33,7 +39,7 @@ $: {
     }
     displayName = displayName.length >= 22 ? displayName.slice(0, 22) + "..." : displayName;
   }
-  if (profile.type && profile.type == "ORGANISATION") {
+  if (profile?.type && profile?.type == "ORGANISATION") {
     isOrganisation = true;
   } else if (profile.__typename && profile.__typename == "ORGANISATION") {
     isOrganisation = true;
