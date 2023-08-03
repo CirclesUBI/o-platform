@@ -20,17 +20,13 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
-
 export let circlesAddress: string;
-
 let business: Businesses;
-
 let visible: boolean = false;
 let link: string;
 let showShareOptions: boolean = false;
 let mapHeight = "16em";
 let nextEventTimeString: string = "";
-
 const mapOptions = {
   zoomControl: true,
   mapTypeControl: false,
@@ -39,7 +35,6 @@ const mapOptions = {
   rotateControl: false,
   fullscreenControl: false,
 };
-
 type BusinessHour = {
   day: string;
   hours?: string[];
@@ -55,44 +50,27 @@ let detailActions: UserActionItem[];
 let availableActions = [];
 let isMe: boolean;
 let shopOwner;
-
 onMount(async () => {
   detailActions = [];
-
   let $me: Profile | null = null;
-
   const unsub = me.subscribe((o) => {
     $me = o;
   });
   unsub();
   if (!$me) throw new Error(window.o.i18n("shared.userActions.errors.couldNotLoadYourProfile"));
-
   shareLink();
-
   return marketStore.subscribe(async (data) => {
     if (!data || data.businesses.length == 0) {
       return;
     }
-
     business = data.businesses.find((o) => o.circlesAddress == circlesAddress);
-    if (!business) return;
-
+    if (!business) {
+      await marketStore.loadSingleItem(circlesAddress);
+    }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
     shopOwner = shopOwnerData.contactAddress_Profile.members;
-
     const currentDateIndex = new Date().getDay();
-    const businessHours = [
-      business.businessHoursSunday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.sunday"),
-      business.businessHoursMonday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.monday"),
-      business.businessHoursTuesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.tuesday"),
-      business.businessHoursWednesday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.wednesday"),
-      business.businessHoursThursday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.thursday"),
-      business.businessHoursFriday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.friday"),
-      business.businessHoursSaturday + " " + $_("dapps.o-marketlisting.pages.marketListingDetail.saturday"),
-    ];
-
     isMe = $me.id === business.id;
-
     hours = [
       {
         day: "dapps.o-marketlisting.pages.marketListingDetail.sunday",
@@ -130,12 +108,9 @@ onMount(async () => {
         isNow: false,
       },
     ];
-
     hours[currentDateIndex].isNow = true;
-
     if (hours[currentDateIndex].hours) {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
-
       // Determine the next time the shop closes or opens
       if (isOpenNow) {
         let nextTimes = hours[currentDateIndex].hours[0].split("-");
@@ -153,7 +128,6 @@ onMount(async () => {
     } else {
       noData = true;
     }
-
     if (!isMe) {
       availableActions.push({
         key: "transfer",
@@ -170,12 +144,10 @@ onMount(async () => {
     }
   });
 });
-
 function convertH2M(timeInHour) {
   var timeParts = timeInHour.split(":");
   return Number(timeParts[0]) * 60 + Number(timeParts[1]);
 }
-
 function checkIsOpenNow(timesArray) {
   if (!timesArray) {
     return;
@@ -183,19 +155,15 @@ function checkIsOpenNow(timesArray) {
   var d = new Date(); // current time
   let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
   let open = false;
-
   if (timesArray) {
     timesArray.forEach(function (times, index) {
       if (open) {
         return true;
       }
-
       times = times.split("-");
-
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
-
         return (open = nIn >= begIn && (nIn < endIn || nIn === endIn));
       }
     });
@@ -204,7 +172,6 @@ function checkIsOpenNow(timesArray) {
   }
   return open;
 }
-
 async function shareLink() {
   link = await ApiClient.mutate<string, ShareLinkMutationVariables>(ShareLinkDocument, {
     targetType: LinkTargetType.Business,
@@ -214,14 +181,12 @@ async function shareLink() {
 </script>
 
 <div class="bg-marketlisting" style="display: none;"></div>
-
 <section class="p-4">
   {#if business}
     <div class="flex justify-center w-full">
       <div class="relative xl:w-2/3 xl:h-2/3">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img src="{business.picture}" alt="picture of the business" class="w-full h-full rounded-2xl" />
-
         <div
           role="presentation"
           on:click="{() => {
@@ -251,7 +216,6 @@ async function shareLink() {
     <div class="flex justify-start pt-4">
       <DetailActionBar actions="{availableActions}" />
     </div>
-
     {#if !noData}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <div>
@@ -274,7 +238,6 @@ async function shareLink() {
                   </span>
                 {/if}
                 {nextEventTimeString}
-
                 {#if visible}
                   <Icon name="chevron-up" class="inline w-5 h-5 -mt-1 -ml-1" />
                 {:else}
@@ -304,7 +267,6 @@ async function shareLink() {
         <p class="pl-2"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
-
     {#if shopOwner && shopOwner.length}
       <div class="flex pt-4 mt-4 text-default border-t-2">
         <section class="justify-center mb-2">
@@ -324,7 +286,6 @@ async function shareLink() {
         </section>
       </div>
     {/if}
-
     <div class="flex pt-4 mt-4 border-t-2" style="height: {mapHeight};">
       {#if business.lat && business.lon && business.location}
         <GoogleMap
@@ -348,7 +309,6 @@ async function shareLink() {
         </button>
       </div>
     {/if}
-
     {#if showShareOptions}
       <div class="flex flex-row justify-between w-full pl-4 pr-6 mt-6 mb-3">
         <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
@@ -359,7 +319,6 @@ async function shareLink() {
             </div>
           </CopyClipboard>
         </div>
-
         <div class="w-10 h-10 text-center rounded-full cursor-pointer copylink bg-light-light">
           <a href="mailto:?subject=Invitation%20to%20Circlesland&body={window.o.i18n('dapps.o-marketlisting.pages.marketListingDetail.shareMarket')} {link}" target="_blank" rel="noreferrer">
             <Icon name="mail" class="inline w-10 h-10 p-2 heroicon smallicon" />

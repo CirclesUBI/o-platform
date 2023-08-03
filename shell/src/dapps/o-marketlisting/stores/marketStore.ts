@@ -1,5 +1,10 @@
 import { get, readable, Subscriber } from "svelte/store";
-import { AllBusinessesDocument, Businesses, QueryAllBusinessesOrderOptions } from "../../../shared/api/data/types";
+import {
+  AllBusinessesDocument,
+  Businesses,
+  QueryAllBusinessesConditions, QueryAllBusinessesOrder,
+  QueryAllBusinessesOrderOptions
+} from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
 
 export type MarketListingData = {
@@ -19,6 +24,7 @@ function marketStore() {
     reload: reload,
     fetchNext: fetchNext,
     search: search,
+    loadSingleItem: loadSingleItem,
     resetSearch() {
       _marketListingData.searchString = null;
     },
@@ -61,6 +67,22 @@ function fetchNext() {
 
   reload(_marketListingData.orderBy, _marketListingData.filter, cursor, true);
   return true;
+}
+
+async function loadSingleItem(circlesAddress: string) {
+  const businesses = await ApiClient.query<Businesses[], any>(AllBusinessesDocument, {
+    queryParams: {
+      where: <QueryAllBusinessesConditions>{
+        inCirclesAddress: [circlesAddress]
+      },
+      order: <QueryAllBusinessesOrder>{
+        orderBy: QueryAllBusinessesOrderOptions.Newest
+      },
+      limit: 1
+    }
+  });
+
+  _marketListingData.businesses.push(...businesses);
 }
 
 function reload(orderBy: QueryAllBusinessesOrderOptions, filter?: number[], cursor: number = 0, append: boolean = false) {
