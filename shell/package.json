@@ -1,10 +1,6 @@
 {
   "name": "@o-platform/shell",
-<<<<<<< HEAD
   "version": "1.0.3-1",
-=======
-  "version": "1.0.3",
->>>>>>> next
   "author": "Daniel Janz, Thorsten Schau (Gnosis Service GmbH); Samuel Andert (Basic Income Lab GmbH)",
   "license": "AGPL-3.0-or-later",
   "description": "CirclesUBI Indonesia web app",
