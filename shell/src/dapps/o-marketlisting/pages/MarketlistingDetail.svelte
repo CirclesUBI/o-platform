@@ -48,7 +48,7 @@ let isOpenNow: boolean;
 let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
-let isMe: boolean;
+let isMyShop: boolean;
 let shopOwner;
 onMount(async () => {
   detailActions = [];
@@ -70,7 +70,22 @@ onMount(async () => {
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
     shopOwner = shopOwnerData.contactAddress_Profile.members;
     const currentDateIndex = new Date().getDay();
-    isMe = $me.id === business.id;
+
+    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+
+    availableActions.push({
+      key: "transfer",
+      icon: "sendmoney",
+      title: window.o.i18n("shared.userActions.sendMoney"),
+      action: async () => {
+        window.o.runProcess(transfer, {
+          safeAddress: $me.circlesAddress,
+          recipientAddress: business.circlesAddress,
+          privateKey: sessionStorage.getItem("circlesKey"),
+        });
+      },
+    });
+
     hours = [
       {
         day: "dapps.o-marketlisting.pages.marketListingDetail.sunday",
@@ -127,20 +142,6 @@ onMount(async () => {
       }
     } else {
       noData = true;
-    }
-    if (!isMe) {
-      availableActions.push({
-        key: "transfer",
-        icon: "sendmoney",
-        title: window.o.i18n("shared.userActions.sendMoney"),
-        action: async () => {
-          window.o.runProcess(transfer, {
-            safeAddress: $me.circlesAddress,
-            recipientAddress: business.circlesAddress,
-            privateKey: sessionStorage.getItem("circlesKey"),
-          });
-        },
-      });
     }
   });
 });
@@ -214,7 +215,7 @@ async function shareLink() {
       </div>
     </div>
     <div class="flex justify-start pt-4">
-      <DetailActionBar actions="{availableActions}" />
+      <DetailActionBar actions="{!isMyShop ? availableActions : []}" />
     </div>
     {#if !noData}
       <div class="flex pt-4 mt-4 text-black border-t-2">
