@@ -5,6 +5,7 @@ import ActionListItem from "../atoms/ActionListItem.svelte";
 import { Environment } from "../environment";
 import Label from "../atoms/Label.svelte";
 export let actions: {
+  key: string;
   icon: string;
   title: string;
   colorClass: string;

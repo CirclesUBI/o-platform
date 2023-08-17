@@ -1,14 +1,14 @@
 {
   "name": "@o-platform/shell",
   "version": "1.0.3-1",
-"author": "Daniel Janz, Thorsten Schau (Gnosis Service GmbH); Samuel Andert (Basic Income Lab GmbH)",
+  "author": "Daniel Janz, Thorsten Schau (Gnosis Service GmbH); Samuel Andert (Basic Income Lab GmbH)",
   "license": "AGPL-3.0-or-later",
   "description": "CirclesUBI Indonesia web app",
   "scripts": {
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
     "local": "ENVIRONMENT='local' USE_MOCKS='true' webpack serve --hot --config webpack.config.js --mode=development",
-    "docker": "DEPLOY_ENVIRONMENT='docker' DEFAULT_APP_LANGUAGE=id I18N_FILE_URL_TEMPLATE='https://raw.githubusercontent.com/CirclesUBI/o-platform-i18n/dev/{locale}.json' ENVIRONMENT='docker' HERE_API_KEY='TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA' webpack serve --hot --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
+    "docker": "DEPLOY_ENVIRONMENT='docker' USE_MOCKS='true' DEFAULT_APP_LANGUAGE=id I18N_FILE_URL_TEMPLATE='https://raw.githubusercontent.com/CirclesUBI/o-platform-i18n/dev/{locale}.json' ENVIRONMENT='docker' HERE_API_KEY='TAyr4mDOyPVD3DUwlUhLgV-hQxIsXGl3wnlyTkTPWsA' webpack serve --hot --host 0.0.0.0 --port 8080 --config webpack.config.js --mode=development",
     "override": "DEFAULT_APP_LANGUAGE=id I18N_FILE_URL_TEMPLATE='https://raw.githubusercontent.com/CirclesUBI/o-platform-i18n/dev/{locale}.json' ENVIRONMENT='override' I18N_FILE_URL_TEMPLATE='https://raw.githubusercontent.com/CirclesUBI/o-platform-i18n/dev/{locale}.json'  webpack serve --hot --host localhost --https --port 8080 --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
     "validate": "svelte-check"
