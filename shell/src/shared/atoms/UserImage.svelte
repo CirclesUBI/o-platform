@@ -19,7 +19,7 @@ let sizeInPixels = 0;
 let noAvatar;
 
 if (!profile.avatarUrl) {
-  const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 15));
+  const seed = Web3.utils.hexToNumber(profile.circlesAddress?.slice(0, 11) ?? "0xfffffffff");
   noAvatar = jazzicon(size === 15 ? 54 : size * 4, seed);
 }
 
@@ -89,7 +89,7 @@ $: {
             class:rounded-md="{isOrganisation}"
             src="{profile.avatarUrl}"
             alt="{displayName}" />
-        {:else if noAvatar}
+        {:else}
           <div class=" w-{size} h-{size} no-avatar-container" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}" class:dashboard-avatar="{size === 15}">
             {@html outerHTML(noAvatar)}
           </div>
