@@ -82,7 +82,7 @@ $: {
             class:w-4="{size < 20}"
             class:h-4="{size < 20}" />
         {/if}
-        {#if profile.avatarUrl}
+        {#if profile && profile.avatarUrl}
           <img
             class=" w-{size} h-{size} rounded-corners-purple-borders"
             class:rounded-full="{!isOrganisation}"
