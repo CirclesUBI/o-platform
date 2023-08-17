@@ -89,7 +89,7 @@ $: {
             class:rounded-md="{isOrganisation}"
             src="{profile.avatarUrl}"
             alt="{displayName}" />
-        {:else}
+        {:else if noAvatar}
           <div class=" w-{size} h-{size} no-avatar-container" class:rounded-full="{!isOrganisation}" class:rounded-md="{isOrganisation}" class:dashboard-avatar="{size === 15}">
             {@html outerHTML(noAvatar)}
           </div>
