@@ -4,15 +4,10 @@ import { fatalError } from "@o-platform/o-process/dist/states/fatalError";
 import { createMachine } from "xstate";
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { push } from "svelte-spa-router";
-import {
-  EventsDocument,
-  EventType,
-  InvitationTransactionDocument,
-  RedeemClaimedInvitationDocument,
-} from "../../../../shared/api/data/types";
-import {show} from "@o-platform/o-process/dist/actions/show";
+import { EventsDocument, EventType, InvitationTransactionDocument, RedeemClaimedInvitationDocument } from "../../../../shared/api/data/types";
+import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../../shared/atoms/Error.svelte";
-import {setWindowLastError} from "../../../../shared/processes/actions/setWindowLastError";
+import { setWindowLastError } from "../../../../shared/processes/actions/setWindowLastError";
 
 export type RedeemInvitationContextData = {
   inviteCode: string;
@@ -22,15 +17,9 @@ export type PromptRedeemInvitationContext = ProcessContext<RedeemInvitationConte
 
 const editorContent = {
   waitUntilRedeemed: {
-    title: window.o.i18n(
-      "dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.title"
-    ),
-    description: window.o.i18n(
-      "dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.description"
-    ),
-    submitButtonText: window.o.i18n(
-      "dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.submitButtonText"
-    ),
+    title: window.o.i18n("dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.title"),
+    description: window.o.i18n("dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.description"),
+    submitButtonText: window.o.i18n("dapps.o-onboarding.processes.invitation.promptRedeemInvitation.editorContent.waitUntilRedeemed.submitButtonText"),
   },
 };
 const processDefinition = (processId: string) =>
@@ -47,9 +36,7 @@ const processDefinition = (processId: string) =>
         entry: () => {
           window.o.publishEvent(<PlatformEvent>{
             type: "shell.progress",
-            message: window.o.i18n(
-              "dapps.o-onboarding.processes.invitation.promptRedeemInvitation.redeemInvitation.message"
-            ),
+            message: window.o.i18n("dapps.o-onboarding.processes.invitation.promptRedeemInvitation.redeemInvitation.message"),
           });
         },
         invoke: {
@@ -95,11 +82,7 @@ const processDefinition = (processId: string) =>
             });
 
             if (claimResult.errors?.length || !claimResult.data.invitationTransaction?.transaction_hash) {
-              throw new Error(
-                window.o.i18n(
-                  "dapps.o-onboarding.processes.invitation.promptRedeemInvitation.checkIfRedeemed.notYetRedeemed"
-                )
-              );
+              throw new Error(window.o.i18n("dapps.o-onboarding.processes.invitation.promptRedeemInvitation.checkIfRedeemed.notYetRedeemed"));
             }
           },
           onDone: "#success",
@@ -111,9 +94,9 @@ const processDefinition = (processId: string) =>
         invoke: {
           src: async () => {
             const timeout = new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(null);
-                }, 1000 * 3);
+              setTimeout(() => {
+                resolve(null);
+              }, 1000 * 3);
             });
             const waiter = new Promise(async (resolve) => {
               const apiClient = await window.o.apiClient.client.subscribeToResult();
@@ -122,10 +105,7 @@ const processDefinition = (processId: string) =>
               });
               let subscription: ZenObservable.Subscription;
               const subscriptionHandler = (next) => {
-                if (
-                  next.data.events.type == EventType.EthTransfer ||
-                  next.data.events.type == EventType.GnosisSafeEthTransfer
-                ) {
+                if (next.data.events.type == EventType.EthTransfer || next.data.events.type == EventType.GnosisSafeEthTransfer) {
                   if (subscription) {
                     subscription.unsubscribe();
                   }
