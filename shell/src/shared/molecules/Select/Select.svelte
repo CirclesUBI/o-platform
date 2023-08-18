@@ -554,7 +554,6 @@ function handleWindowClick(event) {
 function handleClick() {
   if (isDisabled) return;
   isFocused = true;
-  listOpen = !listOpen;
 }
 
 export function handleClear() {
