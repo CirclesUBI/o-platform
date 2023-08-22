@@ -230,6 +230,7 @@ function setPlaceByCoords(latLng, geocoderService) {
 <div style="">
   <input
     id="pacInput"
+    data-cy="enterLocationInput"
     class="w-full text-sm controls form-control input input-bordered"
     type="text"
     bind:value="{inputText}"
