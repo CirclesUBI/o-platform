@@ -38,7 +38,8 @@ function onkeydown(e: KeyboardEvent) {
     <div class="text-center">
       <div class="relative inline-flex">
         <div
-          class="absolute z-10 text-center align-top list-none cursor-pointer top-1 right-2 inline-table "
+          class="absolute z-10 text-center align-top list-none cursor-pointer top-1 right-2 inline-table"
+          data-cy="editPhoto"
           role="presentation"
           on:click="{() => {
             context.dirtyFlags[context.field] = true;
@@ -53,12 +54,7 @@ function onkeydown(e: KeyboardEvent) {
           </span>
         </div>
         <div class="w-48 rounded-full w-92 h-92">
-          <img
-            class="m-auto rounded-full"
-            id="cropCanvas"
-            src="{context.data[context.field]}"
-            height="300"
-            alt="avatar" />
+          <img class="m-auto rounded-full" id="cropCanvas" src="{context.data[context.field]}" height="300" alt="avatar" />
         </div>
       </div>
     </div>

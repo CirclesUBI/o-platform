@@ -457,6 +457,7 @@ function mapRecenter({ place }) {
                     <DropDown
                       selected="{business.businessCategory ? business.businessCategory : $_('dapps.o-marketlisting.pages.mystore.select-category')}"
                       items="{allCategories}"
+                      dataCy="categorySelect"
                       id="filters"
                       key="id"
                       i18nKeys="{true}"
