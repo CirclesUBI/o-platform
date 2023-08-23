@@ -175,7 +175,7 @@ function handleKeyDown(e) {
 
 function scrollToActiveItem(className) {
   let input = document.getElementById("dropdownSelectInput");
-  input.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  input.scrollIntoView();
   // if (isVirtualList || !container) return;
 
   // let offsetBounding;
