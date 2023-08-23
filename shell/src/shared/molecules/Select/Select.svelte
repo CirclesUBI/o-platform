@@ -554,7 +554,7 @@ function handleWindowClick(event) {
 function handleClick() {
   if (isDisabled) return;
   isFocused = true;
-  // listOpen = !listOpen;
+  listOpen = !listOpen;
 }
 
 export function handleClear() {
@@ -726,6 +726,7 @@ onDestroy(() => {
       class:h-12="{staticList !== true}">
       <div class="flex-grow">
         <input
+          id="dropdownSelectInput"
           type="text"
           on:blur
           name="searchTerm"
