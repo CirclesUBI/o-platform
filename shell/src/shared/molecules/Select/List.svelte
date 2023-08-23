@@ -48,8 +48,6 @@ onMount(() => {
     }
     activeItemIndex = hoverItemIndex;
   }
-
-  scrollToActiveItem("active");
 });
 
 onDestroy(() => {
@@ -79,7 +77,6 @@ beforeUpdate(() => {
   prev_activeItemIndex = activeItemIndex;
   prev_selectedValue = selectedValue;
   window.o.publishEvent({ type: "shell.scrollToBottom" });
-  scrollToActiveItem("active");
 });
 
 function handleSelect(item) {
@@ -131,9 +128,6 @@ async function updateHoverItem(increment) {
 
     isNonSelectableItem = items[hoverItemIndex].isGroupHeader && !items[hoverItemIndex].isSelectable;
   }
-
-  await tick();
-  scrollToActiveItem("active");
 }
 
 function handleKeyDown(e) {
@@ -173,20 +167,6 @@ function handleKeyDown(e) {
   }
 }
 
-function scrollToActiveItem(className) {
-  let input = document.getElementById("dropdownSelectInput");
-  input.scrollIntoView();
-  // if (isVirtualList || !container) return;
-
-  // let offsetBounding;
-  // const focusedElemBounding = container.querySelector(`.listItem .${className}`);
-  // if (focusedElemBounding) {
-  //   offsetBounding = container.getBoundingClientRect().bottom - focusedElemBounding.getBoundingClientRect().bottom;
-  // }
-
-  // container.scrollTop -= offsetBounding;
-}
-
 function isItemActive(item, selectedValue, optionIdentifier) {
   return selectedValue && selectedValue[optionIdentifier] === item[optionIdentifier];
 }
@@ -197,6 +177,15 @@ function isItemFirst(itemIndex) {
 
 function isItemHover(hoverItemIndex, item, itemIndex, items) {
   return hoverItemIndex === itemIndex || items.length === 1;
+}
+
+function focus(node) {
+  const update = () => {
+    const item = node.querySelector(".focused-item");
+    if (item) item.scrollIntoView({ block: "center" });
+  };
+  update();
+  return { update };
 }
 </script>
 
@@ -222,27 +211,35 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
 {#if !isVirtualList}
   <div class="listContainer">
     {#if items}
-      {#each items as item, i}
-        {#if item.isGroupHeader && !item.isSelectable}
-          <div class="listGroupTitle">{getGroupHeaderLabel(item)}</div>
+      <section use:focus>
+        {#each items as item, i}
+          {#if item.isGroupHeader && !item.isSelectable}
+            <div class="listGroupTitle">{getGroupHeaderLabel(item)}</div>
+          {:else}
+            <div
+              class:focused-item="{i === items.length - 1}"
+              on:focus="{() => handleHover(i)}"
+              on:mouseover="{() => handleHover(i)}"
+              on:click="{(event) => handleClick({ item, i, event })}"
+              role="presentation"
+              class="listItem">
+              <svelte:component
+                this="{Item}"
+                item="{item}"
+                filterText="{filterText}"
+                getOptionLabel="{getOptionLabel}"
+                getHighlight="{getHighlight}"
+                isFirst="{isItemFirst(i)}"
+                isActive="{isItemActive(item, selectedValue, optionIdentifier)}"
+                isHover="{isItemHover(hoverItemIndex, item, i, items)}" />
+            </div>
+          {/if}
         {:else}
-          <div on:focus="{() => handleHover(i)}" on:mouseover="{() => handleHover(i)}" on:click="{(event) => handleClick({ item, i, event })}" role="presentation" class="listItem">
-            <svelte:component
-              this="{Item}"
-              item="{item}"
-              filterText="{filterText}"
-              getOptionLabel="{getOptionLabel}"
-              getHighlight="{getHighlight}"
-              isFirst="{isItemFirst(i)}"
-              isActive="{isItemActive(item, selectedValue, optionIdentifier)}"
-              isHover="{isItemHover(hoverItemIndex, item, i, items)}" />
-          </div>
-        {/if}
-      {:else}
-        {#if !hideEmptyState}
-          <div class="empty">{noOptionsMessage}</div>
-        {/if}
-      {/each}
+          {#if !hideEmptyState}
+            <div class="empty">{noOptionsMessage}</div>
+          {/if}
+        {/each}
+      </section>
     {/if}
   </div>
 {/if}
@@ -252,7 +249,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
   box-shadow: var(--listShadow, 0 2px 3px 0 rgba(44, 62, 80, 0.24));
   border-radius: var(--listBorderRadius, 4px);
   /* max-height: var(--listMaxHeight, 250px); */
-  /* overflow-y: auto; */
+  overflow-y: auto;
   background: var(--listBackground, #fff);
 }
 
