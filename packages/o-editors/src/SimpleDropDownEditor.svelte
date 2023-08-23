@@ -1,150 +1,170 @@
 <script lang="ts">
-import { onMount } from "svelte";
-
-// import Select from "svelte-select";
-import Select from "../../../shell/src/shared/molecules/Select/Select.svelte";
+import { onMount, afterUpdate } from "svelte";
 
 import { EditorContext } from "./editorContext";
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 import ProcessNavigation from "./ProcessNavigation.svelte";
 import { Observable } from "rxjs";
+import Icons from "@o-platform/shell/src/shared/molecules/Icons.svelte";
 import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
 import { Profile, SafeInfo } from "@o-platform/shell/src/shared/api/data/types";
-import UserImage from "@o-platform/shell/src/shared/atoms/UserImage.svelte";
 import BeerItem from "./BeerItem.svelte";
-// let selected;
-let items;
-let choices;
-let filteredItems = [];
-const itemId = "displayName";
 export let context: DropdownSelectorContext<any, any, any>;
-// import loadOptions from "./beers.js";
+import { _ } from "@o-platform/shell/src/i18n/i18nDictionary";
+import { log } from "xstate/lib/actions";
 
-// function getBeers(filterText) {
-//   if (!filterText.length) return Promise.resolve([]);
+let filteredCountries = [];
 
-//   filterText = filterText ? filterText.replace(" ", "_") : "";
-
-//   return new Promise((resolve, reject) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.open("GET", `https://api.punkapi.com/v2/beers?beer_name=${filterText}`);
-//     xhr.send();
-
-//     xhr.onload = () => {
-//       if (xhr.status >= 200 && xhr.status < 300) {
-//         resolve(
-//           JSON.parse(xhr.response).sort((a, b) => {
-//             if (a.name > b.name) return 1;
-//             if (a.name < b.name) return -1;
-//           })
-//         );
-//       } else {
-//         reject();
-//       }
-//     };
-//   });
-// }
-
-let field: PromptField<any>;
-
-// onMount(async () => {
-//   field = normalizePromptField(context.field);
-//   const currentKey = field.get(context);
-//   if (currentKey) {
-//     selected = await context.params.choices.byKey(currentKey, context);
-//   } else {
-//     selected = undefined;
-//   }
-//   console.log("CONTEXT: ", context);
-// });
-
+let _context: EditorContext;
+let showSafeAddressInput: boolean = false;
+let buttonDisabled = "disabled";
+let inputValue = undefined;
+let searchInput; // use with bind:this to focus element
 $: {
-  context = context;
+  _context = context;
 }
+let fieldId = context.isSensitive ? Math.random().toString().replace(".", "") : context.field;
+const filterCountries = async () => {
+  let storageArr = [];
+  if (inputValue) {
+    const evaluatedLoadOptions = context.params.choices.find(inputValue, context);
 
-function submitHandler() {
-  // const event = new Continue();
-  // event.data = {};
-  // event.data[(<any>field).name] = selected;
-  // context.data[(<any>field).name] = selected;
-  // context.process.sendAnswer(event);
-}
+    // countries.forEach(country => {
+    // 	 if (country.toLowerCase().startsWith(inputValue.toLowerCase())) {
+    // 		 storageArr = [...storageArr, makeMatchBold(country)];
+    // 	 }
+    // });
 
-let floatingConfig = {
-  placement: "top",
-  // Try removing this line below. The tooltip will
-  // overflow the viewport's edge!
+    return new Promise((resolve) => {
+      const observable: Observable<Profile[]> = <Observable<Profile[]>>evaluatedLoadOptions;
+      observable.subscribe((next) => {
+        if (!next) {
+          resolve(null);
+        } else {
+          storageArr = [...next];
+          console.log("ARRAY", storageArr);
+          filteredCountries = storageArr;
+          // dispatch("loaded", { storageArr });
+        }
+      });
+    });
+  }
 };
-let target;
-// async function examplePromise(filterText) {
-//   // Put your async code here...
-//   // For example call an API using filterText as your search params
-//   // When your API responds resolve your Promise
-//   let res = await (<Promise<any[]>>context.params.choices.find(filterText, context));
-//   console.log("RES: ", res);
-//   return res;
-// }
-async function loadOptions(filterText: any): Promise<any[]> {
-  const evaluatedLoadOptions = await (<Promise<any[]>>context.params.choices.find(filterText, context));
 
-  // let promi = new Promise((resolve) => {
-  //   const observable: Observable<Profile[]> = <Observable<Profile[]>>evaluatedLoadOptions;
-  //   observable.subscribe((next) => {
-  //     if (!next) {
-  //       console.log("KAPUTT");
-  //       resolve(null);
-  //     } else {
-  //       console.log("DATA: ", next);
-  //       // TODO: THIS IS SOMEHOW NOT RETURNING THE RIGHT DATA FORMAT I THINK
-  //       resolve([...next]);
-  //     }
-  //   });
-  // });
-  console.log("PROMI", evaluatedLoadOptions);
-  return evaluatedLoadOptions;
+$: filterCountries();
+function toggleInputView() {
+  showSafeAddressInput = !showSafeAddressInput;
+}
+
+function focus(node) {
+  const update = () => {
+    const item = node.querySelector(".focused-item");
+    console.log("DER ITEM", item);
+    if (item) item.scrollIntoView({ block: "center" });
+  };
+
+  update();
+
+  return { update };
 }
 </script>
 
-<div class="flex flex-row" style="height: 60vh">
-  <div class="self-end w-full">
-    <Select loadOptions="{loadOptions}" itemId="{itemId}" floatingConfig="{floatingConfig}" listPlacement="top">
-      <div class="beer" slot="item" let:item let:index>
-        <BeerItem item="{item}" />
-      </div>
+<svelte:window />
 
-      <div class="beer" slot="selection" let:selection>
-        <BeerItem item="{selection}" />
-      </div>
-    </Select>
+<div id="dropdownResults" class="flex flex-col overflow-auto items">
+  {#if filteredCountries.length > 0}
+    <section use:focus>
+      {#each filteredCountries as item, i}
+        <div class:focused-item="{i === filteredCountries.length - 1}"><BeerItem item="{item}" /></div>
+      {/each}
+    </section>
+  {/if}
+</div>
 
-    <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" noSticky="{true}" />
+<form autocomplete="off">
+  <div
+    class="sticky bottom-0 left-0 flex flex-row order-1 w-full space-x-4 bg-white"
+    style="height: 70px; z-index: 99999999; box-shadow: 2px 2px 1px 10px
+      rgba(255, 255, 255, 1);">
+    <div class="flex-grow autocomplete">
+      <input
+        id="dropdown-input"
+        type="text"
+        class="flex-grow h-12 min-w-0 dropdown-editor-input input input-lg input-bordered"
+        placeholder="Search "
+        bind:this="{searchInput}"
+        bind:value="{inputValue}"
+        on:input="{filterCountries}" />
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        on:click="{() => {
+          // dispatch('buttonClick');
+        }}"
+        class="btn btn-primary btn-square">
+        <Icons icon="submitsmall" />
+      </button>
+    </div>
   </div>
+
+  <!-- FILTERED LIST OF COUNTRIES -->
+
+  <!-- <div class="flex flex-row items-center form-control justify-self-center">
+    <div class="autocomplete">
+      <input
+        id="dropdown-input"
+        type="text"
+        class="order-1 input input-lg input-bordered"
+        placeholder="Search Country Names"
+        bind:this="{searchInput}"
+        bind:value="{inputValue}"
+        on:input="{filterCountries}" />
+    </div>
+
+    <div>
+      <button type="submit" class="btn btn-primary btn-square">
+        <Icons icon="submitsmall" />
+      </button>
+    </div>
+  </div> -->
+</form>
+<div class="sticky text-xs text-right cursor-pointer text-primary left-16" style="z-index: 999999999999; right: 5.5rem; bottom: 0.2rem;" role="presentation" on:click="{toggleInputView}">
+  {showSafeAddressInput ? $_("dapps.o-banking.transfer.clickToSearchProfile") : $_("dapps.o-banking.transfer.clickToEnterSafeAddress")}
 </div>
 
 <style>
-:global(.sv-dropdown) {
-  position: static !important;
-  bottom: 100%;
-  order: 1;
-
-  max-height: fit-content !important;
+div.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+  width: 300px;
 }
-:global(.sv-control) {
-  order: 2;
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+  margin: 0;
+}
+input[type="text"] {
+  background-color: #f1f1f1;
   width: 100%;
+}
+input[type="submit"] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
 
-  bottom: 1rem;
-  background: white;
-}
-:global(.svelecte) {
-  flex: 1 1 auto;
-  display: flex;
-  flex-flow: column;
-  margin-bottom: 1.5rem;
-  position: static !important;
-}
-:global(.sv-content > div) {
-  flex-grow: 1;
+#autocomplete-items-list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  width: 297px;
+  border: 1px solid #ddd;
+  background-color: #ddd;
 }
 </style>
