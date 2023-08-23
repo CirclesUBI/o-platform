@@ -726,6 +726,7 @@ onDestroy(() => {
       class:h-12="{staticList !== true}">
       <div class="flex-grow">
         <input
+          id="dropdownSelectInput"
           type="text"
           on:blur
           name="searchTerm"
