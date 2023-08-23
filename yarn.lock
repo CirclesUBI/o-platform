@@ -16032,11 +16032,11 @@ __metadata:
   linkType: hard
 
 "svelecte@npm:^3.13.2":
-  version: 3.16.4
-  resolution: "svelecte@npm:3.16.4"
+  version: 3.13.3
+  resolution: "svelecte@npm:3.13.3"
   dependencies:
     svelte-tiny-virtual-list: ^2.0.0
-  checksum: 61a877478e4c6b3c7295e84642c8b3e4549793d4531ef9fa461ebd4d5a74201aded726362807e6439fc6bfe5ff0a855dd372292b29d5e642639c2d46ec5c9c44
+  checksum: c9964eaf18006e857b4964c6bb4ed13a3eca7f9f5c8d835fc6a94122daa613a7fe390840e5fcf5458592f618ff9ba42351fe9c4aea36b7ccc1f846d70ad024f2
   languageName: node
   linkType: hard
 
