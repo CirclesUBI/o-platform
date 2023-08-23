@@ -176,15 +176,6 @@ function handleKeyDown(e) {
 function scrollToActiveItem(className) {
   let input = document.getElementById("dropdownSelectInput");
   input.scrollIntoView();
-  // if (isVirtualList || !container) return;
-
-  // let offsetBounding;
-  // const focusedElemBounding = container.querySelector(`.listItem .${className}`);
-  // if (focusedElemBounding) {
-  //   offsetBounding = container.getBoundingClientRect().bottom - focusedElemBounding.getBoundingClientRect().bottom;
-  // }
-
-  // container.scrollTop -= offsetBounding;
 }
 
 function isItemActive(item, selectedValue, optionIdentifier) {

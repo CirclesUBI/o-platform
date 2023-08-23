@@ -6,6 +6,7 @@ import DropDownProfile from "@o-platform/o-editors/src/dropdownItems/DropDownPro
 import { DropdownSelectorParams } from "@o-platform/o-editors/src/DropdownSelectEditorContext";
 import { AvataarGenerator } from "../avataarGenerator";
 import { EditorViewContext } from "@o-platform/o-editors/src/shared/editorViewContext";
+import SimpleDropDownEditor from "@o-platform/o-editors/src/SimpleDropDownEditor.svelte";
 import {
   Contact,
   Organisation,
@@ -35,10 +36,10 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
   navigation?: {
     // If you want to allow the user to go one step back then specify here where he came from
     previous?: string;
-    canGoBack?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
+    canGoBack?: (context: ProcessContext<TContext>, event: { type: string; [x: string]: any }) => boolean;
     next?: string;
     skip?: string;
-    canSkip?: (context: ProcessContext<TContext>, event: { type: string;[x: string]: any }) => boolean;
+    canSkip?: (context: ProcessContext<TContext>, event: { type: string; [x: string]: any }) => boolean;
   };
 }) {
   const field = normalizePromptField(spec.field);
@@ -100,7 +101,7 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
   return prompt<TContext, any>({
     id: spec.id ?? field.name,
     field: spec.field,
-    component: DropdownSelectEditor,
+    component: SimpleDropDownEditor,
     params: <DropdownSelectorParams<TContext, Profile | Organisation, string>>{
       allowAlternativeInput: true,
       view: spec.params.view,
@@ -143,16 +144,16 @@ export function promptCirclesSafe<TContext extends ProcessContext<any>, TEvent e
               const searchResult = (
                 profiles && profiles.length > 0
                   ? profiles
-                    .filter((o) => o.circlesAddress)
-                    .map((o) => {
-                      return {
-                        ...o,
-                        circlesAddress: o.circlesAddress,
-                        type: o.type,
-                        avatarUrl: o.avatarUrl ? o.avatarUrl : null,
-                      };
-                    })
-                    .reverse()
+                      .filter((o) => o.circlesAddress)
+                      .map((o) => {
+                        return {
+                          ...o,
+                          circlesAddress: o.circlesAddress,
+                          type: o.type,
+                          avatarUrl: o.avatarUrl ? o.avatarUrl : null,
+                        };
+                      })
+                      .reverse()
                   : []
               ).sort(sortByNameComparer);
               console.log("SEARCH RESULT: ", resultsObservable);

@@ -79,14 +79,7 @@ function handleSwipe(event) {
 const onClose = () => window.o.publishEvent({ type: "shell.closeModal" });
 </script>
 
-<aside
-  id="modalAside"
-  aria-labelledby="modal-heading"
-  aria-modal="true"
-  tabIndex="{-1}"
-  role="dialog"
-  class="z-40 pt-2 text-base overlay"
-  class:blur_aside="{blur}">
+<aside id="modalAside" aria-labelledby="modal-heading" aria-modal="true" tabIndex="{-1}" role="dialog" class="z-40 pt-2 text-base overlay" class:blur_aside="{blur}">
   <div id="modalAsideContentContainer" class="w-full p-2 pb-0 mt-1 overflow-hidden modalAsideContentContainer">
     <div
       class="w-full mt-2 bg-white rounded-xl modalAsideContent md:w-2/3 xl:w-1/2"

@@ -1,177 +1,126 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import Svelecte, { addFormatter } from "svelecte";
+
+// import Select from "svelte-select";
+import Select from "../../../shell/src/shared/molecules/Select/Select.svelte";
+
 import { EditorContext } from "./editorContext";
 import { Continue } from "@o-platform/o-process/dist/events/continue";
 import { DropdownSelectorContext } from "./DropdownSelectEditorContext";
 import ProcessNavigation from "./ProcessNavigation.svelte";
-
-import {
-  normalizePromptField,
-  PromptField,
-} from "@o-platform/o-process/dist/states/prompt";
-import {SafeInfo} from "@o-platform/shell/src/shared/api/data/types";
-
-let selected;
+import { Observable } from "rxjs";
+import { normalizePromptField, PromptField } from "@o-platform/o-process/dist/states/prompt";
+import { Profile, SafeInfo } from "@o-platform/shell/src/shared/api/data/types";
+import UserImage from "@o-platform/shell/src/shared/atoms/UserImage.svelte";
+import BeerItem from "./BeerItem.svelte";
+// let selected;
 let items;
 let choices;
-
+let filteredItems = [];
+const itemId = "displayName";
 export let context: DropdownSelectorContext<any, any, any>;
+// import loadOptions from "./beers.js";
 
+// function getBeers(filterText) {
+//   if (!filterText.length) return Promise.resolve([]);
+
+//   filterText = filterText ? filterText.replace(" ", "_") : "";
+
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("GET", `https://api.punkapi.com/v2/beers?beer_name=${filterText}`);
+//     xhr.send();
+
+//     xhr.onload = () => {
+//       if (xhr.status >= 200 && xhr.status < 300) {
+//         resolve(
+//           JSON.parse(xhr.response).sort((a, b) => {
+//             if (a.name > b.name) return 1;
+//             if (a.name < b.name) return -1;
+//           })
+//         );
+//       } else {
+//         reject();
+//       }
+//     };
+//   });
+// }
 
 let field: PromptField<any>;
 
-onMount(async () => {
-  field = normalizePromptField(context.field);
-  const currentKey = field.get(context);
-  if (currentKey) {
-    selected = await context.params.choices.byKey(currentKey, context);
-  } else {
-    selected = undefined;
-  }
-  console.log("CONTEXT: ", context);
-});
+// onMount(async () => {
+//   field = normalizePromptField(context.field);
+//   const currentKey = field.get(context);
+//   if (currentKey) {
+//     selected = await context.params.choices.byKey(currentKey, context);
+//   } else {
+//     selected = undefined;
+//   }
+//   console.log("CONTEXT: ", context);
+// });
 
 $: {
   context = context;
-  if (context) {
-    context.params.choices.find(null, context)
-            .then((c) => {
-              choices = c;
-              console.log(`Choices: `, c);
-            });
-  }
-  console.log(`Selected:`, selected);
 }
 
 function submitHandler() {
-  const event = new Continue();
-  event.data = {};
-  event.data[(<any>field).name] = selected;
-  context.data[(<any>field).name] = selected;
-  context.process.sendAnswer(event);
+  // const event = new Continue();
+  // event.data = {};
+  // event.data[(<any>field).name] = selected;
+  // context.data[(<any>field).name] = selected;
+  // context.process.sendAnswer(event);
 }
 
-function itemRenderer(item:SafeInfo, isSelected) {
-  let avatar;
-  let name;
-  if (item.safeProfile) {
-    name = item.safeProfile.displayName;
-    avatar = item.safeProfile.avatarUrl
-      ? item.safeProfile.avatarUrl
-      : "/images/market/circles-no-image.jpg";
-  } else {
-    name = item.safeAddress;
-    avatar = "/images/market/circles-no-image.jpg";
-  }
+let floatingConfig = {
+  placement: "top",
+  // Try removing this line below. The tooltip will
+  // overflow the viewport's edge!
+};
+let target;
+// async function examplePromise(filterText) {
+//   // Put your async code here...
+//   // For example call an API using filterText as your search params
+//   // When your API responds resolve your Promise
+//   let res = await (<Promise<any[]>>context.params.choices.find(filterText, context));
+//   console.log("RES: ", res);
+//   return res;
+// }
+async function loadOptions(filterText: any): Promise<any[]> {
+  const evaluatedLoadOptions = await (<Promise<any[]>>context.params.choices.find(filterText, context));
 
-  if (isSelected) {
-    return `<div
-  class="flex items-center w-full p-3 space-x-4 bg-white ">
-  <div class="">
-    <div class="cursor-pointer has-tooltip">
-      <div
-        class="self-center text-center rounded-full justify-self-center"
-        style="padding: 1px;">
-        <div class="w-12 h-12 m-auto bg-white rounded-full">
-          <img
-            class="w-12 h-12 rounded-full"
-            src="${avatar}"
-            alt="${name}" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="flex-col flex-grow">
-    <div class="flex flex-row items-center justify-between text-left">
-      <div class="flex-grow min-w-0">
-        <h2
-          class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
-          ${name}
-        </h2>
-      </div>
-      <div
-        class="self-end pl-2 text-right undefined svelte-1vvqort text-success">
-        <span></span>
-      </div>
-    </div>
-    <div class="flex flex-row items-center justify-between text-left">
-      <div class="flex-grow leading-none">
-        <span class="inline-block text-xs text-dark-lightest"
-          >${item.safeAddress}</span>
-      </div>
-      <div
-        class="text-xs text-right text-dark-lightest whitespace-nowrap leading-non">
-        <div slot="itemCardEndSmallElement"></div>
-      </div>
-    </div>
-  </div>
-</div>`;
-  }
-
-  return `
-  
-<div
-  class="flex items-center w-full p-3 space-x-4 bg-white ">
-  <div class="">
-    <div class="cursor-pointer has-tooltip">
-      <div
-        class="self-center text-center rounded-full justify-self-center"
-        style="padding: 1px;">
-        <div class="w-12 h-12 m-auto bg-white rounded-full">
-          <img
-            class="w-12 h-12 rounded-full"
-            src="${avatar}"
-            alt="${name}" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="flex-col flex-grow">
-    <div class="flex flex-row items-center justify-between text-left">
-      <div class="flex-grow min-w-0">
-        <h2
-          class="overflow-hidden text-base whitespace-nowrap overflow-ellipsis">
-          ${name}
-        </h2>
-      </div>
-      <div
-        class="self-end pl-2 text-right undefined svelte-1vvqort text-success">
-        <span></span>
-      </div>
-    </div>
-    <div class="flex flex-row items-center justify-between text-left">
-      <div class="flex-grow leading-none">
-        <span class="inline-block text-xs text-dark-lightest"
-          >${item.safeAddress}</span>
-      </div>
-      <div
-        class="text-xs text-right text-dark-lightest whitespace-nowrap leading-non">
-        <div slot="itemCardEndSmallElement"></div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-  `;
+  // let promi = new Promise((resolve) => {
+  //   const observable: Observable<Profile[]> = <Observable<Profile[]>>evaluatedLoadOptions;
+  //   observable.subscribe((next) => {
+  //     if (!next) {
+  //       console.log("KAPUTT");
+  //       resolve(null);
+  //     } else {
+  //       console.log("DATA: ", next);
+  //       // TODO: THIS IS SOMEHOW NOT RETURNING THE RIGHT DATA FORMAT I THINK
+  //       resolve([...next]);
+  //     }
+  //   });
+  // });
+  console.log("PROMI", evaluatedLoadOptions);
+  return evaluatedLoadOptions;
 }
-
-addFormatter("itemRenderer", itemRenderer);
 </script>
 
-{#if choices}
-  <Svelecte
-    options="{choices}"
-    valueAsObject={true}
-    renderer="itemRenderer"
-    bind:value="{selected}"
-    placeholder="Select Safe" />
-{/if}
+<div class="flex flex-row" style="height: 60vh">
+  <div class="self-end w-full">
+    <Select loadOptions="{loadOptions}" itemId="{itemId}" floatingConfig="{floatingConfig}" listPlacement="top">
+      <div class="beer" slot="item" let:item let:index>
+        <BeerItem item="{item}" />
+      </div>
 
-<ProcessNavigation
-  on:buttonClick="{submitHandler}"
-  context="{context}"
-  noSticky="{true}" />
+      <div class="beer" slot="selection" let:selection>
+        <BeerItem item="{selection}" />
+      </div>
+    </Select>
+
+    <ProcessNavigation on:buttonClick="{submitHandler}" context="{context}" noSticky="{true}" />
+  </div>
+</div>
 
 <style>
 :global(.sv-dropdown) {
