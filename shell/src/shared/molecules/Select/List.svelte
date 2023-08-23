@@ -49,7 +49,7 @@ onMount(() => {
     activeItemIndex = hoverItemIndex;
   }
 
-  scrollToActiveItem("active");
+  scrollToInputField();
 });
 
 onDestroy(() => {
@@ -79,7 +79,7 @@ beforeUpdate(() => {
   prev_activeItemIndex = activeItemIndex;
   prev_selectedValue = selectedValue;
   window.o.publishEvent({ type: "shell.scrollToBottom" });
-  scrollToActiveItem("active");
+  scrollToInputField();
 });
 
 function handleSelect(item) {
@@ -133,7 +133,7 @@ async function updateHoverItem(increment) {
   }
 
   await tick();
-  scrollToActiveItem("active");
+  scrollToInputField();
 }
 
 function handleKeyDown(e) {
@@ -173,7 +173,7 @@ function handleKeyDown(e) {
   }
 }
 
-function scrollToActiveItem(className) {
+function scrollToInputField() {
   let input = document.getElementById("dropdownSelectInput");
   input.scrollIntoView();
 }
