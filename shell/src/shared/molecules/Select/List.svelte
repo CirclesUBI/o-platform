@@ -174,15 +174,17 @@ function handleKeyDown(e) {
 }
 
 function scrollToActiveItem(className) {
-  if (isVirtualList || !container) return;
+  let input = document.getElementById("dropdownSelectInput");
+  input.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  // if (isVirtualList || !container) return;
 
-  let offsetBounding;
-  const focusedElemBounding = container.querySelector(`.listItem .${className}`);
-  if (focusedElemBounding) {
-    offsetBounding = container.getBoundingClientRect().bottom - focusedElemBounding.getBoundingClientRect().bottom;
-  }
+  // let offsetBounding;
+  // const focusedElemBounding = container.querySelector(`.listItem .${className}`);
+  // if (focusedElemBounding) {
+  //   offsetBounding = container.getBoundingClientRect().bottom - focusedElemBounding.getBoundingClientRect().bottom;
+  // }
 
-  container.scrollTop -= offsetBounding;
+  // container.scrollTop -= offsetBounding;
 }
 
 function isItemActive(item, selectedValue, optionIdentifier) {
@@ -218,7 +220,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
 {/if}
 
 {#if !isVirtualList}
-  <div data-simplebar class="listContainer">
+  <div class="listContainer">
     {#if items}
       {#each items as item, i}
         {#if item.isGroupHeader && !item.isSelectable}
