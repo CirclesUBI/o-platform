@@ -159,19 +159,15 @@ function toggleInputView() {
         </div>
       {:else}
         <Select
-          name="searchTerm"
-          autoComplete="off"
           isFocused="{false}"
           selectedValue="{selected}"
           loadOptions="{(searchString) => context.params.choices.find(searchString, context)}"
           noOptionsMessage=""
           placeholder="Search..."
           listAutoWidth="{false}"
-          getHighlight="{context.params.getHighlight}"
           inlineSubmit="{context.params.showNavigation === undefined ? true : context.params.showNavigation}"
           isCreatable="{false}"
           listPlacement="top"
-          scrollContainer="{document.getElementById('modalScrollable')}"
           containerClasses="min-w-full asyncList  max-w-xs"
           on:clear="{handleClear}"
           optionIdentifier="{context.params.keyProperty}"
