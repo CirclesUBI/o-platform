@@ -29,7 +29,6 @@ export let noOptionsMessage = "No options";
 export let isMulti = false;
 export let activeItemIndex = 0;
 export let filterText = "";
-export let getHighlight = undefined;
 
 let isScrollingTimer = 0;
 let isScrolling = false;
@@ -218,7 +217,7 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
 {/if}
 
 {#if !isVirtualList}
-  <div data-simplebar class="listContainer">
+  <div class="listContainer">
     {#if items}
       {#each items as item, i}
         {#if item.isGroupHeader && !item.isSelectable}
@@ -228,9 +227,6 @@ function isItemHover(hoverItemIndex, item, itemIndex, items) {
             <svelte:component
               this="{Item}"
               item="{item}"
-              filterText="{filterText}"
-              getOptionLabel="{getOptionLabel}"
-              getHighlight="{getHighlight}"
               isFirst="{isItemFirst(i)}"
               isActive="{isItemActive(item, selectedValue, optionIdentifier)}"
               isHover="{isItemHover(hoverItemIndex, item, i, items)}" />
