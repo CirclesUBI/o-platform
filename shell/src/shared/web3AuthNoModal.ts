@@ -116,23 +116,10 @@ export class Web3Auth {
     console.log("idToken: ", idToken);
   };
 
-  getUserInfo = async (mockprofileIndex: number = undefined) => {
+  getUserInfo = async (mockprofileIndex: number = 0) => {
     console.log("Mockindes:", mockprofileIndex);
     if (Environment.useMockLogin) {
-      let user: Partial<OpenloginUserInfo>;
-      if (mockprofileIndex) {
-        user = Environment.getTestProfile(mockprofileIndex);
-      } else {
-        user = {
-          email: "email@some.hostname.of.some.mailserver.somewhere",
-          name: "Oauth profile name",
-          typeOfLogin: "google",
-          profileImage: "https://some.url.to.somewhere",
-          aggregateVerifier: "not-verified",
-          verifier: "not-verified",
-          verifierId: "not-verified",
-        };
-      }
+      const user: Partial<OpenloginUserInfo> = Environment.getTestProfile(mockprofileIndex);
       return user as OpenloginUserInfo;
     } else {
       if (!this.web3auth) {
