@@ -13,12 +13,11 @@ import HtmlViewer from "../../../../../packages/o-editors/src/HtmlViewer.svelte"
 import { PlatformEvent } from "@o-platform/o-events/dist/platformEvent";
 import { show } from "@o-platform/o-process/dist/actions/show";
 import ErrorView from "../../../shared/atoms/Error.svelte";
-import { Web3Auth, GetWeb3AuthResult } from "../../../shared/web3AuthNoModal";
+import { Web3Auth } from "../../../shared/web3AuthNoModal";
 import { FindInvitationCreatorDocument, Profile, QueryFindInvitationCreatorArgs } from "../../../shared/api/data/types";
 import { ApiClient } from "../../../shared/apiConnection";
 import { AvataarGenerator } from "../../../shared/avataarGenerator";
 import { setWindowLastError } from "../../../shared/processes/actions/setWindowLastError";
-import { OpenloginUserInfo } from "@web3auth/openlogin-adapter";
 
 import { Environment } from "../../../shared/environment";
 
@@ -133,11 +132,11 @@ const processDefinition = (processId: string) =>
             onDone: [
               {
                 cond: (context) => Environment.useMockLogin === true,
-                target: "#useMockProfile",
+                target: "useMockProfile",
               },
               {
                 cond: (context) => context.data.accountAddress === undefined,
-                target: "#chooseFlow",
+                target: "chooseFlow",
               },
               {
                 cond: (context) => context.data.accountAddress !== undefined,
@@ -198,30 +197,9 @@ const processDefinition = (processId: string) =>
             src: async (context) => {
               const webauth = new Web3Auth();
               await webauth.init();
-              let privateKey: { privKey: any } = undefined;
-              let userInfo: OpenloginUserInfo;
-
-              const mockProfile = Environment.getTestProfile(context.data.useMockProfileIndex);
-
-              if (mockProfile) {
-                privateKey = {
-                  privKey: mockProfile.privateKey,
-                };
-
-                const openLogin = <GetWeb3AuthResult>{
-                  async getUserInfo(): Promise<Partial<OpenloginUserInfo>> {
-                    delete mockProfile.privateKey;
-                    return mockProfile;
-                  },
-                };
-
-                userInfo = <OpenloginUserInfo>await openLogin.getUserInfo();
-              } else {
-                await webauth.login("mock", context.data.useMockProfileIndex);
-                privateKey = await webauth.getPrivateKey();
-                userInfo = await webauth.getUserInfo(context.data.useMockProfileIndex);
-              }
-
+              await webauth.login("mock", context.data.useMockProfileIndex);
+              const privateKey = await webauth.getPrivateKey();
+              const userInfo = await webauth.getUserInfo(context.data.useMockProfileIndex);
               return {
                 privateKey: privateKey.privKey,
                 userInfo: userInfo,
