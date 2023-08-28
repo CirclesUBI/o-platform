@@ -40,9 +40,14 @@ type BusinessHour = {
   hours?: string[];
   isNow: boolean;
 };
-const today = new Date();
-const currentDateIndex = today.getDay();
-const currentHour = today.getHours();
+
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 let hours: BusinessHour[];
 let isOpenNow: boolean;
 let noData: boolean;
@@ -124,6 +129,7 @@ onMount(async () => {
       },
     ];
     hours[currentDateIndex].isNow = true;
+
     if (hours[currentDateIndex].hours) {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
       // Determine the next time the shop closes or opens
@@ -153,9 +159,11 @@ function checkIsOpenNow(timesArray) {
   if (!timesArray) {
     return;
   }
-  var d = new Date(); // current time
+  const baliTime = dayjs().tz("Asia/Makassar");
+  var d = baliTime.$d; // current time
   let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
   let open = false;
+
   if (timesArray) {
     timesArray.forEach(function (times, index) {
       if (open) {
@@ -165,7 +173,7 @@ function checkIsOpenNow(timesArray) {
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
-        return (open = nIn >= begIn && (nIn < endIn || nIn === endIn));
+        return (open = nIn >= begIn && nIn < endIn);
       }
     });
   } else {

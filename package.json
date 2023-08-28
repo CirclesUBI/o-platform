@@ -26,6 +26,7 @@
     "@metamask/jazzicon": "^2.0.0",
     "@prisma/client": "^2.18.0",
     "core-util-is": "^1.0.2",
+    "dayjs": "^1.11.9",
     "rxjs": "^6.6.3",
     "sugarss": "^2.0.0",
     "svelte": "^3.50.1",
