@@ -93,7 +93,7 @@ const submitHandler = () => {
   <div class="flex flex-col items-end w-full m-auto text-center form-control justify-self-center sm:w-3/4">
     {#if _context.data.lat}
       <div class="w-full mb-8 section-txt h-80" id="map">
-        <div class="map-wrap">
+        <div class="map-wrap" data-cy="googleMap">
           <GoogleMapSearch
             apiKey="{Environment.placesApiKey}"
             on:recenter="{(e) => mapRecenter(e.detail)}"
@@ -134,7 +134,7 @@ const submitHandler = () => {
           {/if}
           {#if success}
             <div class="w-full mb-8 section-txt h-80" id="map">
-              <div class="map-wrap">
+              <div class="map-wrap" data-cy="googleMap">
                 <GoogleMapSearch
                   apiKey="{Environment.placesApiKey}"
                   on:recenter="{(e) => mapRecenter(e.detail)}"
@@ -153,7 +153,7 @@ const submitHandler = () => {
             {/if}
 
             <div class="w-full mb-8 section-txt h-80" id="map">
-              <div class="map-wrap">
+              <div class="map-wrap" data-cy="googleMap">
                 <GoogleMapSearch
                   apiKey="{Environment.placesApiKey}"
                   on:recenter="{(e) => mapRecenter(e.detail)}"

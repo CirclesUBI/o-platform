@@ -155,6 +155,8 @@ const options = {
   dateFormat: "Y-m-d", //change format also
   enableTime: false,
   weekNumbers: true,
+  minDate: "1900-01-01",
+  maxDate: "today",
   altInput: true,
   altFormat: "F j, Y",
   time_24hr: true,

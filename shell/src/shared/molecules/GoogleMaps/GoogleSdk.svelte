@@ -14,9 +14,11 @@ onMount(() => {
   };
   if ($mapsLoaded) {
     dispatch("ready");
+    console.log("THE MAP IS LOADED");
   }
   if (!$mapsLoading) {
     const url = ["//maps.googleapis.com/maps/api/js?", apiKey ? `key=${apiKey}&` : "", "libraries=places&callback=byGmapsReady"].join("");
+    console.log("the map is loading from", url);
     mapsLoading.set(true);
     loader(
       [{ type: "script", url }],
@@ -28,7 +30,3 @@ onMount(() => {
   }
 });
 </script>
-
-{#if $mapsLoaded}
-  <span data-cy="googleMap"></span>
-{/if}
