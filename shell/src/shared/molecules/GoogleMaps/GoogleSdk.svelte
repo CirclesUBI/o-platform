@@ -28,3 +28,7 @@ onMount(() => {
   }
 });
 </script>
+
+{#if $mapsLoaded}
+  <span data-cy="googleMap"></span>
+{/if}

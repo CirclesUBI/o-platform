@@ -46,6 +46,7 @@ const index: Page<any, DappState> = {
       props: {
         icon: "exit",
         backgroundColorClass: "transparent",
+        customClass: "hard-log-out",
         action: () => {
           push("#/passport/actions/logout");
         },

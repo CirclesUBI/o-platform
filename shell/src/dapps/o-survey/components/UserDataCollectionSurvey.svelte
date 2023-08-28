@@ -261,7 +261,11 @@ const options = {
             {#if $inviteUrl}
               <span class="text-sm grow text-success">{$_("dapps.o-homepage.components.survey.userDataCollection.inviteValid")}</span>
             {:else}
-              <button class="px-8 overflow-hidden text-lg transition-all transform grow btn btn-primary" on:click="{() => handleClick('openQRCode')}" disabled="{$inviteUrl}">
+              <button
+                class="px-8 overflow-hidden text-lg transition-all transform grow btn btn-primary"
+                data-cy="scanInviteButton"
+                on:click="{() => handleClick('openQRCode')}"
+                disabled="{$inviteUrl}">
                 {$_("dapps.o-homepage.components.survey.button.scanInviteNow")}
               </button>
             {/if}
@@ -294,6 +298,7 @@ const options = {
           {#if $myForm.dirty}
             <button
               class="relative px-8 overflow-hidden text-lg transition-all transform btn btn-primary bg-primary text-cpurple"
+              data-cy="nextButton"
               on:click="{() => handleClick('next')}"
               disabled="{!$myForm.valid}">
               {$_("dapps.o-homepage.components.survey.button.next")}</button>

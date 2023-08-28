@@ -51,7 +51,8 @@ export let isNotFoundPage: boolean = false;
       <div
         class="flex items-center justify-center w-12 h-12 ml-4 {navigation.rightSlot.props.backgroundColorClass
           ? 'bg-' + navigation.rightSlot.props.backgroundColorClass
-          : 'bg-white'} rounded-full cursor-pointer"
+          : 'bg-white'} rounded-full cursor-pointer {navigation.rightSlot.props.customClass}"
+        data-cy="hardLogoutButton"
         class:text-white="{navigation.rightSlot.props.backgroundColorClass}"
         role="presentation"
         on:click="{navigation.rightSlot.props.action}">

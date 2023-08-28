@@ -2,6 +2,7 @@ export interface NavigationProps {
   icon?: string;
   text?: string;
   backgroundColorClass?: string;
+  customClass?: string;
   action?: () => void;
 }
 
