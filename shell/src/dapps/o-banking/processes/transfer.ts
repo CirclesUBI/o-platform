@@ -192,65 +192,7 @@ const processDefinition = (processId: string) =>
           onDone: [
             {
               cond: (context) => !!context.data.recipientProfile,
-              target: "#getMaxFlow",
-            },
-            {
-              target: "#getMaxFlow",
-            },
-          ],
-          onError: "#error",
-        },
-      },
-      getMaxFlow: {
-        id: "getMaxFlow",
-        entry: () => {
-          window.o.publishEvent(<PlatformEvent>{
-            type: "shell.progress",
-            message: window.o.i18n("dapps.o-banking.processes.transfer.findMaxFlow.entry.message"),
-          });
-        },
-        invoke: {
-          id: "getMaxFlow",
-          src: async (context) => {
-            let flow: any = {
-              isValid: false,
-            };
-            let amount = "0";
-
-            /*
-            let tries = 0;
-            while(!flow.isValid && tries < 32) {
-              flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
-                from: context.data.safeAddress,
-                to: context.data.recipientAddress,
-                amount: amount,
-              });
-              if (!flow.isValid) {
-                let oldAmount = amount == "0" ? flow.flow : amount
-                amount = new BN(oldAmount).sub(new BN(oldAmount).div(new BN("32"))).toString();
-                console.log(`Flow not valid, reducing amount from ${oldAmount} to ${amount}`);
-              }
-              tries++;
-            }*/
-
-            flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
-              from: context.data.safeAddress,
-              to: context.data.recipientAddress,
-              amount: amount,
-            });
-
-            if (!context.data.maxFlows) {
-              context.data.maxFlows = {};
-            }
-            context.data.maxFlows["crc"] = flow.flow;
-          },
-          onDone: [
-            {
-              cond: (context) => {
-                console.log('context.data.maxFlows["crc"] == "0"', context.data.maxFlows["crc"]);
-                return context.data.maxFlows["crc"] == "";
-              },
-              target: "#noTrust",
+              target: "#tokens",
             },
             {
               target: "#tokens",
@@ -259,27 +201,6 @@ const processDefinition = (processId: string) =>
           onError: "#error",
         },
       },
-      noTrust: prompt<TransferContext, any>({
-        id: "noTrust",
-        field: "__",
-        component: HtmlViewer,
-        params: (context) => {
-          return {
-            view: {
-              title: "Not trusted",
-              description: `${context.data.recipientProfile.displayName} isn't trusting you.`,
-              submitButtonText: "Go back",
-            },
-            html: () => "",
-            hideNav: false,
-          };
-        },
-        navigation: {
-          next: "#recipientAddress",
-          canGoBack: () => false,
-          canSkip: () => false,
-        },
-      }),
       tokens: prompt<TransferContext, any>({
         field: "tokens",
         component: CurrencyTransfer,
