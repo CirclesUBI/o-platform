@@ -20,6 +20,13 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export let circlesAddress: string;
 let business: Businesses;
 let visible: boolean = false;
@@ -40,9 +47,7 @@ type BusinessHour = {
   hours?: string[];
   isNow: boolean;
 };
-const today = new Date();
-const currentDateIndex = today.getDay();
-const currentHour = today.getHours();
+
 let hours: BusinessHour[];
 let isOpenNow: boolean;
 let noData: boolean;
@@ -124,6 +129,7 @@ onMount(async () => {
       },
     ];
     hours[currentDateIndex].isNow = true;
+
     if (hours[currentDateIndex].hours) {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
       // Determine the next time the shop closes or opens
@@ -153,9 +159,10 @@ function checkIsOpenNow(timesArray) {
   if (!timesArray) {
     return;
   }
-  var d = new Date(); // current time
-  let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
+  const d = dayjs().tz("Asia/Makassar");
+  let nIn = convertH2M(d.hour() + ":" + d.minute());
   let open = false;
+
   if (timesArray) {
     timesArray.forEach(function (times, index) {
       if (open) {
@@ -165,7 +172,8 @@ function checkIsOpenNow(timesArray) {
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
-        return (open = nIn >= begIn && (nIn < endIn || nIn === endIn));
+        open = nIn >= begIn && nIn < endIn;
+        return open;
       }
     });
   } else {
