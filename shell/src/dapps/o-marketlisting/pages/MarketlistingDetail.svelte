@@ -20,6 +20,13 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export let circlesAddress: string;
 let business: Businesses;
 let visible: boolean = false;
@@ -40,13 +47,6 @@ type BusinessHour = {
   hours?: string[];
   isNow: boolean;
 };
-
-const dayjs = require("dayjs");
-const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 let hours: BusinessHour[];
 let isOpenNow: boolean;
@@ -159,9 +159,8 @@ function checkIsOpenNow(timesArray) {
   if (!timesArray) {
     return;
   }
-  const baliTime = dayjs().tz("Asia/Makassar");
-  var d = baliTime.$d; // current time
-  let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
+  const d = dayjs().tz("Asia/Makassar");
+  let nIn = convertH2M(d.hour() + ":" + d.minute());
   let open = false;
 
   if (timesArray) {
@@ -173,7 +172,8 @@ function checkIsOpenNow(timesArray) {
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
-        return (open = nIn >= begIn && nIn < endIn);
+        open = nIn >= begIn && nIn < endIn;
+        return open;
       }
     });
   } else {
