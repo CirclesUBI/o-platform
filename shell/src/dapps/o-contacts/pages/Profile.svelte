@@ -190,13 +190,11 @@ async function setProfile(id: string) {
                     {$_("dapps.o-contacts.pages.profile.memberAt")}
                   </div>
                   <div class="flex flex-row flex-wrap mt-2">
-                    {#each profile.memberships as membership}
-                      {#if membership.organisation}
-                        <div class="mt-2 mr-2">
-                          <UserImage profile="{membership.organisation}" tooltip="{true}" />
-                        </div>
-                      {/if}
-                    {/each}
+                    {#if profile.memberships[0].organisation}
+                      <div class="mt-2 mr-2">
+                        <UserImage profile="{profile.memberships[0].organisation}" tooltip="{true}" />
+                      </div>
+                    {/if}
                   </div>
                 </div>
               </section>

@@ -284,12 +284,10 @@ async function shareLink() {
               <Label key="dapps.o-contacts.pages.profile.members" />
             </div>
             <div class="flex flex-row flex-wrap mt-2">
-              {#each shopOwner as shopOwnerProfile}
-                <div class="mt-2 mr-2 flex items-center">
-                  <UserImage profile="{shopOwnerProfile}" />
-                  <div class="ml-3">{shopOwnerProfile.displayName}</div>
-                </div>
-              {/each}
+              <div class="mt-2 mr-2 flex items-center">
+                <UserImage profile="{shopOwner[0]}" />
+                <div class="ml-3">{shopOwner[0].displayName}</div>
+              </div>
             </div>
           </div>
         </section>
