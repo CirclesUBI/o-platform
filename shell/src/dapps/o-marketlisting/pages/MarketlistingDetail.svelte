@@ -256,7 +256,7 @@ async function shareLink() {
             </div>
           </div>
           <div class="opening-hours-container">
-            {#if visible}
+            {#if visible && hours}
               <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
