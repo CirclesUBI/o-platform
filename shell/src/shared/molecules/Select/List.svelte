@@ -173,6 +173,7 @@ function handleKeyDown(e) {
   }
 }
 
+
 function scrollToInputField() {
   let input = document.getElementById("dropdownSelectInput");
   input.scrollIntoView();
