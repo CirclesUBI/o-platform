@@ -7,6 +7,7 @@ export let key: string;
 export let value: string;
 export let id: string;
 export let selected: string;
+export let dataCy: string;
 export let dropDownClass: string = "";
 export let isButton: boolean = false;
 export let isChevron: boolean = false;
@@ -38,6 +39,7 @@ function handleOnChange(e) {
   class:selectAsButton="{isButton}"
   class:border-secondary="{isButton}"
   class:selectAsChevron="{isChevron}"
+  data-cy="{dataCy}"
   on:change="{handleOnChange}"
   use:clickOutside
   on:click_outside="{() => eventDispatcher('dropDownClickedOutside')}">
