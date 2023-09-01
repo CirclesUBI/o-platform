@@ -256,7 +256,7 @@ async function shareLink() {
             </div>
           </div>
           <div class="opening-hours-container">
-            {#if visible}
+            {#if visible && hours}
               <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
@@ -273,7 +273,7 @@ async function shareLink() {
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <a href="https://wa.me/{business.phoneNumber}" target="_blank" rel="noreferrer"><Icons icon="whatsapp" customClass="inline -mt-1" size="{6}" /></a>
-        <p class="pl-2"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
+        <p class="pl-2"><a href="https://wa.me/{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
     {#if shopOwner && shopOwner.length}
@@ -284,10 +284,12 @@ async function shareLink() {
               <Label key="dapps.o-contacts.pages.profile.members" />
             </div>
             <div class="flex flex-row flex-wrap mt-2">
-              <div class="mt-2 mr-2 flex items-center">
-                <UserImage profile="{shopOwner[0]}" />
-                <div class="ml-3">{shopOwner[0].displayName}</div>
-              </div>
+              {#each shopOwner as shopOwnerProfile}
+                <div class="mt-2 mr-2 flex items-center">
+                  <UserImage profile="{shopOwnerProfile}" />
+                  <div class="ml-3">{shopOwnerProfile.displayName}</div>
+                </div>
+              {/each}
             </div>
           </div>
         </section>
