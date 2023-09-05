@@ -54,7 +54,7 @@ let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 let isMyShop: boolean;
-let shopOwner;
+let shopOwner: Profile[];
 onMount(async () => {
   detailActions = [];
   let $me: Profile | null = null;
@@ -73,7 +73,8 @@ onMount(async () => {
       await marketStore.loadSingleItem(circlesAddress);
     }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
-    let shopOwner = shopOwnerData.contactAddress_Profile.members;
+    shopOwner = shopOwnerData.contactAddress_Profile.members;
+
     const currentDateIndex = new Date().getDay();
 
     isMyShop = $me.circlesAddress === business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
