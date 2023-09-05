@@ -76,7 +76,7 @@ onMount(async () => {
     shopOwner = shopOwnerData.contactAddress_Profile.members;
     const currentDateIndex = new Date().getDay();
 
-    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+    isMyShop = $me.circlesAddress == business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
 
     availableActions.push({
       key: "transfer",
