@@ -73,10 +73,10 @@ onMount(async () => {
       await marketStore.loadSingleItem(circlesAddress);
     }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
-    shopOwner = shopOwnerData.contactAddress_Profile.members;
+    let shopOwner = shopOwnerData.contactAddress_Profile.members;
     const currentDateIndex = new Date().getDay();
 
-    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+    isMyShop = $me.circlesAddress === business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
 
     availableActions.push({
       key: "transfer",
