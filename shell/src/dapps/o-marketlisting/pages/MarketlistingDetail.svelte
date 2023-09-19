@@ -54,7 +54,7 @@ let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 let isMyShop: boolean;
-let shopOwner;
+let shopOwner: Profile[];
 onMount(async () => {
   detailActions = [];
   let $me: Profile | null = null;
@@ -74,9 +74,10 @@ onMount(async () => {
     }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
     shopOwner = shopOwnerData.contactAddress_Profile.members;
+
     const currentDateIndex = new Date().getDay();
 
-    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+    isMyShop = $me.circlesAddress === business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
 
     availableActions.push({
       key: "transfer",
