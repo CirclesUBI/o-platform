@@ -36,7 +36,6 @@ $: {
     const key = selected.toLowerCase();
     if (context.data.maxFlows[key] != "") {
       maxAmount = Math.floor(convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON())).toFixed(0);
-      console.log("RRRR", maxAmount);
     }
     console.log("DATA", context.data);
   }
@@ -83,7 +82,6 @@ async function setProfile(id: string) {
 }
 
 function sendAnswer(amount: string) {
-  console.log("oana", amount);
   const event = new Continue();
   event.data = {};
   event.data[context.field] = {
