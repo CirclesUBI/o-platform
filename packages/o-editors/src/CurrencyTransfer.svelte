@@ -10,11 +10,13 @@ import { RpcGateway } from "../../o-circles/dist/rpcGateway";
 import { convertCirclesToTimeCircles } from "@o-platform/shell/src/shared/functions/displayCirclesAmount";
 import Label from "@o-platform/shell/src/shared/atoms/Label.svelte";
 import { contacts } from "../../../shell/src/shared/stores/contacts";
-import { CommonTrust, Contact, Profile } from "@o-platform/shell/src/shared/api/data/types";
+import { CommonTrust, Contact, DirectPathDocument, Profile, QueryDirectPathArgs, TransitivePath } from "@o-platform/shell/src/shared/api/data/types";
 import UserImage from "@o-platform/shell/src/shared/atoms/UserImage.svelte";
 import { ok, err, Result } from "neverthrow";
 import { onMount } from "svelte";
 import { trustFromContactMetadata } from "@o-platform/shell/src/shared/functions/trustFromContactMetadata";
+import { ApiClient } from "@o-platform/shell/src/shared/apiConnection";
+import LoadingSpinner from "@o-platform/shell/src/shared/atoms/LoadingSpinner.svelte";
 export let context: CurrencyTransferContext;
 
 let Icon = circlesIcon;
@@ -26,6 +28,7 @@ let selectedCurrency = context.params.currencies.find((o) => o.value === selecte
 let contact: Contact;
 let trustMessage: string;
 let trustClassName: string;
+let isLoading: boolean;
 $: selectedCurrency = context.params.currencies.find((o) => o.value === selected);
 
 $: {
@@ -33,6 +36,7 @@ $: {
     const key = selected.toLowerCase();
     if (context.data.maxFlows[key] != "") {
       maxAmount = Math.floor(convertCirclesToTimeCircles(parseFloat(RpcGateway.get().utils.fromWei(context.data.maxFlows[key], "ether").toString()), new Date().toJSON())).toFixed(0);
+      console.log("RRRR", maxAmount);
     }
     console.log("DATA", context.data);
   }
@@ -46,6 +50,8 @@ $: {
 
 onMount(async () => {
   await setProfile(context.data.recipientProfile.circlesAddress);
+
+  await getMaxFlow();
 
   const { trustIn, trustOut } = trustFromContactMetadata(contact);
 
@@ -77,6 +83,7 @@ async function setProfile(id: string) {
 }
 
 function sendAnswer(amount: string) {
+  console.log("oana", amount);
   const event = new Continue();
   event.data = {};
   event.data[context.field] = {
@@ -98,6 +105,29 @@ function onkeydown(e: KeyboardEvent) {
     sendAnswer(amount);
   }
 }
+
+async function getMaxFlow() {
+  isLoading = true;
+  let flow: any = {
+    isValid: false,
+  };
+  let amount = "0";
+  try {
+    flow = await ApiClient.query<TransitivePath, QueryDirectPathArgs>(DirectPathDocument, {
+      from: context.data.safeAddress,
+      to: context.data.recipientAddress,
+      amount: amount,
+    });
+
+    if (!context.data.maxFlows) {
+      context.data.maxFlows = {};
+    }
+    context.data.maxFlows["crc"] = flow.flow;
+    isLoading = false;
+  } catch {
+    console.log("error getting maxflow");
+  }
+}
 </script>
 
 <div>
@@ -111,7 +141,13 @@ function onkeydown(e: KeyboardEvent) {
       {/if}
       <div>
         <Label key="dapps.o-banking.processes.transfer.maximumAmount" values="{{ name: context.data.recipientProfile.firstName }}" />
-        <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold">{maxAmount}</span>
+        {#if isLoading}
+          <center class="mt-2 mb-2">
+            <LoadingSpinner />
+          </center>
+        {:else}
+          <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold">{maxAmount}</span>
+        {/if}
       </div>
     </div>
   {/if}
