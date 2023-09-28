@@ -140,9 +140,9 @@ async function getMaxFlow() {
       <div>
         <Label key="dapps.o-banking.processes.transfer.maximumAmount" values="{{ name: context.data.recipientProfile.firstName }}" />
         {#if isLoading}
-          <center class="mt-2 mb-2">
+          <div class="mt-2 mb-2 flex flex-col items-center">
             <LoadingSpinner />
-          </center>
+          </div>
         {:else}
           <Icons icon="timeCircle" size="{4}" customClass="inline -mt-0.5 pr-0" /><span class="font-bold">{maxAmount}</span>
         {/if}
