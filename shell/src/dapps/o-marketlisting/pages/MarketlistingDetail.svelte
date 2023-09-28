@@ -54,7 +54,7 @@ let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 let isMyShop: boolean;
-let shopOwner: Profile[];
+let shopOwner;
 onMount(async () => {
   detailActions = [];
   let $me: Profile | null = null;
@@ -74,7 +74,6 @@ onMount(async () => {
     }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
     shopOwner = shopOwnerData.contactAddress_Profile.members;
-
     const currentDateIndex = new Date().getDay();
 
     // adding a nice comment so this will get picked back up by the deployment

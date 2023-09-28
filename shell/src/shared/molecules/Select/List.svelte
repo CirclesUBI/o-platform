@@ -49,7 +49,7 @@ onMount(() => {
     activeItemIndex = hoverItemIndex;
   }
 
-  scrollToActiveItem("active");
+  scrollToInputField();
 });
 
 onDestroy(() => {
@@ -79,7 +79,7 @@ beforeUpdate(() => {
   prev_activeItemIndex = activeItemIndex;
   prev_selectedValue = selectedValue;
   window.o.publishEvent({ type: "shell.scrollToBottom" });
-  scrollToActiveItem("active");
+  scrollToInputField();
 });
 
 function handleSelect(item) {
@@ -133,7 +133,7 @@ async function updateHoverItem(increment) {
   }
 
   await tick();
-  scrollToActiveItem("active");
+  scrollToInputField();
 }
 
 function handleKeyDown(e) {
@@ -173,18 +173,10 @@ function handleKeyDown(e) {
   }
 }
 
-function scrollToActiveItem(className) {
+
+function scrollToInputField() {
   let input = document.getElementById("dropdownSelectInput");
   input.scrollIntoView();
-  // if (isVirtualList || !container) return;
-
-  // let offsetBounding;
-  // const focusedElemBounding = container.querySelector(`.listItem .${className}`);
-  // if (focusedElemBounding) {
-  //   offsetBounding = container.getBoundingClientRect().bottom - focusedElemBounding.getBoundingClientRect().bottom;
-  // }
-
-  // container.scrollTop -= offsetBounding;
 }
 
 function isItemActive(item, selectedValue, optionIdentifier) {
