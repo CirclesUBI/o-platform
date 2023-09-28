@@ -76,7 +76,8 @@ onMount(async () => {
     shopOwner = shopOwnerData.contactAddress_Profile.members;
     const currentDateIndex = new Date().getDay();
 
-    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+    // adding a nice comment so this will get picked back up by the deployment
+    isMyShop = $me.circlesAddress === business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
 
     availableActions.push({
       key: "transfer",
@@ -277,7 +278,7 @@ async function shareLink() {
       </div>
     {/if}
     {#if shopOwner && shopOwner.length}
-      <div class="flex pt-4 mt-4 text-default border-t-2">
+      <div class="flex pt-4 mt-4 border-t-2 text-default">
         <section class="justify-center mb-2">
           <div class="flex flex-col w-full pt-2 space-y-1">
             <div class="font-bold text-left text-default text-2xs">
@@ -285,7 +286,7 @@ async function shareLink() {
             </div>
             <div class="flex flex-row flex-wrap mt-2">
               {#each shopOwner as shopOwnerProfile}
-                <div class="mt-2 mr-2 flex items-center">
+                <div class="flex items-center mt-2 mr-2">
                   <UserImage profile="{shopOwnerProfile}" />
                   <div class="ml-3">{shopOwnerProfile.displayName}</div>
                 </div>
