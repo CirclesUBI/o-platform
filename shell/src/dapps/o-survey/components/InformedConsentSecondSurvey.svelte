@@ -77,6 +77,18 @@ function handleClick(button) {
         <Label key="dapps.o-homepage.components.survey.informedConsent.sixthCheckbox" />
       </label>
     </div>
+    <div class="mx-10 my-5 uppercase">
+      <input id="check-4" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$onlyFromFriends.value}" />
+      <label for="check-4" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.seventhCheckbox" />
+      </label>
+    </div>
+    <div class="mx-10 my-5 uppercase">
+      <input id="check-5" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$onlyFromFriends.value}" />
+      <label for="check-5" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.eighthCheckbox" />
+      </label>
+    </div>
     {#if !$myForm.valid}
       <div class="mx-10 my-5 text-sm text-center text-info">
         <Label key="dapps.o-homepage.components.survey.informedConsent.info" />
