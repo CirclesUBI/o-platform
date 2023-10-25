@@ -13,16 +13,20 @@ function validateCheckBox() {
 }
 
 const exchange = field("exchange", false, [required(), validateCheckBox()]);
-const dataCollect = field("dataCollect", false, [required(), validateCheckBox()]);
 const onlyFromFriends = field("onlyFromFriends", false, [required(), validateCheckBox()]);
-const myForm = form(exchange, dataCollect, onlyFromFriends);
+const noExchanges = field("noExchanges", false, [required(), validateCheckBox()]);
+const unethicalItems = field("unethicalItems", false, [required(), validateCheckBox()]);
+const inactiveAccount = field("inactiveAccount", false, [required(), validateCheckBox()]);
+const myForm = form(exchange, onlyFromFriends, noExchanges, unethicalItems, inactiveAccount);
 myForm.validate();
 
 onMount(() => {
   if (sessionStorage.getItem("surveyConsentPage1") === "true") {
     $exchange.value = $surveyConsents.exchangeConsent;
-    $dataCollect.value = $surveyConsents.dataCollectConsent;
-    $onlyFromFriends.value = $surveyConsents.onlyFromFriends;
+    $onlyFromFriends.value = $surveyConsents.onlyFromFriendsConsent;
+    $noExchanges.value = $surveyConsents.noExchangesConsent;
+    $unethicalItems.value = $surveyConsents.unethicalItemsConsent;
+    $inactiveAccount.value = $surveyConsents.inactiveAccountConsent;
   } else {
     push("#/survey/page/1");
   }
@@ -34,8 +38,10 @@ function handleClick(button) {
   } else {
     if ($myForm.valid) {
       $surveyConsents.exchangeConsent = $exchange.value;
-      $surveyConsents.dataCollectConsent = $dataCollect.value;
-      $surveyConsents.onlyFromFriends = $onlyFromFriends.value;
+      $surveyConsents.onlyFromFriendsConsent = $onlyFromFriends.value;
+      $surveyConsents.noExchangesConsent = $noExchanges.value;
+      $surveyConsents.unethicalItemsConsent = $unethicalItems.value;
+      $surveyConsents.inactiveAccountConsent = $inactiveAccount.value;
       $surveyConsents.allConsentsGiven = true;
       sessionStorage.setItem("surveyConsentPage2", "true");
       push("#/survey/page/3");
@@ -66,15 +72,27 @@ function handleClick(button) {
       </label>
     </div>
     <div class="mx-10 my-5 uppercase">
-      <input id="check-2" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$dataCollect.value}" />
+      <input id="check-2" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$onlyFromFriends.value}" />
       <label for="check-2" class="cursor-pointer">
         <Label key="dapps.o-homepage.components.survey.informedConsent.fifthCheckbox" />
       </label>
     </div>
     <div class="mx-10 my-5 uppercase">
-      <input id="check-3" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$onlyFromFriends.value}" />
+      <input id="check-3" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$noExchanges.value}" />
       <label for="check-3" class="cursor-pointer">
         <Label key="dapps.o-homepage.components.survey.informedConsent.sixthCheckbox" />
+      </label>
+    </div>
+    <div class="mx-10 my-5 uppercase">
+      <input id="check-4" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$unethicalItems.value}" />
+      <label for="check-4" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.seventhCheckbox" />
+      </label>
+    </div>
+    <div class="mx-10 my-5 uppercase">
+      <input id="check-5" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$inactiveAccount.value}" />
+      <label for="check-5" class="cursor-pointer">
+        <Label key="dapps.o-homepage.components.survey.informedConsent.eighthCheckbox" />
       </label>
     </div>
     {#if !$myForm.valid}
