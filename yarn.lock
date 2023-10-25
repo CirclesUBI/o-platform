@@ -2833,13 +2833,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@juggle/resize-observer@npm:^3.3.1":
-  version: 3.4.0
-  resolution: "@juggle/resize-observer@npm:3.4.0"
-  checksum: 2505028c05cc2e17639fcad06218b1c4b60f932a4ebb4b41ab546ef8c157031ae377e3f560903801f6d01706dbefd4943b6c4704bf19ed86dfa1c62f1473a570
-  languageName: node
-  linkType: hard
-
 "@krowten/svelte-heroicons@npm:^0.0.6":
   version: 0.0.6
   resolution: "@krowten/svelte-heroicons@npm:0.0.6"
@@ -3331,7 +3324,7 @@ __metadata:
     qr-scanner: ^1.4.2
     quill: ^1.3.7
     react-image-file-resizer: ^0.4.8
-    simplebar: ^5.3.9
+    simplebar: ^6.2.5
     string-replace-loader: ^3.1.0
     style-loader: ^3.3.1
     svelecte: ^3.13.2
@@ -4276,6 +4269,22 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/lodash-es@npm:^4.17.6":
+  version: 4.17.10
+  resolution: "@types/lodash-es@npm:4.17.10"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 129e9dde830815a72f9bd17c3a7b7ffb10a9cf76d65c7bb4f14df13b38411ed3ebe9ebbc2f9059c4e61198e784d499e48d0a281e27a4defbbba748dd8a4cfd9d
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.200
+  resolution: "@types/lodash@npm:4.14.200"
+  checksum: 6471f8bb5da692a6ecf03a8da4935bfbc341e67ee9bcb4f5730bfacff0c367232548f0a01e8ac5ea18c6fe78fb085d502494e33ccb47a7ee87cbdee03b47d00d
   languageName: node
   linkType: hard
 
@@ -6992,13 +7001,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.0.1":
-  version: 3.25.5
-  resolution: "core-js@npm:3.25.5"
-  checksum: 208b308c49bc022f90d4349d4c99802a73c9d55053976b3c529f10014c1e37845926defad8c519f2c7f71ea0acf18d2b323ab6aaee34dc85b4c4b3ced0623f3f
-  languageName: node
-  linkType: hard
-
 "core-util-is@npm:1.0.2":
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
@@ -7451,6 +7453,13 @@ __metadata:
   version: 1.11.5
   resolution: "dayjs@npm:1.11.5"
   checksum: e3bbaa7b4883b31be4bf75a181f1447fbb19800c29b332852125aab96baeff3ac232dcba8b88c4ea17d3b636c99dac5fb9d1af4bb6ae26615698bbc4a852dffb
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.9":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: a6b5a3813b8884f5cd557e2e6b7fa569f4c5d0c97aca9558e38534af4f2d60daafd3ff8c2000fed3435cfcec9e805bcebd99f90130c6d1c5ef524084ced588c4
   languageName: node
   linkType: hard
 
@@ -11273,13 +11282,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.throttle@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "lodash.throttle@npm:4.1.1"
-  checksum: 129c0a28cee48b348aef146f638ef8a8b197944d4e9ec26c1890c19d9bf5a5690fe11b655c77a4551268819b32d27f4206343e30c78961f60b561b8608c8c805
-  languageName: node
-  linkType: hard
-
 "lodash.uniq@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.uniq@npm:4.5.0"
@@ -12504,6 +12506,7 @@ __metadata:
     "@metamask/jazzicon": ^2.0.0
     "@prisma/client": ^2.18.0
     core-util-is: ^1.0.2
+    dayjs: ^1.11.9
     prettier: ^2.5.1
     prisma: 2.18.0
     rxjs: ^6.6.3
@@ -15407,17 +15410,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simplebar@npm:^5.3.9":
-  version: 5.3.9
-  resolution: "simplebar@npm:5.3.9"
+"simplebar-core@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "simplebar-core@npm:1.2.4"
   dependencies:
-    "@juggle/resize-observer": ^3.3.1
+    "@types/lodash-es": ^4.17.6
     can-use-dom: ^0.1.0
-    core-js: ^3.0.1
-    lodash.debounce: ^4.0.8
-    lodash.memoize: ^4.1.2
-    lodash.throttle: ^4.1.1
-  checksum: 11918d02c946b4925068852b4fb2dcc5008e2fb91b7eeba6c27aed810f23b985de043b12fef674fbffbbfa6201904e09d8fbc29e9959562fa6a5cfb9935751d1
+    lodash: ^4.17.21
+    lodash-es: ^4.17.21
+  checksum: 9bef0a29cc2ddba488776bc05eac6cbf3daa6e72fbcb54ff288cbbb2e64cadf22cc378ac3627f86c32c29ddf9f63d7accf8772e4013318aaba353625869ae866
+  languageName: node
+  linkType: hard
+
+"simplebar@npm:^6.2.5":
+  version: 6.2.5
+  resolution: "simplebar@npm:6.2.5"
+  dependencies:
+    can-use-dom: ^0.1.0
+    simplebar-core: ^1.2.4
+  checksum: 351b3757af18d4d49928fbd44793307ca7384e363c73a740a0e542307f6af75f4803ddbb9e0e595126a487a4ba6b5d98cd397880d7217c6b1b442eb5a6c509c5
   languageName: node
   linkType: hard
 
