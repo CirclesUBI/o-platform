@@ -1,6 +1,6 @@
 {
   "name": "@o-platform/shell",
-  "version": "1.0.3-1",
+  "version": "1.0.5-3",
   "author": "Daniel Janz, Thorsten Schau (Gnosis Service GmbH); Samuel Andert (Basic Income Lab GmbH)",
   "license": "AGPL-3.0-or-later",
   "description": "CirclesUBI Indonesia web app",
@@ -95,7 +95,7 @@
     "qr-scanner": "^1.4.2",
     "quill": "^1.3.7",
     "react-image-file-resizer": "^0.4.8",
-    "simplebar": "^5.3.9",
+    "simplebar": "^6.2.5",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^3.3.1",
     "svelte-easy-crop": "^1.0.7",

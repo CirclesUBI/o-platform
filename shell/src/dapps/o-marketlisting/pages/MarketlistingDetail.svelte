@@ -20,6 +20,13 @@ import { _ } from "svelte-i18n";
 import Label from "../../../shared/atoms/Label.svelte";
 import { contacts } from "../../../shared/stores/contacts";
 import UserImage from "../../../shared/atoms/UserImage.svelte";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export let circlesAddress: string;
 let business: Businesses;
 let visible: boolean = false;
@@ -40,16 +47,14 @@ type BusinessHour = {
   hours?: string[];
   isNow: boolean;
 };
-const today = new Date();
-const currentDateIndex = today.getDay();
-const currentHour = today.getHours();
+
 let hours: BusinessHour[];
 let isOpenNow: boolean;
 let noData: boolean;
 let detailActions: UserActionItem[];
 let availableActions = [];
 let isMyShop: boolean;
-let shopOwner;
+let shopOwner: Profile[];
 onMount(async () => {
   detailActions = [];
   let $me: Profile | null = null;
@@ -69,9 +74,11 @@ onMount(async () => {
     }
     const shopOwnerData = await contacts.findBySafeAddress(business.circlesAddress);
     shopOwner = shopOwnerData.contactAddress_Profile.members;
+
     const currentDateIndex = new Date().getDay();
 
-    isMyShop = $me.circlesAddress === shopOwner[0].circlesAddress;
+    // adding a nice comment so this will get picked back up by the deployment
+    isMyShop = $me.circlesAddress === business.circlesAddress || $me.circlesAddress === shopOwner[0].circlesAddress;
 
     availableActions.push({
       key: "transfer",
@@ -124,6 +131,7 @@ onMount(async () => {
       },
     ];
     hours[currentDateIndex].isNow = true;
+
     if (hours[currentDateIndex].hours) {
       isOpenNow = checkIsOpenNow(hours[currentDateIndex].hours);
       // Determine the next time the shop closes or opens
@@ -153,9 +161,10 @@ function checkIsOpenNow(timesArray) {
   if (!timesArray) {
     return;
   }
-  var d = new Date(); // current time
-  let nIn = convertH2M(d.getHours() + ":" + d.getMinutes());
+  const d = dayjs().tz("Asia/Makassar");
+  let nIn = convertH2M(d.hour() + ":" + d.minute());
   let open = false;
+
   if (timesArray) {
     timesArray.forEach(function (times, index) {
       if (open) {
@@ -165,7 +174,8 @@ function checkIsOpenNow(timesArray) {
       if (times[1]) {
         let begIn = convertH2M(times[0]);
         let endIn = convertH2M(times[1]);
-        return (open = nIn >= begIn && (nIn < endIn || nIn === endIn));
+        open = nIn >= begIn && nIn < endIn;
+        return open;
       }
     });
   } else {
@@ -248,7 +258,7 @@ async function shareLink() {
             </div>
           </div>
           <div class="opening-hours-container">
-            {#if visible}
+            {#if visible && hours}
               <div class="grid gap-2 mt-4 grid-rows">
                 {#each hours as businessHour}
                   <div class="grid grid-cols-2 gap-1">
@@ -265,11 +275,11 @@ async function shareLink() {
     {#if business.phoneNumber}
       <div class="flex pt-4 mt-4 text-black border-t-2">
         <a href="https://wa.me/{business.phoneNumber}" target="_blank" rel="noreferrer"><Icons icon="whatsapp" customClass="inline -mt-1" size="{6}" /></a>
-        <p class="pl-2"><a href="tel://{business.phoneNumber}">{business.phoneNumber}</a></p>
+        <p class="pl-2"><a href="https://wa.me/{business.phoneNumber}">{business.phoneNumber}</a></p>
       </div>
     {/if}
     {#if shopOwner && shopOwner.length}
-      <div class="flex pt-4 mt-4 text-default border-t-2">
+      <div class="flex pt-4 mt-4 border-t-2 text-default">
         <section class="justify-center mb-2">
           <div class="flex flex-col w-full pt-2 space-y-1">
             <div class="font-bold text-left text-default text-2xs">
@@ -277,7 +287,7 @@ async function shareLink() {
             </div>
             <div class="flex flex-row flex-wrap mt-2">
               {#each shopOwner as shopOwnerProfile}
-                <div class="mt-2 mr-2 flex items-center">
+                <div class="flex items-center mt-2 mr-2">
                   <UserImage profile="{shopOwnerProfile}" />
                   <div class="ml-3">{shopOwnerProfile.displayName}</div>
                 </div>
