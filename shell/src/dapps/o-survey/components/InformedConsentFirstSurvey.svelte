@@ -12,14 +12,14 @@ function validateCheckBox() {
   return (value: boolean) => ({ valid: value === true, name: "not_set" });
 }
 const research = field("research", false, [required(), validateCheckBox()]);
-const participate = field("participate", false, [required(), validateCheckBox()]);
+const collect = field("collect", false, [required(), validateCheckBox()]);
 const ending = field("ending", false, [required(), validateCheckBox()]);
-const myForm = form(research, participate, ending);
+const myForm = form(research, collect, ending);
 myForm.validate();
 
 onMount(() => {
   $research.value = $surveyConsents.researchConsent;
-  $participate.value = $surveyConsents.participateConsent;
+  $collect.value = $surveyConsents.dataCollectConsent;
   $ending.value = $surveyConsents.endingConsent;
 });
 
@@ -29,7 +29,7 @@ function handleClick(button) {
   } else {
     if ($myForm.valid) {
       $surveyConsents.researchConsent = $research.value;
-      $surveyConsents.participateConsent = $participate.value;
+      $surveyConsents.dataCollectConsent = $collect.value;
       $surveyConsents.endingConsent = $ending.value;
       sessionStorage.setItem("surveyConsentPage1", "true");
       push("#/survey/page/2");
@@ -60,7 +60,7 @@ function handleClick(button) {
       </label>
     </div>
     <div class="mx-10 my-5 uppercase">
-      <input id="check-2" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$participate.value}" />
+      <input id="check-2" type="checkbox" class="mr-2 checkbox checkbox-warning" bind:checked="{$collect.value}" />
       <label for="check-2" class="cursor-pointer">
         <Label key="dapps.o-homepage.components.survey.informedConsent.secondCheckbox" />
       </label>
