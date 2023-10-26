@@ -2,11 +2,13 @@ import { writable } from "svelte/store";
 import { SurveyDataInput } from "../../../shared/api/data/types";
 export const surveyConsents = writable({
   researchConsent: false,
-  participateConsent: false,
+  dataCollectConsent: false,
   endingConsent: false,
   exchangeConsent: false,
-  dataCollectConsent: false,
-  onlyFromFriends: false,
+  onlyFromFriendsConsent: false,
+  noExchangesConsent: false,
+  unethicalItemsConsent: false,
+  inactiveAccountConsent: false,
   allConsentsGiven: false,
 });
 
