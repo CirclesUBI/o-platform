@@ -163,7 +163,7 @@ function onkeydown(e: KeyboardEvent) {
     {/await}
   {/if}
   {#if navigation && !isSurveyPage}
-    <NextNav navigation="{navigation}" isNotFoundPage="{isNotFoundPage}" />
+    <!-- <NextNav navigation="{navigation}" isNotFoundPage="{isNotFoundPage}" /> -->
   {/if}
 
   {#if layout.dialogs.center && layout.dialogs.center.isOpen}

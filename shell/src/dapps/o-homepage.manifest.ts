@@ -113,5 +113,5 @@ export const homepage: DappManifest<DappState> = {
     };
   },
   hideFooterGradient: true,
-  routables: [index, invite, login, terms, privacy, externalChat, notFound],
+  routables: [index, invite, login, terms, privacy, notFound],
 };
