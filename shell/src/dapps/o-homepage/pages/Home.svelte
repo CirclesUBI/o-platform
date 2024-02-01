@@ -19,7 +19,7 @@ if (inviteCode) {
   <main class="h-screen overflow-hidden">
     <TopNav runtimeDapp="{runtimeDapp}" />
 
-    <div class="flex flex-col items-center justify-center font-heading p-8 mt-40">
+    <div class="flex flex-col items-center justify-center font-heading p-8 m-auto h-full">
       <div class="flex flex-col items-center justify-center">
         <div class="text-xl text-center uppercase text-white">Halo Komunitas Circles!</div>
         <div class="text-xl text-center uppercase text-primary mt-8 mb-8">Aplikasi Circles sekarang sedang diperbaiki!</div>
