@@ -78,7 +78,7 @@ function onkeydown(e: KeyboardEvent) {
         class="flex flex-row w-full mainContent"
         class:mb-16="{layout.dialogs.center && !layout.dialogs.center.isOpen && dapp === 'homepage:1'}"
         class:blur="{layout.dialogs.center && layout.dialogs.center.isOpen}">
-        <div class="z-50">
+        <!-- <div class="z-50">
           {#if layout.dialogs.left && layout.dialogs.left.isOpen}
             {#if $media.small}
               {console.log(layout.dialogs.left.component)}
@@ -119,7 +119,7 @@ function onkeydown(e: KeyboardEvent) {
               </LeftDesktop>
             {/if}
           {/if}
-        </div>
+        </div> -->
         <div class="flex-grow">
           {#if layout.main}
             <svelte:component this="{layout.main.component}" {...layout.main.params ? layout.main.params : {}} />
