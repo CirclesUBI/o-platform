@@ -24,7 +24,8 @@ if (inviteCode) {
         <div class="text-xl text-center uppercase text-white">Halo Komunitas Circles!</div>
         <div class="text-xl text-center uppercase text-primary mt-8 mb-8">Aplikasi Circles sekarang sedang diperbaiki!</div>
         <div class="text-xl text-center uppercase text-white">
-          Jika Anda memiliki pertanyaan tentang akun CirclesUBI Anda, jangan ragu untuk menghubungi <span class="text-primary underline">community@circles.org.</span>
+          Jika Anda memiliki pertanyaan tentang akun CirclesUBI Anda, jangan ragu untuk menghubungi <a href="mailto:community@circles.org" class="text-primary underline"
+            >community@circles.org.</a>
         </div>
       </div>
       <div class="mt-10 mb-10 border-t-2 border-white w-full"></div>
@@ -33,7 +34,7 @@ if (inviteCode) {
         <div class="text-xl text-center uppercase text-primary mt-8 mb-8">The Circles App is now being improved!</div>
         <div class="text-xl text-center uppercase text-white">
           If you have any questions about your CirclesUBI account, please feel free to contact
-          <span class="text-primary underline">community@circles.org.</span>
+          <a href="mailto:community@circlesbali.org" class="text-primary underline">community@circlesbali.org.</a>
         </div>
       </div>
     </div>
