@@ -55,7 +55,7 @@ if (runtimeDapp.routeParts.length && runtimeDapp.routeParts[0]) {
       </div>
 
       <div class="self-center pr-3">
-        <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" />
+        <!-- <LocaleSwitcher value="{$locale}" on:locale-changed="{(e) => setupI18n({ withLocale: e.detail })}" /> -->
         <span class="p-1 -mt-6 text-2xl uppercase xs:p-3 xs:-mt-2 whitespace-nowrap font-heading xs:text-4xl">Beta</span>
       </div>
     </div>
